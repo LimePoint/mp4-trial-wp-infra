@@ -19,7 +19,7 @@ host_opts.transform_keys!(&:to_sym)
 Chef::Log.info("Input Received: #{host_opts}")
 
 # Force the inputs for LDAP  coz we know better.
-host_opts[:native_instance_type] = 'VM.Standard.E2.2'
+host_opts[:instance_type] = 'VM.Standard.E2.2'
 host_opts[:operating_system] = 'Oracle Linux'
 host_opts[:operating_system_version] = 7
 
