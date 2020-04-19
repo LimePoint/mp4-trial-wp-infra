@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rsync -CchavzP --stats --log-file=/backups/logs/<%= @targetvm %>/rsync_<%= @asset %>`date +%Y%m%d_%H%M%S`.log \
+-e "ssh -i /home/mintpress/.ssh/id_rsa -o StrictHostKeyChecking=no" --exclude={'binaries/tmp','binaries/obpsoa/tmp','binaries/deployments'} \
+-o -g oracle@<%= @targetvm %>:{'/oracle/app/binaries','/oracle/app/runtime','/oracle/app/oraInventory'} \
+/backups/<%= @targetvm %> 2>&1 > /backups/logs/rsync-<%= @asset %>.out

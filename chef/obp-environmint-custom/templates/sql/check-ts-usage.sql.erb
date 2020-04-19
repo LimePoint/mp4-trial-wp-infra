@@ -1,0 +1,41 @@
+set lines 200 pages 500 trimspool on
+col "% Used" Jus C
+col "AE" hea "Auto Extend" for a12 Jus C
+col "Bytes Used" for 99999999999
+col "DB NAME" for a10 Jus C
+col "TS(GB)" for 999999.00 hea "Size(GB)" Jus C
+col "Used(GB)" Jus C
+col CONTENTS for a10 Jus C
+col DFNO for 99 hea "Datafile|Count" jus c
+col tablespace_name hea "Tablespace" Jus C
+
+SET FEED OFF MARKUP HTML ON SPOOL ON PREFORMAT OFF ENTMAP ON -
+HEAD "<TITLE>Tablespace Usage Report</TITLE>"
+
+ SELECT sys_context('USERENV','DB_NAME')                                   "DB NAME"
+       ,T.TABLESPACE_NAME
+       ,ROUND((U.USED_SPACE*T.BLOCK_SIZE/(1024*1024*1024)),2)              "Used(GB)"
+       ,U.used_space*T.block_size                                          "Bytes Used"
+       ,ROUND((U.TABLESPACE_SIZE*T.BLOCK_SIZE/(1024*1024*1024)),2)         "TS(GB)"
+       ,ROUND(U.USED_PERCENT,2)                                            "% Used"
+       ,T.CONTENTS
+       ,DF.AUTOEXTENSIBLE                                                  "AE"
+       ,T.STATUS
+       ,COUNT(DF.file_id)                                                  "DFNO"
+   FROM DBA_TABLESPACE_USAGE_METRICS U,dba_tablespaces T,dba_data_files DF
+  WHERE U.tablespace_name(+)=T.tablespace_name
+    AND T.tablespace_name   =DF.tablespace_name(+)
+    AND T.CONTENTS = 'PERMANENT'
+  GROUP BY T.tablespace_name
+          ,U.used_space
+          ,U.tablespace_size
+          ,U.used_percent
+          ,T.block_size
+          ,T.contents
+          ,DF.autoextensible
+          ,T.status
+  ORDER BY 6 desc,2
+
+  SPOOL /tmp/<%= @env.upcase %>-ts-usage-asof-<%= Time.now.strftime("%Y-%m-%d_%H")%>.html append
+  /
+  SPOOL OFF

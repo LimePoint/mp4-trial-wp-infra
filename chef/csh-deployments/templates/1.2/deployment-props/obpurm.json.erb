@@ -1,0 +1,47 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+    {
+      "name": "user",
+      "value": "weblogic"
+    },
+    {
+      "name": "password",
+      "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpurm', @obpurm['wls_admin_user'] ) %>"
+    },
+    {
+      "name": "hostname",
+      "value": "<%=@obpurm['admin']['listen_address']%><%=@obpurm['dns_domain_name']%>"
+    },
+    {
+      "name": "weblogicHome",
+      "value": "/oracle/app/binaries/obpurm/fmw/wlserver_10.3"
+    },
+    {
+      "name": "frontendurl",
+      "value": "https://<%=@obpurm['frontend']['otd_vip_name']%>:<%=@obpurm['frontend']['urm_port']%>/urm/idcplg"
+    }
+
+  ]
+}

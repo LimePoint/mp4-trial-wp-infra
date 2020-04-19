@@ -1,0 +1,46 @@
+#!/usr/bin/python
+# Import libraries.
+import os
+import sys
+
+
+username = sys.argv[1]
+password = sys.argv[2]
+url = sys.argv[3]
+domain = sys.argv[4]
+asset_code = sys.argv[5]
+
+#Below function used to connect to WLST prompt
+
+def dkinit(user=username, passwd=password, url=url):
+        try:
+                connect(user,passwd,url)
+        except StandardError, se:
+                        print "---->Error occured while connecting to url",url
+                        print "\n", se
+                        exit()
+        except Exception ,e:
+                        print "---->Exception raised while connecting to url",url
+                        print "\n", e
+                        exit()
+
+def createSIEMCustomAuditor():
+              try:
+                edit()
+                startEdit()
+#                cd('/SecurityConfiguration/' + domain + '/Realms/myrealm/Auditors')
+#                cmo.createAuditor('SIEMCustomAuditor','com.oracle.westpac.csh.siem.cap.SIEMCustomAuditor')
+                cd('/SecurityConfiguration/' + domain + '/Realms/myrealm/Auditors/SIEMCustomAuditor')
+                set('LogFileName','/oracle/app/logs/' + asset_code + '/' + domain +'/SIEMCustomAuditProvider.log')
+                set('ActiveContextHandlerEntries',jarray.array(['com.bea.contextelement.servlet.HttpServletRequest','com.bea.contextelement.servlet.HttpServletResponse'], String))
+                cmo.setLogSizeLimit(512)
+                cmo.setMaxNumberLogFiles(5)
+                save()
+                activate()
+              except:
+                print 'Failed to Set Attributes for SIEMCustomAuditor'
+                print dumpstack()
+                sys.exit(1)
+
+dkinit(user=username, passwd=password, url=url)
+createSIEMCustomAuditor()

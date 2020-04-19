@@ -1,0 +1,21 @@
+# WLST Script to Update certificate of OTD configurations
+#arg1 : Domain adminuser name (ex:weblogic)
+#arg2 : Domain adminuser password
+#arg3 : Domain admin url
+#Usage: restart_wls_ssl.py weblogic ****** t3://localhost:7001
+
+def restartSSL():
+    serverList=cmo.getServers()
+    domainRuntime()
+    for server in serverList:
+        servername=server.getName()
+        bean=getMBean('ServerRuntimes/'+servername)
+        if bean is None:
+            pass
+            print 'Cannot find MBean of  - '+servername+' Appears its down, ignoring'
+        else:
+            bean.restartSSLChannels()
+            print 'Restarted SSL Channel of Server - '+servername+' Successfully'
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+restartSSL()

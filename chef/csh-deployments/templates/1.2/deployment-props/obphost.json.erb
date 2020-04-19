@@ -1,0 +1,84 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-soa",
+      "type": "soa",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "7001"
+        },
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "SOA Server"
+        }]
+    },
+ {
+      "name": "DefaultServer-osb",
+      "type": "osb",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "7001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "OSB Server"
+        }]
+    },
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+    "/getDeploymentProperties.json?environment=LOCAL": [
+        {
+          "name": "user",
+          "value": "<%= @obpobh['wls_admin_user'] %>"
+        },
+        {
+          "name": "password",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpobh', @obpobh['wls_admin_user'] ) %>"
+        },
+        {
+          "name": "hostname",
+          "value": "<%=@obpobh['admin']['listen_address']%><%=@obpobh['dns_domain_name']%>"
+        },
+        {
+	  "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpobh/fmw/wlserver"
+	}
+    ]
+}

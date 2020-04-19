@@ -1,0 +1,110 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "bi_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "obp.bip.instance.path",
+          "value": "/oracle/app/runtime/obpbip/domains/obpbip_domain/config/bipublisher"
+        },
+        {
+          "name": "obp.bip.datasource.name",
+          "value": "obpReportsDataSource"
+        }
+]
+    },
+    {
+    "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+     }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+       {
+          "name": "user",
+          "value": "<%= @obpbip['wls_admin_user'] %>"
+        },
+        {
+          "name": "password",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpbip', @obpbip['wls_admin_user'] ) %>"
+        },
+        {
+          "name": "hostname",
+          "value": "<%=@obpbip['admin']['listen_address']%><%=@obpbip['dns_domain_name']%>"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpbip/fmw/wlserver"
+        },
+        {
+          "name": "obp.bip.report.base.path",
+          "value": "/FC Modules/reports"
+        },
+        { 
+          "name": "obp.bip.instance.path",
+          "value": "/oracle/app/runtime/obpbip/domains/obpbip_domain/config/bipublisher"
+        },
+        {
+          "name": "obp.bip.datasource.name",
+          "value": "obpReportsDataSource"
+        },
+        {
+          "name": "bip.server.url",
+          "value": "http://<%=@obpbip['bi_server']['listen_address']%><%=@obpbip['dns_domain_name']%>:<%=@obpbip['bi_server']['listen_port']%>/xmlpserver"
+        },
+        {
+          "name": "obp.bip.install.home",
+          "value": "/oracle/app/binaries/obpbip/fmw/bi"
+        },
+        {
+          "name": "obp.bip.java.home",
+          "value": "/oracle/app/binaries/obpbip/java"
+        },
+        {
+      	  "name": "obp.bip.obpadminUserName",
+      	  "value": "obpbip_admin"
+      	},
+        {
+       	  "name": "obp.bip.obpadminPassword",
+      	  "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpoid', 'obpbip_admin' ) %>"
+      	},
+        {
+          "name": "DB.PASSWORD",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpbip', 'OBPBIP' ) %>"
+        },
+        {
+          "name": "CONFIGTOOL_PASSWORD",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpoid', 'SA_CONFIGUPLOADER_OBP_USER') %>"
+        },
+        {
+          "name": "DB.USERNAME",
+          "value": "OBP_ANALYTICS"
+        },
+        {
+          "name": "CONFIGTOOL_USERNAME",
+          "value": "<%= @deployment['NETIQUSERNAME'] %>"
+        }        
+  ]
+}
+

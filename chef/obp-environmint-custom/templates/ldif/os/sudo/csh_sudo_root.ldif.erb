@@ -1,0 +1,11 @@
+dn: cn=csh_sudo_user_root_<%= @environment %>,ou=sudo,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: sudoRole
+objectClass: top
+sudoCommand: ALL
+sudoRunAsUser: root
+<% @hosts.each do |h| -%>
+sudoHost: <%= h %>
+<% end -%>
+cn: csh_sudo_user_root_<%= @environment %>
+sudoUser: +csh_team_<%= @environment %>_root

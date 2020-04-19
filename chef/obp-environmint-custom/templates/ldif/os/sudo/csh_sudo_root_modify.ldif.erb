@@ -1,0 +1,6 @@
+dn: cn=csh_sudo_user_root_<%= @environment %>,ou=sudo,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+changetype: modify
+add: sudoHost
+<% @hosts.each do |h| -%>
+sudoHost: <%= h %>
+<% end -%>

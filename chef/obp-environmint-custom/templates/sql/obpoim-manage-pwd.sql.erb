@@ -1,0 +1,13 @@
+/* Turn off variable substitution */
+SET DEFINE OFF;
+
+/* Block for configuring FLX_FW_CONFIG_VAR_B table for properties */
+DECLARE
+	/* Variable Definitions */
+	
+BEGIN
+	UPDATE USR F SET F.USR_PWD_NEVER_EXPIRES='1', F.USR_PWD_WARN_DATE=null, F.USR_PWD_EXPIRE_DATE=null WHERE F.USR_LOGIN='XELSYSADM';
+	UPDATE USR F SET F.USR_PWD_NEVER_EXPIRES='1', F.USR_PWD_WARN_DATE=null, F.USR_PWD_EXPIRE_DATE=null WHERE F.USR_LOGIN='SCIMADMIN';
+	COMMIT;
+END;
+/

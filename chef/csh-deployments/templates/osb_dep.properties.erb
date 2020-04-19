@@ -1,0 +1,652 @@
+<%
+    env_name = @environment
+    DOMAIN_NAME = @topology_vars['obposb']['dns_domain_name']
+    OSB_JMS_SRV =  @topology_vars['obposb']['osb_server']['listen_address']+DOMAIN_NAME+":"+@topology_vars['obposb']['osb_server']['listen_port']
+    OBH_JMS_SRV =  @topology_vars['obpobh']['obphost_server']['listen_address']+DOMAIN_NAME+":"+@topology_vars['obpobh']['obphost_server']['listen_port']
+    OSB_FRONTEND = @topology_vars['obposb']['frontend']['managed_host']+":"+@topology_vars['obposb']['frontend']['osb_port']
+    OBH_FRONTEND = @topology_vars['obpobh']['frontend']['managed_host']+":"+@topology_vars['obpobh']['frontend']['obh_port']
+    IPM_FRONTEND = @topology_vars['obpipm']['frontend']['managed_host']+":"+@topology_vars['obpipm']['frontend']['ipm_port']
+
+    lisa_socket = @topology_vars['common']['lisa_socket']
+
+  #LIST OF SA passwords
+    SA_DLM_API_OSB_PWD = PasswordVault.get_password(@topology_vars['common']['password_vault_name'], 'obpoid', 'SA_DLM_API_OSB_USER')
+    SA_OBP_IPM_MANAGE_PWD = PasswordVault.get_password(@topology_vars['common']['password_vault_name'], 'obpoid', 'SA_OBP_IPM_MANAGE_USER')
+    SA_VALEX_API_OSB_PWD = PasswordVault.get_password(@topology_vars['common']['password_vault_name'], 'obpoid', 'SA_VALEX_API_OSB_USER')
+    SA_SAM_PARTY_ONBOARD_PWD = PasswordVault.get_password(@topology_vars['common']['password_vault_name'], 'obpoid', 'SA_SAM_PARTY_ONBOARD_USER')
+    SA_OCH_OBP_MANAGE_PWD = PasswordVault.get_password(@topology_vars['common']['password_vault_name'], 'obpoid', 'SA_OCH_OBP_MANAGE_USER')
+
+  #FOR Environments integrated with OCH
+  och1_envs = [4,8,12].map{|s| "bpd"+s.to_s}
+  och2_envs = [7,13,21,26,29].map{|s| "bpd"+s.to_s}
+  och3_envs = []
+  r18_envs = [1,2,3,5,7,9,10,16,20,21,22,23,24].map{|s| "bpd"+s.to_s}
+
+  case
+    when och1_envs.include?(env_name)
+      och_socket = 'obpcoch01.wpdev.mintpress.io'
+    when och2_envs.include?(env_name)
+      och_socket = 'obpcoch21.wpdev.mintpress.io'
+    when och3_envs.include?(env_name)
+      och_socket = 'obpcoch31.wpdev.mintpress.io'
+    else
+      och_socket = lisa_socket
+  end
+%>
+#<%= env_name%>
+#==================================
+# BankWOW interface.
+#==================================
+# Offshore this is LISA server, Onshore it will be API Gateway URL for BankWOW URL.
+# File: CZ_BankWOW_Services\BusinessServices\CreateDemandDepositAccountBS.BusinessService
+CreateDemandDepositAccountBSURL=https://<%= lisa_socket%>/account/create/depositAccountFulfilment/
+
+#==================================
+# Bureau interface.
+#==================================
+# This should point to the host server and https port of manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Bureau_Services\BusinessServices\BureauReportBS.BusinessService
+BureauBSBureauReportURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/party/CZBureauReportApplicationService
+
+# This should point to the OSB server and http port. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Bureau_Services\BusinessServices\BureauReqJMSLisenterBS.BusinessService
+BureauBSBureauReqJMSLisenterURL=jms://<%= OSB_JMS_SRV%>/jms.DLMConnectionFactory/DLMJMSRequestQueue
+
+# This should point to the OSB server and http port. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Bureau_Services\BusinessServices\BureauReqJMSLisenterBS.BusinessService
+BureauBSBureauResJMSLisenterURL=jms://<%= OSB_JMS_SRV%>/jms.DLMConnectionFactory/DLMJMSResponseQueue
+
+# Offshore this is LISA server, Onshore it will be DLM URL.
+# File: CZ_Bureau_Services\BusinessServices\CreditBureauBS.BusinessService
+BureauBSCreditBureauURL=https://<%= OSB_FRONTEND%>/DLMStubs/DLMStubPS
+
+# Offshore this is LISA server, Onshore it will be DLM URL.
+# File: CZ_Bureau_Services\BusinessServices\GetCacheIDListBS.BusinessService
+BureauBSGetCacheIDListURL=https://<%= OSB_FRONTEND%>/DLMStubs/DLMStubPS
+
+# Offshore this is LISA server, Onshore it will be DLM URL.
+# File: CZ_Bureau_Services\BusinessServices\RetrieveResponseBS.BusinessService
+BureauBSRetrieveResponseURL=https://<%= OSB_FRONTEND%>/DLMStubs/DLMStubPS
+
+# Offshore this is LISA server, Onshore it will be DLM URL.
+# File: CZ_Bureau_Services\BusinessServices\RetrieveConnectorReportBS.BusinessService
+BureauBSRetrieveConnReportURL=https://<%= OSB_FRONTEND%>/DLMStubs/DLMStubPS
+
+# This should point to the OSB server and http port. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Bureau_Services\ProxyServices\InitiateBureauJMSLisenterPS.ProxyService
+BureauPSInitiateBureauJMSLisenterURL=jms://<%= OSB_JMS_SRV%>/jms.DLMConnectionFactory/DLMJMSRequestQueue
+
+#==================================
+# CAFE interface.
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0516 service URL.
+# File: CZ_CAFE_Services\ModifyDemandDepositArrangement\BusinessServices\ModifyDDABS.BusinessService
+ModifyDDABSURL=https://<%= lisa_socket%>/services/soap/modifyDemandDepositArrangement/v2/SAML
+
+# Offshore this is LISA server, Onshore it will be GESB SVC0449 service URL.
+# File: CZ_CAFE_Services\RetrieveDemandDepositArrangement\BusinessServices\RetrieveDDABS.BusinessService
+RetrieveDDABSURL=https://<%= lisa_socket%>/services/soap/retrieveDemandDepositArrangementDetails/v3/SAML
+
+#==================================
+# Common Services
+#==================================
+# Host database schema name.
+# File: CZ_Common_Services\BusinessServices\errorConfig.BusinessService
+#       CZ_Common_Services\Resources\partyXRef\getAllPartyXref_db.jca
+#       CZ_Common_Services\Resources\partyXRef\getPartyByXRef_db.jca
+#       CZ_Common_Services\Resources\config\dbconfig_db.jca
+#       CZ_Common_Services\Resources\logging\logging_db.jca
+#       CZ_Common_Services\Resources\transform\errorConfig_db.jca
+host_schema_name=OBPHOST_OBP
+
+# Username password of the API Gateway. Offshore this value can be anything. Onshore it will usename and password of the API Gateway.
+# File: CZ_Common_Services\Resources\ServiceAccounts\APIGSA.sa
+SA_APIG_USER=SA_APIG_USER
+SA_APIG_PWD=SA_APIG_PWD
+
+# Username password of the DLM service account. Both at offshore and Onshore the user name is "SA_DLM_API_OSB_USER" and password is the password of the mentioned user.
+# File: CZ_Common_Services\Resources\ServiceAccounts\DLMHostSA.sa
+SA_DLM_API_OSB_USER=SA_DLM_API_OSB_USER
+SA_DLM_API_OSB_PASSWORD=<%= SA_DLM_API_OSB_PWD%>
+
+# Username password of the DLM report service account. Offshore this value can be anything. Onshore it will usename and password of the DLM report service account.
+# File: CZ_Common_Services\Resources\ServiceAccounts\DLMReportSA.sa
+dlm_report_sa_username=dlm_report_sa_username
+dlm_report_sa_password=dlm_report_sa_password
+
+# Username password of the APIG Rate finder service account. Offshore this value can be anything. Onshore it will usename and password of the APIG Rate finder service account.
+# File: CZ_Common_Services\Resources\ServiceAccounts\RFAPIGSA.sa
+SA_APIG_RF_USER=SA_APIG_RF_USER
+SA_APIG_RF_PASSWORD=SA_APIG_RF_PASSWORD
+
+# Username password of the APIG Rate finder service account. Offshore this value can be anything. Onshore it will usename and password of the SAM interface service account.
+# File: CZ_Common_Services\Resources\ServiceAccounts\SamSA.sa
+SAM_OSB_USER=SAM_OSB_USER
+SAM_OSB_PASSWORD=SAM_OSB_PASSWORD
+
+# Username password of the DLM API Gateway. Offshore this value can be anything. Onshore it will be username and password of the DLM API Gateway.
+# File: CZ_Common_Services\Resources\ServiceAccounts\DLMOutboundSA.sa
+SA_DLM_APIG_OUTBOUND_USER=SA_DLM_APIG_OUTBOUND_USER
+SA_DLM_APIG_OUTBOUND_PWD=SA_DLM_APIG_OUTBOUND_PWD
+
+# Username password of the IPM server Service account.
+# File: LZ_Common_Services\Resources\ServiceAccounts\IPMDocUploadSA.sa
+SA_OBP_IPM_MANAGE_USER=SA_OBP_IPM_MANAGE_USER
+SA_OBP_IPM_MANAGE_PWD=<%= SA_OBP_IPM_MANAGE_PWD%>
+
+# Username password of the Valuation Inbound Service account to invoke OBP host.
+# File: LZ_Common_Services\Resources\ServiceAccounts\ValuationInboundSA.sa
+SA_VALEX_API_OSB_USER=SA_VALEX_API_OSB_USER
+SA_VALEX_API_OSB_PWD=<%= SA_VALEX_API_OSB_PWD%>
+
+# Username password of the Valuation Outbound Service account. Offshore this value can be anything. Onshore it will be username and password of the Valex APIG Gateway.
+# File: LZ_Common_Services\Resources\ServiceAccounts\ValuationOutboundSA.sa
+SA_VALEX_APIG_OUTBOUND_USER=SA_VALEX_APIG_OUTBOUND_USER
+SA_VALEX_APIG_OUTBOUND_PWD=SA_VALEX_APIG_OUTBOUND_PWD
+
+# Application ID for IPM Service. Offshore and Onshore it will be taken from the flx_cm_doc_typ_meta_data table where DOC_TYP_ID = 'MAIN'. Value in the APP_ID column should be taken.
+# File: LZ_IPM_Services\XQuery\ipmdcstodsreq.xqy
+IPM_APP_ID=2
+
+SA_MDM_READ_USER=WBCOSBWPAC
+<% if och_socket.include?('lisa') %>
+SA_MDM_READ_PASSWORD=welcome1
+<% else %>
+SA_MDM_READ_PASSWORD={AES}i79HrT+ldb48dP4tl13hSjHOpSz5xYmaO6FaykBZOzs=
+<% end %>
+
+#==================================
+# Digital Services
+#==================================
+# This should point to the host server and https port of manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Digital_Services\BusinessServices\ApplicationSearchApplicationServiceSpiBS.BusinessService
+ApplicationSearchApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/ApplicationSearchApplicationServiceSpi
+
+# This should point to the host server and https port of manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Digital_Services\BusinessServices\DetailedApplicationTrackerApplicationServiceSpiBS.BusinessService
+DetailedApplicationTrackerApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/DetailedApplicationTrackerApplicationServiceSpi
+
+# This should point to the host server and https port of manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Digital_Services\BusinessServices\DigitalAcceptanceBS.BusinessService
+CZDigitalAcceptanceApplicationServiceURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/content/CZDigitalAcceptanceApplicationService
+
+# This should point to the host server and https port of manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: CZ_Digital_Services\BusinessServices\DigitalApplicationTrackerApplicationServiceBS.BusinessService
+DigitalApplicationTrackerApplicationServiceURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/origination/DigitalApplicationTrackerApplicationService
+
+# URL for the MortgageOrigination Event API. Offshore this is LISA server, Onshore it will be API Gateway URL for MortgageOrigination Event API.
+# File: CZ_Digital_Services\BusinessServices\MortgageOriginationEventAPIBS.BusinessService
+MortgageOriginationEventAPIBSURL=https://<%= lisa_socket%>/inf/bnkng/evnt/arrngmntorigevnt/consumr/mrtgeorigevnt/v1/SAML
+
+# URL for SamPartyOnboardBSURL
+SamPartyOnboardBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/party/PartyOnBoardingApplicationServiceSpi
+
+#==================================
+# Enterprise Inquiry
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0258 service URL.
+# File: CZ_EnterpriseInquiry_Services\BusinessServices\RetrieveAccountForPartyBS.BusinessService
+RetrieveAccountForPartyBSURL=https://<%= lisa_socket%>/services/soap/retrieveDetailsAndArrangementRelationshipsForIPs/v12/SAML
+
+# Offshore this is LISA server, Onshore it will be GESB SVC0259 service URL.
+# File: CZ_EnterpriseInquiry_Services\BusinessServices\RetrievePartyForAccountBS.BusinessService
+RetrievePartyForAccountBSURL=https://<%= lisa_socket%>/services/soap/retrieveIPRolesForArrangement/v4/SAML
+
+#==================================
+# FTH Online
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0328 service URL.
+# File: CZ_FTHONLINE_Services\RetrieveAccountSummaryArrangement\BusinessServices\RetrievAccountSummaryBS.BusinessService
+RetrievAccountSummaryBSURL=https://<%= lisa_socket%>/services/soap/retrieveAccountSummary/v1/SAML
+
+#==================================
+# Mortgage Arrangement services
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0376 service URL.
+# File: CZ_MortgageArrangement_Services\BusinessServices\RetrieveMADetailsBS.BusinessService
+RetrieveMADetailsBSURL=https://<%= lisa_socket%>/services/soap/retrieveMortgageArrangementDetails/v3/SAML
+
+#==================================
+# NETIQ services
+#==================================
+# Offshore this is LISA server, Onshore it will be NetIQ service URL.
+# File: CZ_NetIQSTS_Services\BusinessServices\GetSAMLAssertionBS.BusinessService
+GetSAMLAssertionBSURL=https://<%= lisa_socket%>/services/soap/requestSecurityToken/SAML
+
+# Offshore this is LISA server, Onshore it will be NetIQ service URL.
+# File: CZ_NetIQSTS_Services\BusinessServices\GetSAMLAssertionRFBS.BusinessService
+GetSAMLAssertionRFBSURL=https://<%= lisa_socket%>/services/soap/requestSecurityToken/SAML
+
+# Offshore this value will remain as is. Onshore this value will be 'To' attribute of the NetIQ Instance
+# File: CZ_NetIQSTS_Services\Resources\DVM\SAMLServiceConfig.dvm
+ToURL=https://login-dev.authbridge-nonprod.westpacgroup.com
+
+# Offshore this value will remain as is. Onshore this value will be 'EndpointReference' attribute of the NetIQ Endpoints
+# File: CZ_NetIQSTS_Services\Resources\DVM\SAMLServiceConfig.dvm
+EndpointReferenceURL=https://dp-ma.dev2.esb.srv.westpac.com.au
+
+# Offshore this value will remain as is. Onshore this value will be 'To' attribute of the NetIQ Instance for rate finder
+# File: CZ_NetIQSTS_Services\Resources\DVM\SAMLServiceConfig.dvm
+ToRFURL=https://login-test.authbridge-nonprod.westpacgroup.com
+
+# Offshore this value will remain as is. Onshore this value will be 'EndpointReference' attribute of the NetIQ Endpoints for rate finder
+# File: CZ_NetIQSTS_Services\Resources\DVM\SAMLServiceConfig.dvm
+EndpointReferenceRFURL=https://<%= lisa_socket%>/hlrf/offer/v1/SAML
+
+#==================================
+# OCH Services
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0425 service URL.
+# File: CZ_OCH_Services\BusinessServices\CreateXrefBS.BusinessService
+CreateXrefBSURL=https://<%= lisa_socket%>/services/soap/recordIPIdentifiers/v1/SAML
+
+# Offshore this is LISA server, Onshore it will be GESB SVC0258 service URL.
+# File: CZ_OCH_Services\BusinessServices\RetrieveDetailsAndArrangementRelBS.BusinessService
+RetrieveDetailsAndArrangementRelBSURL=https://<%= lisa_socket%>/services/soap/retrieveDetailsAndArrangementRelationshipsForIPs/v12/SAML
+
+# Offshore this is LISA server, Onshore it will be GESB SVC0324 service URL.
+# File: CZ_OCH_Services\BusinessServices\RetrieveIDVDetailsBS.BusinessService
+RetrieveIDVDetailsBSURL=https://<%= lisa_socket%>/services/soap/retrieveIDVDetails/v6/SAML
+
+# Offshore this is LISA server, Onshore it will be GESB SVC0392 service URL.
+# File: CZ_OCH_Services\BusinessServices\SearchAndMatchPartyBS.BusinessService
+SearchAndMatchPartyBSURL=https://<%= lisa_socket%>/services/soap/searchIPByDetails/v3/SAML
+
+#Both endpoints will be same for R1.2
+<% if och_socket.include?('lisa') %>
+MDMREADServicesBSURL=https://<%= lisa_socket%>/services/soap/MDMREADServicesBSURL/SAML
+GenerateSessionTokenServiceURL=https://<%= lisa_socket%>/services/soap/MDMREADServicesBSURL/SAML
+<% else %>
+MDMREADServicesBSURL=https://<%= och_socket%>/WBCEAIHttpOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+GenerateSessionTokenServiceURL=https://<%= och_socket%>/WBCEAIHttpOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+<% end %>
+
+#==================================
+# QAS Services
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0454 service URL.
+# File: CZ_OCH_Services\BusinessServices\RetrieveAddressDetailsBS.BusinessService
+RetrieveAddressDetailsBSURL=https://<%= lisa_socket%>/services/soap/retrievePostalAddress/v1/SAML
+
+# Offshore this is LISA server, Onshore it will be URL of the one click address search.
+# File: CZ_OCH_Services\BusinessServices\RetrieveAddressPickList.BusinessService
+RetrieveAddressPickListsBSURL=https://<%= lisa_socket%>/services/qas/api/address/query
+
+#==================================
+# Rate Finder
+#==================================
+# Offshore this is LISA server, Onshore it will be URL of the Rate Finder system.
+# File: CZ_RateFinder_Services\BusinessServices\RateFinderBS.BusinessService
+RateFinderBSURL=https://<%= lisa_socket%>/hlrf/offer/v1/search/SAML
+
+#==================================
+# Retrive arrangement
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0522 service URL.
+# File: CZ_RetrieveIPArrangement_Services\BusinessServices\RetrieveIPArrangementBS.BusinessService
+RetrieveIPArrangementBSURL=https://<%= lisa_socket%>/services/soap/retrieveArrangementsForIP/v2/SAML
+
+#==================================
+# SAM Services
+#==================================
+# Offshore this is LISA server, Onshore it will be SAM Services URL.
+# File: CZ_SamCollateral_Services\BusinessServices\SamCollateralBS.BusinessService
+SamCollateralBSURL=https://<%= lisa_socket%>/services/soap/BA/v1/SAML
+
+#==================================
+# SAM API Gateway Proxy
+#==================================
+proxy_server_host=10.36.211.6
+
+#==================================
+# Search Arrangement Services
+#==================================
+# Offshore this is LISA server, Onshore it will be GESB SVC0393 service URL.
+# File: CZ_SearchArrangement_Services\BusinessServices\SearchArrangementByAccountNoBS.BusinessService
+SearchArrangementByAccountNoBSURL=https://<%= lisa_socket%>/services/soap/searchIPByArrangement/v2/SAML
+
+#==================================
+# LZ Common Service
+#==================================
+# This should point to the host server and https port of manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_Common_Services\BusinessServices\SesionContextOPSSBS.BusinessService
+LzCommonBSSesionContextURL=https://<%= OBH_FRONTEND%>/commonservice/CommonApplicationServiceSpi
+
+#==================================
+# LZ Valex Service
+#==================================
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationInternal_Services\cancellationRequest\BusinessServices\ValuationCancellationRequestSBBS.BusinessService
+ValuationIntBSValuationCancelReqURL=https://<%= OSB_FRONTEND%>/ValuationCancellationRequestSBPS
+
+# Offshore this value remains as is. Onshore this should point to the Valex endpoint
+# File: LZ_ValuationInternal_Services\commonResponse\BusinessServices\DownloadExternalAttachmentBS.BusinessService
+ValuationIntBSDownloadExtAttachURL=https://vxtest.valex.com.au/
+
+# This should point to the host server and https port of manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationInternal_Services\commonResponse\BusinessServices\ValuationCommonResponseBS.BusinessService
+ValuationIntBSValuationCommonRespURL=https://<%= OBH_FRONTEND%>/services/lcm/ValuationAsyncResponseApplicationServiceSpi
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationInternal_Services\commonResponse\BusinessServices\ValuationDownloadAttachmentBS.BusinessService
+ValuationIntBSValuationDownloadAttachURL=https://<%= OSB_FRONTEND%>/LZ_ValuationInternal_Services/commonResponse/Proxies/DownloadExternalAttachmentPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationInternal_Services\findOrOrder\BusinessServices\ValuationFindOrOrderRequestSBBS.BusinessService
+ValuationIntBSValuationFindOrOrderReqURL=https://<%= OSB_FRONTEND%>/ValexStub/ProxyService/ValuationOutboundServicesPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationInternal_Services\requestValuationQuery\BusinessServices\ValuationQueryRequestSBBS.BusinessService
+ValuationIntBSValuationQueryReqURL=https://<%= OSB_FRONTEND%>/ValuationQueryRequestSBPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationInternal_Services\updateValuation\BusinessServices\UpdateValuationRequestSBBS.BusinessService
+ValuationIntBSUpdateValuationReqURL=https://<%= OSB_FRONTEND%>/UpdateValuationRequestSBPS
+
+# Offshore this value remains as is. Onshore this should point to the Valex endpoint
+# File: LZ_ValuationExternal_Services\cancellationRequest\BusinessServices\ValuationCancelRequestBS.BusinessService
+ValuationExtBSValuationCancelReqURL=https://<%= lisa_socket%>/services/soap/findOrOrder
+
+# Offshore this value remains as is. Onshore this should point to the Valex endpoint
+# File: LZ_ValuationExternal_Services\findOrOrder\BusinessServices\ValuationFindOrOrderRequestBS.BusinessService
+ValuationExtBSFindOrOrderReqURL=https://<%= lisa_socket%>/services/soap/findOrOrder
+
+# Offshore this value remains as is. Onshore this should point to the Valex endpoint
+# File: LZ_ValuationExternal_Services\requestValuationQuery\BusinessServices\ValuationQueryRequestBS.BusinessService
+ValuationExtBSQueryRequestURL=https://<%= lisa_socket%>/services/soap/findOrOrder
+
+# Offshore this value remains as is. Onshore this should point to the Valex endpoint
+# File: LZ_ValuationExternal_Services\updateValuation\BusinessServices\UpdateValuationRequestBS.BusinessService
+ValuationExtBSUpdateRequestURL=https://<%= lisa_socket%>/services/soap/findOrOrder
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationExternal_Services\valCancel\BusinessServices\ValuationCancellationInboundResponseSBBS.BusinessService
+ValuationExtBSCancelInboundResURL=https://<%= OSB_FRONTEND%>/ValuationCancellationInboundResponseSBPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationExternal_Services\valEscalate\BusinessServices\ValuationEscalateInboundResponseSBBS.BusinessService
+ValuationExtBSEscalateInboundResURL=https://<%= OSB_FRONTEND%>/ValuationEscalateInboundResponseSBPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationExternal_Services\valQueryResponse\BusinessServices\ValuationQueryInboundResponseSBBS.BusinessService
+ValuationExtBSQueryInboundResURL=https://<%= OSB_FRONTEND%>/ValuationQueryInboundResponseSBPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationExternal_Services\valResponse\BusinessServices\ValuationStandardInboundResponseSBBS.BusinessService
+ValuationExtBSStandardInboundResURL=https://<%= OSB_FRONTEND%>/ValuationStandardInboundResponseSBPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationExternal_Services\valUpdateAddress\BusinessServices\ValuationUpdateAddressInboundResponseSBBS.BusinessService
+ValuationExtBSUpdateAddressInboundResURL=https://<%= OSB_FRONTEND%>/ValuationUpdateAddressInboundResponseSBPS
+
+# This should point to the OSB server and https port of the osb manage server. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_ValuationExternal_Services\valWorkflow\BusinessServices\ValuationWorkflowUpdateInboundResponseSB.BusinessService
+ValuationExtBSWorkflowInboundResURL=https://<%= OSB_FRONTEND%>/ValuationWorkflowUpdateInboundResponseSBPS
+
+#==================================
+# LZ IPM Service
+#==================================
+# This should point to the IPM server and http port. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_IPM_Services\BusinessServices\DocCreateBS.BusinessService
+IPMServiceBSDocCreateURL=https://<%= IPM_FRONTEND%>/imaging/ws/DocumentService
+
+# This should point to the IPM server and http port. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_IPM_Services\BusinessServices\DocumentUploadBS.BusinessService
+IPMServiceBSDocUploadURL=https://<%= IPM_FRONTEND%>/imaging/ws/DocumentContentService
+
+# This should point to the IPM server and http port. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_IPM_Services\BusinessServices\LoginBS.BusinessService
+IPMServiceBSLoginURL=https://<%= IPM_FRONTEND%>/imaging/ws/LoginService
+
+# This should point to the IPM server and http port. The remainder of the URL remains the same for Offshore and Onshore
+# File: LZ_IPM_Services\BusinessServices\LogoutBS.BusinessService
+IPMServiceBSLogoutURL=https://<%= IPM_FRONTEND%>/imaging/ws/LoginService
+
+#This tokenization is required as the OWSM policy needs to be different for onshore and offshore (including BPD) environments.
+#This token needs to find and replace in all files under
+#CZ_Digital_Services\ProxyServices
+DigitalInboundSAMLPolicy=oracle/wss_saml_or_username_token_service_policy
+
+MASSL_CERT_ALIAS=wpdev
+MASSL_CERT_PASSWORD=welcome1
+
+FetchVerificationsListURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/commonservice/CZRetrieveVerificationApplicationService
+DocumnetApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi
+ApplicationVerificationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/ApplicationVerificationServiceSpi
+SettlementInstructionApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/SettlementInstructionApplicationServiceSpi
+CZSubmissionInquiryApplicationServiceURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/origination/CZSubmissionInquiryApplicationService
+
+##This is for OSB Financial Prepop
+FetchCustomerFinancialBSURL=https://<%= lisa_socket%>/cap/prodsvcofferadm/prodacctadm/accthldgs/v1
+
+# Came in via 20180904 TechConfig change for Feb'19 release
+MDMPublishServicesPSURL=jms://<%= OSB_JMS_SRV%>/jms.OCHPublishQCF/jms.OCHPublishRequestQ
+CZPartyMDMPublishApplicationServiceURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/party/CZPartyMDMPublishApplicationService
+CZPartyMDMPublishQBSURL=jms://<%= OSB_JMS_SRV%>/jms.OCHPublishQCF/jms.OCHPublishRequestQ
+<% if och_socket.include?('lisa') %>
+GenerateSessionTokenReadServiceURL=https://<%= lisa_socket%>/WBCEAIHttpOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+GenerateSessionTokenMaintainServiceURL=https://<%= lisa_socket%>/WBCEAIUpsertOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+<% else %>
+GenerateSessionTokenReadServiceURL=https://<%= och_socket%>/WBCEAIHttpOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+GenerateSessionTokenMaintainServiceURL=https://<%= och_socket%>/WBCEAIUpsertOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+<% end %>
+
+#SAM collateral user party on board
+SA_SAM_PARTY_ONBOARD_USER=SA_SAM_PARTY_ONBOARD_USER
+SA_SAM_PARTY_ONBOARD_PWD=<%= SA_SAM_PARTY_ONBOARD_PWD%>
+
+# Came in via 20180904 TechConfig change for Feb'19 release. Set OID SA_OCH_OBP_MANAGE_USER user password for service account
+SA_OCH_OBP_MANAGE_USER=SA_OCH_OBP_MANAGE_USER
+SA_OCH_OBP_MANAGE_PASSWORD=<%= SA_OCH_OBP_MANAGE_PWD%>
+
+# Came in via 20181013 TechConfig change for Feb'19 release
+CreditCardMaintenanceBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntsubtyps/credcardmaint/v1
+CreditCardFulfilmentBSURL=https://<%= lisa_socket%>/cap/prodfulflmnt/prodprocsng/lend/credcardfulflmnt/v1
+
+# Came in via 20181112 TechConfig change for Feb'19 release
+SaiGlobalServicesBSURL=https://<%= lisa_socket%>
+X_IBM_Client_Id_value=X_IBM_Client_Id_value
+
+# Came in via 20181115 changes for Feb'19 release
+<% if och_socket.include?('lisa') %>
+UpsertCustomerBSURL=https://<%= lisa_socket%>/WBCEAIUpsertOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+<% else %>
+UpsertCustomerBSURL=https://<%= och_socket%>/WBCEAIUpsertOSB_enu/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1
+<% end %>
+
+#Came in via 20181121 changes for Feb'19 release
+PexaServiceBSURL=https://<%= lisa_socket%>
+#PexaProxyServerIP=11.11.11.1
+#
+#Ref:: https://confluence.srv.westpac.com.au/display/CSH/20181212
+CZExternalPartyOnboardingApplicationBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/party/CZExternalPartyOnboardingApplicationService
+CreateDraftSubmissionBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/SubmissionBasicDraftCreationApplicationServiceSpi
+BorrowingPowerSimulationApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/BorrowingPowerSimulationApplicationServiceSpi
+CZBankerDashboardSearchApplicationServiceURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/origination/CZBankerDashboardSearchApplicationService
+
+#Ref:: https://confluence.srv.westpac.com.au/display/CSH/20181214-OSB
+RetrieveCreditCardArrangementDetailsBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntsubtyps/credcard/v1
+RetrieveTermLoanArrangementDetailsBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntsubtyps/termloan/v1
+
+#Ref:: https://confluence.srv.westpac.com.au/display/CSH/20181217
+SendNotificationBSURL=https://<%= lisa_socket%>/cap/presales/cntctmgt/notfctn/v1
+
+#Ref:: https://confluence.srv.westpac.com.au/display/CSH/20181219
+SubmissionTaskApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/SubmissionTaskApplicationServiceSpi
+ToDoTaskApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/workflow/ToDoTaskApplicationServiceSpi
+DocumentApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi
+
+#Ref:: https://confluence.srv.westpac.com.au/display/CSH/20181228
+CZFacilityInquiryApplicationServiceURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/lcm/CZFacilityInquiryApplicationService
+
+#Came in via 20190109 for Feb'19 release
+CreateInternetBankingBSURL=https://<%= lisa_socket%>/cap/chnlmaint/chnlaccsadmin/onlnbnkngreg/v1
+
+#To by-pass proxy services for stubbed environments
+stub=true
+
+#Came in via 20190205-OSBchanges for Feb'19 release
+ESignStatusUpdateBSURL=https://<%= lisa_socket%>/cap/entcontmgt/contrepomgt/ibm_esign/v1
+
+#Came in via 20190207-OSBchanges for Feb'19 release
+RetrieveAddressDetailsQASUpgradeBSURL=https://<%= lisa_socket%>/proOnDemand/v3/proOnDemandService
+
+#Ref:: https://confluence.srv.westpac.com.au/display/CSH/20190211-OSB
+#Came in via 20190211-OSB for Feb'19 release
+QASOnDemandAuthTokenValue=77b217a5-cdbd-4daa-8a20-5288e32e01f3
+
+#Came in via 20190212-OSBchanges for Feb'19 release
+CZExternalPartyOnboardingForBorrowingPowerBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/party/CZExternalPartyOnboardingApplicationService
+CreateBorrowingPowerQuoteBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/BorrowingPowerSimulationApplicationServiceSpi
+
+#Username password for Bankwow service.Came in via 20190214-OSB Changes for Feb'19 release
+BankWOW_APIGSA_User=BankWOW_APIGSA_User
+BankWOW_APIGSA_Pwd=BankWOW_APIGSA_Pwd
+
+#Username password for WLPUSH service.Came in via 20190214-OSB Changes for Feb'19 release
+WLPush_APIGSA_User=WLPush_APIGSA_User
+WLPush_APIGSA_Pwd=WLPush_APIGSA_Pwd
+
+#Username password for ESign service.Came in via 20190214-OSB Changes for Feb'19 release
+ESignStatusUpdate_APIGSA_User=ESignStatusUpdate_APIGSA_User
+ESignStatusUpdate_APIGSA_Pwd=ESignStatusUpdate_APIGSA_Pwd
+
+#Username password for FetchFin service.Came in via 20190214-OSB Changes for Feb'19 release
+FetchFin_APIGSA_User=FetchFin_APIGSA_User
+FetchFin_APIGSA_Pwd=FetchFin_APIGSA_Pwd
+
+#Username password for QASOnDemand service.Came in via 20190214-OSB Changes for Feb'19 release
+QASOnDemand_APIGSA_User=QASOnDemand_APIGSA_User
+QASOnDemand_APIGSA_Pwd=QASOnDemand_APIGSA_Pwd
+
+#Username password for CCFulfilment service.Came in via 20190214-OSB Changes for Feb'19 release
+CCFulfilment_APIGSA_User=CCFulfilment_APIGSA_User
+CCFulfilment_APIGSA_Pwd=CCFulfilment_APIGSA_Pwd
+
+#Username password for CCManinatin service.Came in via 20190214-OSB Changes for Feb'19 release
+CCMaintain_APIGSA_User=CCMaintain_APIGSA_User
+CCMaintain_APIGSA_Pwd=CCMaintain_APIGSA_Pwd
+
+#Username password for CCRetrieve service.Came in via 20190214-OSB Changes for Feb'19 release
+CCRetrieve_APIGSA_User=CCRetrieve_APIGSA_User
+CCRetrieve_APIGSA_Pwd=CCRetrieve_APIGSA_Pwd
+
+#Username password for TDRetrieve service.Came in via 20190214-OSB Changes for Feb'19 release
+TDRetrieve_APIGSA_User=TDRetrieve_APIGSA_User
+TDRetrieve_APIGSA_Pwd=TDRetrieve_APIGSA_Pwd
+
+#Username password for SAIG service.Came in via 20190214-OSB Changes for Feb'19 release
+SAIG_APIGSA_User=SAIG_APIGSA_User
+SAIG_APIGSA_Pwd=SAIG_APIGSA_Pwd
+
+#Username password for IBProv and customer alert services .Came in via 20190220-OSB Changes for Feb'19 release
+IBProv_APIGSA_User=BankWOW_APIGSA_User
+IBProv_APIGSA_Pwd=BankWOW_APIGSA_Pwd
+
+CustomerAlert_APIGSA_User=BankWOW_APIGSA_User
+CustomerAlert_APIGSA_Pwd=BankWOW_APIGSA_Pwd
+
+DLMEV_APIGSA_User=DLMEV_APIGSA_User
+DLMEV_APIGSA_Pwd=DLMEV_APIGSA_Pwd
+
+#Came in via 20190220-FMS create shell for Feb'19 release
+FMSBSURL=https://<%= OBH_FRONTEND%>/services/soap/newLoanService/v1/SAML
+
+#FMS_PROXY_SERVER
+FMS_PS_HOST=obpc<%= env_name%>proxy.wpdev.mintpress.io
+FMS_PS_PORT=8080
+
+#Came in via 20190306-osb changes for Feb'19 release
+SubmissionInquiryApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/origination/SubmissionInquiryApplicationServiceSpi
+IdentityApplicationServiceBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/sms/IdentityApplicationServiceSpi
+
+#Came in via 20190328-osb changes for Feb'19 release
+MaintainArrangementBSURL=https://<%= OBH_FRONTEND%>/services/soap/maintainArrangementContactPreferences/v3
+
+#Came in via 20190402-osb changes for Feb'19 release
+SnSInboundSAMLPolicy=oracle/http_saml20_token_bearer_service_policy
+
+OBPBorrowingPowerQuotePSURL=https://<%= OSB_FRONTEND%>/CZ_CreateBorrowingPowerQuote_Service/ProxyServices/OBPBorrowingPowerQuotePS
+OBPDraftCreationPSURL=https://<%= OSB_FRONTEND%>/CZ_CreateDraftSubmission_Services/ProxyServices/OBPDraftCreationPS
+
+#Came in via 20190402-osb changes for R1.5 release
+CZBorrowingPowerApplicationServiceBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/origination/CZBorrowingPowerApplicationService
+
+#Came in via 20190412-FMS_Retrieve_BCM changes for R1.5 release
+FMSRetrieveBcmBSURL=https://<%= OSB_FRONTEND%>/CZ_RetrieveBCM_Stub/ProxyServices/CZ_RetrieveBCMPS
+
+#Came in via 20190418-osb changes for Feb'19 release
+ElectronicVerificationBSURL=https://<%= OBH_FRONTEND%>/dp3_westpacprivacy_1302/bsm/ws/Enterprise/CreditRisk/PublicData/IndividualEVBusinessService
+
+#Came in via 20190426-OSB changes for R1.5 release
+ApplicantApplicationServiceBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.cz.webservices/services/origination/CZApplicantApplicationService
+
+#Came in via 20190618 -osb changes for R1.6 release
+ChequeFundingAuthorisationBSURL=https://<%= lisa_socket%>/services/soap/ChequeFundingAuthorisation/v1/SAML
+
+
+#Came in via 20190815-OSB changes for R1.7 release
+#Ref. https://confluence.srv.westpac.com.au/display/CSH/20190815
+SA_MDM_ST_READ_USER=WBCOSBSGBBSA
+SA_MDM_ST_READ_PASSWORD=WestPac#7195
+
+#Came in for R1.7 - REF URL - https://confluence.srv.westpac.com.au/display/CSH/20190910-LisLoanAccountOpening
+LISRestServiceBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/lendfacilty/mrtgesgbmaint/v1
+LISServicesAPIGSA_Username=LISServicesAPIGSA_Username
+LISServicesAPIGSA_Password=LISServicesAPIGSA_Password
+
+#came in via 20190925_LISIparService
+LISIparRestServiceBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntcustmaint/v1
+
+# Came in via 20191008-OSB changes for R1.7 release
+IPAR_APIGSA_User=IPAR_APIGSA_User
+IPAR_APIGSA_Pwd=IPAR_APIGSA_Pwd
+ARIP_APIGSA_User=ARIP_APIGSA_User
+ARIP_APIGSA_Pwd=ARIP_APIGSA_Pwd
+IPARWdpOchBSURL=https://<%= lisa_socket%>/inf/bnkng/party/custarrngmnt/v1
+
+<% if r18_envs.include?(env_name) %>
+ARIPWdpOchBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntpartyrole/arrngmntcust/v2
+<% else %>
+ARIPWdpOchBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntcust/v1
+<% end %>
+
+#Came in via 20191213-OSB Tokenization for R1.8 release
+MORTGAGE_APIGSA_User=MORTGAGE_APIGSA_User
+MORTGAGE_APIGSA_Pwd=MORTGAGE_APIGSA_Pwd
+RetrieveHomeLoanAccountBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntsubtyps/mrtge/v1
+
+#Came in via 20191223-OSB Tokenization for R1.8 release
+DDA_APIGSA_Username=weblogic
+DDA_APIGSA_Password=welcome1
+DDARestServiceBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/depstarrngmnt/savtxnmaint/v1
+
+#Came in via 20191224-OSB Tokenization for R1.8 release
+LISCollateralRetrieveBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/lendfacilty/mrtgesgb/v1
+CollateralRetrievePartyOnboardBSURL=https://<%= lisa_socket%>/com.ofss.fc.webservice/services/party/PartyOnBoardingApplicationServiceSpi
+
+#Came in via 20191224-OSB Tokenization for R1.8 release
+TransactionAccInquiryBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/depstarrngmnt/savtxn/v2 API
+TransactionAccInquiryAPIGSA_Username=TransactionAccInquiryAPIGSA_Username
+TransactionAccInquiryAPIGSA_Password=TransactionAccInquiryAPIGSA_Password
+
+#Came in via 20191227-OSB Tokenization for R1.8 release
+PCCSRestServiceBSURL=https://<%= lisa_socket%>/inf/bnkng/resrcitm/accsdev/debcardmaint/v1
+DDAIPARRestServiceBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntcustmaint/v1
+
+#Came in via 20191226-Package OSB Tokens for R1.8.1 release
+PackageBSRetrievePackageURL=https://<%= lisa_socket%>/cap/prodsvcofferadm/prodacctadm/pkgarrngmnt/v1
+PackageBSCreatePackageURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/pkgarrngmntmaint/v1
+PackageBSModifyPackageURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/pkgarrngmntmaint/v1
+PackageAPIGSA_Username=weblogic
+PackageAPIGSA_Password=welcome1
+
+#Came in via 20200107 for R1.8 release
+
+SearchArrangementWDPBSURL=https://<%= lisa_socket%>/inf/bnkng/arrngmnt/arrngmntpartyrole/arrngmntcust/v2
+
+#came in via 20190113_OSB changes for R1.8.1 release
+EntitlementsApplicationServiceSpiURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/sms/EntitlementsApplicationServiceSpi
+
+#came in via 20200120_OSB changes for R1.8.1 release
+EntitlementsApplicationServiceBSURL=https://<%= OBH_FRONTEND%>/com.ofss.fc.webservice/services/sms/EntitlementsApplicationServiceSpi

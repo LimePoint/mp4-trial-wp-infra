@@ -1,0 +1,14 @@
+
+[GENERAL]
+fileFormatVersion = 3
+
+[MDS.SCHEMA_UPGRADE]
+pluginInstance = 2
+
+MDS.databaseType = Oracle Database
+MDS.databaseConnectionString = <%= @db_url %>
+MDS.schemaConnectionString = <%= @db_url %>
+MDS.schemaUserName = <%= @rcu_prefix %>_MDS
+MDS.cleartextSchemaPassword = <%= @schema_password %>
+MDS.dbaUserName = <%= @dba_user %> as sysdba
+MDS.cleartextDbaPassword = <%= @sysdba_password %>

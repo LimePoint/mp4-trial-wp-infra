@@ -1,0 +1,27 @@
+#!/bin/bash
+# This script redeploys an Application with new Source App Path
+
+# arg1 - weblogic username
+# arg2 - weblogic password
+# arg3 - weblogic admin url
+# arg4 - application name
+# arg5 - Absolute Path of the Application's Source App Path
+
+import sys
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+appList=sys.argv[4].split(',')
+# appList=['com.ofss.fc.ui.restops','com.ofss.fc.ui.view.admin','com.ofss.fc.ui.view.admin.dashboard','com.ofss.fc.ui.view.developer']
+
+try:
+  print '###### Undeploying Application in progress ######'
+  for appName in appList:
+    try:
+      print '###### Undeploying Application ' + appName + ' ######'
+      progress=undeploy(appName)
+    except:
+      print '###### Unable to Undeploy Application ######'
+      dumpStack()
+except:
+  print '##### Application does not exist #####'
+  dumpStack()
+  sys.exit(1)

@@ -1,0 +1,126 @@
+# Disable the default password policy sitting under OID
+# But change the minimum character requirements
+
+dn: cn=default,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+changetype: modify
+replace: pwdmaxage
+pwdmaxage: 0
+
+dn: cn=default,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+changetype: modify
+replace: pwdMinLength
+pwdMinLength: 8
+
+dn: cn=default,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+changetype: modify
+replace: pwdLockout
+pwdLockout: 0
+
+dn: cn=default,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+changetype: modify
+replace: orclpwdPolicyEnable
+orclpwdPolicyEnable: 0
+
+dn: cn=default,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext,dc=westpac,dc=com,dc=au
+changetype: modify
+replace: pwdmaxage
+pwdmaxage: 0
+
+dn: cn=default,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext,dc=westpac,dc=com,dc=au
+changetype: modify
+replace: orclpwdPolicyEnable
+orclpwdPolicyEnable: 0
+
+
+# Create the new password policies
+
+# Create one for normal users
+dn: cn=normal_users,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+displayname: Password Policy for normal users under dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: pwdpolicy
+cn: normal_users
+pwdminlength: 8
+orclpwdminalphachars: 1
+orclpwdalphanumeric: 1
+pwdmaxage: 7776000
+pwdMinAge: 86400
+pwdMustChange: 1
+pwdInHistory: 12
+pwdLockout: 1
+pwdMaxFailure: 10
+pwdCheckSyntax: 1
+orclpwdpolicyenable: 1
+
+# Create one for privileged users
+dn: cn=privileged_users,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+displayname: Password Policy for privileged users under dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: pwdpolicy
+cn: privileged_users
+pwdminlength: 12
+orclpwdminalphachars: 1
+orclpwdalphanumeric: 1
+orclpwdminspecialchars: 1
+pwdmaxage: 3888000
+pwdMustChange: 1
+pwdInHistory: 12
+pwdLockout: 1
+pwdLockoutDuration: 0
+pwdMaxFailure: 10
+pwdCheckSyntax: 1
+orclpwdpolicyenable: 1
+
+# Create one for service accounts
+dn: cn=service_accounts,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+displayname: Password Policy for service accounts under dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: pwdpolicy
+cn: service_accounts
+pwdminlength: 15
+orclpwdminalphachars: 1
+orclpwdalphanumeric: 1
+orclpwdminspecialchars: 1
+pwdmaxage: 0
+pwdCheckSyntax: 1
+orclpwdpolicyenable: 1
+
+# Apply the relevant password policies to containers
+dn: cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: modify
+replace: pwdPolicysubentry
+pwdPolicysubentry:cn=service_accounts,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+
+dn: cn=customer,cn=users,dc=westpac,dc=com,dc=au
+changetype: modify
+replace: pwdPolicysubentry
+pwdPolicysubentry:cn=normal_users,cn=pwdPolicies,cn=Common,cn=Products,cn=OracleContext
+
+<%# This is the LDAP Instance %>
+dn: cn=oid1,cn=osdldapd,cn=subconfigsubentry
+changetype: modify
+replace: orclldapconntimeout
+orclldapconntimeout: 15
+
+<%# This is the Replication Instance %>
+dn: cn=oid2,cn=osdldapd,cn=subconfigsubentry
+changetype: modify
+replace: orclldapconntimeout
+orclldapconntimeout: 15
+
+
+<% if ['tst3','tst4','tst6','tst5','stg3','svp3r','svp3w','prd3r','prd3w','psp3'].include?(node.chef_environment) then %>
+
+<%# This is the LDAP Instance on node 2 and will only exist on multi node environments %>
+dn: cn=oid3,cn=osdldapd,cn=subconfigsubentry
+changetype: modify
+replace: orclldapconntimeout
+orclldapconntimeout: 15
+
+<%# This is the replication Instance on node 2 and will only exist on multi node environments %>
+dn: cn=oid4,cn=osdldapd,cn=subconfigsubentry
+changetype: modify
+replace: orclldapconntimeout
+orclldapconntimeout: 15
+
+<% end %>

@@ -1,0 +1,54 @@
+dn: cn=subSchemaSubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.93
+        NAME 'homeBranch'
+        DESC 'Home Branch'
+        EQUALITY caseIgnoreMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 
+        SINGLE-VALUE TRUE
+ )
+
+dn: cn=subSchemaSubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.36 
+        NAME 'brand'
+        DESC 'Brand'
+        EQUALITY caseIgnoreMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 
+        SINGLE-VALUE TRUE
+ ) 
+
+dn: cn=subSchemaSubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.98 
+        NAME 'partyId'
+        DESC 'Party Id'
+        EQUALITY caseIgnoreMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 
+        SINGLE-VALUE TRUE
+ ) 
+
+dn: cn=subSchemaSubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.42 
+        NAME 'ciskey'
+        DESC 'Cis key'
+        EQUALITY caseIgnoreMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 
+        SINGLE-VALUE TRUE
+ ) 
+
+dn: cn=subSchemaSubentry
+changetype: modify
+add: objectClasses
+objectClasses: ( 2.5.9.6  
+        NAME 'fcPerson'
+        DESC 'An entry which represents a person in OBP'
+        SUP top
+        STRUCTURAL
+        MAY ( homeBranch $ brand $ partyId $ ciskey )
+ )

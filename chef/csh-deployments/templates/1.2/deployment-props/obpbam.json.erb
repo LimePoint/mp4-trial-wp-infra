@@ -1,0 +1,43 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+    {
+      "name": "user",
+      "value": "weblogic"
+    },
+    {
+      "name": "password",
+      "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpsoa', @obpsoa['wls_admin_user'] ) %>"
+    },
+    {
+      "name": "hostname",
+      "value": "<%=@obpsoa['admin']['listen_address']%><%=@obpsoa['dns_domain_name']%>"
+    },
+    {
+      "name": "weblogicHome",
+      "value": "/oracle/app/binaries/obpsoa/fmw/wlserver"
+    }
+
+  ]
+}

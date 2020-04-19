@@ -1,0 +1,105 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "db_targetSchema",
+      "type": "db",
+      "properties": [
+        {
+          "name": "logon",
+          "value": "<%= @obpdoc['documaker']['asline_db_user'] %>/<%= Mint::AesEncryption.decrypt(PasswordVault.get_password(@common['password_vault_name'], 'obpdoc', @obpdoc['database']['rcu_schema_prefix'].upcase)) %>@DMKRDB"
+        }
+      ]
+    },
+    {
+      "name": "db_adminSchema",
+      "type": "db",
+      "properties": [
+        {
+          "name": "logon",
+          "value": "dmkr_admin/<%= Mint::AesEncryption.decrypt(PasswordVault.get_password(@common['password_vault_name'], 'obpdoc', @obpdoc['database']['rcu_schema_prefix'].upcase)) %>@DMKRDB"
+        }
+      ]
+    },
+    {
+      "name": "dmkr_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        }]
+    },
+    {  
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+     }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+     {
+          "name": "user",
+          "value": "weblogic"
+        },
+        {
+          "name": "password",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpdoc', @obpdoc['wls_admin_user'] ) %>"
+        },
+        {
+          "name": "hostname",
+          "value": "<%=@obpdoc['admin']['listen_address']%><%=@obpdoc['dns_domain_name']%>"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpdoc/fmw/wlserver"
+        },
+        {
+          "name": "jms.provider.URL",
+          <% if is_running_on_cloudFn then %>
+          "value": "t3://<%= @obpdoc['frontend']['otd_vip_name']%>:17202"
+          <% else %>
+          "value": "t3://<%= @obpdoc['frontend']['otd_vip_name']%>:14202"
+          <% end %>
+        },
+        {
+          "name": "https.ipmServerName",
+          "value": "https://<%=@obpipm['frontend']['otd_vip_name']%>"
+        },
+        {
+          "name": "DMKR_SMTP_HOST",
+          "value": "<%= @deployment['DMKR_SMTP_HOST'] %>"
+        },
+        {
+          "name": "DMKR_SMTP_PORT",
+          "value": "<%= @deployment['DMKR_SMTP_PORT'] %>"
+        },
+        {
+          "name": "DMKR_SMTP_SENDER",
+          "value": "<%= @deployment['DMKR_SMTP_SENDER'] %>"
+        },
+        {
+          "name": "ipmPassword",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpoid', 'obpipm_admin' ) %>"
+        },
+        {
+          "name": "docAppWSDLPass",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpoid', 'SA_DOCUMAKER_OBP_MANAGE_USER' ) %>"
+        }
+  ]
+}
+

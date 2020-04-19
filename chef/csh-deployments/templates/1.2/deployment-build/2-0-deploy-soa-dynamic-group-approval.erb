@@ -1,0 +1,176 @@
+{
+  "name": "Step 2 -- Deploy SOA Dynamic Group Approval",
+  "params": {},
+  "stages": [
+    {
+      "name": "Default Stage",
+      "params": {},
+      "manual": false,
+      "jobs": [
+        {
+          "name": "Deploy Node 1",
+          "description": "",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Deploy SOA Dynamic Approval Jar and update Manifest",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b obpSoaDynamicApproval.gradle -g ../../cache -PsoaVersion=${bamboo.CEMLI_SOA_DYNMC_APPG_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+        <% if (@dataBag['obpsoa']['hostnameList'][1] != nil) then %>
+        ,
+        {
+          "name": "Deploy Node 2",
+          "description": "",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Deploy SOA Dynamic Approval Jar and update Manifest",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b obpSoaDynamicApproval.gradle -g ../../cache -PsoaVersion=${bamboo.CEMLI_SOA_DYNMC_APPG_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+        <% end %>
+
+        <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][0] != nil) then %>
+        ,
+        {
+          "name": "Deploy Node 2",
+          "description": "",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Deploy SOA Dynamic Approval Jar and update Manifest",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_3_OBT} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b obpSoaDynamicApproval.gradle -g ../../cache -PsoaVersion=${bamboo.CEMLI_SOA_DYNMC_APPG_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+        <% end %>
+        <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) &&  (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][1] != nil) then %>
+        ,
+        {
+          "name": "Deploy Node 2",
+          "description": "",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Deploy SOA Dynamic Approval Jar and update Manifest",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_4_OBT} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b obpSoaDynamicApproval.gradle -g ../../cache -PsoaVersion=${bamboo.CEMLI_SOA_DYNMC_APPG_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+        <% end %>
+        <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) &&  (@dataBag['obpsoa']['bam_server']['hostnameList'][0] != nil) then %>
+        ,
+        {
+          "name": "Deploy Node 2",
+          "description": "",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Deploy SOA Dynamic Approval Jar and update Manifest",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_5_BAM} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b obpSoaDynamicApproval.gradle -g ../../cache -PsoaVersion=${bamboo.CEMLI_SOA_DYNMC_APPG_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+        <% end %>
+        <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['bam_server']['hostnameList'][1] != nil) then %>
+        ,
+        {
+          "name": "Deploy Node 2",
+          "description": "",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Deploy SOA Dynamic Approval Jar and update Manifest",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_6_BAM} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b obpSoaDynamicApproval.gradle -g ../../cache -PsoaVersion=${bamboo.CEMLI_SOA_DYNMC_APPG_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+        <% end %>
+
+      ]
+    }
+  ],
+  "vars": {
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['soaDynamicGroupApproval']['cemli_release_path']%>",
+    "CEMLI_SOA_DYNMC_APPG_VERSION" : "<%= @manifest_vars['deployments']['soaDynamicGroupApproval']['extension_version']%>",
+    "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpSoaDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obpsoa']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>",
+    <% if (@dataBag['obpsoa']['hostnameList'][1] != nil) then %>   "OBP_NODE_2" : "<%= @dataBag['obpsoa']['hostnameList'][1]%><%= @dataBag['obpsoa']['dns_domain_name']%>",<% end %>
+    <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][0] != nil) then %>   "OBP_NODE_3_OBT" : "<%= @dataBag['obpsoa']['obphumantask_server']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][1] != nil) then %>   "OBP_NODE_4_OBT" : "<%= @dataBag['obpsoa']['obphumantask_server']['hostnameList'][1]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['bam_server']['hostnameList'][0] != nil) then %>   "OBP_NODE_5_BAM" : "<%= @dataBag['obpsoa']['bam_server']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['bam_server']['hostnameList'][1] != nil) then %>   "OBP_NODE_6_BAM" : "<%= @dataBag['obpsoa']['bam_server']['hostnameList'][1]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "debug": "false"
+  }
+}

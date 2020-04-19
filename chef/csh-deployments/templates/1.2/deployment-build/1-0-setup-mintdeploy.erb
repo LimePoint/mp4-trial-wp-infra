@@ -1,0 +1,56 @@
+{
+  "name" : "Step 1 -- Setup MintDeploy",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [
+     <%
+
+       host_list = @mintDeployHosts.split(' ')
+       host_list.each_with_index do |minthost, index|
+
+
+     %>
+      <% if index != 0 %>
+      ,
+      <% end %>
+      {
+        "name" : "Mint Deploy - <%= minthost %>",
+        "description" : null,
+        "params" : { },
+        "tasks" : [ {
+          "name" : null,
+          "description" : "Install and Configure MintDeploy",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\n    echo \"--- Configuring on host <%= minthost %> ---\";\n    ssh <%= @ssh_key_string %> -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= minthost %> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd <%= @dataBag['deployment']['BINARYPATH']%>; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh <%= @ssh_key_string %> -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= minthost %> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd <%= @dataBag['deployment']['BINARYPATH']%>; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh <%= @ssh_key_string %> -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= minthost %> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>rm -f <%= @dataBag['deployment']['BINARYPATH']%>/mint-deploy.sh;cd <%= @dataBag['deployment']['BINARYPATH']%>; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh <%= @ssh_key_string %> -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= minthost %> \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+            "interpreter" : "LEGACY_SH_BAT",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        } ]
+      }
+    <% end %>
+
+    ]
+  } ],
+  "vars" : {
+    "ARTIFACTORY_URL" : "<%= @dataBag['deployment']['ARTIFACTORY_URL']%>",
+    "DEPLOY_HOME" : "<%= @dataBag['deployment']['DEPLOY_HOME']%>",
+    "GRADLE_VERSION" : "<%= @dataBag['deployment']['GRADLE_VERSION']%>",
+    "JAVA_VERSION" : "<%= @dataBag['deployment']['JAVA_VERSION']%>",
+    "MINTDEPLOY_VERSION" : "<%= @manifest_vars['mintdeploy_version']%>",
+    "debug" : "false"
+  },
+  "labels" : null,
+  "permissions" : null
+}

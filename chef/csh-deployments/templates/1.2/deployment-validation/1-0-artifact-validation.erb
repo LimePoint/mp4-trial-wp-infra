@@ -1,0 +1,36 @@
+{
+  "name": "Step 1 -- Artifact Validation",
+  "params": {},
+  "stages": [
+    {
+      "name": "Default Stage",
+      "params": {},
+      "manual": false,
+      "jobs": [
+        {
+          "name": "Artifact Validation",
+          "description": "Artifact Validation",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Artifactory Validation",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "/usr/bin/inspec  exec /home/mintpress/mintpress/prebuild-validations/artifact-check --attrs /tmp/urls.yml <%= @ssh_key_string %> -t ssh://mintpress@<%= @obh_admin_host %> -l debug",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "vars": {}
+}

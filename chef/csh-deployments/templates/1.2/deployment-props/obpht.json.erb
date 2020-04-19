@@ -1,0 +1,104 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-soa",
+      "type": "soa",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17002"
+        },
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "SOA Server"
+        }]
+    },
+ {
+      "name": "DefaultServer-osb",
+      "type": "osb",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "7001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "OSB Server"
+        }]
+    },
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+    "/getDeploymentProperties.json?environment=LOCAL": [
+        {
+          "name": "user",
+          "value": "<%= @obpsoa['wls_admin_user'] %>"
+        },
+        {
+          "name": "password",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpsoa', @obpsoa['wls_admin_user'] ) %>"
+        },
+        {
+          "name": "hostname",
+          "value": "<%=@obpsoa['admin']['listen_address']%><%=@obpsoa['dns_domain_name']%>"
+        },
+        {
+    "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpsoa/fmw/wlserver"
+         },
+        {
+          "name": "soaHome",
+          "value": "/oracle/app/binaries/obpsoa/fmw/soa"
+        },
+        {
+          "name": "SOA.DB.URL",
+          <% if (@environment_name =~ /^svp\d*w/ or @environment_name =~ /^prd\d*w/) %>
+          "value": "<%= @obpsoa['database']['secondary_scan_address']%>:<%= @obpsoa['database']['listen_port']%>/<%= @obpsoa['database']['service_name']%>"
+          <% else %>
+          "value": "<%= @obpsoa['database']['scan_address']%>:<%= @obpsoa['database']['listen_port']%>/<%= @obpsoa['database']['service_name']%>"
+          <% end %>
+        }, 
+        {
+          "name": "SOA.DB.USERNAME",
+          "value": "<%= @obpsoa['database']['rcu_schema_prefix'].downcase%>_opss"
+        },
+        {
+          "name": "SOA.DB.PASSWORD",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpsoa','OBPSOA' ) %>"
+        }
+    ]
+}

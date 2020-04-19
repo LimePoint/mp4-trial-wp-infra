@@ -1,0 +1,39 @@
+[GENERAL]
+fileFormatVersion = 3
+
+[UAWLSINTERNAL.UAWLS]
+pluginInstance = 1
+
+UASVR.path = <%= @domain_home %>
+
+[IPM.IPM]
+pluginInstance = 14
+
+IPM.databaseType = Oracle Database
+IPM.databaseConnectionString = <%= @db_url %>
+IPM.schemaConnectionString = <%= @db_url %>
+IPM.schemaUserName = <%= @rcu_prefix %>_IPM
+IPM.cleartextSchemaPassword = <%= @schema_password %>
+IPM.dbaUserName = <%= @dba_user %> as sysdba
+IPM.cleartextDbaPassword = <%= @sysdba_password %>
+
+
+[UCM.UCM]
+pluginInstance = 15
+
+OCS.databaseType = Oracle Database
+OCS.databaseConnectionString = <%= @db_url %>
+OCS.schemaConnectionString = <%= @db_url %>
+OCS.schemaUserName = <%= @rcu_prefix %>_OCS
+OCS.cleartextSchemaPassword = <%= @schema_password %>
+OCS.dbaUserName = <%= @dba_user %> as sysdba
+OCS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[JRF.JRF_CONFIG_PLUGIN]
+pluginInstance = 4
+
+[CAM.SYSCOMP]
+pluginInstance = 6
+
+[FMWCONFIG.CIE_CONFIG_PLUGIN]
+pluginInstance = 12

@@ -1,0 +1,68 @@
+set echo on trims off
+
+SPOOL "/tmp/Kill_Script_R262.log"
+delete from FLX_CS_AUDIT_SEARCH_CONTEXT where ref_txn_no in (select ref_txn_no from flx_cs_audit_item where creation_date < sysdate - 7 ) ;
+delete from flx_cs_audit_item_log where id in ( select id from flx_cs_audit_item where creation_date < sysdate - 7 ) ;
+delete from flx_cs_audit_item where creation_date < sysdate - 7  ;
+delete from FLX_RL_EVALUATION_DTLS where ref_code in ( select rule_exec_ref_code from FLX_RL_RULE_EXECUTION_H where creation_date < sysdate-7);
+delete from FLX_RL_RULE_EXECUTION_H where creation_date < sysdate-7);
+delete from  CZ_IF_PI_MASTER_TL_H where extraction_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+delete from  FLX_IF_INTEGRATION_LOG where start_date < sysdate - 7 ;
+delete from  CZ_CS_BRANCHCODES_DTLS_I_W  fileid in ( select cod_file_id from flx_ext_file_upload_mast where dat_tim_proc_start < sysdate - 7);
+commit;
+delete from  CZ_IF_PI_EXPENSE_DTLS_TL where extraction_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+delete from  CZ_IF_ACCT_INT_TL_H where extract_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+delete from  FLX_SYNC_INDEX_JOB_LOG where start_time < sysdate - 7 ;
+delete from  FLX_CS_STATE_TRANS_H where creation_date < sysdate - 7 ;
+delete from  FLX_PR_TXN_ANALYSIS where creation_date < sysdate - 7 ;
+delete from  FLX_WRF_TASK_EVENT_LOG_H where created_Date < sysdate - 7 ;
+commit;
+--delete from  FLX_CS_PERIOD_CODES_B where ;
+--delete from  FLX_CS_PERIOD_STATUS where ;
+--delete from  FLX_OR_CD_DBT_FIN_DTLS where ;
+delete from  FLX_PR_POLICY_USAGE_ANALYSIS where creation_date < sysdate - 7 ;
+--delete from  FLX_OR_CD_FIN_DTLS where ;
+delete from  FLX_WRF_TASK_STATE_TRANS_B where created_Date < sysdate - 7 ;
+delete from  CZ_IF_BE_PARTY_LINKAGE_TL_H where  extract_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+--delete from  FLX_OR_FNDG_ITM_DTLS where ;
+delete from  CZ_IF_SUBMISSION_MSTER_TL_H where extraction_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+--delete from  FLX_PCSM_SUB_RANDOM_NUMBERS where ;
+delete from  FLX_OPS_CONFIG_DATA_ITEM where creation_date < sysdate - 7 ;
+delete from  FLX_BATCH_JOB_EXCEPTION_LOG where time_stamp < sysdate - 7 ;
+delete from  CZ_IF_FACILITY_FUNDING_TL where extract_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+--delete from  FLX_OR_CD_DBT_FIN_DTLS_H where ;
+--delete from  FLX_OR_FNDG_FACTS where ;
+--delete from  FLX_OR_CD_FIN_DTLS_H where ;
+delete from  FLX_AS_DRV_UNTANKING_ADJ where to_date(date_run,'yyyymmdd') < (select curr_date-7 from flx_cs_bank_dates_b );
+delete from  FLX_PL_DRV_PERIOD_CREATE where to_date(date_run,'yyyymmdd') < (select curr_date-7 from flx_cs_bank_dates_b );
+delete from  FLX_PL_DRV_FIN_CLOSURE where to_date(date_run,'yyyymmdd') < (select curr_date-7 from flx_cs_bank_dates_b );
+--delete from  FLX_OR_FNDG_ADDLN_DTLS where ;
+delete from  CZ_IF_DOC_MASTER_TL where extraction_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+commit;
+--delete from  FLX_CM_AUX_DOC_INDEX where ;
+select * from CZ_BF_BSBDETAILRECORD_W where fileid in ( select cod_file_id from flx_ext_file_upload_mast where dat_tim_proc_start < (select curr_date-7 from flx_cs_bank_dates_b ));
+delete from  FLX_EP_ACT_LOG_B where dat_sys_log < sysdate - 7 ;
+--delete from  FLX_OR_FNDG_ITMS where ;
+delete from  CZ_IF_PI_EXPENSE_DTLS_TL_H where extraction_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+delete from  FLX_AC_BUNDLE_AUDIT_LOG_B where audit_date < (select curr_date-7 from flx_cs_bank_dates_b );
+--delete from  FLX_PR_PROCESSED_PRICE_DTLS where ;
+delete from  CZ_IF_FACILITY_FUNDING_TL_H where extract_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+delete from  FLX_FW_DMS_ALERT_ITEM where time_Stamp < sysdate - 7;
+delete from  CZ_IF_DOC_MASTER_TL_H where extraction_Date < (select curr_date-7 from flx_cs_bank_dates_b);
+delete from FLX_LM_ACCT_LINK_DTLS_B where (account_id , credit_facility_id , brn_date) in (
+select account_id , credit_facility_id , brn_date from
+ ( select account_id , credit_facility_id , brn_date , rank() over (partition by account_id , credit_facility_id order by brn_date desc,sys_date desc )
+ rank_n from FLX_LM_ACCT_LINK_DTLS_B)where rank_n > 1 ) ;
+delete from  FLX_CM_DOC_CHECKLIST where creation_date < sysdate - 7;
+commit;
+--delete from  CZ_RCMS_DTL where ;
+delete from  FLX_CS_EXT_TXN_XREF where txn_start_time < sysdate - 7 ;
+delete from  FLX_RL_EXPRESSION_EVAL_H where creation_date < sysdate - 7;
+-- not for TST3
+delete from  FLX_PR_TXN_FACT_DETAILS where ticket_number in (select ticket_number from  FLX_PR_PRICING_TICKET_B where creation_date < sysdate - 7 );
+delete from  FLX_PR_TXN_FEE_DTLS where ticket_number in (select ticket_number from  FLX_PR_PRICING_TICKET_B where creation_date < sysdate - 7 );
+delete from FLX_PR_TRNDETL_FEE_CHARGE  where ticket_code in (select ticket_number from  FLX_PR_PRICING_TICKET_B where creation_date < sysdate - 7 );
+delete from  FLX_PR_PRICING_TRANS_DETAILS where ticket_code in (select ticket_number from  FLX_PR_PRICING_TICKET_B where creation_date < sysdate - 7 );
+delete from  FLX_PR_PRICING_TICKET_B where creation_date < sysdate - 7 ;
+commit;
+spool off

@@ -1,0 +1,2069 @@
+<% environment_name = @environment['name'] %>
+<% password_vault_name = @common['password_vault_name'] %>
+<% dns_domain = @obpdoc["dns_domain_name"] ; if dns_domain.nil? then dns_domain=".mintpress.io" end %>
+<% asset_code = @code.downcase  %>
+<% uniquifier = @uuid.tr('-', '') %>
+
+<% base_install_path = '/oracle/app/binaries/' + asset_code  %>
+<% base_domain_path  = '/oracle/app/runtime/' + asset_code + '/domains' %>
+<% instance_path  = '/oracle/app/runtime/' + asset_code + '/instances' %>
+
+
+<% log_location_path   = '/oracle/app/logs/' + asset_code %>
+<% certs_location_path = '/oracle/app/runtime/' + environment_name + '/certs' %>
+
+<% java_install_path      = base_install_path + '/java' %>
+<% jdk_version            = '8' %>
+
+<% fmw_install_path           = base_install_path + '/fmw' %>
+<% oracle_client_install_path  = base_install_path + '/dbclient' %>
+<% inventory_install_path = base_install_path + '/oraInventory' %>
+<% temp_location          = base_install_path + '/tmp' %>
+
+<% doc_admin_server_top   = base_domain_path %>
+<% node_manager_top       = fmw_install_path + '/wlserver/common/nodemanager' %>
+
+{
+    "internalVariables":
+    {
+        "environmentName": "<%= environment_name %>",
+        "assetCode": "<%= asset_code %>",
+        "defaultHostTargetTmpDirectory": "<%= temp_location %>",
+        "stageRootDir": "/oracle/stage",
+        "documakerDataFileLocation": "<%= if node['dns'] and node['dns']['zone']=='wpdev.mintpress.io' then '/oracle/app/oradata/CBCD3DOCPRIM/' else '+DATAC1' end %>",
+        "databaseSysUsername": "<%= @obpdoc['database']['sysdba_username'].upcase %>",
+        "databaseSysUserPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['database']['sysdba_username']) %>",
+        "databaseSchemaPassword" : "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['database']['rcu_schema_prefix'].upcase) %>"
+    },
+    "projectName": "<%= environment_name.upcase %><%= asset_code.upcase %><%= uniquifier.upcase %>",
+    "uniquifier": "<%= uniquifier %>",
+    "site": {
+        "hostList": [
+            {
+                "id": "<%= @obpdoc['hostnameList'][0] %>",
+                "address": "${_.basename}<%= @obpdoc['dns_domain_name'] %>",
+                "properties": [
+                    {
+                        "name": "basename",
+                        "value": "<%= @obpdoc['hostnameList'][0] %>"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Host_Details",
+                    "List_Of_TVT_Tests"
+                ]
+            },
+            {
+                "id": "db_server",
+                "address": "<%= @obpdoc['database']['scan_address'] %>",
+                "groupRefs":
+                [
+                    "Common_Host_Details"
+                ],
+                "properties": [
+                    {
+                        "name": "scaleout",
+                        "value": "false"
+                    }
+                ]
+            }
+        ],
+        "installationList": [
+            {
+                "name": "jdk",
+                "product": "jdk",
+                "version": "1.8.0_221",
+                "installPath": "<%= java_install_path %>",
+                "softwareStage": "${stageRootDir}/jdk/jdk-8u221-linux-x64.tar.gz",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "fmwinfra",
+                "product": "fmwinfra",
+                "version": "12.2.1.2",
+                "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/fmw_12.2.1.2.0_infrastructure.jar",
+                "installPath": "<%= fmw_install_path %>",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "jdk"
+                ],
+                "patchset": [
+                    {
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "25860645",
+                        "aru": "25860645"
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "30164542",
+                        "aru": "30164542"
+                    }
+                ]
+            },
+            {
+                "name": "soa",
+                "product": "soa",
+                "version": "12.2.1.2",
+                "installPath": "<%= fmw_install_path %>/soa",
+                "softwareStage": "${stageRootDir}/soa/12.2.1.2/fmw_12.2.1.2.0_soa.jar",
+                "dependsonList": [
+                    "fmwinfra"
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "patchset": [
+                    {
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/soa/12.2.1.2/patches",
+                        "name": "24750358",
+                        "aru": "24750358"
+                    }
+                ]
+            },
+            {
+                "name": "oracleclient",
+                "product": "oracleclient",
+                "version": "12.1.0.2",
+                "installPath": "<%= oracle_client_install_path %>",
+                "softwareStage": "${stageRootDir}/rdbms/12.1.0.2/client",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "jdk"
+                ],
+                "properties": [
+                    {
+                        "target": "oracle.home",
+                        "value": "${_.installPath}"
+                    },
+                    {
+                        "target": "oracle.base",
+                        "value": "<%= base_install_path %>"
+                    },
+                    {
+                        "target": "oracle.hostname",
+                        "value": "<%= "#{@obpdoc['hostnameList'][0]}#{@obpdoc['dns_domain_name']}" %>"
+                    },
+                    {
+                        "target": "oracle.install.type",
+                        "value": "Administrator"
+                    }
+                ]
+            },
+            {
+                "name": "documaker",
+                "product": "documaker",
+                "version": "12.6.0",
+                "installPath": "<%= fmw_install_path %>/odee_12",
+                "softwareStage": "${stageRootDir}/documaker/12.6.01",
+                "dependsonList": [
+                    "soa",
+                    "oracleclient"
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details",
+                    "Documaker_Config",
+                    "Documaker_Node"
+                ]
+            }
+        ],
+        "environmentList": [
+            {
+                "name": "<%= environment_name %>",
+                "mwTopologyList": [
+                    {
+                        "name": "<%= asset_code %>",
+                        "description": "<%= environment_name %> <%= asset_code %> Environment",
+                        "nodeManagerList": [
+                            {
+                                "name": "nm-<%= @obpdoc['hostnameList'][0] %>",
+                                "listenAddress": "<%= @obpdoc['nm']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>",
+                                "listenPort": "<%= @obpdoc['nm']['listen_port'] %>",
+                                "hostIdentifier": "<%= @obpdoc['hostnameList'][0] %>",
+                                "groupRefs": [
+                                    "Node_Manager_Common_Config",
+                                    "Node_Manager_SSL_Config"
+                                ],
+                                "properties": [
+                                    {
+                                        "target": "wls.nodemanager.log.path",
+                                        "value": "<%= log_location_path %>/${/host.basename}"
+                                    },
+                                    {
+                                        "value": "${/host.basename}",
+                                        "target": "wls.nodemanager.identityname"
+                                    },
+                                    {
+                                        "value": "<%= certs_location_path %>/<%= @obpdoc['hostnameList'][0][0...-2] %>.jks",
+                                        "target": "wls.nodemanager.identitystorefile"
+                                    }
+                                ]
+                            }
+                        ],
+                        "domainList": [
+                            {
+                                "name": "<%= @obpdoc['wls_domain_name'] %>",
+                                "locationPath": "<%= doc_admin_server_top %>",
+                                "adminUser": "<%= @obpdoc['wls_admin_user'] %>",
+                                "adminPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user'] ) %>",
+                                "adminServer": {
+                                    "name": "AdminServer",
+                                    "machineName": "Machine-<%= @obpdoc['hostnameList'][0] %>",
+                                    "listenAddress": "<%= @obpdoc['admin']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>",
+                                    "listenAddressPort": "<%= @obpdoc['admin']['listen_port'] %>",
+                                    "listenAddressPortSSL": "<%= @obpdoc['admin']['listen_port_ssl'] %>",
+                                    "targetName": "<%= asset_code[3..-1] %>AdminServer"
+                                },
+                                "machineList": [
+                                    {
+                                        "name": "Machine-<%= @obpdoc['hostnameList'][0] %>",
+                                        "nodeManagerName": "nm-<%= @obpdoc['hostnameList'][0] %>"
+                                    }
+                                ],
+                                "clusterList": [
+                                    {
+                                        "name": "<%= @obpdoc['soa_server']['cluster_name'] %>",
+                                        "messageMode": "Unicast"
+                                    },
+                                    {
+                                        "name": "<%= @obpdoc['dmkr_server']['cluster_name'] %>",
+                                        "messageMode": "Unicast"
+                                    },
+                                    {
+                                        "name": "<%= @obpdoc['jms_server']['cluster_name'] %>",
+                                        "messageMode": "Unicast"
+                                    },
+                                    {
+                                        "name": "<%= @obpdoc['idm_server']['cluster_name'] %>",
+                                        "messageMode": "Unicast"
+                                    }
+                                ],
+                                "managedServerList": [
+                                    {
+                                        "name": "soa_server1",
+                                        "machineName": "Machine-<%= @obpdoc['hostnameList'][0] %>",
+                                        "clusterName": "<%= @obpdoc['soa_server']['cluster_name'] %>",
+                                        "listenAddress": "<%=  @obpdoc['soa_server']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>",
+                                        "listenAddressPort": "<%=  @obpdoc['soa_server']['listen_port'] %>",
+                                        "listenAddressPortSSL": "<%=  @obpdoc['soa_server']['listen_port_ssl'] %>",
+                                        "targetName": "${_.name}"
+                                    },
+                                    {
+                                        "name": "dmkr_server1",
+                                        "machineName": "Machine-<%= @obpdoc['hostnameList'][0] %>",
+                                        "listenAddress": "<%=  @obpdoc['dmkr_server']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>",
+                                        "listenAddressPort": "<%=  @obpdoc['dmkr_server']['listen_port'] %>",
+                                        "listenAddressPortSSL": "<%=  @obpdoc['dmkr_server']['listen_port_ssl'] %>",
+                                        "clusterName": "<%= @obpdoc['dmkr_server']['cluster_name'] %>",
+                                        "targetName": "${_.name}"
+                                    },
+                                    {
+                                        "name": "jms_server1",
+                                        "machineName": "Machine-<%= @obpdoc['hostnameList'][0] %>",
+                                        "listenAddress": "<%=  @obpdoc['jms_server']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>",
+                                        "listenAddressPort": "<%=  @obpdoc['jms_server']['listen_port'] %>",
+                                        "listenAddressPortSSL": "<%=  @obpdoc['jms_server']['listen_port_ssl'] %>",
+                                        "clusterName": "<%= @obpdoc['jms_server']['cluster_name'] %>",
+                                        "targetName": "${_.name}"
+                                    },
+                                    {
+                                        "name": "idm_server1",
+                                        "machineName": "Machine-<%= @obpdoc['hostnameList'][0] %>",
+                                        "listenAddress": "<%=  @obpdoc['idm_server']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>",
+                                        "listenAddressPort": "<%=  @obpdoc['idm_server']['listen_port'] %>",
+                                        "listenAddressPortSSL": "<%=  @obpdoc['idm_server']['listen_port_ssl'] %>",
+                                        "clusterName": "<%= @obpdoc['idm_server']['cluster_name'] %>",
+                                        "targetName": "${_.name}"
+                                    }
+                                ],
+                                "middlewareList": [
+                                    {
+                                        "installationName": "documaker",
+                                        "targetList": [
+                                            {
+                                                "type": "Cluster",
+                                                "names": [
+                                                    "<%= @obpdoc['soa_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['dmkr_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['jms_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['idm_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "applicationList": [
+                                    {
+                                        "name": "DocumakerApplications"
+                                    }
+                                ],
+                                "configurationList": [
+                                    {
+                                        "resourceName": "GenericServerSettings_auto_1",
+                                        "type": "Server",
+                                        "properties": [
+                                            {
+                                                "name": "serverName",
+                                                "value": "soa_server1,dmkr_server1,jms_server1,idm_server1"
+                                            }
+                                        ]
+                                    }
+                                    ,
+                                     <%= render "common-settings-configs.erb"  %>
+                                    ,
+                                    {
+                                        "resourceName": "SOAClusterStartupParameters",
+                                        "type": "StartupParameter",
+                                        "targets": [
+                                             {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                  "<%= @obpdoc['soa_server']['cluster_name'] %>"
+                                                ]
+                                              }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DmkrClusterStartupParameters",
+                                        "type": "StartupParameter",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpdoc['dmkr_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "JmsClusterStartupParameters",
+                                        "type": "StartupParameter",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpdoc['jms_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "IdmClusterStartupParameters",
+                                        "type": "StartupParameter",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpdoc['idm_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DMKRAdmin",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpdoc['soa_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['dmkr_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['jms_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['idm_server']['cluster_name'] %>"
+                                                ]
+                                            },
+                                            {
+                                                "type": "SERVER",
+                                                "names": [
+                                                    "AdminServer"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DMKRAsline",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpdoc['soa_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['dmkr_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['jms_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['idm_server']['cluster_name'] %>"
+                                                ]
+                                            },
+                                            {
+                                                "type": "SERVER",
+                                                "names": [
+                                                    "AdminServer"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jms-tlogs",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpdoc['soa_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['dmkr_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['jms_server']['cluster_name'] %>",
+                                                    "<%= @obpdoc['idm_server']['cluster_name'] %>"
+                                                ]
+                                            },
+                                            {
+                                                "type": "SERVER",
+                                                "names": [
+                                                    "AdminServer"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "Documaker_Admin_Group",
+                                        "type": "Group",
+                                        "properties": [
+                                            {
+                                                "name": "authenticatorName",
+                                                "value": "DefaultAuthenticator"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "Documaker_Admin_User",
+                                        "type": "User",
+                                        "properties": [
+                                            {
+                                                "name": "authenticatorName",
+                                                "value": "DefaultAuthenticator"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "Documaker_JMS_User",
+                                        "type": "User",
+                                        "properties": [
+                                            {
+                                                "name": "authenticatorName",
+                                                "value": "DefaultAuthenticator"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "JmsJdbcStore-1",
+                                        "type": "JDBCStore",
+                                        "targets": [
+                                            {
+                                                "type": "MIGRATABLE",
+                                                "names": [
+                                                    "jms_server1 (migratable)"
+                                                ]
+                                            }
+                                        ],
+                                        "properties": [
+                                            {
+                                                "name": "dataSource",
+                                                "value": "jms-tlogs"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DocumakerJMSServer1",
+                                        "type": "JMSServer",
+                                        "properties": [
+                                            {
+                                                "name": "jdbcStore",
+                                                "value": "JmsJdbcStore-1"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "MIGRATABLE",
+                                                "names": [
+                                                    "jms_server1 (migratable)"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DocumakerJMSModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "DocumakerSubDeployment1"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpdoc['jms_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DocumakerSubDeployment1",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "DocumakerJMSServer1"
+                                                ]
+                                            }
+                                        ],
+                                        "properties": [
+                                            {
+                                                "name": "scaleout",
+                                                "value": "false"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OAMIdentityAsserter",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OIDAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DefaultAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jms_cluster_settings",
+                                        "type": "Cluster",
+                                        "properties": [
+                                            {
+                                                "name": "clusterName",
+                                                "value": "jms_cluster"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jms_server1 (migratable)",
+                                        "type": "MigratableTarget",
+                                        "properties": [
+                                            { 
+                                                "name": "noTarget",
+                                                "value": "true" 
+                                            }
+                                        ] 
+                                    }
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "serverStartMode",
+                                        "value": "prod",
+                                        "target": "wls.production.mode"
+                                    },
+                                    {
+                                        "name": "backupEnvironmentName",
+                                        "value": "<%= environment_name %>",
+                                        "target": "environment.name"
+                                    },
+                                    {
+                                        "name": "applyJRF",
+                                        "value": "true",
+                                        "target": "wls.apply.jrf"
+                                    },
+                                    {
+                                        "name": "tlogsLocationPath",
+                                        "value": "<%= base_domain_path %>/${/domain.name}",
+                                        "target": "wls.tlogs.location.path"
+                                    },
+                                    {
+                                        "name": "odlLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}",
+                                        "target": "wls.odl.log.location"
+                                    },
+                                    {
+                                        "value": "<%= @common['odl_log_retentionPeriod'] %>",
+                                        "target": "wls.odl.log.retentionPeriod"
+                                    },
+                                    {
+                                        "name": "defaultJMSLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}"
+                                    },
+                                    {
+                                        "target": "wls.admin.listen.port.admin",
+                                        "value": "<%= @obpdoc['admin']['listen_port_admin'] %>"
+                                    },
+                                    {
+                                        "target": "documaker.assemblyline.system.id",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "name": "mintpress.startup_parallel",
+                                        "target": "mintpress.startup_parallel",
+                                        "value": "10"
+                                    }
+                                ],
+                                "groupRefs": [
+                                    "Documaker_Config",
+                                    "Documaker_Node"
+                                ],
+                                "templateList": [
+                                    {
+                                        "name": "soa"
+                                    }
+                                ],
+                                "repositoryList": [
+                                    {
+                                        "componentList": [
+                                            "ORASDPM",
+                                            "SOAINFRA",
+                                            "MDS"
+                                        ],
+                                        "id": "rcu01",
+                                        "dbName": "<%= environment_name %><%= asset_code %>db",
+                                        "prefix": "<%= @obpdoc['database']['rcu_schema_prefix'].upcase %>",
+                                        "dbUser": "${databaseSysUsername}",
+                                        "schemaPassword": "${databaseSchemaPassword}",
+                                        "defaultRepository": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "instanceList": [
+                            {
+                                "name": "DocuMaker1",
+                                "type": "documaker",
+                                "installationName": "documaker",
+                                "instanceTop": "<%= instance_path %>",
+                                "hostIdentifier": "<%= @obpdoc['hostnameList'][0] %>",
+                                "groupRefs": [
+                                    "Documaker_Config",
+                                    "Documaker_Node"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "isSecondInstance",
+                                        "value": "$(if ${_.nodeid} == 1 then 'false' else 'true' end)"
+                                    },
+                                    {
+                                        "name": "systemId",
+                                        "value": "${_.nodeid}"
+                                    },
+                                    {
+                                        "target": "documaker.documentfactory.system.id",
+                                        "value": "${_.systemId}"
+                                    },
+                                    {
+                                        "target": "documaker.documentfactory.system.name",
+                                        "value": "System ${_.systemId}"
+                                    },
+                                    {
+                                        "target": "documaker.assemblyline.system.id",
+                                        "value": "${_.systemId}"
+                                    },
+                                    {
+                                        "target": "documaker.assemblyline.system.name",
+                                        "value": "Assembly Line ${_.systemId}"
+                                    }
+
+                                ],
+                                "repository": {
+                                    "componentList": [],
+                                    "id": "rcu02",
+                                    "dbName": "<%= environment_name %><%= asset_code %>db",
+                                    "prefix": "<%= @obpdoc['database']['rcu_schema_prefix'].upcase %>",
+                                    "dbUser": "${databaseSysUsername}",
+                                    "schemaPassword": "${databaseSchemaPassword}"
+                                }
+                            }
+                        ],
+                        "properties": [
+                            {
+                                "name": "targetPlatform",
+                                "value": "EXA"
+                            }
+                        ],
+                        "hostInstallationList": [
+                            {
+                                "installationName": "documaker",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ]
+                            }
+                        ],
+                        "transferList": [
+
+                            <%= render "common-certs-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpdoc['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :keystore_name => @obpdoc['hostnameList'][0][0...-2],
+                                    :certs_source_path => @common['certs_source'],
+                                    :cert_destination_path => certs_location_path,
+                                    :truststore => @common['trustStore']
+                                }
+                            %>
+                            ,
+                            {
+                                "name": "cacerts_jdk",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['certs_source'] %>/<%= environment_name %>/cacerts",
+                                "destinationFile": "<%= fmw_install_path %>/odee_12/documaker/jre/lib/security/cacerts",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                    "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            <%= render "common-jdk-policy-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpdoc['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :jdk_version => jdk_version,
+                                    :java_install_path => java_install_path
+                                }
+                            %>
+                            ,
+                            <%= render "common-transfer-ovd-keystore.erb",
+                                :variables => {
+                                    :environment_name => environment_name,
+                                    :host_identifier => @obpdoc['hostnameList'][0],
+                                    :certs_source_path => @common['certs_source'] ,
+                                    :admin_server_top => doc_admin_server_top,
+                                    :domain_name => @obpdoc['wls_domain_name']
+                                }
+                            %>
+                            ,                           
+                            {
+                                "name": "obpemailtemplate",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "${stageRootDir}/documaker/23754403/obp_update/templates/obpemailtemplate.txt",
+                                "destinationFile": "<%= fmw_install_path %>/odee_12/documaker/obpemailtemplate.txt",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "printcontroltemplate",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "${stageRootDir}/documaker/23754403/obp_update/templates/printcontroltemplate.xml",
+                                "destinationFile": "<%= fmw_install_path %>/odee_12/documaker/printcontroltemplate.xml",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "obp-dir-brochure",
+                                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                                "content": "ZHVtbXkK",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "destinationFile": "<%= fmw_install_path %>/odee_12/documaker/mstrres/dmres/brochure/.dummy",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "obp-dir-post",
+                                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                                "content": "ZHVtbXkK",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "destinationFile": "<%= fmw_install_path %>/odee_12/documaker/mstrres/dmres/post/.dummy",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "obp-dir-results-archive",
+                                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                                "content": "ZHVtbXkK",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "destinationFile": "<%= fmw_install_path %>/odee_12/documaker/mstrres/dmres/results-archive/.dummy",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "obp-dir-scratch",
+                                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                                "content": "ZHVtbXkK",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "destinationFile": "<%= fmw_install_path %>/odee_12/documaker/mstrres/dmres/scratch/.dummy",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "SIEMCustomAuditor",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['custom_source'] %>/common/SIEMCustomAuditor.jar",
+                                "destinationFile": "<%= fmw_install_path %>/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries",
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "HealthCheckFileCopy",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= "#{@common['custom_source']}/common/HealthCheck.war" %>",
+                                "destinationFile": "<%= "#{base_domain_path}/applications/#{@obpdoc['wls_domain_name']}/HealthCheck.war" %>",
+                                "permissions": "755",
+                                "transferWhenList": [
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ]
+                            }
+                        ],
+                        "executeList": [
+                            {
+                                "name": "UpdateAdaptersOSXml",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-wls-ldap-adapters]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            },
+                            <%= render "common-enable-sso.erb",
+                                :variables => {
+                                    :host_identifier => @obpdoc['hostnameList'][0],
+                                    :fmw_install_path => "#{fmw_install_path}",
+                                    :t3_connect_url => "t3://#{@obpdoc['admin']['listen_address']}#{@obpdoc['dns_domain_name']}:#{@obpdoc['admin']['listen_port']}",
+                                    :admin_username => @obpdoc['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user']),
+                                    :domain_home => "#{doc_admin_server_top}/#{@obpdoc['wls_domain_name']}",
+                                    :logout_url => @common['OAMLogoutURL']
+                                }
+                            %>
+                            ,
+                            <%= render "common-deploy-healthcheck.erb",
+                                :variables => {
+                                    :host_identifier => @obpdoc['hostnameList'][0],
+                                    :asset_code => asset_code,
+                                    :custom_source => @common['custom_source'],
+                                    :fmw_install_path => fmw_install_path,
+                                    :t3_connect_url => "t3://#{@obpdoc['admin']['listen_address']}#{@obpdoc['dns_domain_name']}:#{@obpdoc['admin']['listen_port']}",
+                                    :admin_username => @obpdoc['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user'] ),
+                                    :app_target => "#{@obpdoc['soa_server']['cluster_name']},#{@obpdoc['dmkr_server']['cluster_name']},#{@obpdoc['jms_server']['cluster_name']},#{@obpdoc['idm_server']['cluster_name']}",
+                                    :app_path => "#{base_domain_path}/applications/#{@obpdoc['wls_domain_name']}"
+                                }
+                            %>
+                            ,
+                            {
+                                "name": "DeleteDemoTrustEntry",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "cd <%= doc_admin_server_top %>/<%= @obpdoc['wls_domain_name'] %>/bin/;cp -f setDomainEnv.sh setDomainEnv.sh.mint; sed -i 's|-Djavax.net.ssl.trustStore=\\${WL_HOME}/server/lib/DemoTrust.jks||g' setDomainEnv.sh; sed -i 's|-Dtangosol.coherence.clusteraddress=227.7.7.12||g' setDomainEnv.sh; sed -i 's|-Dtangosol.coherence.clusterport=9778||g' setDomainEnv.sh",
+                                "executeWhenList": [
+                                    "post-configure"
+                                ]
+                            },
+                            {
+                                "name": "CreateDatabaseObjects",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::create-db-users]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-rcu"
+                                ]
+                            },
+                            {
+                                "name": "DeleteDatabaseObjects",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::drop-db-users]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-clobber"
+                                ]
+                            }
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                :variables => {
+                                    :name => 'ConfigureJMSView',
+                                    :host_identifier => @obpdoc['hostnameList'][0],
+                                    :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                    :script => "#{@common['custom_source']}/common/configureJmsAccess.py",
+                                    :t3_connect_url => "t3://#{@obpdoc['admin']['listen_address']}#{@obpdoc['dns_domain_name']}:#{@obpdoc['admin']['listen_port']}",
+                                    :admin_username => @obpdoc['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user']),
+                                    :args => '',
+                                    :when => 'post-online'
+                                }
+                            %>
+                            ,
+                            {
+                                "name": "DocumakerJPSQuery",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "wget ${execute.queryUrl} -O ${defaultHostTargetTmpDirectory}/docu_jps.html; cat ${defaultHostTargetTmpDirectory}/docu_jps.html; rm -f ${defaultHostTargetTmpDirectory}/docu_jps.html",
+                                "executeWhenList": [
+                                    "post-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "target": "execute.queryUrl",
+                                        "value": "http://<%= @obpdoc['admin']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>:<%= @obpdoc['admin']['listen_port'] %>/jpsquery"
+                                    },
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "setSOACallBackURL",
+                                "hostIdentifierList": [
+                                  "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= ". #{doc_admin_server_top}/#{@obpdoc['wls_domain_name']}/bin/setDomainEnv.sh java weblogic.WLST #{@common['custom_source']}/common/setSOAMBeans.py weblogic ${execute.weblogicAdminPassword} t3://#{@obpdoc['admin']['listen_address']}#{@obpdoc['dns_domain_name']}:#{@obpdoc['admin']['listen_port']} #{@obpdoc['frontend']['managed_host']}:#{@obpdoc['frontend']['soa_port']}" %>",
+                                "properties": [
+                                  {
+                                    "name": "execute.weblogicAdminPassword",
+                                    "target": "execute.weblogicAdminPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user'] ) %>"
+                                  },
+                                  {
+                                    "name": "scaleout",
+                                    "value": "false"
+                                   }
+                                ],
+                                "executeWhenList": [
+                                  "post-online"
+                                ]
+                            },
+                            {
+                                "name": "UpdateDocumakerConfigs",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::documaker-configs]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "pre-online"
+                                ]
+                            },
+                            <% if environment_name =~ /^svp/ or environment_name =~ /^prd/ %>
+                            <%= render "common-run-wlst.erb",
+                                :variables => {
+                                  :name => "updateJpsConfig",
+                                  :host_identifier => @obpdoc['hostnameList'][0],
+                                  :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                  :script => "#{@common['custom_source']}/common/updateJpsConfig.py",
+                                  :t3_connect_url => "t3://#{@obpdoc['admin']['listen_address']}#{@obpdoc['dns_domain_name']}:#{@obpdoc['admin']['listen_port']}",
+                                  :admin_username => @obpdoc['wls_admin_user'],
+                                  :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user']),
+                                  :args => "'#{@obpdoc['database']['doc_db_url']}'",
+                                  :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <% end %>
+                            {
+                                "name": "InstallDocumakerMobile",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::install-documaker-mobile]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-binaries"
+                                ]
+                            },
+                            {
+                                "name": "UpgradeJRE180172",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::upgrade-java]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-binaries"
+                                ]
+                            },
+                            {
+                                "name": "Removewlclientjar",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "rm -rf /oracle/app/binaries/obpdoc/fmw/odee_12/documaker/docupresentment/lib/wlclient.jar",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-binaries"
+                                ]
+                            },
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "deleteDefaultAuditor",
+                                      :host_identifier => @obpdoc['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/deleteDefaultAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpdoc['admin']['listen_address']}#{@obpdoc['dns_domain_name']}:#{@obpdoc['admin']['listen_port']}",
+                                      :admin_username => @obpdoc['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user']),
+                                      :args => "#{@obpdoc['wls_domain_name']}",
+                                      :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "updateSIEMAuditor",
+                                      :host_identifier => @obpdoc['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/updateSIEMAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpdoc['admin']['listen_address']}#{@obpdoc['dns_domain_name']}:#{@obpdoc['admin']['listen_port']}",
+                                      :admin_username => @obpdoc['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user']),
+                                      :args => "#{@obpdoc['wls_domain_name']} #{asset_code}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                            ,
+                            {
+                                "name": "FMW-App-Role-Mapping",
+                                "hostIdentifierList": [
+                                    "<%= @obpdoc['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::fmw-app-role-mapping]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "databaseList": [
+            {
+                "name": "<%= environment_name %><%= asset_code %>db",
+                "port": "<%= @obpdoc['database']['listen_port'] %>",
+                "serviceName": "<%= @obpdoc['database']['service_name'] %>",
+                "properties": [
+                    {
+                        "name": "rcu.datafile.initialsize",
+                        "value": "200M",
+                        "target": "rcu.datafile.initialsize"
+                    },
+                    {
+                        "target": "rcu.extra.parameters",
+                        "value": " -encryptTablespace <%= @obpdoc['database'].key?('encryption') ? @obpdoc['database']['encryption'] : 'false' %>"
+                    },
+                    {
+                        "name": "jdbcUrl",
+                        "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=${_.host.address})(Port=${_.port}))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=${_.serviceName})))"
+                    },
+                    {
+                        "name": "jdbcUrlTNS",
+                        "value": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=${_.host.address})(PORT=${_.port}))(CONNECT_DATA=(SERVICE_NAME=${_.serviceName})))"
+                    }
+                    <% if @obpdoc['database'].key?('ons_node_list') %>
+                    ,
+                    {
+                        "name": "gridLinkONS",
+                        "value": "<%= @obpdoc['database']['ons_node_list'] %>"
+
+                    }
+                    <%end %>
+                ],
+                "hostIdentifier": "db_server",
+                "schemaList": [
+                    {
+                        "name": "${databaseSysUsername}",
+                        "password": "${databaseSysUserPassword}"
+                    }
+                ]
+            }
+        ],
+        "resourceList": [
+
+            <%= render "common-settings-resources.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :domain_name => @obpdoc['wls_domain_name'],
+                    :log_location_path => log_location_path,
+                    :certs_location_path => certs_location_path,
+                    :admin_kestore_alias => @obpdoc['hostnameList'][0],
+                    :managed_keystore_alias => '%ListenAddress/noprefix%',
+                    :keystore_name => @obpdoc['hostnameList'][0][0...-2],
+                    :common => @common,
+                    :frontend => @obpdoc['frontend'],
+                    :database => @obpdoc['database'],
+                    :set_dual_site_url => @obpdoc['database'].key?('set_dual_site_url') ? @obpdoc['database']['set_dual_site_url'].downcase : "false",
+                    :enable_dbssl => "false"
+                }
+            %>
+            ,
+            <%= render "common-oid-authenticator.erb",
+                :variables => {
+                    :name => 'OIDAuthenticator',
+                    :hostname => @obpoid['frontend']['managed_host'],
+                    :port => @obpoid['frontend']['ldap_port'],
+                    :username => 'cn=obpdoc_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au',
+                    :password => PasswordVault.get_password(password_vault_name, 'obpoid', 'obpdoc_readonly'),
+                    :group_base_dn => 'ou=documaker,ou=apps,dc=westpac,dc=com,dc=au',
+                    :user_base_dn => 'cn=users,dc=westpac,dc=com,dc=au',
+                    :common => @common
+                }
+            %>
+            ,
+            {
+                "name": "OAMIdentityAsserter",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "oracle.security.wls.oam.providers.asserter.OAMIdentityAsserter",
+                    "ControlFlag": "OPTIONAL"
+                }
+            },
+            {
+                "name": "DefaultAuthenticator",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "null",
+                    "ControlFlag": "SUFFICIENT"
+                }
+            },
+            {
+                "name": "AdminStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpdoc["admin"]['ms_heap'] %> -Xmx<%= @obpdoc["admin"]['mx_heap'] %> -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer ",
+					"2": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "SOAClusterStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpdoc["soa_server"]['ms_heap'] %> -Xmx<%= @obpdoc["soa_server"]['mx_heap'] %>",
+                    "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75",
+                    "3": "-Dweblogic.configuration.schemaValidationEnabled=false -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer -Djbo.passivationstore=database -Djbo.pcoll.mgr=oracle.jbo.pcoll.OraclePersistManager",
+                    "4": "<%= "-javaagent:#{@common['appdynamics_agent']} -Dappagent.install.dir=/oracle/app/binaries/appdynamics/javaagent -Dappdynamics.agent.tierName=OBP-DOC-SOA -Dappdynamics.agent.nodeName=%ListenAddress/noprefix%#{@obpdoc['dns_domain_name']}:%ListenPort+1000%" if @common['enable_appdynamics'] == "true" %>",
+					"5": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "DmkrClusterStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpdoc["dmkr_server"]['ms_heap'] %> -Xmx<%= @obpdoc["dmkr_server"]['mx_heap'] %>",
+                    "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 ",
+                    "3": "-Dweblogic.configuration.schemaValidationEnabled=false -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer -Djbo.passivationstore=database -Djbo.pcoll.mgr=oracle.jbo.pcoll.OraclePersistManager",
+                    "4": "<%= "-javaagent:#{@common['appdynamics_agent']} -Dappagent.install.dir=/oracle/app/binaries/appdynamics/javaagent -Dappdynamics.agent.tierName=OBP-DOC-DMKR -Dappdynamics.agent.nodeName=%ListenAddress/noprefix%#{@obpdoc['dns_domain_name']}:%ListenPort+1000%" if @common['enable_appdynamics'] == "true" %>",
+					"5": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "JmsClusterStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpdoc["jms_server"]['ms_heap'] %> -Xmx<%= @obpdoc["jms_server"]['mx_heap'] %>",
+                    "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC  -XX:CMSInitiatingOccupancyFraction=75 ",
+                    "3": "-Dweblogic.configuration.schemaValidationEnabled=false -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+                    "4": "<%= "-javaagent:#{@common['appdynamics_agent']} -Dappagent.install.dir=/oracle/app/binaries/appdynamics/javaagent -Dappdynamics.agent.tierName=OBP-DOC-JMS -Dappdynamics.agent.nodeName=%ListenAddress/noprefix%#{@obpdoc['dns_domain_name']}:%ListenPort+1000%" if @common['enable_appdynamics'] == "true" %>",
+					"5": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "IdmClusterStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpdoc["idm_server"]['ms_heap'] %> -Xmx<%= @obpdoc["idm_server"]['mx_heap'] %>",
+                    "2": " -XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djbo.passivationstore=database -Djbo.pcoll.mgr=oracle.jbo.pcoll.OraclePersistManager -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+                    "3": "<%= "-javaagent:#{@common['appdynamics_agent']} -Dappagent.install.dir=/oracle/app/binaries/appdynamics/javaagent -Dappdynamics.agent.tierName=OBP-DOC-IDM -Dappdynamics.agent.nodeName=%ListenAddress/noprefix%#{@obpdoc['dns_domain_name']}:%ListenPort+1000%" if @common['enable_appdynamics'] == "true" %>",
+					"4": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "DMKRAdmin",
+                "type": "JDBCSystemResource",
+                "attributes": {
+                    "Notes": "DMKRAdmin JDBC resources"
+                },
+                "params": [
+                    {
+                        "type": "JDBCResource",
+                        "params": [
+                            {
+                                "type": "JDBCConnectionPoolParams",
+                                "attributes": {
+                                    "MinCapacity": "<%= @common['jdbc']['min_capacity'] %>",
+                                    "TestConnectionsOnReserve": "true",
+                                    "TestTableName": "SQL SELECT 1 FROM DUAL"
+                                }
+                            },
+                            {
+                                "type": "JDBCDataSourceParams",
+                                "attributes": {
+                                    "AlgorithmType": "Failover",
+                                    "JNDINames": "jdbc/<%= @obpdoc['documaker']['admin_db_user'] %>"
+                                }
+                            },
+                            {
+                                "type": "JDBCDriverParams",
+                                "attributes": {
+                                    <% if @common['enable_dbssl'] == "true" %>
+                                    "Url": "<%= @obpdoc['database']['doc_db_url']%>",
+                                    <% else %>
+                                    "Url": "<%= @obpdoc['database']['doc_db_url']%>",
+                                    <% end %>
+                                    "Password": "${databaseSchemaPassword}",
+                                    "DriverName": "oracle.jdbc.xa.client.OracleXADataSource"
+                                },
+                                "properties": {
+                                    <% if @common['enable_dbssl'] == "true" %>
+                                    "javax.net.ssl.trustStoreType": "JKS",
+                                    "encrypted:javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpdoc', 'truststorepass') %>",
+                                    "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+                                    "oracle.net.ssl_version": "1.2",
+                                    "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                                    <% end %>
+                                    "user": "<%= @obpdoc['documaker']['admin_db_user'] %>",
+                                    "oracle.jdbc.ReadTimeout": "300000"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "DMKRAsline",
+                "type": "JDBCSystemResource",
+                "attributes": {
+                    "Notes": "DMKRAsline JDBC resources"
+                },
+                "params": [
+                    {
+                        "type": "JDBCResource",
+                        "params": [
+                            {
+                                "type": "JDBCConnectionPoolParams",
+                                "attributes": {
+                                    "MinCapacity": "<%= @common['jdbc']['min_capacity'] %>",
+                                    "TestConnectionsOnReserve": "true",
+                                    "TestTableName": "SQL SELECT 1 FROM DUAL"
+                                }
+                            },
+                            {
+                                "type": "JDBCDataSourceParams",
+                                "attributes": {
+                                    "AlgorithmType": "Failover",
+                                    "JNDINames": "jdbc/<%= @obpdoc['documaker']['asline_db_user'] %>"
+                                }
+                            },
+                            {
+                                "type": "JDBCDriverParams",
+                                "attributes": {
+                                    <% if @common['enable_dbssl'] == "true" %>
+                                    "Url": "<%= @obpdoc['database']['doc_db_url']%>",
+                                    <% else %>
+                                    "Url": "<%= @obpdoc['database']['doc_db_url']%>",
+                                    <% end %>
+                                    "Password": "${databaseSchemaPassword}",
+                                    "DriverName": "oracle.jdbc.xa.client.OracleXADataSource"
+                                },
+                                "properties": {
+                                    <% if @common['enable_dbssl'] == "true" %>
+                                    "javax.net.ssl.trustStoreType": "JKS",
+                                    "encrypted:javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpdoc', 'truststorepass') %>",
+                                    "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+                                    "oracle.net.ssl_version": "1.2",
+                                    "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                                    <% end %>
+                                    "user": "<%= @obpdoc['documaker']['asline_db_user'] %>",
+                                    "oracle.jdbc.ReadTimeout": "300000"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "jms-tlogs",
+                "type": "JDBCSystemResource",
+                "attributes": {
+                },
+                "params": [
+                    {
+                        "type": "JDBCResource",
+                        "params": [
+                            {
+                                "type": "JDBCConnectionPoolParams",
+                                "attributes": {
+                                    "MinCapacity": "<%= @common['jdbc']['min_capacity'] %>",
+                                    "TestConnectionsOnReserve": "true",
+                                    "TestTableName": "SQL SELECT 1 FROM DUAL"
+                                }
+                            },
+                            {
+                                "type": "JDBCDataSourceParams",
+                                "attributes": {
+                                    "AlgorithmType": "Failover",
+                                    "JNDINames": "jdbc/jms-tlogs",
+                                    "GlobalTransactionsProtocol": "None"
+                                }
+                            },
+                            {
+                                "type": "JDBCDriverParams",
+                                "attributes": {
+                                    <% if @common['enable_dbssl'] == "true" %>
+                                    "Url": "<%= @obpdoc['database']['doc_db_url']%>",
+                                    <% else %>
+                                    "Url": "<%= @obpdoc['database']['doc_db_url']%>",
+                                    <% end %>
+                                    "Password": "${databaseSchemaPassword}",
+                                    "DriverName": "oracle.jdbc.OracleDriver"
+                                },
+                                "properties": {
+                                    <% if @common['enable_dbssl'] == "true" %>
+                                    "javax.net.ssl.trustStoreType": "JKS",
+                                    "encrypted:javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpdoc', 'truststorepass') %>",
+                                    "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+                                    "oracle.net.ssl_version": "1.2",
+                                    "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                                    <% end %>
+                                    "user": "<%= @obpdoc['database']['custom_schema'] %>",
+                                    "oracle.jdbc.ReadTimeout": "300000"
+                                }
+                            },
+                            {
+                                "type": "JDBCOracleParams",
+                                "attributes": {
+                                    "FanEnabled": "false"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Documaker_Admin_Group",
+                "type": "Group",
+                "attributes": {
+                    "name": "Documaker Administrators",
+                    "description": "Documaker Administrators"
+                }
+            },
+            {
+                "name": "Documaker_Admin_User",
+                "type": "User",
+                "attributes": {
+                    "name": "<%= @obpdoc['documaker']['admin_user'] %>",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['documaker']['admin_user']) %>",
+                    "description": "Documaker Admin",
+                    "groupList": "Documaker Administrators"
+                }
+            },
+            {
+                "name": "Documaker_JMS_User",
+                "type": "User",
+                "attributes": {
+                    "name": "<%= @obpdoc['documaker']['jms_user'] %>",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['documaker']['jms_user']) %>",
+                    "description": "Documaker Admin",
+                    "groupList": "Documaker Administrators"
+                }
+            },
+            {
+                "name": "JmsJdbcStore-1",
+                "type": "JDBCStore",
+                "attributes": {
+                    "PrefixName": "jms_server1"
+                }
+            },
+            {
+                "name": "DocumakerJMSServer1",
+                "type": "JMSServer",
+                "attributes": {
+                    "StoreEnabled": "true",
+                    "MessagesMaximum": "-1"
+                }
+            },
+            {
+                "name": "DocumakerJMSModule",
+                "type": "JMSSystemResource",
+                "attributes": {
+                    "Notes": "Documaker JMS Module"
+                },
+                "params": [
+                    {
+                        "name": "AL1QCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "AL1QCF",
+                            "JNDIName": "jms.al1.qcf"
+                        },
+                        "params": [
+                            {
+                                "type": "LoadBalancingParams",
+                                "attributes": {
+                                    "ServerAffinityEnabled": "false",
+                                    "LoadBalancingEnabled": "true"
+                                }
+                            },
+                            {
+                                "type": "SecurityParams",
+                                "attributes": {
+                                    "AttachJMSXUserId": "false"
+                                }
+                            },
+                            {
+                                "type": "ClientParams",
+                                "attributes": {
+                                    "ClientIdPolicy": "Restricted",
+                                    "SubscriptionSharingPolicy": "Exclusive",
+                                    "MessagesMaximum": "10"
+                                }
+                            },
+                            {
+                                "type": "TransactionParams",
+                                "attributes": {
+                                    "TransactionTimeout": "3600",
+                                    "XAConnectionFactoryEnabled": "true"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "ArchiverReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.archiverreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "AssemblerReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.assemblerreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "DistributerReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.distributorreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "IdentifierReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.identifierreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "PresenterReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.presenterreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "PublisherReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.publisherreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "PubNotifierReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.pubnotifierreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "ReceiverReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.receiverreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "ReceiverRes",
+                        "attributes": {
+                            "JNDIName": "jms.al1.receiverres",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "IDSReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.idsreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "IDSRes",
+                        "attributes": {
+                            "JNDIName": "jms.al1.idsres",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "SchedulerReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.schedulerreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "BatcherReq",
+                        "attributes": {
+                            "JNDIName": "jms.al1.batcherreq",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "ReceiverRem",
+                        "attributes": {
+                            "JNDIName": "jms.al1.receiverrem",
+                            "LoadBalancingPolicy": "Round-Robin",
+                            "ForwardDelay": "1",
+                            "SubDeploymentName": "DocumakerSubDeployment1"
+                        }
+                    }
+                ]
+            },
+            {
+                "attributes": {
+                    "AdministrationPort": "<%= @obpdoc['admin']['listen_port_admin'] %>",
+                    "AdministrationPortEnabled": "false"
+                },
+                "type": "Domain",
+                "name": "DomainAdministrationPortConfiguration"
+            },
+            {
+                "name": "jms_cluster_settings",
+                "type": "Cluster",
+                "attributes": {
+                    "MigrationBasis": "Consensus"
+                }
+            },
+            {
+                "name": "jms_server1 (migratable)",
+                "type": "MigratableTarget",
+                "attributes": {
+                    "MigrationPolicy": "exactly-once"
+                } 
+            }
+        ],
+        "propertyGroupList":
+        [
+            <%= render "common-config-groups.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :asset_code => asset_code,
+                    :inventory_install_path => inventory_install_path,
+                    :fmw_install_path => fmw_install_path,
+                    :temp_location => temp_location
+                }
+            %>
+            ,
+            {
+                "name": "Node_Manager_Common_Config",
+                "description": "Common Node Manager configuration",
+                "properties": [
+                    {
+                        "target": "wls.nodemanager.shared.domain.dir",
+                        "value": "true"
+                    },
+                    {
+                        "name": "wlInstallationName",
+                        "value": "fmwinfra"
+                    },
+                    {
+                        "name": "nodemanagerTop",
+                        "value": "<%= node_manager_top %>",
+                        "target": "wls.nodemanager.top"
+                    }
+                ]
+            }
+            ,
+            <%= render "common-nm-ssl-config.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :certs_location_path => certs_location_path,
+                    :truststore => @common['trustStore']
+                }
+            %>
+            ,
+            {
+                "name": "Documaker_Node",
+                "description": "Documaker Node #1 config",
+                "properties": [
+
+                    {
+                        "target": "sqlplus.oracle.home",
+                        "value": "<%= oracle_client_install_path %>"
+                    },
+                    {
+                        "target": "documaker.soa.host",
+                        "value": "<%= @obpdoc['admin']['listen_address'] %><%= @obpdoc['dns_domain_name'] %>"
+                    },
+                    {
+                        "target": "documaker.soa.port",
+                        "value": "<%= @obpdoc['soa_server']['listen_port'] %>"
+                    },
+                    {
+                        "target": "documaker.jms.listen.port",
+                        "value": "<%= @obpdoc['jms_server']['listen_port'] %>"
+                    },
+                    {
+                        "target": "documaker.webserver.endpoint",
+                        "value": "<%= @obpdoc['frontend']['protocol'] %>://<%= @obpdoc['frontend']['managed_host'] %>:<%= @obpdoc['frontend']['soa_port'] %>/DWSV0AL1/CompositionService?WSDL"
+                    },
+                    {
+                        "target": "documaker.approval.process.endpoint",
+                        "value": "<%= @obpdoc['frontend']['protocol'] %>://<%= @obpdoc['frontend']['managed_host'] %>:<%= @obpdoc['frontend']['soa_port'] %>/soa-infra/services/default/iDMkr_Correspondence/correspondenceprocesses_client_ep"
+                    },
+                    {
+                        "target": "documaker.approval.businessrules.endpoint",
+                        "value": "<%= @obpdoc['frontend']['protocol'] %>://<%= @obpdoc['frontend']['managed_host'] %>:<%= @obpdoc['frontend']['soa_port'] %>/soa-infra/services/default/iDMkrApprovalRuleProj/iDMkrApprovalRules_DecisionService_ep"
+                    }
+                ]
+            },
+            {
+                "name": "Documaker_Config",
+                "description": "Documaker config properties",
+                "properties": [
+                    {
+                        "target": "documaker.oracle.home",
+                        "value": "<%= fmw_install_path %>/odee_12"
+                    },
+                    {
+                        "target": "documaker.database.host",
+                        "value": "${/database.host.address}"
+                    },
+                    {
+                        "target": "documaker.database.port",
+                        "value": "${/database.port}"
+                    },
+                    {
+                        "target": "documaker.database.sid",
+                        "value": "${/database.serviceName}"
+                    },
+                    {
+                        "target": "documaker.soa.admin.username",
+                        "value": "<%= @obpdoc['wls_admin_user'] %>"
+                    },
+                    {
+                        "target": "documaker.soa.admin.password",
+                        "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['wls_admin_user']) %>"
+                    },
+                    {
+                        "target": "documaker.database.advanced.compression.enabled",
+                        "value": "false"
+                    },
+                    {
+                        "target": "documaker.database.datafile.top",
+                        "value": "${documakerDataFileLocation}"
+                    },
+                    {
+                        "target": "documaker.admin.username",
+                        "value": "<%= @obpdoc['documaker']['admin_db_user'] %>"
+                    },
+                    {
+                        "target": "documaker.admin.password",
+                        "value": "${databaseSchemaPassword}"
+                    },
+                    {
+                        "target": "documaker.assemblyline.username",
+                        "value": "<%= @obpdoc['documaker']['asline_db_user'] %>"
+                    },
+                    {
+                        "target": "documaker.assemblyline.password",
+                        "value": "${databaseSchemaPassword}"
+                    },
+                    {
+                        "target": "documaker.assemblyline.hotfolder",
+                        "value": "<%= fmw_install_path %>/odee_12/documaker/hotdirectory"
+                    },
+                    {
+                        "target": "documaker.smtp.host",
+                        "value": "notconfigured"
+                    },
+                    {
+                        "target": "documaker.smtp.port",
+                        "value": "25"
+                    },
+                    {
+                        "target": "documaker.smtp.user",
+                        "value": "<%= @obpdoc['documaker']['smtp_user'] %>"
+                    },
+                    {
+                        "target": "documaker.smtp.password",
+                        "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['documaker']['smtp_user']) %>"
+                    },
+                    {
+                        "target": "documaker.smtp.sender",
+                        "value": "documaker@example.com"
+                    },
+                    {
+                        "target": "documaker.ucm.enable",
+                        "value": "false"
+                    },
+                    {
+                        "target": "documaker.ucm.username",
+                        "value": "<%= @obpdoc['documaker']['ucm_user'] %>"
+                    },
+                    {
+                        "target": "documaker.ucm.password",
+                        "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['documaker']['ucm_user']) %>"
+                    },
+                    {
+                        "target": "documaker.ucm.protocol",
+                        "value": "http"
+                    },
+                    {
+                        "target": "documaker.ucm.host",
+                        "value": "notconfigured"
+                    },
+                    {
+                        "target": "documaker.ucm.ibr.port",
+                        "value": "3335"
+                    },
+                    {
+                        "target": "documaker.ucm.cs.port",
+                        "value": "3334"
+                    },
+                    {
+                        "target": "documaker.ucm.connection.string",
+                        "value": "idc://ibr_host_port"
+                    },
+                    {
+                        "target": "documaker.ucm.document.url",
+                        "value": "http://ucm_host_port/cs/groups/secure/documents/document"
+                    },
+                    {
+                        "target": "documaker.ums.enable",
+                        "value": "false"
+                    },
+                    {
+                        "target": "documaker.configure.jms",
+                        "value": "false"
+                    },
+                    {
+                        "target": "documaker.jms.principal",
+                        "value": "<%= @obpdoc['documaker']['jms_user'] %>"
+                    },
+                    {
+                        "target": "documaker.jms.credential",
+                        "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['documaker']['jms_user']) %>"
+                    },
+                    {
+                        "target": "documaker.configure.smtp",
+                        "value": "false"
+                    },
+                    {
+                        "target": "documaker.ums.host",
+                        "value": "notconfigured"
+                    },
+                    {
+                        "target": "documaker.ums.port",
+                        "value": "3333"
+                    },
+                    {
+                        "target": "documaker.ums.username",
+                        "value": "<%= @obpdoc['documaker']['ums_user'] %>"
+                    },
+                    {
+                        "target": "documaker.ums.password",
+                        "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpdoc['documaker']['ums_user']) %>"
+                    },
+                    {
+                        "target": "documaker.ums.endpoint",
+                        "value": "endpointURLGoesHere"
+                    },
+                    {
+                        "target": "documaker.appdeploy.stage",
+                        "value": "<%= fmw_install_path %>/odee_12"
+                    },
+                    {
+                        "target": "documaker.dmkr.appdeploy.enabled",
+                        "value": "true"
+                    },
+                    {
+                        "target": "documaker.dmkr.appdeploy.target.name",
+                        "value": "<%= @obpdoc['dmkr_server']['cluster_name'] %>"
+                    },
+                    {
+                        "target": "documaker.idm.appdeploy.enabled",
+                        "value": "true"
+                    },
+                    {
+                        "target": "documaker.idm.appdeploy.target.name",
+                        "value": "<%= @obpdoc['idm_server']['cluster_name'] %>"
+                    },
+                    {
+                        "target": "documaker.soa.appdeploy.enabled",
+                        "value": "true"
+                    },
+                    {
+                        "target": "documaker.soa.partition.name",
+                        "value": "default"
+                    },
+                    {
+                        "target": "documaker.obp.integration.enabled",
+                        "value": "false"
+                    },
+                    <% if environment_name =~ /^svp\d*w/ or environment_name =~ /^prd\d*w/ %>
+                    {
+                        "name": "seedDocumakerSchemaObjects",
+                        "value": "false"
+                    }
+                    <% else %>
+                    {
+                        "name": "seedDocumakerSchemaObjects",
+                        "value": "true"
+                    }
+                    <% end %>
+                ]
+            }
+        ]
+    }
+}

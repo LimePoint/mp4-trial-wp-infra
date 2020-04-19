@@ -1,0 +1,35 @@
+/*
+
+	Author: Romil Bhagat
+	Last Updated: 18-01-2018
+*/
+
+DECLARE
+	/* Variable Definitions */
+BEGIN
+	/*
+		Application - Receiver
+		System 1 | Assembly 1 | Receiver
+	*/
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='-Djava.security.egd=file:///dev/urandom -Xmx256m -Djava.library.path=/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/bin -Dweblogic.security.SSL.enableJSSE=true -Dweblogic.security.SSL.protocolVersion=TLS1.2 -Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2' WHERE CONTEXT_NAME='STARTUP' AND GROUP_NAME='Archiver' AND PROPERTY='JVMOptions';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @JMSDMKRT3VIP %>' WHERE CONTEXT_NAME='MESSAGE_PROTOCOL' AND GROUP_NAME='idsConnection' AND PROPERTY='providerURL';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @JMSDMKRT3VIP %>' WHERE CONTEXT_NAME='MESSAGE_PROTOCOL' AND GROUP_NAME='SYSTEM_IDSWLSJMSConnection' AND PROPERTY='providerURL';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @documakerSOAVIP %>/soa-infra/services/default/iDMkr_Correspondence/correspondenceprocesses_client_ep?WSDL' WHERE CONTEXT_NAME='WORKFLOW' AND GROUP_NAME='BPEL_CLIENT_DATA' AND PROPERTY='urlText';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @documakerDMKRVIP %>/DWSV0AL1/CompositionService?WSDL' WHERE CONTEXT_NAME='WORKFLOW' AND GROUP_NAME='BPEL_CLIENT_DATA' AND PROPERTY='documakerServiceAddress';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @documakerSOAVIP %>/soa-infra/services/default/iDMkrApprovalRulesProj/iDMkrApprovalRules_DecisionService_ep' WHERE CONTEXT_NAME='WORKFLOW' AND GROUP_NAME='BPEL_CLIENT_DATA' AND PROPERTY='decisionServiceAddress';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @obpHostVIP %>/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi?WSDL' WHERE CATEGORY='OBPResultsUploader' AND CONTEXT_NAME='DESTINATION' AND GROUP_NAME='Configuration' AND PROPERTY='periodic.process.ngpsubmit.wsdl';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @ipmVIP %>/imaging/ws' WHERE CATEGORY='OBP_Archive' AND CONTEXT_NAME='DESTINATION' AND GROUP_NAME='Configuration' AND PROPERTY='destination.ipm.connection.string';
+	
+	UPDATE ALCONFIGCONTEXT SET VALUE='<%= @JMSDMKRT3VIP %>' WHERE CONTEXT_NAME='QUEUES' AND GROUP_NAME='Bus' AND PROPERTY='jms.provider.URL';
+
+	COMMIT;
+END;
+/

@@ -1,0 +1,79 @@
+# This script sets log levels of FMW ODL Loggers
+# arg1 : Domain Admin User
+# arg2 : Domain adminuser Password
+# arg3 : Domain admin url
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+try:
+        ServerList=cmo.getServers()
+        for name in ServerList:
+         var=java.lang.String.startsWith(name.getName(),'AdminS')
+         if var==1:
+          pass
+         else:
+          try:
+            SNAME=name.getName()
+            setLogLevel(target=SNAME, logger="", level="ERROR:1", persist="0",runtime="0")
+            listLH=listLogHandlers()
+            for LH in listLH:
+              print '##############################################'
+              LHNAME=LH.get('name')
+              print LHNAME
+              print '####################### Setting Log Level  for LogHandler - ' + LHNAME + 'in server - '+ SNAME + '  ###########################'
+              configureLogHandler(target=SNAME, name=LHNAME, level="ERROR:1")
+          except:
+            print '####################### Error in Setting Log level for LogHandler - ' + LHNAME + '  ###########################'
+            dumpStack()
+            sys.exit(1)
+          try:
+            if java.lang.String.contains(name.getName(),'osb_server'):
+              loggerList=['oracle','oracle.wsm.msg.logging','oracle.sysman','oracle.clickhistory.EUM','oracle.adf.share.diagnostics.versions','oracle.webservices','oracle.webservices.management','oracle.j2ee.ws','oracle.j2ee.ws.server','oracle.fabric.common','com.oracle.webservices','com.sun.xml.ws','oracle.ods.virtualization','oracle.ods.virtualization.accesslog']
+            elif java.lang.String.contains(name.getName(),'obphost_server'):  
+              loggerList=['oracle','oracle.wsm.msg.logging','oracle.sysman','08.com.ofss','com.ofss','org.eclipse.persistence','javax.persistence','javax.jws','03.com.ofss']
+            elif java.lang.String.contains(name.getName(),'soa_server'):
+              loggerList=['oracle','oracle.wsm.msg.logging','oracle.sysman','com.ofss','org.eclipse.persistence','javax.persistence','javax.jws','03.com.ofss']
+            elif java.lang.String.contains(name.getName(),'obphumantask_server'):
+              loggerList=['oracle','oracle.wsm.msg.logging','oracle.sysman','oracle.ods.virtualization','oracle.ods.virtualization.accesslog','oracle.webservices','oracle.webservices.management','oracle.j2ee.ws','oracle.j2ee.ws.server','oracle.fabric.common','com.oracle.webservices','com.sun.xml.ws','oracle.beam','oracle.adf.share.diagnostics.versions','oracle.soa.sql.trc.fabric','oracle.soa.healthcheck','oracle.sws','oracle.soa.adapter.iwaf','oracle.clickhistory.EUM','com.ofss','org.eclipse.persistence','javax.persistence','javax.jws','03.com.ofss']
+            elif java.lang.String.contains(name.getName(),'bam_server'):
+              loggerList=['oracle','oracle.wsm.msg.logging','oracle.sysman','oracle.ods.virtualization','oracle.ods.virtualization.accesslog','oracle.webservices','oracle.webservices.management','oracle.j2ee.ws','oracle.j2ee.ws.server','oracle.fabric.common','com.oracle.webservices','com.sun.xml.ws','oracle.beam','oracle.adf.share.diagnostics.versions','oracle.soa.sql.trc.fabric','oracle.soa.healthcheck','oracle.sws','oracle.soa.adapter.iwaf','oracle.clickhistory.EUM','com.ofss','org.eclipse.persistence','javax.persistence','javax.jws','03.com.ofss']
+            elif java.lang.String.contains(name.getName(),'obpui_server'):
+              loggerList=['oracle','oracle.wsm.msg.logging','oracle.sysman','08.com.ofss','com.ofss','org.eclipse.persistence','javax.persistence','javax.jws','03.com.ofss']
+            else:
+              print '###### NO MATCHING SERVER NAME.... EXITING.....############'
+              sys.exit()
+            for LOGGER in loggerList:
+              print '####################### Setting Log Level  for Logger - ' + LOGGER + 'in server - '+ SNAME + '  ###########################'
+              setLogLevel(target=SNAME, logger=LOGGER, level="ERROR:1", persist="0",runtime="0")
+          except:
+            print '####################### Error in Setting Log level for Logger - ' + LOGGER + '  ###########################'
+            dumpStack()
+            sys.exit(1)
+          if java.lang.String.contains(name.getName(),'obpui_server') or java.lang.String.contains(name.getName(),'obphumantask_server'):
+            try:
+              setLogLevel(target=name.getName(), logger="03.errorpopup_log", addLogger="0", level="TRACE:32", persist="0",runtime="0")
+              setLogLevel(target=name.getName(), logger="errorpopup_log", addLogger="0", level="TRACE:32", persist="0",runtime="0")
+            except:
+              print '####################### Error in creating errorpopup Logger #########################'
+              dumpStack()
+            try:
+              configureLogHandler(target=name.getName(), name="ofsspop-handler", addHandler="1", handlerType="oracle.core.ojdl.logging.ODLHandlerFactory", path=sys.argv[4] + "/${weblogic.Name}/ofss-errorpop.log", level="TRACE:32", addToLogger=["03.errorpopup_log","errorpopup_log"], useParentHandlers=0)
+            except:
+              print '####################### Error in creating ErrorPop Log Handler #########################'
+              dumpStack()
+            try:
+              configureLogHandler(target=name.getName(), name="ofsspop-handler",propertyName="useDefaultAttributes", propertyValue="false", addProperty="0")
+              configureLogHandler(target=name.getName(), name="ofsspop-handler",propertyName="supplementalAttributes", propertyValue="J2EE_APP.name, J2EE_MODULE.name, WEBSERVICE.name, WEBSERVICE_PORT.name, composite_instance_id, component_instance_id, composite_name, component_name", addProperty="0")
+              configureLogHandler(target=name.getName(), name="ofsspop-handler",propertyName="format", propertyValue="ODL-Text", addProperty="0")
+              configureLogHandler(target=name.getName(), name="ofsspop-handler",rotationFrequency="24h", baseRotationTime="05:00", retentionPeriod="5d")
+              configureLogHandler(target=name.getName(), name="ofsspop-handler",propertyName="useThreadName", propertyValue="true", addProperty="0")
+              configureLogHandler(target=name.getName(), name="ofsspop-handler",propertyName="encoding", propertyValue="UTF-8", addProperty="0")
+            except:
+              print '####### Error in updating ErrorPop Log Handler'
+              dumpStack()
+              sys.exit(1)
+          else:
+            print '###################### NO MATCHING UI or HT Server.. Not COnfiguring errorpop_logging ########################'
+except:
+        print '######################## Error in accessing the domain ##########################'
+        dumpStack()
+        sys.exit(1)

@@ -1,0 +1,90 @@
+
+            {
+                "name": "<%= @name %>",
+                "type": "Server",
+                "params":
+                [
+                    {
+                        "type": "Log",
+                        "attributes":
+                        {
+                            "RotateLogOnStartup": "true",
+                            "MemoryBufferSize": "500",
+                            "StdoutFormat": "standard",
+                            "BufferSizeKB": "8",
+                            "ServerLoggingBridgeUseParentLoggersEnabled": "false",
+                            "RedirectStderrToServerLogEnabled": "false",
+                            "StdoutSeverity": "Off",
+                            "DomainLogBroadcastSeverity": "Error",
+                            "MemoryBufferSeverity": "Error",
+                            "StdoutLogStack": "true",
+                            "RedirectStdoutToServerLogEnabled": "false",
+                            "NumberOfFilesLimited": "true",
+                            "FileCount": "5",
+                            "RotationType": "byTime",
+                            "DomainLogBroadcasterBufferSize": "10",
+                            "Log4jLoggingEnabled": "false",
+                            "FileMinSize": "10000",
+                            "RotationTime": "05:00",
+                            "FileTimeSpan": "24",
+                            "StacktraceDepth": "5",
+                            "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
+                            "LogFileSeverity": "Warning",
+                            "FileName": "<%= @log_location_path %>/<%= @domain_name %>/%Name%/%Name%.log"
+                        }
+                    },
+                    {
+                        "type": "WebServer",
+                        "params":
+                        [
+                            {
+                                "type": "WebServerLog",
+                                "attributes":
+                                {
+                                    "RotateLogOnStartup": "true",
+                                    "NumberOfFilesLimited": "true",
+                                    "FileCount": "5",
+                                    "RotationType": "byTime",
+                                    "FileMinSize": "10000",
+                                    "RotationTime": "05:00",
+                                    "FileTimeSpan": "24",
+                                    "FileName": "<%= @log_location_path %>/<%= @domain_name %>/%Name%/access.log",
+                                    "LogFileFormat": "extended",
+                                    "ELFFields": "cs(X-Forwarded-For) c-ip auth_user date time time-taken cs-method cs-uri sc-status ctx-ecid ctx-rid"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "SSL",
+                        "attributes":
+                        {
+                            "ServerPrivateKeyAlias": "<%= @keystore_alias %>",
+                            "HostnameVerificationIgnored": "false",
+                            "Enabled": "true",
+                            "ServerPrivateKeyPassPhrase": "<%= PasswordVault.get_password(@password_vault_name, @asset_code, 'keystorepass' ) %>",
+                            "JSSEEnabled": "true",
+                            "UseServerCerts": "true"
+                        }
+                    },
+                    {
+                        "type": "ServerDiagnosticConfig",
+                        "attributes":
+                        {
+                            "DiagnosticContextEnabled": "true"
+                        }
+                    }
+                ],
+                "attributes":
+                {
+                    "Notes": "Server settings",
+                    "KeyStores": "CustomIdentityAndCustomTrust",
+                    "CustomIdentityKeyStoreFileName": "<%= @certs_location_path %>/<%= @keystore_name %>.jks",
+                    "CustomTrustKeyStoreFileName": "<%= @certs_location_path %>/<%= @truststore %>",
+                    "CustomIdentityKeyStorePassPhrase": "<%= PasswordVault.get_password(@password_vault_name, @asset_code, 'keystorepass' ) %>",
+                    "CustomTrustKeyStorePassPhrase": "<%= PasswordVault.get_password(@password_vault_name, @asset_code, 'truststorepass' ) %>",
+                    "CustomIdentityKeyStoreType": "jks",
+                    "CustomTrustKeyStoreType": "jks",
+                    "AdministrationPort": "%ListenPort+2000%"
+                }
+            }

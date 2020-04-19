@@ -1,0 +1,48 @@
+{
+  "name" : "Step 2 -- Deploy OBP Access Policies",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Deploy OES Policies",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+           "scriptBody" : "<%= @script_init_string %>\necho '--- Downloading PolicyStore from Artifactory on ${bamboo.OES_HOSTNAME} ---';\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>rm -rf <%= @dataBag['deployment']['BINARYPATH']%>/pit; mkdir -p <%= @dataBag['deployment']['BINARYPATH']%>/pit/PolicyStoreSetup; cd <%= @dataBag['deployment']['BINARYPATH']%>/pit/PolicyStoreSetup; wget --no-check-certificate ${bamboo.ARTIFACTORY_URL}/${bamboo.CEMLI_RELEASE_PATH}/extensionspolicystoresetup/${bamboo.POLICY_VERSION}/extensionspolicystoresetup-${bamboo.POLICY_VERSION}.tar.gz -O PolicyStoreSetup.tar.gz'\";\necho '--- Setting up PolicyStore on ${bamboo.OES_HOSTNAME} ---';\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd <%= @dataBag['deployment']['BINARYPATH']%>/pit/PolicyStoreSetup; tar -zxvf PolicyStoreSetup.tar.gz'\";\necho '--- Starting Policy Import on ${bamboo.OES_HOSTNAME} ---';\nssh <%= @ssh_key_string %>  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd <%= @dataBag['deployment']['BINARYPATH']%>/pit/PolicyStoreSetup/UtilityConfig; unzip -o UIComponents_new.zip'\";\necho '---Executing gradle for customisation and execution of PolicyStore---';\nssh <%= @ssh_key_string %>  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>  cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/* ; ${bamboo.GRADLE_HOME}/bin/gradle -b obpAccessPolicyDeploy.gradle -PmintDeployHome=/oracle/app/binaries/deployments/mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/<%= @environment_name %>/obpht.json deploy clean -s'\";\nssh <%= @ssh_key_string %>  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd <%= @dataBag['deployment']['BINARYPATH']%>/pit/PolicyStoreSetup; chmod 755 seedFreshPolicyStore.sh; ./seedFreshPolicyStore.sh'\";\necho '--- Finished Policy Import on ${bamboo.OES_HOSTNAME} ---';",
+           "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    } ]
+  } ],
+  "vars" : {
+    "ARTIFACTORY_URL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['access_policies']['cemli_release_path'].gsub('.','/') %>",
+    "GRADLE_VERSION" : "<%= @dataBag['deployment']['GRADLE_VERSION']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpht.json",
+    "JAVA_VERSION" : "<%= @dataBag['deployment']['JAVA_VERSION']%>",
+    "OES_HOSTNAME" : "<%= @dataBag['obpsoa']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>",
+    "POLICY_VERSION" : "<%= @manifest_vars['deployments']['access_policies']['extension_version']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpAccessPoliciesDeploy",
+    "productArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+     "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "ENVNAME" : "<%= @environment_name.chomp('r').chomp('w').upcase %>",
+    "debug" : "false"
+  },
+  "labels" : null,
+  "permissions" : null
+}

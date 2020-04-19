@@ -1,0 +1,73 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "host_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        }]
+    },
+    {  
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+     }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+     {
+          "name": "user",
+          "value": "<%= @obpdoc['wls_admin_user'] %>"
+        },
+        {
+          "name": "password",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpdoc', @obpdoc['wls_admin_user'] ) %>"
+        },
+        {
+          "name": "hostname",
+          "value": "<%=@obpdoc['admin']['listen_address']%><%=@obpdoc['dns_domain_name']%>"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpdoc/fmw/wlserver"
+        },
+        {
+          "name": "DB.PASSWORD",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpobh', 'OBPHOST' ) %>"
+        },
+        {
+          "name": "CONFIGTOOL_PASSWORD",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpoid', 'SA_CONFIGUPLOADER_OBP_USER') %>"
+        },
+        {
+          "name": "DB.USERNAME",
+          "value": "OBPHOST_OBP"
+        },
+        {
+          "name": "CONFIGTOOL_USERNAME",
+          "value": "<%= @deployment['NETIQUSERNAME'] %>"
+        },
+        {
+          "name": "cwalletpassword",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'deployment', 'cwalletpassword' ) %>"
+        }
+  ]
+}
+

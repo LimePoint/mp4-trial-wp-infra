@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rsync -CchavzP --stats --log-file=/backups/logs/<%= @targetvm %>/rsync_db_`date +%Y%m%d_%H%M%S`.log \
+-e "ssh -i /home/mintpress/.ssh/id_rsa -o StrictHostKeyChecking=no" --exclude={'product/db12/diag','product/db12/cfgtoollogs'} \
+-o -g oracle@<%= @targetvm %>:{'/oracle/app/oradata','/oracle/app/oraInventory','/oracle/app/flashback','/oracle/app/product'}  \
+/backups/<%= @targetvm %> 2>&1 > /backups/logs/rsync-db.out

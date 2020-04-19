@@ -1,0 +1,299 @@
+/*
+How to update this file:
+
+This file must be updated in a way that it works for both on cloud and on-prem
+On cloud, there is no OTD and hence all urls must have a port
+
+*/
+
+
+/*
+
+	Author: Romil Bhagat
+	Last Updated: 23-10-2017
+	This file configures Environment specific values for OBP Host.
+
+*/
+/* Turn off variable substitution */
+SET DEFINE OFF;
+WHENEVER SQLERROR EXIT SQL.SQLCODE
+SET VERIFY OFF TERMOUT ON SERVEROUT ON
+
+/* Block for configuring FLX_FW_CONFIG_VAR_B table for properties */
+DECLARE
+	/* Variable Definitions */
+	v_OPBCIMADMINPassword VARCHAR2(500) := '<%= Mint::AesEncryption.decrypt(PasswordVault.secret("databag://#{@dataBag['common']['password_vault_name']}/obpcim/obpcimadmin").value) %>';
+
+BEGIN
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='reports' WHERE F.PROP_ID='env.name';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpdoc']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='documaker.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpdoc']['frontend']['dmkr_port'] %>' WHERE F.PROP_ID='documaker.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpbip']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='bip.server.ip';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpbip']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='bip.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpbip']['frontend']['bip_port'] %>' WHERE F.PROP_ID='bip.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpipm']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='ipm.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpipm']['frontend']['ipm_port'] %>' WHERE F.PROP_ID='ipm.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobh']['admin']['listen_address'] %><%= @dataBag['obpobh']['dns_domain_name'] %>' WHERE F.PROP_ID='host.admin.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobh']['admin']['listen_port_ssl'] %>' WHERE F.PROP_ID='host.admin.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='collection.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='collection.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='common.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='common.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='communications.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='communications.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='deposits.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='deposits.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='fw.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='fw.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='lcm.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='lcm.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='lending.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='lending.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='obphost.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='obphost.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='origination.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='origination.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='party.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='party.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='pm.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='pm.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='pricing.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='pricing.host.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='prodproc.host.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE PROP_ID='prodproc.host.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['admin']['listen_address'] %><%= @dataBag['obpobu']['dns_domain_name'] %>' WHERE F.PROP_ID='ui.admin.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['admin']['listen_port_ssl'] %>' WHERE F.PROP_ID='ui.admin.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='ui.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['frontend']['obu_port'] %>' WHERE F.PROP_ID='ui.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='soa.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['soa_port'] %>' WHERE F.PROP_ID='soa.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='bam.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['bam_port'] %>' WHERE F.PROP_ID='bam.server.port';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['otd_vip_name'] %>' WHERE PROP_ID='humantask.server.name';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['ht_port'] %>' WHERE PROP_ID='humantask.server.sec.port';
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='<%= @dataBag['obpsoa']['obphumantask_server']['listen_port'] %>' WHERE PROP_ID='humantask.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpcim']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='oim-external.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpcim']['frontend']['otd_cim_tcp_port'] %>' WHERE F.PROP_ID='oim-external.server.port';
+
+	UPDATE FLX_FW_CONFIG_ALL_B F SET F.PROP_VALUE='t3s://${oim-external.server.name}:${oim-external.server.port}' WHERE F.PROP_ID='OIM_URL';
+	UPDATE FLX_FW_CONFIG_ALL_B F SET F.PROP_VALUE='obpcimadmin' WHERE F.PROP_ID='OIM_USER_NAME';
+	UPDATE FLX_FW_CONFIG_ALL_B F SET F.PROP_VALUE=v_OPBCIMADMINPassword WHERE F.PROP_ID='OIM_USER_PASSWORD';
+
+    UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='/oracle/app/binaries/obpobu/fmw/obpinstall/obp' where PROP_ID='ui.obp.location';
+    UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE=REPLACE(PROP_VALUE, 'http://', 'https://') WHERE PROP_VALUE LIKE '%host.server.name%';
+
+	UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='default' WHERE PROP_ID='soa.partition.name.origination';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'false' WHERE PROP_ID = 'ebo.integration.flag';
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET CATEGORY_ID='AdapterFactoriesOverride' WHERE PROP_ID='PARTY_COLLECTION_ADAPTER_MOCKED';
+
+	--This configure OBP host to point OSB - obpOSBVIPName
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obposb']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='osb.o2o.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obposb']['frontend']['osb_port'] %>' WHERE F.PROP_ID='osb.o2o.port.ssl.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='https' WHERE F.PROP_ID='osb.o2o.server.protocol';
+
+
+	-- Updates the Webhelp folders
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='/oracle/app/binaries/obpui/fmw/obpinstall/obp/' WHERE PROP_ID='web.help.url' AND CATEGORY_ID='UiConfig';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='/oracle/app/binaries/obpui/fmw/obpinstall/obp/obp.ui.domain/userfiles/images/' WHERE PROP_ID='UI_IMAGE_FOLDER_PATH' AND CATEGORY_ID='UiConfig';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='/oracle/app/binaries/obpui/fmw/obpinstall/obp/obp.ui.domain/userfiles/files/' WHERE PROP_ID='UI_IMAGE_FILE_PATH' AND CATEGORY_ID='UiConfig';
+
+	-- This configures the OBP Host to point to the correct IPM Application
+	UPDATE FLX_CM_DOC_TYP_META_DATA SET APP_ID='2' WHERE DOC_TYP_ID='MAIN';
+	UPDATE FLX_CM_DOC_TYP_META_DATA SET APP_ID='3' WHERE DOC_TYP_ID='TEMP';
+
+	-- This configures the OBP UI to point to the correct IPM Application
+    UPDATE FLX_FW_CONFIG_ALL_B set prop_value='2' where prop_id = 'applicationId';
+
+	-- To make this cloud compatible
+	<% if node['dns'] and node['dns']['zone']=='wpdev.mintpress.io' %>
+		-- This configures OBP UI to setup the correct link to open the documents
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>:<%= @dataBag['obpipm']['frontend']['friendly_port'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_PREFIX';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>:<%= @dataBag['obpipm']['frontend']['friendly_port'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_SUFFIX';
+
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.view.obeo/faces/applicationForm.jspx' WHERE PROP_ID = 'OR101';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.view.obeo/faces/applicationForm' WHERE category_id like 'TaskCodeLinkage' and prop_id ='APPFORM';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.view.obeo/faces/applicationTracker.jspx' WHERE PROP_ID = 'OR100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.view.obeo/faces/singlePartyView.jspx' WHERE PROP_ID = 'PI026';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.view.obeo/faces/quoteTracker.jspx' WHERE PROP_ID = 'SIM01';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.viewpmu/faces/PMMain.jspx' WHERE PROP_ID = 'PM060';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpoam']['frontend']['friendly_name'] %>:<%= @dataBag['obpoam']['frontend']['friendly_port'] %>/oam/server/logout' WHERE PROP_ID='SSO_LOGOUT_URL';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>:<%= @dataBag['obpsoa']['frontend']['friendly_port'] %>/integration/worklistapp/faces/home.jspx' WHERE PROP_ID = 'EXT01';
+		-- Task Code URL Config
+		UPDATE FLX_FW_CONFIG_ALL_B SET  PROP_VALUE = 'https://<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>:<%= @dataBag['obpsoa']['frontend']['friendly_port'] %>/bam/composer' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'EXT05';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpbip']['frontend']['friendly_name'] %>:<%= @dataBag['obpbip']['frontend']['friendly_port'] %>/xmlpserver/' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'EXT04';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpbip']['frontend']['friendly_name'] %>:<%= @dataBag['obpbip']['frontend']['friendly_port'] %>/analytics' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'OA100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpdoc']['frontend']['friendly_name'] %>:<%= @dataBag['obpdoc']['frontend']['friendly_port'] %>/DocumakerCorrespondence' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'ODC100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpurm']['frontend']['friendly_name'] %>:<%= @dataBag['obpurm']['frontend']['friendly_port'] %>/urm' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'URM100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.view.obeo/faces/singlePartyView.jspx' WHERE PROP_ID = 'PI100';
+	<% else %>
+		-- This configures OBP UI to setup the correct link to open the documents
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_PREFIX';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_SUFFIX';
+
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.view.obeo/faces/applicationForm.jspx' WHERE PROP_ID = 'OR101';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.view.obeo/faces/applicationForm' WHERE category_id like 'TaskCodeLinkage' and prop_id ='APPFORM';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.view.obeo/faces/applicationTracker.jspx' WHERE PROP_ID = 'OR100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.view.obeo/faces/singlePartyView.jspx' WHERE PROP_ID = 'PI026';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.view.obeo/faces/quoteTracker.jspx' WHERE PROP_ID = 'SIM01';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.viewpmu/faces/PMMain.jspx' WHERE PROP_ID = 'PM060';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpoam']['frontend']['friendly_name'] %>/oam/server/logout' WHERE PROP_ID='SSO_LOGOUT_URL';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>/integration/worklistapp/faces/home.jspx' WHERE PROP_ID = 'EXT01';
+		-- Task Code URL Config
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>/bam/composer' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'EXT05';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpbip']['frontend']['friendly_name'] %>/xmlpserver/' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'EXT04';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpbip']['frontend']['friendly_name'] %>/analytics' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'OA100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpdoc']['frontend']['friendly_name'] %>/DocumakerCorrespondence' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'ODC100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpurm']['frontend']['friendly_name'] %>/urm' where CATEGORY_ID = 'TaskCodeLinkage' and PROP_ID = 'URM100';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.view.obeo/faces/singlePartyView.jspx' WHERE PROP_ID = 'PI100';
+
+		-- Task code URL config on FLX_FW_CONFIG_VAR_B
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>' where PROP_ID='soasso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='soasso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpipm']['frontend']['friendly_name'] %>' where PROP_ID='ipmsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='ipmsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpbip']['frontend']['friendly_name'] %>' where PROP_ID='bipsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='bipsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>' where PROP_ID='bamsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='bamsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpobu']['frontend']['friendly_name'] %>' where PROP_ID='uisso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='uisso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpbip']['frontend']['friendly_name'] %>' where PROP_ID='oasso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='oasso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpipm']['frontend']['friendly_name'] %>' where PROP_ID='docsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='docsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpurm']['frontend']['friendly_name'] %>' where PROP_ID='urmsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='urmsso.server.port';
+	<% end %>
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${host.server.name}:${host.server.port}/com.ofss.fc.channel.branch/HTTPListener' WHERE PROP_ID='host.service.json.url';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${soa.server.name}:${soa.server.port}/bpm/workspace/faces/jsf/worklist/worklist.jspx' WHERE PROP_ID='worklistapp.url';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${soa.server.name}:${soa.server.port}' WHERE PROP_ID='workflow.provider.http.url';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='t3s://${soa.server.name}:${soa.server.port}' WHERE PROP_ID='SOA_URL';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${ipm.server.name}:${ipm.server.port}/imaging/ws' WHERE PROP_ID='PROPERTY_IPM_URL';
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${ipm.server.name}:${ipm.server.port}/imaging/faces/Pages/Welcome.jspx' WHERE PROP_ID='EXT03';
+
+	-- This makes all SOA calls SSL
+	UPDATE FLX_FW_CONFIG_OUT_WS_CFG_B SET ENDPOINT_URL = REPLACE(ENDPOINT_URL, 'http://', 'https://') WHERE ENDPOINT_URL LIKE 'http://%';
+	UPDATE FLX_FW_CONFIG_OUT_WS_CFG_B SET URL = REPLACE(URL, 'http://', 'https://') WHERE URL LIKE 'http://%';
+
+    -- Earlier as per Enable LISA Integration Flag which is disabled
+    UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='true' WHERE PROP_ID = 'mdm.Search.flag';
+    UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='true' WHERE PROP_ID = 'ebo.integration.flag';
+
+    -- Updates to Flx_Fw_Config_All_B as per stubbed parameter
+    <% if @dataBag['common']['stubbed'] == "true" %>
+       <%= "Delete From Flx_Fw_Config_All_B Where Prop_Id='CZ_CUSTOMER_UPDATE_ENABLE' And Category_Id='CZ_FEATURE_ENABLE';" %>
+       <%= "Insert into FLX_FW_CONFIG_ALL_B (PROP_ID,CATEGORY_ID,PROP_VALUE,FACTORY_SHIPPED_FLAG,PROP_COMMENTS,SUMMARY_TEXT,CREATED_BY,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER) values ('CZ_CUSTOMER_UPDATE_ENABLE','CZ_FEATURE_ENABLE','false','Y','Customer update from OBP to OCH feature enabled or disabled','PROP_VALUE=true means Enabled and PROP_VALUE=false means Disabled','ofssuser',sysdate,'ofssuser',sysdate,'A',1);" %>
+    <% else %>
+       <%= "Delete From Flx_Fw_Config_All_B Where Prop_Id='CZ_CUSTOMER_UPDATE_ENABLE' And Category_Id='CZ_FEATURE_ENABLE';" %>
+       <%= "Insert into FLX_FW_CONFIG_ALL_B (PROP_ID,CATEGORY_ID,PROP_VALUE,FACTORY_SHIPPED_FLAG,PROP_COMMENTS,SUMMARY_TEXT,CREATED_BY,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER) values ('CZ_CUSTOMER_UPDATE_ENABLE','CZ_FEATURE_ENABLE','true','Y','Customer update from OBP to OCH feature enabled or disabled','PROP_VALUE=true means Enabled and PROP_VALUE=false means Disabled','ofssuser',sysdate,'ofssuser',sysdate,'A',1);" %>
+    <% end %>
+
+	-- Enable SSO
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='true' WHERE PROP_ID='IS_SSO_ENABLED';
+
+	<% if @enable_virus_scan == "true" %>
+		<%= "delete from flx_fw_config_all_b where prop_id ='ScanAdapter';" %>
+		<%= "insert into flx_fw_config_all_b (prop_id, category_id, prop_value, factory_shipped_flag, prop_comments, summary_text, object_status_flag, object_version_number) values ('ScanAdapter', 'UiConfig','com.ofss.fc.ui.scan.MetaScanAdapter','Y',null,'ScanAdapter com.ofss.fc.ui.scan.MetaScanAdapter  UiConfig','A',1);" %>
+	<% else %>
+		<%= "DELETE FROM FLX_FW_CONFIG_ALL_B WHERE PROP_ID ='ScanAdapter';" %>
+	<% end %>
+
+	-- fix to change the OBP report output path for batch
+	UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='/oracle/app/runtime/obphost/domains/resources/' WHERE PROP_ID='fc.io.dir';
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE=REPLACE(PROP_VALUE, '${fc.io.dir}', '/oracle/app/runtime/obphost/domains/resources') WHERE PROP_ID IN ('Request.Response.Folder','receipt.base.out.location','UPLOAD_FILE_LOCATION','REPOUT', 'NGP_BASOUT','NGP.BASEOUT_BACKUP', 'NGP.BASEIN_BACKUP', 'NGP.WORKAREA', 'NGP.DOWNLOAD_AREA','NGP.UPLOAD_AREA','EXPORT.LOCATION','Request.Response.Folder');
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE=REPLACE(PROP_VALUE, '${default.legal.entity}', '03') WHERE PROP_ID IN ('Request.Response.Folder','receipt.base.out.location','UPLOAD_FILE_LOCATION','REPOUT', 'NGP_BASOUT','NGP.BASEOUT_BACKUP', 'NGP.BASEIN_BACKUP', 'NGP.WORKAREA', 'NGP.DOWNLOAD_AREA','NGP.UPLOAD_AREA','EXPORT.LOCATION','Request.Response.Folder');
+
+	-- fix to for the ODI DB client path for RCMS
+	UPDATE FLX_LZ_AU_SUB_INTER_TYPE SET SCHEMA_FILE_PATH='/oracle/app/binaries/obpodi/dbclient' where SUB_INTERFACE_NAME = 'RCMS_UPLOAD';
+
+	-- fix to change the BIP url to HTTPS
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${bip.server.name}:${bip.server.port}/xmlpserver/services/PublicReportService' WHERE PROP_ID='PROPERTY_BIP_URL';
+
+	-- fix to change the SOA Protocol to HTTPS
+	UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='https' WHERE PROP_ID='soa.server.protocol';
+
+	-- Update db deploy log table with env name
+	UPDATE CZ_AF_DB_DEPLOY_LOG SET envname ='<%= @envname %>';
+
+	-- 2.7.1 Changes
+
+	delete from  flx_fw_config_all_b where prop_id like '%json.url%' and category_id in ('pricing.UiConfig','ccm.UiConfig');
+	delete from flx_fw_config_all_b where prop_id like '%.host.service.json.url%';
+
+	-- Valex Funder ID Changes
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_client_id_pbwp'] %>' where field_name='COL_VAL_CLIENT_ID' and target_unit='PBWP';
+
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_funder_id_pbwp'] %>' where field_name='COL_VAL_PARTY_FUNDER_ID' and target_unit='PBWP';
+
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_client_id_pbsg'] %>' where field_name='COL_VAL_CLIENT_ID' and target_unit='PBSG';
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_funder_id_pbsg'] %>' where field_name='COL_VAL_PARTY_FUNDER_ID' and target_unit='PBSG';
+
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_client_id_pbbm'] %>' where field_name='COL_VAL_CLIENT_ID' and target_unit='PBBM';
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_funder_id_pbbm'] %>' where field_name='COL_VAL_PARTY_FUNDER_ID' and target_unit='PBBM';
+
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_client_id_pbbs'] %>' where field_name='COL_VAL_CLIENT_ID' and target_unit='PBBS';
+	update flx_lz_au_field_data set field_data_transform='<%= @dataBag['common']['val_funder_id_pbbs'] %>' where field_name='COL_VAL_PARTY_FUNDER_ID' and target_unit='PBBS';
+
+    -- RRB Changes to product code
+    <% if node['dns'] and node['dns']['zone']=='wpdev.mintpress.io' %>
+       update FLX_LZ_AU_FIELD_DATA set FIELD_DATA_TRANSFORM='500001' where record_id=780100001 and field_name='PACKAGE_PRODUCT_CODE';
+    <% else %>
+       update FLX_LZ_AU_FIELD_DATA set FIELD_DATA_TRANSFORM='<%= @dataBag['common']['rrb_field_data_tfm'] %>' where record_id=780100001 and field_name='PACKAGE_PRODUCT_CODE';
+    <% end %>
+
+	-- change Financial Instution details only for non-prod envs
+
+	<% unless @envname =~ /^PRD/ %>
+
+	DELETE FROM FLX_CS_FIN_INST_DTLS_B WHERE FINANCIAL_INSTITUTION_NAME IN ('Australian and NewZealand Banking Group (ANZ)','Commonwealth Bank Of Australia','Macquarie Group','National Australia Bank Australia','INDUE LTD','NECDL BAN BANK');
+	update FLX_CS_FIN_INST_DTLS_B SET BUSINESS_NUMBER='ABN31007250575',PEXA_SUBSCRIBER_ID='6954' where FINANCIAL_INSTITUTION_NAME='Bendigo and Adelaide Bank';
+	update FLX_CS_FIN_INST_DTLS_B SET BUSINESS_NUMBER='ABN31007250580A',PEXA_SUBSCRIBER_ID='6959' where FINANCIAL_INSTITUTION_NAME='Beyond Bank Australia';
+	update FLX_CS_FIN_INST_DTLS_B SET BUSINESS_NUMBER='ABN31007250578',PEXA_SUBSCRIBER_ID='6957' where FINANCIAL_INSTITUTION_NAME='GREATER BANK LIMITED';
+	update FLX_CS_FIN_INST_DTLS_B SET BUSINESS_NUMBER='ABN31007250579A',PEXA_SUBSCRIBER_ID='6958' where FINANCIAL_INSTITUTION_NAME='Resimac Limited';
+	update FLX_CS_FIN_INST_DTLS_B SET BUSINESS_NUMBER='ABN74083938416',PEXA_SUBSCRIBER_ID='6904' where FINANCIAL_INSTITUTION_NAME='Rural Bank Limited';
+	update FLX_CS_FIN_INST_DTLS_B SET BUSINESS_NUMBER='ABN31007250577',PEXA_SUBSCRIBER_ID='6956' where FINANCIAL_INSTITUTION_NAME='SUNCORP-METWAY LTD';
+	update FLX_CS_FIN_INST_DTLS_B SET BUSINESS_NUMBER='ABN31007250580B',PEXA_SUBSCRIBER_ID='6959' where FINANCIAL_INSTITUTION_NAME='COMMUNITY CPS AUSTRALIA LTD (T/A BEYOND B';
+	Insert into FLX_CS_FIN_INST_DTLS_B (FINANCIAL_INSTITUTION_ID,FINANCIAL_INSTITUTION_NAME,BUSINESS_NUMBER,BANK_CODE,PEXA_SUBSCRIBER_ID,EMAIL,ADDRESS_LINE2,ADDRESS_LINE3,ADDRESS_LINE4,ADDRESS_LINE5,ADDRESS_LINE6,ADDRESS_LINE7,ADDRESS_LINE8,ADDRESS_LINE9,ADDRESS_LINE10,ADDRESS_LINE11,ADDRESS_LINE12,STATE,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,DOMAIN_OBJECT_EXTN,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER,CREATED_BY,ZIP,CITY,COUNTRY_CODE,ADDRESS_LINE1,FF_TEXT_ATTRIBUTE_1,FF_TEXT_ATTRIBUTE_2,FF_TEXT_ATTRIBUTE_3,FF_TEXT_ATTRIBUTE_4,FF_TEXT_ATTRIBUTE_5) values (null,'Australian and NewZealand Banking Group (ANZ)','ABN31007250574','AUSNEWZEAL','6953',null,null,null,null,null,null,null,null,null,null,null,null,'NSW',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'ofssuser',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'CZ','A',1,'ofssuser','2000','SYDNEY','AU','Level 9, 833 Collins Street, Docklands, Victoria 3008, Australia',null,null,null,null,null);
+	Insert into FLX_CS_FIN_INST_DTLS_B (FINANCIAL_INSTITUTION_ID,FINANCIAL_INSTITUTION_NAME,BUSINESS_NUMBER,BANK_CODE,PEXA_SUBSCRIBER_ID,EMAIL,ADDRESS_LINE2,ADDRESS_LINE3,ADDRESS_LINE4,ADDRESS_LINE5,ADDRESS_LINE6,ADDRESS_LINE7,ADDRESS_LINE8,ADDRESS_LINE9,ADDRESS_LINE10,ADDRESS_LINE11,ADDRESS_LINE12,STATE,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,DOMAIN_OBJECT_EXTN,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER,CREATED_BY,ZIP,CITY,COUNTRY_CODE,ADDRESS_LINE1,FF_TEXT_ATTRIBUTE_1,FF_TEXT_ATTRIBUTE_2,FF_TEXT_ATTRIBUTE_3,FF_TEXT_ATTRIBUTE_4,FF_TEXT_ATTRIBUTE_5) values (null,'Commonwealth Bank Of Australia','ABN31007250573','COMMBANKAU','6952',null,null,null,null,null,null,null,null,null,null,null,null,'NSW',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'ofssuser',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'CZ','A',1,'ofssuser','2000','SYDNEY','AU','Ground Floor, Tower 1, 201 Sussex Street, Sydney, NSW 2000, Australia',null,null,null,null,null);
+	Insert into FLX_CS_FIN_INST_DTLS_B (FINANCIAL_INSTITUTION_ID,FINANCIAL_INSTITUTION_NAME,BUSINESS_NUMBER,BANK_CODE,PEXA_SUBSCRIBER_ID,EMAIL,ADDRESS_LINE2,ADDRESS_LINE3,ADDRESS_LINE4,ADDRESS_LINE5,ADDRESS_LINE6,ADDRESS_LINE7,ADDRESS_LINE8,ADDRESS_LINE9,ADDRESS_LINE10,ADDRESS_LINE11,ADDRESS_LINE12,STATE,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,DOMAIN_OBJECT_EXTN,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER,CREATED_BY,ZIP,CITY,COUNTRY_CODE,ADDRESS_LINE1,FF_TEXT_ATTRIBUTE_1,FF_TEXT_ATTRIBUTE_2,FF_TEXT_ATTRIBUTE_3,FF_TEXT_ATTRIBUTE_4,FF_TEXT_ATTRIBUTE_5) values (null,'Macquarie Group','ABN31007250576B','MACQUABANK','6955',null,null,null,null,null,null,null,null,null,null,null,null,'NSW',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'ofssuser',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'CZ','A',1,'ofssuser','2000','SYDNEY','AU','50 Martin Pl, Sydney, NSW 2000, Australia',null,null,null,null,null);
+	Insert into FLX_CS_FIN_INST_DTLS_B (FINANCIAL_INSTITUTION_ID,FINANCIAL_INSTITUTION_NAME,BUSINESS_NUMBER,BANK_CODE,PEXA_SUBSCRIBER_ID,EMAIL,ADDRESS_LINE2,ADDRESS_LINE3,ADDRESS_LINE4,ADDRESS_LINE5,ADDRESS_LINE6,ADDRESS_LINE7,ADDRESS_LINE8,ADDRESS_LINE9,ADDRESS_LINE10,ADDRESS_LINE11,ADDRESS_LINE12,STATE,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,DOMAIN_OBJECT_EXTN,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER,CREATED_BY,ZIP,CITY,COUNTRY_CODE,ADDRESS_LINE1,FF_TEXT_ATTRIBUTE_1,FF_TEXT_ATTRIBUTE_2,FF_TEXT_ATTRIBUTE_3,FF_TEXT_ATTRIBUTE_4,FF_TEXT_ATTRIBUTE_5) values (null,'National Australia Bank Australia','ABN31007250572A','NATIONAUBK','6951',null,null,null,null,null,null,null,null,null,null,null,null,'NSW',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'ofssuser',to_timestamp('02/MAR/20 12:00:00.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'CZ','A',1,'ofssuser','2000','SYDNEY','AU','800 Bourke Street, Docklands, Victoria 3008, Australia',null,null,null,null,null);
+	Insert into FLX_CS_FIN_INST_DTLS_B (FINANCIAL_INSTITUTION_ID,FINANCIAL_INSTITUTION_NAME,BUSINESS_NUMBER,BANK_CODE,PEXA_SUBSCRIBER_ID,EMAIL,ADDRESS_LINE2,ADDRESS_LINE3,ADDRESS_LINE4,ADDRESS_LINE5,ADDRESS_LINE6,ADDRESS_LINE7,ADDRESS_LINE8,ADDRESS_LINE9,ADDRESS_LINE10,ADDRESS_LINE11,ADDRESS_LINE12,STATE,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,DOMAIN_OBJECT_EXTN,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER,CREATED_BY,ZIP,CITY,COUNTRY_CODE,ADDRESS_LINE1,FF_TEXT_ATTRIBUTE_1,FF_TEXT_ATTRIBUTE_2,FF_TEXT_ATTRIBUTE_3,FF_TEXT_ATTRIBUTE_4,FF_TEXT_ATTRIBUTE_5) values (null,'INDUE LTD','31007250579','INDUELMTED',null,null,null,null,null,null,null,null,null,null,null,null,null,'NSW',to_timestamp('04/DEC/19 11:53:56.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'ofssuser',to_timestamp('04/DEC/19 11:53:56.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'CZ','A',1,'ofssuser','2000','SYDNEY','AU','USE REGISTERED BUSINESS ADDRESS',null,null,null,null,null);
+	Insert into FLX_CS_FIN_INST_DTLS_B (FINANCIAL_INSTITUTION_ID,FINANCIAL_INSTITUTION_NAME,BUSINESS_NUMBER,BANK_CODE,PEXA_SUBSCRIBER_ID,EMAIL,ADDRESS_LINE2,ADDRESS_LINE3,ADDRESS_LINE4,ADDRESS_LINE5,ADDRESS_LINE6,ADDRESS_LINE7,ADDRESS_LINE8,ADDRESS_LINE9,ADDRESS_LINE10,ADDRESS_LINE11,ADDRESS_LINE12,STATE,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,DOMAIN_OBJECT_EXTN,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER,CREATED_BY,ZIP,CITY,COUNTRY_CODE,ADDRESS_LINE1,FF_TEXT_ATTRIBUTE_1,FF_TEXT_ATTRIBUTE_2,FF_TEXT_ATTRIBUTE_3,FF_TEXT_ATTRIBUTE_4,FF_TEXT_ATTRIBUTE_5) values (null,'NECDL BAN BANK','12004044937','NECDLBANBA',null,null,null,null,null,null,null,null,null,null,null,null,null,'NSW',to_timestamp('04/DEC/19 11:53:56.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'ofssuser',to_timestamp('04/DEC/19 11:53:56.000000000 AM','DD/MON/RR HH12:MI:SSXFF AM'),'CZ','A',1,'ofssuser','2000','SYDNEY','AU','USE REGISTERED BUSINESS ADDRESS',null,null,null,null,null);
+
+	<% end %>
+
+	COMMIT;
+END;
+/

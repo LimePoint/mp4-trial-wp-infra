@@ -1,0 +1,64 @@
+#Script to map LDAP Groups to Application Roles
+#arg1 : Domain adminuser name (ex:weblogic)
+#arg2 : Domain adminuser password
+#arg3 : Domain admin url
+#arg4 : Application Stripe Name
+#arg5 : LDAP Groups List Seperated by colon (:)
+#arg6 : Application Role List
+#arg7 : Action - <grant>/<revoke>
+#Usage: setApplicationRole.py weblogic ****** t3://localhost:7001 soa-infra soa_operator SOAOperator <revoke>
+
+import sys
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+domainName=cmo.getName()
+
+def setAppRole(stripeName,newGrpArray,appRoleArray) :
+ for grpName in newGrpArray :
+  try :
+   for appRole in appRoleArray :
+    try :
+     grantAppRole(appStripe=stripeName,appRoleName=appRole,principalClass='weblogic.security.principal.WLSGroupImpl',principalName=grpName,forceValidate='false')
+     print '############################'
+     print 'In Application Stripe - ' +stripeName+ ' Application Role Of  - ' +appRole+ ' set successfully for group - ' +grpName
+     print '#############################'
+    except javax.management.MBeanException :
+     print '#####App Role - ' +appRole+ ' either already exists for the group - ' +grpName+ ' or the group doesnt exist ###########'
+     print '###### Please verify from below output ###########'
+     listAppRoleMembers(appStripe=stripeName,appRoleName=appRole)
+  except :
+   print 'Exception in Granting App Roles to the provided Groups'
+   sys.exit(1)
+
+def removeAppRole(stripeName,newGrpArray,appRoleArray) :
+ for grpName in newGrpArray :
+  try :
+   for appRole in appRoleArray :
+    try :
+     revokeAppRole(appStripe=stripeName,appRoleName=appRole,principalClass='weblogic.security.principal.WLSGroupImpl',principalName=grpName)
+     print '############################'
+     print 'In Application Stripe - ' +stripeName+ ' Application Role Of  - ' +appRole+ ' revoked successfully for group - ' +grpName
+     print '#############################'
+    except javax.management.MBeanException :
+     print '#####App Role - ' +appRole+ ' either already revoked for the group - ' +grpName+ ' or the group doesnt exist ###########'
+     print '###### Please verify from below output ###########'
+     listAppRoleMembers(appStripe=stripeName,appRoleName=appRole)
+  except :
+   print 'Exception in Revoking App Roles to the provided Groups'
+   sys.exit(1)
+
+stripeName = str(sys.argv[4])
+strnewGrp=str(sys.argv[5])
+newGrpArray=strnewGrp.split(":")
+strAppRoleArray = str(sys.argv[6])
+appRoleArray = strAppRoleArray.split(":")
+action=str(sys.argv[7])
+if action == 'revoke' :
+  removeAppRole(stripeName,newGrpArray,appRoleArray)
+elif action == 'grant' :
+  setAppRole(stripeName,newGrpArray,appRoleArray)
+else :
+  print 'Action - '+action+' not recognized... Exiting '
+  sys.exit(1)
+disconnect()
+exit()

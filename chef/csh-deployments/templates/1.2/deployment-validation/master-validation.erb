@@ -1,0 +1,49 @@
+<%
+  uniquifier = Time.now.strftime('%Y%h%d_%H%M')
+  puts "uniquifier      #{uniquifier}"
+
+# Organize  all candidate admin servers in a hash
+  hash_admins = {}
+
+  oam_admin_host = @dataBag['obpoam']['hostnameList'][0]+ @dataBag['obpoam']['dns_domain_name']
+  hash_admins.merge!("obpoam": oam_admin_host)
+  obh_admin_host = @dataBag['obpobh']['hostnameList'][0]+ @dataBag['obpobh']['dns_domain_name']
+  hash_admins.merge!("obpobh": obh_admin_host)
+  soa_admin_host = @dataBag['obpsoa']['hostnameList'][0]+ @dataBag['obpsoa']['dns_domain_name']
+  hash_admins.merge!("obpsoa": soa_admin_host)
+  bip_admin_host = @dataBag['obpbip']['hostnameList'][0]+ @dataBag['obpbip']['dns_domain_name']
+  hash_admins.merge!("obpbip": bip_admin_host)
+  doc_admin_host = @dataBag['obpdoc']['hostnameList'][0]+ @dataBag['obpdoc']['dns_domain_name']
+  hash_admins.merge!("obpdoc": doc_admin_host)
+  odi_admin_host = @dataBag['obpodi']['hostnameList'][0]+ @dataBag['obpodi']['dns_domain_name']
+  hash_admins.merge!("obpodi": odi_admin_host)
+  osb_admin_host = @dataBag['obposb']['hostnameList'][0]+ @dataBag['obposb']['dns_domain_name']
+  hash_admins.merge!("obposb": osb_admin_host)
+  puts "The List of servers for validation : #{hash_admins}"
+
+  csh_release_version = @dataBag['deployment']['CSH_RELEASE_VERSION']
+  puts "Pickup Template for CSH Release Path========>>  #{csh_release_version}"
+%>
+  {
+    "name": "<%= @environment_name %>_Validate_<%= uniquifier %>",
+    "description": "Validate Deployment Sample",
+    "params": {},
+    "plans": [
+      <%= render "#{csh_release_version}/deployment-validation/1-0-artifact-validation.erb",
+        :variables => {
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :obh_admin_host => obh_admin_host,
+          :ssh_key_string => @ssh_key_string
+        }
+      %>,
+      <%= render "#{csh_release_version}/deployment-validation/2-0-server-validation.erb",
+        :variables => {
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :hash_admins => hash_admins,
+          :ssh_key_string => @ssh_key_string
+        }
+      %>
+    ]
+  }

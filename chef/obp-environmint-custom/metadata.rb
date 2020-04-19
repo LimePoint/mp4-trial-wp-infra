@@ -1,0 +1,11 @@
+name             'obp-environmint-custom'
+maintainer       'LimePoint Pty Ltd'
+maintainer_email 'support@limepoint.com'
+license          'ENVIRONMINT(TM) End-User License. Copyright (c) LimePoint Pty Ltd 2014. All rights reserved.'
+description      'CSH specific Service Catalogue cookbooks'
+long_description 'CSH specific Service Catalogue cookbooks'
+version '8.3.14'
+
+depends 'oracle-database'
+depends 'csh-deployments'
+depends 'oci-common'

@@ -1,0 +1,522 @@
+<% environment_name = @environment["name"] %>
+<% password_vault_name = @common['password_vault_name'] %>
+<% dns_domain = @obpcid["dns_domain_name"] ; if dns_domain.nil? then dns_domain=".mintpress.io" end %>
+<% asset_code = @code.downcase  %>
+<% uniquifier = @uuid.tr('-', '') %>
+
+<% base_install_path   = '/oracle/app/binaries/' + asset_code  %>
+<% base_shared_path    = '/oracle/app/runtime/' + asset_code  %>
+<% instance_home_path  = base_shared_path + '/instances' %>
+
+<% log_location_path   = '/oracle/app/logs/' + asset_code %>
+<% certs_location_path = '/oracle/app/runtime/' + environment_name + '/certs' %>
+
+<% java_install_path      = base_install_path + '/java' %>
+<% jdk_version            = '7' %>
+<% fmw_install_path           = base_install_path + '/fmw' %>
+<% inventory_install_path = base_install_path + '/oraInventory' %>
+<% temp_location          = base_install_path + '/tmp' %>
+
+
+{
+  "internalVariables": {
+	"environmentName": "<%= environment_name %>",
+	"assetCode": "<%= asset_code %>",
+	"stageRootDir": "/oracle/stage"
+
+  },
+  "uniquifier": "<%= uniquifier %>",
+  "projectName": "<%= environment_name %>_<%= asset_code %>_<%= uniquifier %>",
+  "site": {
+	"hostList": [
+	  {
+		"id": "<%= @obpcid['hostnameList'][0] %>",
+		"address": "${_.basename}<%= @obpcid['dns_domain_name'] %>",
+		"properties": [
+		  {
+			"name": "basename",
+			"value": "<%= @obpcid['hostnameList'][0] %>"
+		  }
+		],
+		"groupRefs":
+		[
+		  "Common_Host_Details"
+		]
+	  },
+	  {
+		"id": "db_server",
+		"address": "<%= @obpcid['database']['scan_address'] %>",
+		"groupRefs":
+		[
+		  "Common_Host_Details"
+		],
+		"properties": [
+		  {
+			"name": "scaleout",
+			"value": "false"
+		  }
+		]
+	  }
+	],
+	"installationList": [
+	  {
+		"name": "jdk",
+		"product": "jdk",
+		"version": "1.7.0_181",
+		"installPath": "<%= java_install_path %>",
+		"softwareStage": "${stageRootDir}/jdk/jdk-7u181-linux-x64.tar.gz",
+		"groupRefs":
+		[
+		  "Common_Installation_Details"
+		]
+	  },
+	  {
+		"name": "rcu",
+		"product": "rcu",
+		"version": "11.1.1.9",
+		"softwareStage": "${stageRootDir}/rcu/11.1.1.9",
+		"dependsonList": [
+		  "jdk"
+		],
+		"groupRefs":
+		[
+		  "Common_Installation_Details"
+		]
+	  },
+	  {
+		"name": "weblogic",
+		"product": "weblogic",
+		"version": "10.3.6",
+		"installPath": "<%= fmw_install_path %>/wlserver_10.3",
+		"softwareStage": "${stageRootDir}/wls/10.3.6",
+		"dependsonList": [
+		  "jdk",
+		  "rcu"
+		],
+		"groupRefs":
+		[
+		  "Common_Installation_Details_1036"
+		],
+		"patchset": [
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "U5I2",
+              "aru": "29204678",
+            "properties": [
+			  {
+				  "name": "action",
+				  "value": "rollback"
+			  }
+			]
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "XN2D",
+              "aru": "29715457",
+            "properties": [
+			  {
+				  "name": "action",
+				  "value": "rollback"
+			  }
+			]
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "TP1R",
+              "aru": "29752447",
+            "properties": [
+			  {
+				  "name": "action",
+				  "value": "rollback"
+			  }
+			]
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "IL49",
+              "aru": "29800003",
+            "properties": [
+			  {
+				  "name": "action",
+				  "value": "rollback"
+			  }
+			]
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "BF7B",
+              "aru": "25832897"
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "SK1V",
+              "aru": "16810786"
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "MXLE",
+              "aru": "29633432"
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "F21U",
+              "aru": "30077638"
+          },
+          {
+              "targetOracleHome": "${_.installPath}",
+              "softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+              "name": "VSEX",
+              "aru": "30078557"
+          }
+		]
+	  },
+	  {
+		"name": "oid",
+		"product": "idm",
+		"version": "11.1.1.9",
+		"installPath": "<%= fmw_install_path %>/idm",
+		"softwareStage": "${stageRootDir}/idm/11.1.1.9",
+		"dependsonList": [
+		  "weblogic"
+		],
+		"groupRefs":
+		[
+		  "Common_Installation_Details"
+		],
+		"patchset": [
+		  {
+			"name": "23137803",
+			"aru": "23137803",
+			"targetOracleHome": "${_.installPath}",
+			"softwareStage": "${stageRootDir}/idm/11.1.1.9/patches"
+		  },		  
+		  {
+			"name": "28125308",
+			"aru": "28125308",
+			"targetOracleHome": "${_.installPath}",
+			"softwareStage": "${stageRootDir}/idm/11.1.1.9/patches"
+		  }
+		]
+	  }
+	],
+	"environmentList": [
+	  {
+		"name": "<%= environment_name %>",
+		"mwTopologyList": [
+		  {
+			"name": "<%= asset_code %>",
+			"description": "<%= asset_code %> Environment",
+			"instanceList": [
+			  {
+				"name": "oidldap_${_.nodeid}",
+				"type": "oid",
+				"instanceTop": "<%= instance_home_path %>",
+				"installationName":"oid",
+				"hostIdentifier": "<%= @obpcid['hostnameList'][0] %>",
+				"properties": [
+				  {
+					"name": "isSecondInstance",
+					"value": "$(if ${_.nodeid} == 1 then 'false' else 'true' end)",
+					"target": "idm.oid.isSecondInstance"
+				  },
+				  {
+					"value": "<%= @obpcid['oidldap']['listen_address'] %><%= @obpcid['dns_domain_name'] %>",
+					"target": "idm.oid.listen.address"
+				  },
+				  {
+					"value": "<%= @obpcid['oidldap']['listen_port'] %>",
+					"target": "idm.oid.nonssl.port"
+				  },
+				  {
+					"value": "<%= @obpcid['oidldap']['listen_port_ssl'] %>",
+					"target": "idm.oid.ssl.port"
+				  },
+				  {
+					"value": "<%= certs_location_path %>/${_.name}/<%= asset_code %>_wallet",
+					"target": "idm.oid.ssl.wallet.location"
+				  },
+				  {
+					"value": "server-auth",
+					"target": "idm.oid.ssl.authentication.mode"
+				  },
+				  {
+					"value": "orcloidinstancename",
+					"target": "idm.oid.catalog.attributes"
+				  }
+				],
+				"groupRefs": [
+				  "Common_OID_Config",
+				  "Monitoring_Domain_details"
+				],
+				"repository": {
+				  "componentList": [
+					"OID"
+				  ],
+				  "id": "rcu01",
+				  "dbName": "<%= environment_name %><%= asset_code %>db",
+				  "schemaPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, 'ODS') %>",
+				  "prefix": "<%= @obpcid['database']['rcu_schema_prefix'].upcase %>",
+				  "dbUser": "<%= @obpcid['database']['sysdba_username'].upcase %>",
+				  "defaultRepository": "true"
+				}
+			  },
+			  {
+				"name": "oidrepl_${_.nodeid}",
+				"type": "oid",
+				"installationName":"oid",
+				"instanceTop": "<%= instance_home_path %>",
+				"hostIdentifier": "<%= @obpcid['hostnameList'][0] %>",
+				"properties": [
+				  {
+					"name": "isSecondInstance",
+					"value": "true",
+					"target": "idm.oid.isSecondInstance"
+				  },
+				  {
+					"name": "rcuPassword",
+					"value": "<%= PasswordVault.get_password(password_vault_name, asset_code, 'ODS') %>"
+				  },
+				  {
+					"value": "<%= @obpcid['oidrepl']['listen_port_ssl'] %>",
+					"target": "idm.oid.ssl.port"
+				  },
+				  {
+					"value": "<%= @obpcid['oidrepl']['listen_port'] %>",
+					"target": "idm.oid.nonssl.port"
+				  },
+				  {
+					"value": "<%= @obpcid['oidrepl']['listen_address'] %><%= @obpcid['dns_domain_name'] %>",
+					"target": "idm.oid.listen.address"
+				  },
+				  {
+					"value": "<%= certs_location_path %>/${_.name}/<%= asset_code %>_wallet",
+					"target": "idm.oid.ssl.wallet.location"
+				  },
+				  {
+					"value": "no-auth",
+					"target": "idm.oid.ssl.authentication.mode"
+				  }
+				],
+				"groupRefs": [
+				  "Common_OID_Config",
+				  "Monitoring_Domain_details"
+				],
+				"repository": {
+				  "componentList": [
+					"OID"
+				  ],
+				  "dbName": "<%= environment_name %><%= asset_code %>db",
+				  "schemaPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, 'ODS') %>",
+				  "prefix": "<%= @obpcid['database']['rcu_schema_prefix'].upcase %>",
+				  "dbUser": "<%= @obpcid['database']['sysdba_username'].upcase %>",
+				  "id": "rcu01"
+				}
+			  }
+			],
+			"transferList": [
+			  <% @obpcid['hostnameList'].each_with_index do |hostname, index| %>
+			  {
+				"name": "Wallet_ldap<%= index + 1 %>",
+				"hostIdentifierList": [
+				  "<%= hostname %>"
+				],
+				"sourceFile": "<%= @common['certs_source'] %>/<%= environment_name %>/<%= hostname %>_wallet",
+				"destinationFile": "<%= certs_location_path %>/oidldap_<%= index + 1 %>/<%= asset_code %>_wallet/cwallet.sso",
+				"permissions": "600",
+				"transferWhenList": [
+				  "pre-online"
+				],
+				"properties": [
+				  {
+					"name": "scaleout",
+					"value": "false"
+				  }
+				]
+			  },
+			  {
+				"name": "Wallet_repl<%= index + 1 %>",
+				"hostIdentifierList": [
+				  "<%= hostname %>"
+				],
+				"sourceFile": "<%= @common['certs_source'] %>/<%= environment_name %>/<%= hostname %>_wallet",
+				"destinationFile": "<%= certs_location_path %>/oidrepl_<%= index + 1 %>/<%= asset_code %>_wallet/cwallet.sso",
+				"permissions": "600",
+				"transferWhenList": [
+				  "pre-online"
+				],
+				"properties": [
+				  {
+					"name": "scaleout",
+					"value": "false"
+				  }
+				]
+			  },
+			  <% end %>
+			  <%= render "common-jdk-policy-transfer.erb",
+				  :variables => {
+					  :host_identifier => @obpcid['hostnameList'][0],
+					  :environment_name => environment_name,
+					  :asset_code => asset_code,
+					  :jdk_version => jdk_version,
+					  :java_install_path => java_install_path
+				  }
+			  %>
+			],
+			"executeList": [
+			  {
+				"name": "SchemaLoad",
+				"hostIdentifierList": [
+				  "<%= @obpcid['hostnameList'][0] %>"
+				],
+				"sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::cid-content-load]' -l info",
+				"properties": [
+				  {
+					"name": "scaleout",
+					"value": "false"
+				  }
+				],
+				"executeWhenList": [
+				  "post-online"
+				]
+			  }
+			],
+			"properties": [
+			  {
+				"name": "targetPlatform",
+				"value": "EXA"
+			  }
+			],
+			"hostInstallationList": [
+			  {
+				"installationName": "oid",
+				"hostIdentifierList": [
+				  "<%= @obpcid['hostnameList'][0] %>"
+				]
+			  }
+			]
+		  }
+		]
+	  }
+	],
+	"databaseList": [
+	  {
+		"name": "<%= environment_name %><%= asset_code %>db",
+		"port": "<%= @obpcid['database']['listen_port'] %>",
+		"serviceName": "<%= @obpcid['database']['service_name'] %>",
+		"properties": [
+		  {
+			"name": "rcu.datafile.initialsize",
+			"value": "200M",
+			"target": "rcu.datafile.initialsize"
+		  }
+		],
+		"schemaList": [
+		  {
+			"name": "<%= @obpcid['database']['sysdba_username'].upcase %>",
+			"password": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpcid['database']['sysdba_username'].upcase) %>"
+		  }
+		],
+		"hostIdentifier": "db_server"
+	  }
+	],
+	"propertyGroupList": [
+	  <%= render "common-config-groups.erb",
+				:variables => {
+					:environment_name => environment_name,
+					:asset_code => asset_code,
+					:inventory_install_path => inventory_install_path,
+					:fmw_install_path => fmw_install_path,
+					:temp_location => temp_location
+				}
+			%>
+	  ,
+		{
+		  "name": "Common_OID_Config",
+		  "description": "OID Instance configuration",
+		  "properties": [
+			{
+			  "name": "oidIsAutoport",
+			  "value": "false",
+			  "target": "idm.oid.isAutoport"
+			},
+			{
+			  "name": "oidNamespace",
+			  "value": "dc=westpac,dc=com,dc=au",
+			  "target": "idm.oid.namespace"
+			},
+			{
+			  "name": "oidAdminPassword",
+			  "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpcid['oidldap']['admin_user']) %>",
+			  "target": "idm.oid.adminpassword"
+			},
+			{
+			  "name": "rcuPassword",
+			  "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, 'ODS') %>"
+			},
+			{
+			  "name": "schemaPassword",
+			  "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, 'ODS') %>",
+			  "target": "idm.oid.db.schemapassword"
+			},
+			{
+			  "name": "oidIsRAC",
+			  "value": "false",
+			  "target": "idm.oid.isRAC"
+			},
+			{
+			  "value": "28",
+			  "target": "idm.oid.ssl.version"
+			}
+		  ]
+		},
+		{
+		"name": "Monitoring_Domain_details",
+		"description": "Admin domain details for monitoring OID",
+		"properties": [
+			{
+			"name": "registerWithDomain",
+			"value": "true"
+			},
+			{
+			"name": "wls.domain.name",
+			"value": "<%= @obpidm['wls_domain_name'] %>",
+			"target": "wls.domain.name"
+			},
+			{
+			"name": "wls.domain.hostname",
+			"value": "<%= @obpidm['admin']['listen_address'] %><%= @obpidm['dns_domain_name'] %>",
+			"target": "wls.domain.hostname"
+			},
+			{
+			"name": "registerAdminUsername",
+			"value": "<%= @obpidm['wls_admin_user'] %>",
+			"target": "wls.admin.username"
+			},
+			{
+			"name": "registerAdminPassword",
+			"value": "<%= PasswordVault.get_password(password_vault_name, 'obpidm', @obpidm['wls_admin_user'] ) %>",
+			"target": "wls.admin.password"
+			},
+			{
+			"name": "registerAdminHostname",
+			"value": "<%= @obpidm['admin']['listen_address'] %><%= @obpidm['dns_domain_name'] %>",
+			"target": "wls.admin.hostname"
+			},
+			{
+			"name": "registerAdminPort",
+			"value": "<%= @obpidm['admin']['listen_port'] %>",
+			"target": "wls.admin.listen.port"
+			}
+		]
+	}
+	]
+  }
+}

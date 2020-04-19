@@ -1,0 +1,13 @@
+dn: cn=csh_sudo_user_ctmagent_<%= @environment %>,ou=sudo,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: sudoRole
+objectClass: top
+sudoCommand: ALL
+sudoRunAsUser: ctmagent
+<% @hosts.each do |h| -%>
+<% if h =~ /odi/ -%>
+sudoHost: <%= h %>
+<% end -%>
+<% end -%>
+cn: csh_sudo_user_ctmagent_<%= @environment %>
+sudoUser: +csh_team_<%= @environment %>_ctmagent

@@ -1,0 +1,92 @@
+{
+  "name" : "Step 2 -- Deploy ODI Batch",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [   {
+          "description" : "ODI Batch Scripts Download",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "url=${bamboo.cemliArtifactoryURL}/`echo ${bamboo.CEMLI_RELEASE_PATH}|sed -r \"s|\\.|/|g\"`/extensionsobpscripts/${bamboo.OBPSCRIPTSVERSION}/extensionsobpscripts-${bamboo.OBPSCRIPTSVERSION}.zip\nif curl -k --output /dev/null --silent --head --fail \"$url\"; then\n  echo \"Artefact exists: $url\"\nelse\n  echo \"Artefact does not exist: $url\"\n  exit 1\nfi\n<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; <%= @shell_init_string %> mkdir -p /oracle/app/batch/odi/scripts;cd /oracle/app/batch/odi;rm -rf /oracle/app/batch/odi/scripts_bkp;mkdir -p /oracle/app/batch/odi/scripts_bkp; cp -r /oracle/app/batch/odi/scripts /oracle/app/batch/odi/scripts_bkp/;curl -k ${url} -o /tmp/extensionsobpscripts.zip;cd /oracle/app/batch/odi/scripts; rm -rf * ;unzip -o /tmp/extensionsobpscripts.zip -d /oracle/app/batch/odi/scripts; cd /oracle/app/batch/odi/scripts; ls -ltrc; chmod -R 755 *; ls -ltrc'\"",
+            "interpreter" : "LEGACY_SH_BAT",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        }, {
+          "description" : "Apply Customisation to Downloaded files",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; <%= @shell_init_string %> cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/* ; ${bamboo.GRADLE_HOME}/bin/gradle -b odiExpressDep.gradle -PmintDeployHome=/oracle/app/binaries/deployments/mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s;/tmp/odiExpress/replaceBatchTokens.sh;/tmp/odiExpress/replaceOdiTopologyTokens.sh; rm -rf /tmp/odiExpress/*'\"",
+            "interpreter" : "RUN_AS_EXECUTABLE",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        }, {
+        "name" : null,
+        "description" : "ODI Batch CWallet Creation",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME};chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b odiCWallet.gradle -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PmintDeployHome=../../../mintdeploy deploy clean -s; [ -f /oracle/app/batch/cwalletGenerator/config/Wallet.properties ] && > /oracle/app/batch/cwalletGenerator/config/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Remove wallet properties after deploy",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %> [ -f /oracle/app/batch/cwalletGenerator/config/Wallet.properties ] && > /oracle/app/batch/cwalletGenerator/config/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    } ]
+  } ],
+  "vars" : {
+
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['odi_batch']['cemli_release_path']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpodi.json",
+    "DBSTRING" : "<%= @dataBag['obpobh']['database']['sysconfig_url'].partition('jdbc:oracle:thin:@').last %>",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "JAVA_HOME" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpodi/java",
+    "OBPSCRIPTSVERSION" : "<%= @manifest_vars['deployments']['odi_batch']['extension_version']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/odiExpress",
+    "OBP_HOST_NODE" : "<%= @dataBag['obpobh']['hostnameList'][0]%><%= @dataBag['obpobh']['dns_domain_name']%>",
+    "OBP_NODE_1" : "<%= @dataBag['obpodi']['hostnameList'][0]%><%= @dataBag['obpodi']['dns_domain_name']%>",
+    "OBP_STARTSCRIPT_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpStartupShutdown",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "debug" : "false"
+  },
+  "labels" : null,
+  "permissions" : null
+}

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<exportdata>
+    <applications>
+        <application>
+            <id>3</id>
+            <name>DCMSDocuments</name>
+            <description>Imaging application for DCMS migrated documents</description>
+            <properties>
+                <repository>
+                    <id>1</id>
+                    <name>UCM Connection</name>
+                </repository>
+                <nextFieldId>19</nextFieldId>
+                <fastCheckIn>false</fastCheckIn>
+                <fullTextSearch>false</fullTextSearch>
+            </properties>
+            <fieldDefinitions>
+                <fieldDefinition>
+                    <id>2</id>
+                    <name>Doc RSN</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>true</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>3</id>
+                    <name>DRUID</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>5</id>
+                    <name>Document Type</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>true</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>6</id>
+                    <name>Original Document Type</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>7</id>
+                    <name>Title Reference Volume</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>8</id>
+                    <name>Title Reference Folio</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>9</id>
+                    <name>Title State</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>10</id>
+                    <name>Image Status</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>11</id>
+                    <name>Document Checksum</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>false</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>12</id>
+                    <name>Image Conversion Status</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>13</id>
+                    <name>Document Source</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>true</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>15</id>
+                    <name>Upload Date</name>
+                    <type>DATETIME</type>
+                    <length>0</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>16</id>
+                    <name>Document Scan Date</name>
+                    <type>DATETIME</type>
+                    <length>0</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>17</id>
+                    <name>Transaction Id</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>true</indexed>
+                    <pickList/>
+                </fieldDefinition>
+                <fieldDefinition>
+                    <id>18</id>
+                    <name>Process Batch Id</name>
+                    <type>TEXT</type>
+                    <length>80</length>
+                    <scale>0</scale>
+                    <required>false</required>
+                    <indexed>false</indexed>
+                    <pickList/>
+                </fieldDefinition>
+            </fieldDefinitions>
+            <applicationPermissions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            <documentPermissions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            <security>
+                <securityItem>
+                    <name>DCMSApp_Admins</name>
+                    <type>GROUP</type>
+                    <permissions>
+                        <view>1</view>
+                        <modify>1</modify>
+                        <delete>1</delete>
+                        <grantaccess>1</grantaccess>
+                    </permissions>
+                </securityItem>
+            </security>
+            <documentSecurity>
+                <documentSecurityItem>
+                    <name>DCMSDocs_Admins</name>
+                    <type>GROUP</type>
+                    <permissions>
+                        <view>1</view>
+                        <write>1</write>
+                        <delete>1</delete>
+                        <grantaccess>1</grantaccess>
+                        <lockAdministrator>1</lockAdministrator>
+                        <standard>0</standard>
+                        <restricted>0</restricted>
+                        <hidden>0</hidden>
+                    </permissions>
+                </documentSecurityItem>
+                <documentSecurityItem>
+                    <name>DCMSDocs_Readers</name>
+                    <type>GROUP</type>
+                    <permissions>
+                        <view>1</view>
+                        <write>0</write>
+                        <delete>0</delete>
+                        <grantaccess>0</grantaccess>
+                        <lockAdministrator>0</lockAdministrator>
+                        <standard>0</standard>
+                        <restricted>0</restricted>
+                        <hidden>0</hidden>
+                    </permissions>
+                </documentSecurityItem>
+            </documentSecurity>
+            <lifecyclePolicy>
+                <retentionPolicy>DCMSDOCSFS</retentionPolicy>
+                <storagePolicy>
+                    <storagePolicyItem>
+                        <volumeName>DCMSDOCSFS</volumeName>
+                        <duration>1</duration>
+                        <durationUnit>DAYS</durationUnit>
+                        <indefinite>true</indefinite>
+                    </storagePolicyItem>
+                </storagePolicy>
+                <supportingContentVolume>DCMSDOCSFS</supportingContentVolume>
+            </lifecyclePolicy>
+            <bpelConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+        </application>
+    </applications>
+    <dependentApplications/>
+    <searches/>
+    <inputs/>
+    <exportComments> </exportComments>
+    <exportFileDate>2018-11-27T15:43:49.730+11:00</exportFileDate>
+</exportdata>

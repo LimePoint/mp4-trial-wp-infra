@@ -1,0 +1,119 @@
+{
+  "name": "Step 2 -- Deploy URM",
+  "params": {},
+  "stages": [
+    {
+      "name": "Default Stage",
+      "params": {},
+      "manual": false,
+      "jobs": [
+        {
+          "name": "Deploy Node 1",
+          "description": "",
+          "params": {},
+          "tasks": [
+            {
+              "description": "Start URM",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=start-obpurm.py deploy clean -s'\"",
+                "interpreter": "RUN_AS_EXECUTABLE",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            },
+            {
+              "description": "Deploy URMConfig and URMDB",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b obpURMArtDwld.gradle -g ../../cache -PurmVersion=${bamboo.CEMLI_URM_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PENVNAME=${bamboo.ENVNAME} deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            },
+            {
+              "description": "Execute URMConfig and URMDB",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b urmScriptExecute.gradle -g ../../cache -PmintDeployHome=../.. -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PENVNAME=${bamboo.ENVNAME} -PuseDeployConfig=true deploy clean -s'\"",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            },
+            {
+              "description": "Shutdown URM",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null  -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=shutdown-obpurm.py deploy clean -s'\"",
+                "interpreter": "RUN_AS_EXECUTABLE",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            },
+            {
+              "description": "Start URM",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=start-obpurm.py deploy clean -s'\"",
+                "interpreter": "RUN_AS_EXECUTABLE",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "vars": {
+    "CEMLI_RELEASE_PATH": "<%= @manifest_vars['deployments']['urm']['cemli_release_path']%>",
+    "CEMLI_URM_VERSION": "<%= @manifest_vars['deployments']['urm']['extension_version']%>",
+    "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+    "OBP_DEPLOY_HOME": "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpURMDeploy",
+    "OBP_NODE_1": "<%= @dataBag['obpurm']['hostnameList'][0]%><%= @dataBag['obpurm']['dns_domain_name']%>",
+    <% if (@dataBag['obpurm']['hostnameList'][1] != nil) then %>   "OBP_NODE_2" : "<%= @dataBag['obpurm']['hostnameList'][1]%><%= @dataBag['obpurm']['dns_domain_name']%>",<% end %>
+    "OBP_STARTSCRIPT_HOME": "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpStartupShutdown",
+    "cemliArtifactoryURL": "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpurm.json",
+    <%
+      if ['prd2r','prd2w'].include?(@environment_name)
+        env_modified = 'prd2r'
+      elsif ['svp2r','svp2w'].include?(@environment_name)
+        env_modified = 'svp2r'
+      else
+        env_modified = @environment_name
+      end
+    %>
+
+    "ENVNAME" : "<%= env_modified.downcase %>",
+
+    "debug": "false"
+  }
+}

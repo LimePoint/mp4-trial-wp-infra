@@ -1,0 +1,7 @@
+dn: cn=csh_team_<%= @environment %>_oracle,ou=team,ou=netgroup,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+objectClass: nisNetgroup
+objectClass: top
+<% @user_list.each do |user| -%>
+nisNetgroupTriple: (,<%= user %>,)
+<% end -%>
+cn: csh_team_<%= @environment %>_oracle

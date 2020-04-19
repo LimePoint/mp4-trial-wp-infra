@@ -1,0 +1,41 @@
+#Script to Update JDBC Driver
+#arg1 : Domain adminuser name (ex:weblogic)
+#arg2 : Domain adminuser password
+#arg3 : Domain admin url
+#Usage : updateJDBCDriver.py weblogic ****** t3://localhost:17001
+
+import sys
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+
+try :
+    domainConfig()
+    edit()
+    startEdit()
+    cd('/JDBCSystemResources/EDNDataSource/JDBCResource/EDNDataSource/JDBCDriverParams/EDNDataSource')
+    cmo.setDriverName('oracle.jdbc.xa.client.OracleXADataSource')
+    save()
+    cd('/JDBCSystemResources/oimOperationsDB/JDBCResource/oimOperationsDB/JDBCDriverParams/oimOperationsDB')
+    cmo.setDriverName('oracle.jdbc.xa.client.OracleXADataSource')
+    save()
+    cd('/JDBCSystemResources/OraSDPMDataSource/JDBCResource/OraSDPMDataSource/JDBCDriverParams/OraSDPMDataSource')
+    cmo.setDriverName('oracle.jdbc.xa.client.OracleXADataSource')
+    save()
+    cd('/JDBCSystemResources/SOADataSource/JDBCResource/SOADataSource/JDBCDriverParams/SOADataSource')
+    cmo.setDriverName('oracle.jdbc.xa.client.OracleXADataSource')
+    save()
+    cd('/JDBCSystemResources/soaOIMLookupDB/JDBCResource/soaOIMLookupDB/JDBCDriverParams/soaOIMLookupDB')
+    cmo.setDriverName('oracle.jdbc.xa.client.OracleXADataSource')
+    save()
+    activate()
+    print '######################################'
+    print 'Successfully Updated JDBCDriver '
+    print '######################################'
+    disconnect()
+    exit()
+except :
+    print 'Unable to Update JDBCDriver ' 
+    dumpStack()
+    undo(defaultAnswer='y')
+    cancelEdit('y')
+    sys.exit(1)

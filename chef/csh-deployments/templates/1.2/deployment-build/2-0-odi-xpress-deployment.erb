@@ -1,0 +1,150 @@
+{
+  "name" : "Step 2 -- Odi Express Deployment",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Shutdown ODI",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= @dataBag['obpodi']['hostnameList'][0]%><%= @dataBag['obpodi']['dns_domain_name']%> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/<%= @environment_name %>/obpodi.json -PscriptToRun=shutdown-obpodi.py deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "true"
+      }, {
+          "description" : "Download Topology files",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "url=${bamboo.cemliArtifactoryURL}/`echo ${bamboo.CEMLI_RELEASE_PATH}|sed -r \"s|\\.|/|g\"`/extensionsodi/${bamboo.ODIVERSION}/extensionsodi-${bamboo.ODIVERSION}.zip\nif curl -k --output /dev/null --silent --head --fail \"$url\"; then\n  echo \"Artefact exists: $url\"\n  echo \"Downloading Artefact ...\"\n  curl -k \"$url\" -o /tmp/extensionsodi.zip\nelse\n  echo \"Artefact does not exist: $url\"\n  exit 1\nfi\n<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; <%= @shell_init_string %> cd ${bamboo.OBP_DEPLOY_HOME};rm -rf topologyFolder;mkdir topologyFolder;curl -k ${url} -o /tmp/extensionsodi.zip;cd topologyFolder;unzip /tmp/extensionsodi.zip'\"",
+            "interpreter" : "RUN_AS_EXECUTABLE",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        }, {
+          "description" : "Apply Customisation to Downloaded files",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; <%= @shell_init_string %> cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/* ; ${bamboo.GRADLE_HOME}/bin/gradle -b odiExpressDep.gradle -PmintDeployHome=/oracle/app/binaries/deployments/mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s;/tmp/odiExpress/replaceBatchTokens.sh;/tmp/odiExpress/replaceOdiTopologyTokens.sh; rm -rf /tmp/odiExpress/*'\"",
+            "interpreter" : "RUN_AS_EXECUTABLE",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        }, {
+          "description" : "Importing Topologies and Non CSA Scenarios",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; <%= @shell_init_string %> cd ${bamboo.OBP_DEPLOY_HOME}; sed -i \"s/WORKREP_CSA/workrep1/g\" config.properties; java -cp /oracle/app/binaries/obpodi/fmw/wlserver/server/lib/weblogic.jar:/oracle/app/binaries/obpodi/fmw/odi/sdk/lib/oracle.odi-sdk-jse.jar:.:odiExpress.jar ImportODITopologies ./topologyFolder/topology/servers ./topologyFolder/topology/contexts ./topologyFolder/ODI_TXN/scenarios;'\"",
+            "interpreter" : "RUN_AS_EXECUTABLE",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        }, {
+          "description" : "Importing CSA Scenarios",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; <%= @shell_init_string %> cd ${bamboo.OBP_DEPLOY_HOME}; sed -i \"s/workrep1/WORKREP_CSA/g\" config.properties; java -cp /oracle/app/binaries/obpodi/fmw/wlserver/server/lib/weblogic.jar:/oracle/app/binaries/obpodi/fmw/odi/sdk/lib/oracle.odi-sdk-jse.jar:.:odiExpress.jar ImportODITopologies ./topologyFolder/ODI_CSA/scenarios;'\"",
+            "interpreter" : "RUN_AS_EXECUTABLE",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        }, {
+        "name" : null,
+        "description" : "TNS ORA Copy",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>echo \\\"HOSTDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;. /oracle/app/binaries/deployments/mintdeploy/envScripts/copyTNSOra.sh;'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Odi Agent Ear Deploy",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME};${bamboo.GRADLE_HOME}/bin/gradle -b odiDepApps.gradle -g ../../../cache --refresh-dependencies deploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../../../mintdeploy/ -s'\"",
+          "interpreter" : "RUN_AS_EXECUTABLE",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Start up ODI",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= @dataBag['obpodi']['hostnameList'][0]%><%= @dataBag['obpodi']['dns_domain_name']%> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/<%= @environment_name %>/obpodi.json -PscriptToRun=start-obpodi.py deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "true"
+      } ]
+    } ]
+  } ],
+  "vars" : {
+
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['odi']['cemli_release_path']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpodi.json",
+    "DBSTRING" : "<%= @dataBag['obpobh']['database']['sysconfig_url'].partition('jdbc:oracle:thin:@').last %>",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "JAVA_HOME" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpodi/java",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/odiExpress",
+    "OBP_HOST_NODE" : "<%= @dataBag['obpobh']['hostnameList'][0]%><%= @dataBag['obpobh']['dns_domain_name']%>",
+    "OBP_NODE_1" : "<%= @dataBag['obpodi']['hostnameList'][0]%><%= @dataBag['obpodi']['dns_domain_name']%>",
+    "ODIVERSION" : "<%= @manifest_vars['deployments']['odi']['extension_version']%>",
+    "OBP_STARTSCRIPT_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpStartupShutdown",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "debug" : "false"
+  },
+  "labels" : null,
+  "permissions" : null
+}

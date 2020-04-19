@@ -1,0 +1,1068 @@
+<% environment_name = @environment['name'] %>
+<% password_vault_name = @common['password_vault_name'] %>
+<% dns_domain = @obpotd["dns_domain_name"] ; if dns_domain.nil? then dns_domain=".mintpress.io" end %>
+<% asset_code = @code.downcase  %>
+<% uniquifier = @uuid.tr('-', '') %>
+
+<% base_install_path = '/oracle/app/binaries/' + asset_code  %>
+<% base_domain_path  = '/oracle/app/runtime/' + asset_code + '/domains' %>
+<% otd_instance_top  = '/oracle/app/instances/' + asset_code + '/domains' %>
+
+<% log_location_path   = '/oracle/app/logs/' + asset_code %>
+<% certs_location_path = '/oracle/app/runtime/' + environment_name + '/certs' %>
+
+<% java_install_path      = base_install_path + '/java' %>
+<% jdk_version            = '8' %>
+
+<% fmw_install_path           = base_install_path + '/fmw' %>
+<% inventory_install_path = base_install_path + '/oraInventory' %>
+<% temp_location          = base_install_path + '/tmp' %>
+<% otd_temp_location      = '/oracle/app/otdtmp' %>
+<% otd_admin_server_top   = base_domain_path %>
+<% node_manager_top       = fmw_install_path + '/wlserver/common/nodemanager' %>
+
+{
+    "internalVariables":
+    {
+        "environmentName": "<%= environment_name %>",
+        "assetCode": "<%= asset_code %>",
+        "stageRootDir": "/oracle/stage"
+    },
+    "projectName": "<%= environment_name %>_<%= asset_code %>_<%= uniquifier %>",
+    "uniquifier": "<%= uniquifier %>",
+    "site": {
+        "hostList": [
+            {
+                "id": "<%= @obpotd['hostnameList'][0] %>",
+                "address": "${_.basename}<%= @obpotd['dns_domain_name'] %>",
+                "properties": [
+                    {
+                        "name": "basename",
+                        "value": "<%= @obpotd['hostnameList'][0] %>"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Host_Details",
+                    "List_Of_TVT_Tests"
+                ]
+            }
+        ],
+        "installationList": [
+
+            {
+                "name": "jdk",
+                "product": "jdk",
+                "version": "1.8.0_221",
+                "installPath": "<%= java_install_path %>",
+                "softwareStage": "${stageRootDir}/jdk/jdk-8u221-linux-x64.tar.gz",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "fmwinfra",
+                "product": "fmwinfra",
+                "version": "12.2.1.3",
+                "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.3/fmw_12.2.1.3.0_infrastructure.jar",
+                "installPath": "<%= fmw_install_path %>",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "jdk"
+                ],
+				"patchset": [
+				  {
+                    "targetOracleHome": "${_.installPath}",
+                    "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.3/patches",
+                    "name": "29814665",
+                    "aru": "29814665",
+                    "properties": [
+                        {
+                          "name": "action",
+                          "value": "rollback"
+                        }
+                      ]
+                  },                  
+                  {
+                    "targetOracleHome": "${_.installPath}",
+                    "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.3/patches",
+                    "name": "30386660",
+                    "aru": "30386660",
+                    "properties": [
+                        {
+                          "target": "opatch.minimum.version",
+                          "value": "13.9.4.2"
+                        },
+                        {
+                          "target": "opatch.binary.location",
+                          "value": "${stageRootDir}/common_patches/OPatch/139420/6880880"
+                        },
+                        {
+                          "target": "opatch.update.usegeneric",
+                          "value": "true"
+                        },
+                        {
+                          "name": "patchWhen",
+                          "value": "post-binaries"
+                        }
+                      ]
+                  },
+				  {
+                    "targetOracleHome": "${_.installPath}",
+                    "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.3/patches",
+                    "name": "30576401",
+                    "aru": "30576401",
+                    "properties": [
+                        {
+                          "target": "opatch.minimum.version",
+                          "value": "13.9.4.2"
+                        },
+                        {
+                          "target": "opatch.binary.location",
+                          "value": "${stageRootDir}/common_patches/OPatch/139420/6880880"
+                        },
+                        {
+                          "target": "opatch.update.usegeneric",
+                          "value": "true"
+                        },
+                        {
+                          "name": "patchWhen",
+                          "value": "post-binaries"
+                        }
+                      ]
+                  },
+                  {
+                    "targetOracleHome": "${_.installPath}",
+                    "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.3/patches",
+                    "name": "29909359",
+                    "aru": "29909359",
+                    "properties": [
+                        {
+                          "target": "opatch.minimum.version",
+                          "value": "13.9.4.2"
+                        },
+                        {
+                          "target": "opatch.binary.location",
+                          "value": "${stageRootDir}/common_patches/OPatch/139420/6880880"
+                        },
+                        {
+                          "target": "opatch.update.usegeneric",
+                          "value": "true"
+                        },
+                        {
+                          "name": "patchWhen",
+                          "value": "post-binaries"
+                        }
+                      ]
+                  }
+				]
+            },
+            {
+                "name": "otd",
+                "product": "otd",
+                "version": "12.2.1.3",
+                "installPath": "<%= fmw_install_path %>/otd",
+                "softwareStage": "${stageRootDir}/otd/12.2.1.3/fmw_12.2.1.3.0_otd_linux64.bin",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "fmwinfra"
+                ]
+            }
+        ],
+        "environmentList": [
+            {
+                "name": "<%= environment_name %>",
+                "webgateInstanceList": [
+                    {
+                        "name": "MultiSSO",
+                        <% if @obpotd['alter_site_oam_url'] %>
+                        "url": "http://<%= @obpotd['alter_site_oam_url'] %>",
+                        <% else %>
+                        "url": "http://<%= @obpoam['admin']['listen_address'] %><%= @obpoam['dns_domain_name'] %>:<%= @obpoam['admin']['listen_port'] %>",
+                        <% end %>
+                        "username": "<%= @obpoam['wls_admin_user'] %>",
+                        "password": "<%= PasswordVault.get_password(password_vault_name, 'obpoam', @obpoam['wls_admin_user'] ) %>",
+                        "rregHome": "${stageRootDir}/idm/12.2.1.3/RREG.tar.gz",
+                        "runOnTarget": "true"
+                    }
+                ],
+                "mwTopologyList": [
+                    {
+                        "name": "<%= asset_code %>",
+                        "description": "<%= environment_name %> <%= asset_code %> Environment",
+                        "nodeManagerList": [
+                            {
+                                "name": "nm-<%= @obpotd['hostnameList'][0] %>",
+                                "listenAddress": "<%= @obpotd['nm']['listen_address'] %><%= @obpotd['dns_domain_name'] %>",
+                                "listenPort": "<%= @obpotd['nm']['listen_port'] %>",
+                                "hostIdentifier": "<%= @obpotd['hostnameList'][0] %>",
+                                "groupRefs": [
+                                    "Node_Manager_Common_Config",
+                                    "Node_Manager_SSL_Config"
+                                ],
+                                "properties": [
+                                    {
+                                        "target": "wls.nodemanager.log.path",
+                                        "value": "<%= log_location_path %>/${/host.basename}"
+                                    },
+                                    {
+                                        "value": "${/host.basename}",
+                                        "target": "wls.nodemanager.identityname"
+                                    },
+                                    {
+                                        "value": "<%= certs_location_path %>/<%= @obpotd['hostnameList'][0][0...-2] %>.jks",
+                                        "target": "wls.nodemanager.identitystorefile"
+                                    }
+                                ]
+                            }
+                        ],
+                        "domainList": [
+                            {
+                                "name": "<%= @obpotd['wls_domain_name'] %>",
+                                "locationPath": "<%= otd_admin_server_top %>",
+                                "adminUser": "<%= @obpotd['wls_admin_user'] %>",
+                                "adminPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpotd['wls_admin_user'] ) %>",
+                                "adminServer": {
+                                    "name": "AdminServer",
+                                    "machineName": "<%= @obpotd['nm']['listen_address'] %><%= @obpotd['dns_domain_name'] %>",
+                                    "listenAddress": "<%= @obpotd['admin']['listen_address'] %><%= @obpotd['dns_domain_name'] %>",
+                                    "listenAddressPort": "<%= @obpotd['admin']['listen_port'] %>",
+                                    "listenAddressPortSSL": "<%= @obpotd['admin']['listen_port_ssl'] %>",
+                                    "targetName": "<%= asset_code[3..-1] %>AdminServer"
+                                },
+                                "machineList": [
+                                    {
+                                        "name": "<%= @obpotd['nm']['listen_address'] %><%= @obpotd['dns_domain_name'] %>",
+                                        "nodeManagerName": "nm-<%= @obpotd['hostnameList'][0] %>"
+                                    }
+                                ],
+                                "middlewareList": [
+                                    {
+                                        "installationName": "otd"
+                                    }
+                                ],
+                                "configurationList": [
+
+                                    <%= render "common-settings-configs.erb",
+                                        :variables => {
+                                            :nodatabase => 'dummy'
+                                        }
+                                    %>
+                                    ,
+                                    {
+                                        "resourceName": "DefaultAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "otdConfigurationList": [
+                                    <% asset_vars   = @obpotd['otd_config']['obpoid'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpoid',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpoid['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['SEC'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpoid['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpobh'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpobh',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpobh['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 1,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpobh['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpobu'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpobu',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpobu['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 2,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpobu['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpsoa'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpsoa',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpsoa['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 3,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpsoa['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpipm'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpipm',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpipm['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 4,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpipm['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpdoc'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpdoc',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpdoc['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 5,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpdoc['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpbip'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpbip',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpbip['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 6,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpbip['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpodi'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpodi',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpodi['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['INT'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 7,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpodi['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obposb'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obposb',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obposb['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['INT'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 8,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obposb['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpoim'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpoim',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpoim['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['SEC'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 9,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpoim['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obp-sso'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obp-sso',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => asset_vars['e_vip_name'].split('.')[0],
+                                            :eoibBond => @common['eoibBond']['SEC'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 10,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => asset_vars['e_vip_name'].split('.')[0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obp-banker'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obp-banker',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => asset_vars['e_vip_name'].split('.')[0],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 11,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => asset_vars['e_vip_name'].split('.')[0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obp-worklist'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obp-worklist',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => asset_vars['e_vip_name'].split('.')[0],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 12,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => asset_vars['e_vip_name'].split('.')[0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obp-reports'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obp-reports',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => asset_vars['e_vip_name'].split('.')[0],
+                                            :eoibBond => @common['eoibBond']['APP'],
+
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 13,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => asset_vars['e_vip_name'].split('.')[0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obp-files'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obp-files',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => asset_vars['e_vip_name'].split('.')[0],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 14,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => asset_vars['e_vip_name'].split('.')[0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpcim'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpcim',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpcim['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['SEC'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 15,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpcim['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpcid'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpcid',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpcid['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['SEC'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 16,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpcid['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpurm'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpurm',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => @obpurm['hostnameList'][0][0...-2],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 17,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => @obpurm['hostnameList'][0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obp-records'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obp-records',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => asset_vars['e_vip_name'].split('.')[0],
+                                            :eoibBond => @common['eoibBond']['APP'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 18,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => asset_vars['e_vip_name'].split('.')[0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>,
+                                    <% asset_vars   = @obpotd['otd_config']['obpapi'] %>
+                                    <%= render "common-otd-asset-config.erb",
+                                        :variables => {
+                                            :environment_name => environment_name,
+                                            :password_vault_name => password_vault_name,
+                                            :asset_code => asset_code,
+                                            :asset_name => 'obpapi',
+                                            :otd_vars => @obpotd,
+                                            :primaryMachine => "#{@obpotd['hostnameList'][0]}-prv#{@obpotd['dns_domain_name']}",
+                                            :backupMachine => "#{@obpotd['hostnameList'][1]}-prv#{@obpotd['dns_domain_name']}",
+                                            :asset_vars => asset_vars,
+                                            :keystore_name => asset_vars['e_vip_name'].split('-')[0],
+                                            :eoibBond => @common['eoibBond']['INT'],
+                                            :router_id => @obpotd['otd_config']['base_routerId'].to_i + 19,
+                                            :temp_location => otd_temp_location,
+                                            :log_location_path => log_location_path,
+                                            :truststore => @common['trustStore'],
+                                            :keystore_alias => asset_vars['e_vip_name'].split('-')[0],
+                                            :certs_source_path => @common['certs_source'],
+                                            :appd_enabled => @common['enable_appdynamics']
+                                        }
+                                    %>
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "serverStartMode",
+                                        "value": "prod",
+                                        "target": "wls.production.mode"
+                                    },
+                                    {
+                                        "name": "backupEnvironmentName",
+                                        "value": "<%= environment_name %>",
+                                        "target": "environment.name"
+                                    },
+                                    {
+                                        "name": "tlogsLocationPath",
+                                        "value": "<%= base_domain_path %>/${/domain.name}",
+                                        "target": "wls.tlogs.location.path"
+                                    },
+                                    {
+                                        "name": "odlLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}",
+                                        "target": "wls.odl.log.location"
+                                    },
+                                    {
+                                        "value": "<%= @common['odl_log_retentionPeriod'] %>",
+                                        "target": "wls.odl.log.retentionPeriod"
+                                    },
+                                    {
+                                        "name": "defaultJMSLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}"
+                                    },
+                                    {
+                                        "target": "wls.admin.listen.port.admin",
+                                        "value": "<%= @obpotd['admin']['listen_port_admin'] %>"
+                                    },
+                                    {
+                                        "name": "managedTopLocation",
+                                        "value": "<%= otd_instance_top %>",
+                                        "target": "wls.domain.managed.top"
+                                    },
+                                    {
+                                        "name": "otdUseSnmp",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "target": "wls.restricted.jrf",
+                                        "value": "true"
+                                    }
+                                ],
+                                "templateList": [
+                                    {
+                                        "name": "otd"
+                                    }
+                                ]
+                            }
+                        ],
+                        "properties": [
+                            {
+                                "name": "targetPlatform",
+                                "value": "EXA"
+                            }
+                        ],
+                        "hostInstallationList": [
+                            {
+                                "installationName": "otd",
+                                "hostIdentifierList": [
+                                    "<%= @obpotd['hostnameList'][0] %>"
+                                ]
+                            }
+                        ],
+                        "transferList": [
+
+                            <%= render "common-certs-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpotd['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :keystore_name => @obpotd['hostnameList'][0][0...-2],
+                                    :certs_source_path => @common['certs_source'],
+                                    :cert_destination_path => certs_location_path,
+                                    :truststore => @common['trustStore']
+                                }
+                            %>
+                            ,
+                            <%= render "common-jdk-policy-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpotd['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :jdk_version => jdk_version,
+                                    :java_install_path => java_install_path
+                                }
+                            %>                            ,
+                            <%= render "common-transfer-ovd-keystore.erb",
+                                :variables => {
+                                    :environment_name => environment_name,
+                                    :host_identifier => @obpotd['hostnameList'][0],
+                                    :certs_source_path => @common['certs_source'] ,
+                                    :admin_server_top => otd_admin_server_top,
+                                    :domain_name => @obpotd['wls_domain_name']
+                                }
+                            %>
+                            ,
+                            {
+                                "name": "SIEMCustomAuditor",
+                                "hostIdentifierList": [
+                                  "<%= @obpotd['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['custom_source'] %>/common/SIEMCustomAuditor.jar",
+                                "destinationFile": "<%= fmw_install_path %>/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries",
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "executeList": [
+                            {
+                                "name": "UpdateStickybit",
+                                "hostIdentifierList": [
+                                    "<%= @obpotd['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "sudo /bin/chown root <%= fmw_install_path %>/otd/lib/portbind ; sudo /bin/chmod 4750 <%= fmw_install_path %>/otd/lib/portbind",
+                                "executeWhenList": [
+                                    "post-binaries"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "CreateLogDirectories",
+                                "hostIdentifierList": [
+                                    "<%= @obpotd['hostnameList'][0] %>"
+                                ],
+
+                                <% log_dir_list      = ''%>
+                                <% @obpotd['hostnameList'].each do |hostname| %>
+
+                                    <% @obpotd['otd_config'].each do |key,value| %>
+
+                                        <% if value.is_a?(Hash) && value.key?('server_pool_list') %>
+
+                                            <% log_dir_list = log_dir_list + log_location_path + '/otd_' + key + '_' + hostname + '-prv' + @obpotd['dns_domain_name'] %>
+
+                                            <% folders  = ''%>
+                                            <% multiple_folders  = 'false'%>
+                                            <% value['server_pool_list'].each_with_index do |server_pool, index| %>
+
+                                                <% if index > 0 %>
+                                                    <% folders = folders + ',' %>
+                                                    <% multiple_folders  = 'true'%>
+                                                <% end %>
+
+                                                <% folders = folders + server_pool['name'] + '-e-virtual-server' %>
+                                            <% end %>
+
+                                            <% if multiple_folders == 'true' %>
+                                                <% log_dir_list = log_dir_list + '/{' + folders +  '} '%>
+                                            <% else %>
+                                                <% log_dir_list = log_dir_list + '/' + folders +  ' '%>
+                                            <% end %>
+                                        <% end %>
+                                    <% end %>
+                                <% end %>
+
+                                "sourceFile": "mkdir -p <%= log_dir_list %>",
+                                "executeWhenList": [
+                                    "post-binaries",
+                                    "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            },
+                            <%= render "common-run-wlst.erb",
+							   :variables => {
+								   :name => "securityJMXAuthEnable",
+								   :host_identifier => @obpotd['hostnameList'][0],
+								   :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+								   :script => "#{@common['custom_source']}/common/securityAccessAndRoles.py",
+								   :t3_connect_url => "t3://#{@obpotd['admin']['listen_address']}#{@obpotd['dns_domain_name']}:#{@obpotd['admin']['listen_port']}",
+								   :admin_username => @obpotd['wls_admin_user'],
+								   :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpotd['wls_admin_user']),
+								   :args => 'JMXAuth true',
+								   :when => 'post-configure'
+							   }
+						   %>
+                           ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "deleteDefaultAuditor",
+                                      :host_identifier => @obpotd['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/deleteDefaultAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpotd['admin']['listen_address']}#{@obpotd['dns_domain_name']}:#{@obpotd['admin']['listen_port']}",
+                                      :admin_username => @obpotd['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpotd['wls_admin_user']),
+                                      :args => "#{@obpotd['wls_domain_name']}",
+                                      :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "updateSIEMAuditor",
+                                      :host_identifier => @obpotd['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/updateSIEMAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpotd['admin']['listen_address']}#{@obpotd['dns_domain_name']}:#{@obpotd['admin']['listen_port']}",
+                                      :admin_username => @obpotd['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpotd['wls_admin_user']),
+                                      :args => "#{@obpotd['wls_domain_name']} #{asset_code}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                            
+                        ]
+                    }
+                ]
+            }
+        ],
+        "resourceList": [
+
+            <%= render "common-settings-resources.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :domain_name => @obpotd['wls_domain_name'],
+                    :log_location_path => log_location_path,
+                    :certs_location_path => certs_location_path,
+                    :admin_kestore_alias => @obpotd['hostnameList'][0],
+                    :managed_keystore_alias => '%ListenAddress/noprefix%',
+                    :keystore_name => @obpotd['hostnameList'][0][0...-2],
+                    :common => @common,
+                    :frontend => @obpotd['frontend']
+                }
+            %>
+            ,
+            {
+                "name": "DefaultAuthenticator",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "null",
+                    "ControlFlag": "SUFFICIENT"
+                }
+            },
+            {
+                "name": "AdminStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpotd["admin"]['ms_heap'] %> -Xmx<%= @obpotd["admin"]['mx_heap']  %>",
+					"2": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "attributes": {
+                    "AdministrationPort": "<%= @obpotd['admin']['listen_port_admin'] %>",
+                    "AdministrationPortEnabled": "false"
+                },
+                "type": "Domain",
+                "name": "DomainAdministrationPortConfiguration"
+            }
+        ],
+        "propertyGroupList":
+        [
+            <%= render "common-config-groups.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :asset_code => asset_code,
+                    :inventory_install_path => inventory_install_path,
+                    :fmw_install_path => fmw_install_path,
+                    :temp_location => temp_location
+                }
+            %>
+            ,
+            {
+                "name": "Node_Manager_Common_Config",
+                "description": "Common Node Manager configuration",
+                "properties": [
+                    {
+                      "target": "wls.nodemanager.domainbased",
+                      "value": "false"
+                    },
+                    {
+                        "target": "wls.nodemanager.shared.domain.dir",
+                        "value": "true"
+                    },
+                    {
+                        "name": "wlInstallationName",
+                        "value": "fmwinfra"
+                    },
+                    {
+                        "name": "nodemanagerTop",
+                        "value": "<%= node_manager_top %>",
+                        "target": "wls.nodemanager.top"
+                    }
+                ]
+            },
+            <%= render "common-nm-ssl-config.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :certs_location_path => certs_location_path,
+                    :truststore => @common['trustStore']
+                }
+            %>
+            ,
+            {
+                "name": "Common_Health_Check_Props",
+                "properties": [
+                    {
+                        "name": "HealthCheckProperties",
+                        "target": "request-method",
+                        "value": "GET"
+                    },
+                    {
+                        "name": "HealthCheckProperties",
+                        "target": "interval",
+                        "value": "5"
+                    },
+                    {
+                        "name": "HealthCheckProperties",
+                        "target": "timeout",
+                        "value": "5"
+                    },
+                    {
+                        "name": "HealthCheckProperties",
+                        "target": "response-code-match",
+                        "value": "200"
+                    }
+                ]
+            }
+        ]
+    }
+}

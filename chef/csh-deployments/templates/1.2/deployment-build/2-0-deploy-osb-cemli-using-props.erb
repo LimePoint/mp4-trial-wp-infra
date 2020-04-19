@@ -1,0 +1,59 @@
+{
+  "name" : "Step 2 -- Deploy OSB Cemli using Properties",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Download OSB Ear",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b downloadOSBArtifact.gradle -g ../../../cache -PuseDeployConfig=true -PartifactoryUrl=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PenvName=LOCAL -PosbVersion=${bamboo.OSBVERSION} --refresh-dependencies deploy clean -s'\"",
+          "interpreter" : "RUN_AS_EXECUTABLE",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Run Deployment",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\n sh /environmint/cont-delivery/osbproperties.sh ${bamboo.ENVNAME} ${bamboo.OBP_NODE_1}\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b osbDeployScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true  -PenvName=LOCAL -PmintDeployHome=../../../mintdeploy/ deploy clean -i -s'\"",
+          "interpreter" : "RUN_AS_EXECUTABLE",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    } ]
+  } ],
+  "vars" : {
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['osb']['cemli_release_path']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obposb.json",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpOSBDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obposb']['hostnameList'][0]%><%= @dataBag['obposb']['dns_domain_name']%>",
+    "OSBVERSION" : "<%= @manifest_vars['deployments']['osb']['extension_version']%>",
+    "ENVNAME" : "<%= @environment_name.upcase %>",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>"
+  },
+  "labels" : null,
+  "permissions" : null
+}

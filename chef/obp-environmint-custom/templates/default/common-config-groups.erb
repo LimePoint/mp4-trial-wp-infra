@@ -1,0 +1,74 @@
+            {
+                "name": "Common_Host_Details",
+                "description": "Authentication details for hosts",
+                "properties":
+                [
+                    {
+                        "name": "user",
+                        "value": "oracle"
+                    },
+		            {
+		            "target": "oracle.install.username",
+		            "value": "oinstall"
+		            },
+                    {
+                        "name": "password",
+                        "value": "unused-key-auth"
+                    },
+                    {
+                        "name": "targetTempDir",
+                        "value": "<%= @temp_location %>",
+                        "target": "target.tmp.dir"
+                    }
+                ]
+            },
+            {
+                "name": "Common_Installation_Details",
+                "description": "Authentication details for hosts",
+                "properties":
+                [
+                    {
+                        "name": "oracleInventoryLoc",
+                        "value": "<%= @inventory_install_path %>"
+                    },
+                    {
+                        "name": "middlewareHome",
+                        "value": "<%= @fmw_install_path %>"
+                    },
+                    {
+                        "name": "oracleInstallGroup",
+                        "value": "oinstall"
+                    },
+                    {
+                        "target": "patch.java.params",
+                        "value": "-Xms3g -Xmx3g"
+                    }
+                ]
+            },
+            {
+                "name": "Common_Installation_Details_1036",
+                "description": "Authentication details for weblogic 10.3.6",
+                "properties":
+                [
+                    {
+                        "name": "oracleInventoryLoc",
+                        "value": "<%= @inventory_install_path %>"
+                    },
+                    {
+                        "name": "middlewareHome",
+                        "value": "<%= @fmw_install_path %>"
+                    },
+                    {
+                        "name": "oracleInstallGroup",
+                        "value": "oinstall"
+                    },
+                    {
+                        "name": "postInstallScript",
+                        "value": "cp -R /oracle/stage/wls/10.3.6/patches/27238412/bsu_update  <%= @fmw_install_path %>/utils/bsu/; cp /oracle/stage/wls/10.3.6/patches/27238412/bsu_update.sh  <%= @fmw_install_path %>/utils/bsu/; cd <%= @fmw_install_path %>/utils/bsu/; sh bsu_update.sh install"
+                    },
+                    {
+                        "target": "patch.java.params",
+                        "value": "-Xms3g -Xmx3g"
+                    }
+                ]
+            }

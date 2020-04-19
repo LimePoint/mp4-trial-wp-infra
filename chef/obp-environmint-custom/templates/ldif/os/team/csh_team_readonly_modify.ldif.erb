@@ -1,0 +1,6 @@
+dn: cn=csh_team_<%= @environment %>_readonly,ou=team,ou=netgroup,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+changeType: modify
+add: nisNetgroupTriple
+<% @user_list.each do |user| %>
+nisNetgroupTriple: (,<%= user %>,)
+<% end %>

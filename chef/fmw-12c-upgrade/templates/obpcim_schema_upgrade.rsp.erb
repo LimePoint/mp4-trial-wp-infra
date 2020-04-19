@@ -1,0 +1,80 @@
+[GENERAL]
+fileFormatVersion = 3
+
+[UAWLSINTERNAL.UAWLS]
+pluginInstance = 1
+UASVR.path = /oracle/app/runtime/<%= @rcu_prefix %>/domains/<%= @rcu_prefix %>_domain
+UASVR.enforce = no
+
+[OPSS.OPSS_SCHEMA_PLUGIN]
+pluginInstance = 10
+OPSS.databaseType = Oracle Database
+OPSS.databaseConnectionString = <%= @db_url %>
+OPSS.schemaConnectionString = <%= @db_url %>
+OPSS.schemaUserName = <%= @rcu_prefix %>_OPSS
+OPSS.cleartextSchemaPassword = <%= @schema_password %>
+OPSS.dbaUserName = <%= @dba_user %> as sysdba
+OPSS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[MDS.SCHEMA_UPGRADE]
+pluginInstance = 18
+MDS.databaseType = Oracle Database
+MDS.databaseConnectionString = <%= @db_url %>
+MDS.schemaConnectionString = <%= @db_url %>
+MDS.schemaUserName = <%= @rcu_prefix %>_MDS
+MDS.cleartextSchemaPassword = <%= @schema_password %>
+MDS.dbaUserName = <%= @dba_user %> as sysdba
+MDS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[MDS.SCHEMA_UPGRADE]
+pluginInstance = 20
+MDS.databaseType = Oracle Database
+MDS.databaseConnectionString = <%= @db_url %>
+MDS.schemaConnectionString = <%= @db_url %>
+MDS.schemaUserName = <%= @rcu_prefix %>_MDS
+MDS.cleartextSchemaPassword = <%= @schema_password %>
+MDS.dbaUserName = <%= @dba_user %> as sysdba
+MDS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[MDS.SCHEMA_UPGRADE]
+pluginInstance = 21
+MDS.databaseType = Oracle Database
+MDS.databaseConnectionString = <%= @db_url %>
+MDS.schemaConnectionString = <%= @db_url %>
+MDS.schemaUserName = <%= @rcu_prefix %>_MDS
+MDS.cleartextSchemaPassword = <%= @schema_password %>
+MDS.dbaUserName = <%= @dba_user %> as sysdba
+MDS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[UCSUMS.UCSUMS_SCHEMA_PLUGIN]
+pluginInstance = 7
+dependsOnPluginInstance = 21
+UMS.databaseType = Oracle Database
+UMS.databaseConnectionString = <%= @db_url %>
+UMS.schemaConnectionString = <%= @db_url %>
+UMS.schemaUserName = <%= @rcu_prefix %>_ORASDPM
+UMS.cleartextSchemaPassword = <%= @schema_password %>
+UMS.dbaUserName = <%= @dba_user %> as sysdba
+UMS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[SOA.SOA1]
+pluginInstance = 17
+dependsOnPluginInstance = 20
+SOAINFRA.databaseType = Oracle Database
+SOAINFRA.databaseConnectionString = <%= @db_url %>
+SOAINFRA.schemaConnectionString = <%= @db_url %>
+SOAINFRA.schemaUserName = <%= @rcu_prefix %>_SOAINFRA
+SOAINFRA.cleartextSchemaPassword = <%= @schema_password %>
+SOAINFRA.dbaUserName = <%= @dba_user %> as sysdba
+SOAINFRA.cleartextDbaPassword = <%= @sysdba_password %>
+
+[OIM.OIM1]
+pluginInstance = 13
+dependsOnPluginInstance = 18,17,10
+OIM.databaseType = Oracle Database
+OIM.databaseConnectionString = <%= @db_url %>
+OIM.schemaConnectionString = <%= @db_url %>
+OIM.schemaUserName = <%= @rcu_prefix %>_OIM
+OIM.cleartextSchemaPassword = <%= @schema_password %>
+OIM.dbaUserName = <%= @dba_user %> as sysdba
+OIM.cleartextDbaPassword = <%= @sysdba_password %>

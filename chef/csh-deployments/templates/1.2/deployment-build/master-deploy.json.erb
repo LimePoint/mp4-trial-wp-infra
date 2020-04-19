@@ -1,0 +1,433 @@
+
+<%
+  uniquifier = Time.now.strftime('%Y%h%d_%H%M')
+  puts "uniquifier      #{uniquifier}"
+
+  hostODISSL=""
+  portODISSL=""
+  @dataBag['obpotd']['otd_config']['obpodi']['origin_pool_list'].each do |list|
+
+    protocolType = list['type']
+
+     if protocolType == 'ssl'
+        hostODISSL= list['members'][0]['host']
+        portODISSL= list['members'][0]['port']
+     end
+
+  end
+
+  #Get the first OAM Host
+  mintDeployHosts = ""
+  mintDeployHosts << @dataBag['obpoam']['hostnameList'][0]+ @dataBag['obpoam']['dns_domain_name']
+
+  #Get all OBH Hosts
+  @dataBag['obpobh']['hostnameList'].each do |host|
+    mintDeployHosts << " " + host + @dataBag['obpobh']['dns_domain_name']
+  end
+
+  #Get all OBPUI Hosts
+  @dataBag['obpobu']['hostnameList'].each do |host|
+    mintDeployHosts << " " + host +  @dataBag['obpobu']['dns_domain_name']
+  end
+
+  if (@dataBag['deployment']['SECONDARY_SITE'] == "false")
+    #Get all SOA BAM, HT servers if baseHostnameList if present
+    if (@dataBag['obpsoa']['soa_server']['baseHostnameList'] != nil)
+      @dataBag['obpsoa']['soa_server']['hostnameList'].each do |host|
+        mintDeployHosts << " " + host +  @dataBag['obpsoa']['dns_domain_name']
+      end
+    else
+      #Get all OBPSOA Hosts
+      @dataBag['obpsoa']['hostnameList'].each do |host|
+       mintDeployHosts << " " + host  + @dataBag['obpsoa']['dns_domain_name']
+      end
+    end
+  end
+
+  if (@dataBag['deployment']['SECONDARY_SITE'] == "false")
+    if (@dataBag['obpsoa']['obphumantask_server']['baseHostnameList'] != nil)
+      @dataBag['obpsoa']['obphumantask_server']['hostnameList'].each do |host|
+          mintDeployHosts << " " + host +  @dataBag['obpsoa']['dns_domain_name']
+      end
+    end
+  end
+
+  if (@dataBag['deployment']['SECONDARY_SITE'] == "false")
+    if (@dataBag['obpsoa']['bam_server']['baseHostnameList'] != nil)
+      @dataBag['obpsoa']['bam_server']['hostnameList'].each do |host|
+        mintDeployHosts << " " + host +  @dataBag['obpsoa']['dns_domain_name']
+      end
+    end
+  end
+
+  #Get all OBPSOA Hosts
+  @dataBag['obpbip']['hostnameList'].each do |host|
+    mintDeployHosts << " " + host + @dataBag['obpbip']['dns_domain_name']
+  end
+  #Get all OBPDOC Hosts
+  @dataBag['obpdoc']['hostnameList'].each do |host|
+    mintDeployHosts << " " + host  + @dataBag['obpdoc']['dns_domain_name']
+  end
+  #Get all ODI Hosts
+  if (@dataBag['deployment']['SECONDARY_SITE'] == "false")
+    @dataBag['obpodi']['hostnameList'].each do |host|
+      mintDeployHosts << " " + host +  + @dataBag['obpodi']['dns_domain_name']
+    end
+  end
+
+  #Get all OSB Hosts
+  @dataBag['obposb']['hostnameList'].each do |host|
+    mintDeployHosts << " " + host + @dataBag['obposb']['dns_domain_name']
+  end
+
+  #Get all URM Hosts
+  if (!is_running_on_cloudFn && @dataBag['deployment']['SECONDARY_SITE'] == "false")
+    @dataBag['obpurm']['hostnameList'].each do |host|
+      mintDeployHosts << " " + host + @dataBag['obpurm']['dns_domain_name']
+    end
+  end
+  puts "List of all hosts ===> #{mintDeployHosts}"
+
+
+  #TBD fix the names of attributes in the manifest
+  asset_array=node.run_state['asset_array']
+  manifest_vars=node.run_state['manifest']
+  puts "Fetching the Dependencies for Start / Stop / Restart"
+
+  startup_dependency_array = Array.new
+  shutdown_dependency_array = Array.new
+  restart_dependency_array = Array.new
+
+asset_array.each do | comp|
+    puts "Component --------------------------------------------- #{comp}"
+
+    c3= manifest_vars['deployments'][comp]['depends']['startup_tasks']
+    puts "START UP TASK :  #{c3}"
+
+    startup_dependency_array = startup_dependency_array |  manifest_vars['deployments'][comp]['depends']['startup_tasks'].split(",").map(&:strip)
+    shutdown_dependency_array = shutdown_dependency_array |   manifest_vars['deployments'][comp]['depends']['shutdown_tasks'].split(",").map(&:strip)
+    restart_dependency_array = restart_dependency_array |  manifest_vars['deployments'][comp]['depends']['restart_tasks'].split(",").map(&:strip)
+
+    puts "Start Up dependency Array #{startup_dependency_array}"
+    puts "Shut Down dependency Array #{shutdown_dependency_array}"
+    puts "Restart  dependencyArray #{restart_dependency_array}"
+
+  end
+
+  puts "Start Up dependency Array #{startup_dependency_array}"
+  puts "Shut Down dependency Array #{shutdown_dependency_array}"
+  puts "Restart  dependencyArray #{restart_dependency_array}"
+
+ %>
+
+<%
+  HOST_DB_PWD = Mint::AesEncryption.decrypt(PasswordVault.get_password(@dataBag['common']['password_vault_name'], 'obpobh', 'OBPHOST' ))
+  SA_CONFIGUPLOADER_OBP_USER_PWD = Mint::AesEncryption.decrypt(PasswordVault.get_password(@dataBag['common']['password_vault_name'], 'obpoid', 'SA_CONFIGUPLOADER_OBP_USER'))
+  IPM_ADMIN_PWD = Mint::AesEncryption.decrypt(PasswordVault.get_password(@dataBag['common']['password_vault_name'], 'obpoid', 'obpipm_admin' ))
+  SA_DOCUMAKER_OBP_MANAGE_USER_PWD = Mint::AesEncryption.decrypt(PasswordVault.get_password(@dataBag['common']['password_vault_name'], 'obpoid', 'SA_DOCUMAKER_OBP_MANAGE_USER' ))
+  OBPSOA_OPSS_PWD = Mint::AesEncryption.decrypt(PasswordVault.get_password(@dataBag['common']['password_vault_name'], 'obpsoa', 'OBPSOA' ))
+  ANALYTICS_SCHEMA_PWD = Mint::AesEncryption.decrypt(PasswordVault.get_password(@dataBag['common']['password_vault_name'], 'obpbip', 'OBPBIP' ))
+
+%>
+<%
+
+    MANIFEST_PCSM_VERSION=node.default['pcsm_version']
+
+
+
+    puts "PCSM Version #{MANIFEST_PCSM_VERSION}"
+    #puts "Here is  the dump of all node defaults"
+    #puts node.default
+    #PLAN_NAME = @environment_name+"_DEPLOYMENTS_"+uniquifier.upcase
+    #TRIMMED_PLAN_NAME = PLAN_NAME.gsub("_","").upcase
+    csh_release_version = @dataBag['deployment']['CSH_RELEASE_VERSION']
+    puts "Pickup Template for CSH Release Path========>>  #{csh_release_version}"
+
+
+    MANIFEST_BUILD=@environment_name+"_"+node.default['build_version']
+    plan_name=MANIFEST_BUILD.gsub("-","_").upcase
+
+    puts "Manifest Plan Name ========>>  #{plan_name}"
+    prev_proj_name=node.run_state['prev_proj_name']
+    puts "Previous Proj  Name ========>>  #{prev_proj_name}"
+    version_index =  prev_proj_name.index(plan_name+"_V_")
+    puts version_index
+    if version_index.nil?
+      puts "Version Index Not Found in the previous build project key, so assigning default to 1"
+      cur_version = 1
+    else
+      prev_version =  prev_proj_name[prev_proj_name.index("_V_")+3, prev_proj_name.length]
+      puts "Prev Version found from the git build json #{prev_version}"
+
+      prev_version = prev_version.to_i+1
+      cur_version = prev_version
+    end
+
+
+    puts "Calculated current version of the project #{cur_version}"
+    new_plan_name=plan_name+"_V_#{cur_version}"
+    attempt = 0
+    while(attempt < 10 ) do
+        attempt += 1
+        puts "Trying new plan name #{new_plan_name}  Retry : #{attempt}"
+        if isPlanExists(new_plan_name, @dataBag )
+          puts "plan exists already, lets bump the version"
+          cur_version = cur_version + 1
+          new_plan_name=plan_name+"_V_#{cur_version}"
+        else
+          puts "This plan does not exists on the runtime, use the plan"
+          break
+        end
+        sleep(1)
+    end
+    TRIMMED_PLAN_NAME = new_plan_name.gsub("_","").upcase
+    puts "Manifest Plan Name Adjusted========>>  #{new_plan_name}"
+    puts "Manifest Trimmed Plan Name Adjusted========>>  #{TRIMMED_PLAN_NAME}"
+%>
+{
+  "name": "<%= new_plan_name%>",
+  "description": null,
+  "params": {},
+  "plans": [
+    <%= render "#{csh_release_version}/deployment-build/0-0-disable-all-plans.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars,
+          :mintDeployHosts => mintDeployHosts,
+          :TRIMMED_PLAN_NAME =>TRIMMED_PLAN_NAME
+        }
+     %>,
+    <%= render "#{csh_release_version}/deployment-build/1-0-setup-mintdeploy.erb" ,
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars,
+          :mintDeployHosts => mintDeployHosts
+
+        }
+     %>,
+
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+    <%= render "#{csh_release_version}/deployment-build/2-0-run-db-increments.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars,
+          :HOST_DB_PWD => HOST_DB_PWD,
+          :SA_CONFIGUPLOADER_OBP_USER_PWD => SA_CONFIGUPLOADER_OBP_USER_PWD
+        }
+    %>,
+    <% end %>
+
+    <% if (!is_running_on_cloudFn && @dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/2-0-run-obiee-db-incremental.erb",
+          :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars,
+            :ANALYTICS_SCHEMA_PWD => ANALYTICS_SCHEMA_PWD,
+            :SA_CONFIGUPLOADER_OBP_USER_PWD => SA_CONFIGUPLOADER_OBP_USER_PWD
+          }
+      %>,
+    <% end %>
+    <%= render "#{csh_release_version}/deployment-build/1-2-shutdown-services.erb",
+         :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars,
+          :shutdown_dependency_array => shutdown_dependency_array
+        }
+    %>,
+
+    <%= render "#{csh_release_version}/deployment-build/2-0-deploy-documaker.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars,
+          :IPM_ADMIN_PWD => IPM_ADMIN_PWD,
+          :SA_DOCUMAKER_OBP_MANAGE_USER_PWD => SA_DOCUMAKER_OBP_MANAGE_USER_PWD
+        }
+    %>,
+    
+    <%= render "#{csh_release_version}/deployment-build/2-0-deploy-osb-cemli-using-props.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars
+        }
+    %>,
+    <%= render "#{csh_release_version}/deployment-build/2-0-deploy-oam-policy.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars
+        }
+    %>,
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/2-0-deploy-access-policies.erb",
+          :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars,
+            :OBPSOA_OPSS_PWD => OBPSOA_OPSS_PWD
+
+          }
+      %>,
+    <% end %>
+
+
+    <%= render "#{csh_release_version}/deployment-build/2-0-deploy-obpbip-reports.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars
+        }
+    %>,
+    <%= render "#{csh_release_version}/deployment-build/2-0-deply-obphost.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars,
+          :MANIFEST_PCSM_VERSION => MANIFEST_PCSM_VERSION
+        }
+    %>,
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/2-0-deploy-obp-ht.erb",
+          :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars
+          }
+      %>,
+    <% end %>
+    <%= render "#{csh_release_version}/deployment-build/2-0-deploy-obp-ui.erb",
+        :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars
+        }
+    %>,
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/2-0-deploy-soa-dynamic-group-approval.erb",
+          :variables => {
+          :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+          :environment_name => @environment_name,
+          :dataBag => @dataBag,
+          :manifest_vars => manifest_vars
+          }
+    %>,
+    <% end %>
+
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/2-0-deploy-soa-increment.erb",
+          :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars
+          }
+      %>,
+    <% end %>
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+        <%= render "#{csh_release_version}/deployment-build/2-0-deploy-obp-bam.erb",
+            :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars
+    }
+    %>,
+    <% end %>
+
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/2-0-odi-batch-deployment.erb",
+          :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars,
+            :hostODISSL => hostODISSL,
+            :portODISSL => portODISSL
+      }
+      %>,
+      <%= render "#{csh_release_version}/deployment-build/2-0-odi-xpress-deployment.erb",
+          :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars,
+            :hostODISSL => hostODISSL,
+            :portODISSL => portODISSL
+          }
+      %>,
+    <% end %>
+    <% if (!is_running_on_cloudFn && @dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/2-0-deploy-obp-urm.erb",
+          :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars
+          }
+      %>,
+    <% end %>
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/3-0-run-business-config.erb",
+      :variables => {
+            :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+            :environment_name => @environment_name,
+            :dataBag => @dataBag,
+            :manifest_vars => manifest_vars,
+            :HOST_DB_PWD => HOST_DB_PWD,
+            :SA_CONFIGUPLOADER_OBP_USER_PWD => SA_CONFIGUPLOADER_OBP_USER_PWD
+
+      }
+      %>,
+    <% end %>
+    <% if (@dataBag['deployment']['SECONDARY_SITE'] == "false")  %>
+      <%= render "#{csh_release_version}/deployment-build/3-0-restart-services.erb",
+        :variables => {
+              :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+              :environment_name => @environment_name,
+              :dataBag => @dataBag,
+              :manifest_vars => manifest_vars,
+              :startup_dependency_array => startup_dependency_array,
+              :restart_dependency_array => restart_dependency_array
+        }
+      %>,
+    <% end %>
+    <%= render "#{csh_release_version}/deployment-build/3-0-startup-services.erb",
+      :variables => {
+        :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+        :environment_name => @environment_name,
+        :dataBag => @dataBag,
+        :manifest_vars => manifest_vars,
+        :startup_dependency_array => startup_dependency_array,
+        :restart_dependency_array => restart_dependency_array
+        }
+    %>,
+     <%= render "#{csh_release_version}/deployment-build/4-0-start-documaker-services.erb",
+      :variables => {
+        :shell_init_string => @shell_init_string, :script_init_string => @script_init_string, :ssh_key_string => @ssh_key_string,
+        :environment_name => @environment_name,
+        :dataBag => @dataBag,
+        :manifest_vars => manifest_vars,
+        :startup_dependency_array => startup_dependency_array,
+        :restart_dependency_array => restart_dependency_array
+        }
+    %> ]
+}

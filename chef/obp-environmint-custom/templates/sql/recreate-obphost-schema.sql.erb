@@ -1,0 +1,78 @@
+WHENEVER SQLERROR EXIT SQL.SQLCODE
+SET VERIFY OFF TERMOUT ON SERVEROUT ON
+
+DECLARE
+    lv_username VARCHAR2(30) := upper('<%= @username %>');
+    lv_password VARCHAR2(30) := '<%= @userpassword %>';
+    lv_tablespace_name VARCHAR2(30) := '';
+
+    lv_readonly_username VARCHAR2(30) := upper('<%= @readonly_username %>');
+    lv_readonly_password VARCHAR2(30) := '<%= @readonly_userpassword %>';
+    lv_readonly_tablespace_name VARCHAR2(30) := '';
+
+    lv_datapump_dir VARCHAR2(300) := '<%= @datapump_dir %>';
+    lv_datapump_dirname VARCHAR2(300) := '<%= @datapump_dirname %>';
+
+BEGIN
+    -- Get the default tablespace of the user
+    DBMS_OUTPUT.PUT_LINE('Finding default tablespace of the user...');
+    SELECT default_tablespace INTO lv_tablespace_name FROM dba_users WHERE username = lv_username;
+
+    lv_readonly_tablespace_name := lv_tablespace_name;
+
+    DBMS_OUTPUT.PUT_LINE('Default tablespace will be set to: ' || lv_tablespace_name);
+
+    -- Now drop the user
+<%if @forcekill == 'TRUE' %>
+    execute immediate 'Alter user '|| lv_username ||' account lock';
+    for i in (select sid,serial#
+                from gv$session
+               where type <> 'BACKGROUND'
+                 and schemaname = lv_username)
+    loop
+        begin
+            execute immediate 'Alter system kill session '''||i.sid||','||i.serial#||''' immediate';
+        exception when others then null;
+        end;
+    end loop;
+    dbms_lock.sleep(10);
+<%end %>
+    DBMS_OUTPUT.PUT_LINE('Dropping user: ' || lv_username );
+
+    EXECUTE IMMEDIATE 'drop user ' || lv_username || ' cascade';
+
+    -- Recreate the user
+    DBMS_OUTPUT.PUT_LINE('Creating user: ' || lv_username );
+
+    EXECUTE IMMEDIATE 'CREATE USER ' || lv_username || ' IDENTIFIED BY ' || lv_password || ' DEFAULT TABLESPACE ' || lv_tablespace_name || ' QUOTA UNLIMITED ON ' || lv_tablespace_name;
+
+    DBMS_OUTPUT.PUT_LINE('Creating user: ' || lv_readonly_username );
+    BEGIN
+        -- Now create the read only user
+        EXECUTE IMMEDIATE 'CREATE USER ' || lv_readonly_username || ' IDENTIFIED BY ' || lv_readonly_password || ' DEFAULT TABLESPACE ' || lv_readonly_tablespace_name;
+        EXECUTE IMMEDIATE 'GRANT CONNECT, SELECT ANY TABLE to ' || lv_readonly_username;
+    EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE = -01920 THEN
+            EXECUTE IMMEDIATE 'GRANT CONNECT, SELECT ANY TABLE to ' || lv_readonly_username;
+            DBMS_OUTPUT.PUT_LINE('User ' || lv_readonly_username || ' already exists. No Action ' );
+        ELSE
+            RAISE;
+        END IF;
+    END;
+
+    DBMS_OUTPUT.PUT_LINE('Creating data pump directory ' || lv_datapump_dirname || ' with path: ' || lv_datapump_dir );
+
+    -- Create the data pump directory
+    EXECUTE IMMEDIATE 'CREATE OR REPLACE DIRECTORY ' || lv_datapump_dirname || ' AS ' || '''' || lv_datapump_dir || '''' ;
+
+END;
+/
+
+-- Revoking execessive privs from read only user
+-- REVOKE RESOURCE from <%= @readonly_username %>;
+
+-- Grant privs to OBPHOST
+@@/tmp/<%= @asset_code%>-dbprivs-<%= @release_version%>.sql
+
+EXIT SQL.SQLCODE;

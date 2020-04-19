@@ -1,0 +1,127 @@
+{
+  "name" : "Step 2 -- OBIEE DB Incremental",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [  {
+        "name" : null,
+        "description" : "Download Config Tool",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b hostdbDwnld.gradle -PhostdbVersion=${bamboo.CTVERSION} -Pobphost.hostname=${bamboo.OBPHOSTNAME} -Pobphost.port=${bamboo.OBPHOSTPORT} -Pfmwhome=${bamboo.OBPHOSTPATH} -PCONFIGTOOL_USERNAME=${bamboo.NETIQUSERNAME} -PCONFIGTOOL_PASSWORD=${bamboo.NETIQPASSWORD} -PDB.URL=${bamboo.HOSTDBURL} -PDB.USERNAME=${bamboo.HOSTDBUSERNAME} -PDB.PASSWORD=${bamboo.HOSTDBPASSWORD} -PENVNAME=${bamboo.ENVNAME} -Pdbclient.home=${bamboo.DBCLIENTPATH} -PDB.JAVA_HOME=${bamboo.JAVA_HOME} -PDB.DEPLOYDIR=${bamboo.HOSTDBPATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PhostDBPath=${bamboo.HOSTDBPATH} -g ../../../cache --refresh-dependencies deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Download OBIEE DB Incr Artefact",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b obieeDBIncrDwnld.gradle -PdbConfigVersion=${bamboo.DBCONFIGVERSION} -PconfigProviderPath= -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -g ../../../cache deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Execute the OBIEE DB Incremental",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; echo \\\"HOSTDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/obi_exports.sh;. /oracle/app/binaries/deployments/mintdeploy/envScripts/obi_exports.sh; ${bamboo.GRADLE_HOME}/bin/gradle -b dbConfigExec.gradle -PmintDeployHome=../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=${bamboo.SCRIPT} -PENVNAME=${bamboo.ENVNAME} -PBUILDDATE=${bamboo.BUILDDATE} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PEXECTYPE=deploy-obiee deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Execute the 1TP DB Incremental - OBPAEXT",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/obpaext_exports.sh;. /oracle/app/binaries/deployments/mintdeploy/envScripts/obpaext_exports.sh; ${bamboo.GRADLE_HOME}/bin/gradle -b dbConfigExec.gradle -PmintDeployHome=../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=${bamboo.SCRIPT} -PENVNAME=${bamboo.ENVNAME} -PBUILDDATE=${bamboo.BUILDDATE} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PEXECTYPE=deploy-obpaext deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Execute the 1TP DB Incremental - OBPAGTA",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/obpagta_exports.sh;. /oracle/app/binaries/deployments/mintdeploy/envScripts/obpagta_exports.sh; ${bamboo.GRADLE_HOME}/bin/gradle -b dbConfigExec.gradle -PmintDeployHome=../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=${bamboo.SCRIPT} -PENVNAME=${bamboo.ENVNAME} -PBUILDDATE=${bamboo.BUILDDATE} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PEXECTYPE=deploy-obpagta deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : false
+      } ]
+    } ]
+  } ],
+  "vars" : {
+    "BUILDDATE" : "<%= @manifest_vars['deployments']['obiee_incremental']['extension_version']%>",
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['obiee_incremental']['cemli_release_path']%>",
+    "CONFIGPROVIDERPATH" : "../deploymentProperties/<%= @environment_name %>/obpbip.json",
+    "CONFIGPROVIDERPATH1" : "../deploymentProperties/<%= @environment_name %>/obpdb.json",
+    "CTVERSION" : "<%= @manifest_vars['config_tool_version']%>",
+    "DBCLIENTPATH" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpbip/dbclient",
+    "DBCONFIGVERSION" : "<%= @manifest_vars['deployments']['obiee_incremental']['extension_version']%>",
+    "DBSTRING" : "<%= @dataBag['obpobh']['database']['sysconfig_url'].gsub('OBP_PRIM','OBA_PRIM').partition('jdbc:oracle:thin:@').last %>",
+    "ENVNAME" : "<%= @environment_name.chomp('r').chomp('w').upcase %>",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "HOSTDBPASSWORD" : "<%= @ANALYTICS_SCHEMA_PWD%>",
+    "HOSTDBPATH" : "<%= @dataBag['deployment']['BINARYPATH']%>/deployments/hostdb/host_db",
+    <% if (@environment_name =~ /^svp\d*w/ or @environment_name =~ /^prd\d*w/) %>
+      "HOSTDBURL" : "<%= @dataBag['obpobh']['database']['secondary_scan_address']%>:<%= @dataBag['obpobh']['database']['listen_port']%>/<%= @dataBag['obpbip']['database']['obp_analytics_service_name']%>",
+    <% else %>
+      "HOSTDBURL" : "<%= @dataBag['obpobh']['database']['scan_address']%>:<%= @dataBag['obpobh']['database']['listen_port']%>/<%= @dataBag['obpbip']['database']['obp_analytics_service_name']%>",
+    <% end %>
+    "HOSTDBUSERNAME" : "OBP_ANALYTICS",
+    "JAVA_HOME" : "<%= @dataBag['deployment']['BINARYPATH']%>/java8",
+    "NETIQPASSWORD" : "<%= @SA_CONFIGUPLOADER_OBP_USER_PWD%>",
+    "NETIQUSERNAME" : "<%= @dataBag['deployment']['NETIQUSERNAME']%>",
+    "OBPHOSTNAME" : "<%= @dataBag['obpobh']['obphost_server']['listen_address']%><%= @dataBag['obpobh']['dns_domain_name']%>",
+    "OBPHOSTPATH" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpobh/fmw",
+    "OBPHOSTPORT" : "<%= @dataBag['obpobh']['obphost_server']['listen_port']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpBusinessConfig",
+    "OBP_ODI_DEPLOY_HOME": "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpOdiDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obpbip']['hostnameList'][0]%><%= @dataBag['obpbip']['dns_domain_name']%>",
+    "SCRIPT" : "./scripts/dbIncremental.sh",
+    "debug" : "false",
+    "productArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>"
+  },
+  "labels" : null,
+  "permissions" : null
+}

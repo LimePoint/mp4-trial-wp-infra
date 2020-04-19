@@ -1,0 +1,109 @@
+{
+  "name" : "Step 3 -- Start up Services",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Start up Managed Server",
+    "description" : "Start up Managed Server",
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Start up UI Managed Servers",
+      "description" : "Start up UI Managed Servers",
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Start up UI",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= @dataBag['obpobu']['hostnameList'][0]%><%= @dataBag['obpobu']['dns_domain_name']%> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/<%= @environment_name %>/obpui.json -PscriptToRun=start-obpui.py deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }
+      ]
+    }, {
+      "name" : "Start up HT Managed Server",
+      "description" : "Start up HT Managed Server",
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Start up HT",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= @dataBag['obpsoa']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/<%= @environment_name %>/obpht.json -PscriptToRun=start-obpht.py deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%= @dataBag['deployment']['SECONDARY_SITE'] == "false"  %>"
+
+      }
+        <%= unless @dataBag['deployment']['SECONDARY_SITE'] == "false"  then render '1.2/deployment-build/disabled-task-placeholder.erb' end%>
+
+      ]
+    }, {
+      "name" : "Start up Host Managed Server",
+      "description" : "Start up Host Managed Server",
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Start up Host",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= @dataBag['obpobh']['hostnameList'][0]%><%= @dataBag['obpobh']['dns_domain_name']%> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/<%= @environment_name %>/obphost.json -PscriptToRun=start-obphost.py deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }
+      ]
+    }, {
+     "name" : "Start up ODI Managed Server",
+     "description" : "Start up ODI Managed Server",
+     "params" : { },
+     "tasks" : [ {
+       "name" : null,
+       "description" : "Start up ODI",
+       "params" : {
+         "argument" : "",
+         "scriptLocation" : "INLINE",
+         "environmentVariables" : "",
+         "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= @dataBag['obpodi']['hostnameList'][0]%><%= @dataBag['obpodi']['dns_domain_name']%> \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/<%= @environment_name %>/obpodi.json -PscriptToRun=start-obpodi.py deploy clean -s'\"",
+         "interpreter" : "LEGACY_SH_BAT",
+         "script" : "",
+         "workingSubDirectory" : ""
+       },
+       "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+       "finalising" : false,
+        "enabled" : "<%= @dataBag['deployment']['SECONDARY_SITE'] == "false"  %>"
+     }
+       <%= unless @dataBag['deployment']['SECONDARY_SITE'] == "false"  then render '1.2/deployment-build/disabled-task-placeholder.erb' end%>
+     ]
+   }]
+  } ],
+  "vars" : {
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpStartupShutdown",
+    "STARTUP_COMPONENTS" : "<%= @startup_dependency_array.join(',')%>",
+    "RESTART_COMPONENTS" : "<%= @restart_dependency_array.join(',') %>",
+    "debug" : "false"
+  },
+  "labels" : null,
+  "permissions" : null
+}

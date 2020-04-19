@@ -1,0 +1,43 @@
+
+#Creating env specific patch profile
+
+# For passwords if you dont want to put password in this file just comment it out from here, you will be prompted for it in rumtime.
+
+#Neccessary env variables       [Mandatory]
+ant_home=<%= @fmw_home %>/oracle_common/modules/thirdparty/org.apache.ant/1.9.8.0.0/apache-ant-1.9.8
+java_home=/oracle/app/binaries/<%= @asset_code %>/java
+mw_home=<%= @fmw_home %>
+oim_oracle_home=<%= @fmw_home %>/idm
+soa_home=<%= @fmw_home %>/soa
+weblogic.server.dir=<%= @fmw_home %>/wlserver
+domain_home=<%= @domain_home %>
+
+#weblogic configuration variables
+weblogic_user=weblogic
+#Password is optional,  if you want to  give it on terminal itself leave it commented. Otherwise uncomment it.
+weblogic_password=<%= @weblogic_pwd %>
+soa_host=<%= @admin_listen_address %>
+soa_port=17302
+
+#DB configuration variables
+operationsDB.user=<%= @schema_prefix %>_OIM
+# Database password is optional. if you want to  give it on terminal itself leave it commented. Otherwise uncomment it.
+OIM.DBPassword=<%= @schema_pwd %>
+operationsDB.host=<%= @db_listen_address %>
+operationsDB.serviceName=<%= @db_service_name %>
+operationsDB.port=<%= @db_port %>
+
+mdsDB.user=<%= @schema_prefix %>_MDS
+#Password is optional,  if you want to  give it on terminal itself leave it commented. Otherwise uncomment it.
+mdsDB.password=<%= @schema_pwd %>
+mdsDB.host=<%= @db_listen_address %>
+mdsDB.serviceName=<%= @db_service_name %>
+mdsDB.port=<%= @db_port %>
+
+oim_username=xelsysadm
+#Password is optional, you can put it here also (and also uncomment the line) otherwise leave it as it is and you will get prompted for it during runtime as hidden string
+oim_password=<%= @weblogic_pwd %>
+oim_serverurl=t3://<%= @admin_listen_address %>:17202
+wls_serverurl=t3://<%= @admin_listen_address %>:17101
+#Parameter for OPSS Customizations. Set to true if customizations are already present. Defaults to false.
+opss_customizations_present=false

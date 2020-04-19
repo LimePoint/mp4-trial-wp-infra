@@ -1,0 +1,536 @@
+<% environment_name = @environment["name"] %>
+<% password_vault_name = @common['password_vault_name'] %>
+<% dns_domain = @obpidm["dns_domain_name"] ; if dns_domain.nil? then dns_domain=".mintpress.io" end %>
+<% asset_code = @code.downcase  %>
+<% uniquifier = @uuid.tr('-', '') %>
+
+<% base_install_path   = '/oracle/app/binaries/' + asset_code  %>
+<% base_shared_path    = '/oracle/app/runtime/' + asset_code  %>
+<% base_domain_path    = base_shared_path + '/domains' %>
+
+<% log_location_path   = '/oracle/app/logs/' + asset_code %>
+<% certs_location_path = '/oracle/app/runtime/' + environment_name + '/certs' %>
+
+<% java_install_path      = base_install_path + '/java' %>
+<% jdk_version            = '7' %>
+
+<% fmw_install_path           = base_install_path + '/fmw' %>
+<% inventory_install_path = base_install_path + '/oraInventory' %>
+<% temp_location          = base_install_path + '/tmp' %>
+
+<% idm_admin_server_top   = base_domain_path %>
+<% node_manager_top       = fmw_install_path + '/wlserver_10.3/common/nodemanager' %>
+
+{
+    "internalVariables": {
+        "environmentName": "<%= environment_name %>",
+        "assetCode": "<%= asset_code %>",
+        "stageRootDir": "/oracle/stage"
+    },
+    "projectName": "<%= environment_name %>_<%= asset_code %>_<%= uniquifier %>",
+    "uniquifier": "<%= uniquifier %>",
+    "site": {
+        "hostList": [
+            {
+                "id": "<%= @obpidm['hostnameList'][0] %>",
+                "address": "${_.basename}<%= @obpidm['dns_domain_name'] %>",
+                "properties": [
+                    {
+                        "name": "basename",
+                        "value": "<%= @obpidm['hostnameList'][0] %>"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Host_Details",
+                    "List_Of_TVT_Tests"
+                ]
+            },
+            {
+                "id": "db_server",
+                "address": "<%= @obpidm['database']['scan_address'] %>",
+                "groupRefs":
+                [
+                    "Common_Host_Details"
+                ],
+                "properties": [
+                    {
+                        "name": "scaleout",
+                        "value": "false"
+                    }
+                ]
+            }
+        ],
+        "installationList": [
+            {
+                "name": "jdk",
+                "product": "jdk",
+                "version": "1.7.0_181",
+                "installPath": "<%= java_install_path %>",
+                "softwareStage": "${stageRootDir}/jdk/jdk-7u181-linux-x64.tar.gz",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "rcu",
+                "product": "rcu",
+                "version": "11.1.1.9",
+                "softwareStage": "${stageRootDir}/rcu/11.1.1.9",
+                "dependsonList": [
+                    "jdk"
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "weblogic",
+                "product": "weblogic",
+                "version": "10.3.6",
+                "installPath": "<%= fmw_install_path %>/wlserver_10.3",
+                "softwareStage": "${stageRootDir}/wls/10.3.6",
+                "dependsonList": [
+                    "jdk",
+                    "rcu"
+                ],
+                "groupRefs": [
+                    "Common_Installation_Details_1036"
+                ],
+                "patchset": [
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "U5I2",
+						"aru": "29204678",
+						"properties": [
+						{
+							"name": "action",
+							"value": "rollback"
+						}
+						]
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "XN2D",
+						"aru": "29715457",
+						"properties": [
+						{
+							"name": "action",
+							"value": "rollback"
+						}
+						]
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "TP1R",
+						"aru": "29752447",
+						"properties": [
+						{
+							"name": "action",
+							"value": "rollback"
+						}
+						]
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "IL49",
+						"aru": "29800003",
+						"properties": [
+						{
+							"name": "action",
+							"value": "rollback"
+						}
+						]
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "BF7B",
+						"aru": "25832897"
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "SK1V",
+						"aru": "16810786"
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "MXLE",
+						"aru": "29633432"
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "F21U",
+						"aru": "30077638"
+					},
+					{
+						"targetOracleHome": "${_.installPath}",
+						"softwareStage": "${stageRootDir}/wls/10.3.6/patches",
+						"name": "VSEX",
+						"aru": "30078557"
+					}
+				]
+			},
+			{
+				"name": "adf",
+				"product": "adf",
+				"version": "11.1.1.9",
+				"installPath": "<%= fmw_install_path %>/adf_11.1",
+				"softwareStage": "${stageRootDir}/adf/11.1.1.9",
+				"dependsonList": [
+					"weblogic"
+				],
+				"groupRefs": [
+					"Common_Installation_Details"
+				]
+			}
+        ],
+        "environmentList": [
+            {
+                "name": "<%= environment_name %>",
+                "mwTopologyList": [
+                    {
+                        "name": "<%= asset_code %>",
+                        "description": "<%= environment_name %> <%= asset_code %> Environment",
+                        "nodeManagerList": [
+                            {
+                                "name": "nm-<%= @obpidm['hostnameList'][0] %>",
+                                "listenAddress": "<%= @obpidm['nm']['listen_address'] %><%= @obpidm['dns_domain_name'] %>",
+                                "listenPort": "<%= @obpidm['nm']['listen_port'] %>",
+                                "hostIdentifier": "<%= @obpidm['hostnameList'][0] %>",
+                                "groupRefs": [
+                                    "Node_Manager_Common_Config",
+                                    "Node_Manager_SSL_Config"
+                                ],
+                                "properties": [
+                                    {
+                                        "target": "wls.nodemanager.log.path",
+                                        "value": "<%= log_location_path %>/${/host.basename}"
+                                    },
+                                    {
+                                        "value": "${/host.basename}",
+                                        "target": "wls.nodemanager.identityname"
+                                    },
+                                    {
+                                        "value": "<%= certs_location_path %>/<%= @obpidm['hostnameList'][0][0...-2] %>.jks",
+                                        "target": "wls.nodemanager.identitystorefile"
+                                    }
+                                ]
+                            }
+                        ],
+                        "domainList": [
+                            {
+                                "name": "<%= @obpidm['wls_domain_name'] %>",
+                                "locationPath": "<%= idm_admin_server_top %>",
+                                "adminUser": "<%= @obpidm['wls_admin_user'] %>",
+                                "adminPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpidm['wls_admin_user'] ) %>",
+                                "adminServer": {
+                                    "name": "AdminServer",
+                                    "machineName": "Machine-<%= @obpidm['hostnameList'][0] %>",
+                                    "listenAddress": "<%= @obpidm['admin']['listen_address'] %><%= @obpidm['dns_domain_name'] %>",
+                                    "listenAddressPort": "<%= @obpidm['admin']['listen_port'] %>",
+                                    "listenAddressPortSSL": "<%= @obpidm['admin']['listen_port_ssl'] %>",
+                                    "targetName": "<%= asset_code[3..-1] %>AdminServer"
+                                },
+                                "machineList": [
+                                    {
+                                        "name": "Machine-<%= @obpidm['hostnameList'][0] %>",
+                                        "nodeManagerName": "nm-<%= @obpidm['hostnameList'][0] %>"
+                                    }
+                                ],
+                                "templateList": [
+                                    {
+                                        "name": "adf"
+                                    }
+                                ],
+                                "middlewareList": [
+                                    {
+                                        "installationName":"adf",
+                                        "targetList":[
+                                            {
+                                                "type":"Server",
+                                                "names":[
+                                                    "AdminServer"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "repositoryList": [
+                                    {
+                                        "id": "rcu01",
+                                        "dbName": "<%= environment_name %><%= asset_code %>db",
+                                        "prefix": "<%= @obpidm['database']['rcu_schema_prefix'].upcase %>",
+                                        "dbUser": "<%= @obpidm['database']['sysdba_username'].upcase %>",
+                                        "schemaPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpidm['database']['rcu_schema_prefix'].upcase + '-MDS') %>",
+                                        "defaultRepository": "true"
+                                    }
+                                ],
+                                "configurationList": [
+
+                                    <%= render "common-settings-configs.erb"  %>
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "serverStartMode",
+                                        "value": "prod",
+                                        "target": "wls.production.mode"
+                                    },
+                                    {
+                                        "name": "backupEnvironmentName",
+                                        "value": "${environmentName}",
+                                        "target": "environment.name"
+                                    },
+                                    {
+                                        "name": "applyJRF",
+                                        "value": "true",
+                                        "target": "wls.apply.jrf"
+                                    },
+                                    {
+                                        "name": "tlogsLocationPath",
+                                        "value": "<%= base_domain_path %>/${/domain.name}",
+                                        "target": "wls.tlogs.location.path"
+                                    },
+                                    {
+                                        "name": "odlLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}",
+                                        "target": "wls.odl.log.location"
+                                    },
+                                    {
+                                        "value": "<%= @common['odl_log_retentionPeriod'] %>",
+                                        "target": "wls.odl.log.retentionPeriod"
+                                    },
+                                    {
+                                        "name": "defaultJMSLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}"
+                                    },
+                                    {
+                                        "target": "wls.admin.listen.port.admin",
+                                        "value": "<%= @obpidm['admin']['listen_port_admin'] %>"
+                                    }
+                                ]
+                            }
+                        ],
+                        "hostInstallationList": [
+                            {
+                                "installationName": "adf",
+                                "hostIdentifierList": [
+                                    "<%= @obpidm['hostnameList'][0] %>"
+                                ]
+                            }
+                        ],
+                        "transferList": [
+
+                            <%= render "common-certs-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpidm['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :keystore_name => @obpidm['hostnameList'][0][0...-2],
+                                    :certs_source_path => @common['certs_source'],
+                                    :cert_destination_path => certs_location_path,
+                                    :truststore => @common['trustStore']
+                                }
+                            %>
+                            ,
+                            <%= render "common-jdk-policy-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpidm['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :jdk_version => jdk_version,
+                                    :java_install_path => java_install_path
+                                }
+                            %>
+                            ,
+                            {
+                                "name": "SIEMCustomAuditor",
+                                "hostIdentifierList": [
+                                  "<%= @obpidm['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['custom_source'] %>/common/SIEMCustomAuditor.jar",
+                                "destinationFile": "<%= fmw_install_path %>/wlserver_10.3/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries",
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "executeList": [
+                            {
+                                "name": "DeployODSM",
+                                "hostIdentifierList": [
+                                    "<%= @obpidm['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= fmw_install_path %>/wlserver_10.3/common/bin/wlst.sh <%= @common['custom_source'] %>/common/deployApplication.py <%= @obpidm['wls_admin_user'] %> ${execute.weblogicAdminPassword} t3://<%= @obpidm['admin']['listen_address'] %><%= @obpidm['dns_domain_name'] %>:<%= @obpidm['admin']['listen_port'] %> odsm#11.1.1.2.0 <%= @common['custom_source'] %>/<%= asset_code %>/odsm.ear AdminServer stage 100",
+                                "properties": [
+                                    {
+                                        "name": "execute.weblogicAdminPassword",
+                                        "target": "execute.weblogicAdminPassword",
+                                        "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpidm['wls_admin_user']) %>"
+                                    },
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            },
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "deleteDefaultAuditor",
+                                      :host_identifier => @obpidm['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/deleteDefaultAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpidm['admin']['listen_address']}#{@obpidm['dns_domain_name']}:#{@obpidm['admin']['listen_port']}",
+                                      :admin_username => @obpidm['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpidm['wls_admin_user']),
+                                      :args => "#{@obpidm['wls_domain_name']}",
+                                      :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "updateSIEMAuditor",
+                                      :host_identifier => @obpidm['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/updateSIEMAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpidm['admin']['listen_address']}#{@obpidm['dns_domain_name']}:#{@obpidm['admin']['listen_port']}",
+                                      :admin_username => @obpidm['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpidm['wls_admin_user']),
+                                      :args => "#{@obpidm['wls_domain_name']} #{asset_code}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                        ]
+                    }
+                ]
+            }
+        ],
+        "databaseList": [
+            {
+                "name": "<%= environment_name %><%= asset_code %>db",
+                "port": "<%= @obpidm['database']['listen_port'] %>",
+                "serviceName": "<%= @obpidm['database']['service_name'] %>",
+                "properties": [
+                    {
+                        "name": "rcu.datafile.initialsize",
+                        "value": "200M",
+                        "target": "rcu.datafile.initialsize"
+                    }
+                ],
+                "schemaList": [
+                  {
+                    "name": "<%= @obpidm['database']['sysdba_username'].upcase %>",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpidm['database']['sysdba_username'].upcase) %>"
+                  }
+                ],
+                "hostIdentifier": "db_server"
+            }
+        ],
+        "resourceList": [
+
+            <%= render "common-settings-resources.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :domain_name => @obpidm['wls_domain_name'],
+                    :log_location_path => log_location_path,
+                    :certs_location_path => certs_location_path,
+                    :admin_kestore_alias => @obpidm['hostnameList'][0],
+                    :managed_keystore_alias => '%ListenAddress/noprefix%',
+                    :keystore_name => @obpidm['hostnameList'][0][0...-2],
+                    :common => @common,
+                    :frontend => @obpidm['frontend'],
+                    :database => @obpidm['database']
+                }
+            %>
+            ,
+            {
+                "name": "AdminStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpidm["admin"]['ms_heap'] %> -Xmx<%= @obpidm["admin"]['mx_heap']%> -XX:MaxPermSize=2048m",
+					"2": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "attributes": {
+                    "AdministrationPort": "<%= @obpidm['admin']['listen_port_admin'] %>",
+                    "AdministrationPortEnabled": "false"
+                },
+                "type": "Domain",
+                "name": "DomainAdministrationPortConfiguration"
+            }
+        ],
+        "propertyGroupList":
+        [
+            <%= render "common-config-groups.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :asset_code => asset_code,
+                    :inventory_install_path => inventory_install_path,
+                    :fmw_install_path => fmw_install_path,
+                    :temp_location => temp_location
+                }
+            %>
+            ,
+            {
+                "name": "Node_Manager_Common_Config",
+                "description": "Common Node Manager configuration",
+                "properties": [
+                    {
+                        "target": "wls.nodemanager.shared.domain.dir",
+                        "value": "true"
+                    },
+                    {
+                        "name": "wlInstallationName",
+                        "value": "weblogic"
+                    },
+                    {
+                        "name": "nodemanagerTop",
+                        "value": "<%= node_manager_top %>",
+                        "target": "wls.nodemanager.top"
+                    }
+                ]
+            }
+            ,
+            <%= render "common-nm-ssl-config.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :certs_location_path => certs_location_path,
+                    :truststore => @common['trustStore']
+                }
+            %>
+        ]
+    }
+}

@@ -1,0 +1,5 @@
+dn: cn=csh_mintpress_oracle,ou=team,ou=netgroup,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+objectClass: nisNetgroup
+objectClass: top
+nisNetgroupTriple: (,mintpress,)
+cn: csh_mintpress_oracle

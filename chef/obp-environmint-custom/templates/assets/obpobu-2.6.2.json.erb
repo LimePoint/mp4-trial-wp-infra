@@ -1,0 +1,1185 @@
+<% environment_name = @environment['name'] %>
+<% password_vault_name = @common['password_vault_name'] %>
+<% dns_domain = @obpobu["dns_domain_name"] ; if dns_domain.nil? then dns_domain=".mintpress.io" end %>
+<% asset_code = @code.downcase  %>
+<% uniquifier = @uuid.tr('-', '') %>
+
+<% base_install_path = '/oracle/app/binaries/' + asset_code  %>
+<% base_domain_path  = '/oracle/app/runtime/' + asset_code + '/domains' %>
+
+<% log_location_path   = '/oracle/app/logs/' + asset_code %>
+<% certs_location_path = '/oracle/app/runtime/' + environment_name + '/certs' %>
+
+<% oracle_install_path      = base_install_path + '/dbclient' %>
+<% java_install_path      = base_install_path + '/java' %>
+<% jdk_version            = '8' %>
+
+<% fmw_install_path           = base_install_path + '/fmw' %>
+<% inventory_install_path = base_install_path + '/oraInventory' %>
+<% temp_location          = '/oracle/app/binaries/tmp' %>
+
+<% obu_admin_server_top   = base_domain_path %>
+<% obu_managed_server_top = obu_admin_server_top %>
+<% node_manager_top       = fmw_install_path + '/wlserver/common/nodemanager' %>
+
+{
+    "internalVariables":
+    {
+        "environmentName": "<%= environment_name %>",
+        "assetCode": "<%= asset_code %>",
+        "stageRootDir": "/oracle/stage"
+    },
+    "projectName": "<%= environment_name %>_<%= asset_code %>_<%= uniquifier %>",
+    "uniquifier": "<%= uniquifier %>",
+    "site": {
+        "hostList": [
+            {
+                "id": "<%= @obpobu['hostnameList'][0] %>",
+                "address": "${_.basename}<%= @obpobu['dns_domain_name'] %>",
+                "properties": [
+                    {
+                        "name": "basename",
+                        "value": "<%= @obpobu['hostnameList'][0] %>"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Host_Details",
+                    "List_Of_TVT_Tests"
+                ]
+            },
+            {
+                "id": "db_server",
+                "address": "<%= @obpobu['database']['scan_address'] %>",
+                "groupRefs":
+                [
+                    "Common_Host_Details"
+                ],
+                "properties": [
+                    {
+                        "name": "scaleout",
+                        "value": "false"
+                    }
+                ]
+            }
+        ],
+        "installationList": [
+            {
+                "name": "jdk",
+                "product": "jdk",
+                "version": "1.8.0_221",
+                "installPath": "<%= java_install_path %>",
+                "softwareStage": "${stageRootDir}/jdk/jdk-8u221-linux-x64.tar.gz",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "fmwinfra",
+                "product": "fmwinfra",
+                "version": "12.2.1.2",
+                "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/fmw_12.2.1.2.0_infrastructure.jar",
+                "installPath": "<%= fmw_install_path %>",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "jdk"
+                ],
+                "patchset": [
+                    {
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "25860645",
+                        "aru": "25860645"
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "27338939",
+                        "aru": "27338939",
+                        "properties": [
+                          {
+                            "name": "action",
+                            "value": "rollback"
+                          }
+                        ]
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "27741413",
+                        "aru": "27741413"
+                    }
+                ]
+            },
+            {
+                "name": "soa",
+                "product": "soa",
+                "version": "12.2.1.2",
+                "installPath": "<%= fmw_install_path %>/soa",
+                "softwareStage": "${stageRootDir}/soa/12.2.1.2/fmw_12.2.1.2.0_soa.jar",
+                "dependsonList": [
+                    "fmwinfra"
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "obp-ui",
+                "product": "obp-ui",
+                "version": "2.6.2",
+                "installPath": "<%= fmw_install_path %>/obpinstall",
+                "softwareStage": "${stageRootDir}/obp/2.6.2/obp-ui",
+                "dependsonList": [
+                    "soa"
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "properties": [
+                    {
+                        "target": "obp.install.java.home",
+                        "value": "<%= java_install_path %>"
+                    },
+                    {
+                        "target": "obp.ui.base.url",
+                        "value": "<%= "https://#{@obpobu['frontend']['otd_vip_name']}:#{@obpobu['frontend']['obu_port']}" %>"
+                    },
+                    {
+                        "target": "obp.soa.wsdlurl",
+                        "value": "<%= "https://#{@obpsoa['frontend']['otd_vip_name']}:#{@obpsoa['frontend']['soa_port']}" %>"
+                    },
+                    {
+                        "target": "obp.host.serviceEjbUrl",
+                        "value": "<%= "t3://#{@obpobh['hostnameList'][0]}#{@obpobh['dns_domain_name']}:#{@obpobh['obphost_server']['listen_port']}" %>"
+                    },
+                    {
+                        "name": "installLocalization",
+                        "value": "true"
+                    },
+                    {
+                        "target": "obp.localization.country",
+                        "value": "au"
+                    },
+                    {
+                        "target": "obpui.ui.clustername",
+                        "value": "<%= @obpobu['obpui_server']['cluster_name'] %>"
+                    }
+                ]
+            }
+            
+        ],
+        "environmentList": [
+            {
+                "name": "<%= environment_name %>",
+                "mwTopologyList": [
+                    {
+                        "name": "<%= asset_code %>",
+                        "description": "<%= environment_name %> <%= asset_code %> Environment",
+                        "nodeManagerList": [
+                            {
+                                "name": "nm-<%= @obpobu['hostnameList'][0] %>",
+                                "listenAddress": "<%= @obpobu['nm']['listen_address'] %><%= @obpobu['dns_domain_name'] %>",
+                                "listenPort": "<%= @obpobu['nm']['listen_port'] %>",
+                                "hostIdentifier": "<%= @obpobu['hostnameList'][0] %>",
+                                "groupRefs": [
+                                    "Node_Manager_Common_Config",
+                                    "Node_Manager_SSL_Config"
+                                ],
+                                "properties": [
+                                    {
+                                        "target": "wls.nodemanager.log.path",
+                                        "value": "<%= log_location_path %>/${/host.basename}"
+                                    },
+                                    {
+                                        "value": "${/host.basename}",
+                                        "target": "wls.nodemanager.identityname"
+                                    },
+                                    {
+                                        "value": "<%= certs_location_path %>/<%= @obpobu['hostnameList'][0][0...-2] %>.jks",
+                                        "target": "wls.nodemanager.identitystorefile"
+                                    }
+                                ]
+                            }
+                        ],
+                        "domainList": [
+                            {
+                                "name": "<%= @obpobu['wls_domain_name'] %>",
+                                "locationPath": "<%= obu_admin_server_top %>",
+                                "adminUser": "<%= @obpobu['wls_admin_user'] %>",
+                                "adminPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user'] ) %>",
+                                "adminServer": {
+                                    "name": "AdminServer",
+                                    "machineName": "Machine-<%= @obpobu['hostnameList'][0] %>",
+                                    "listenAddress": "<%= @obpobu['admin']['listen_address'] %><%= @obpobu['dns_domain_name'] %>",
+                                    "listenAddressPort": "<%= @obpobu['admin']['listen_port'] %>",
+                                    "listenAddressPortSSL": "<%= @obpobu['admin']['listen_port_ssl'] %>",
+                                    "targetName": "<%= asset_code[3..-1] %>AdminServer"
+                                },
+                                "machineList": [
+                                    {
+                                        "name": "Machine-<%= @obpobu['hostnameList'][0] %>",
+                                        "nodeManagerName": "nm-<%= @obpobu['hostnameList'][0] %>"
+                                    }
+                                ],
+                                "clusterList": [
+                                  {
+                                    "name": "<%= @obpobu['obpui_server']['cluster_name'] %>",
+                                    "messageMode": "Unicast"
+                                  }
+                                ],
+                                "managedServerList": [
+                                    {
+                                        "name": "obpui_server1",
+                                        "machineName": "Machine-<%= @obpobu['hostnameList'][0] %>",
+                                        "clusterName": "<%= @obpobu['obpui_server']['cluster_name'] %>",
+                                        "listenAddress": "<%=  @obpobu['obpui_server']['listen_address'] %><%= @obpobu['dns_domain_name'] %>",
+                                        "listenAddressPort": "<%=  @obpobu['obpui_server']['listen_port'] %>",
+                                        "listenAddressPortSSL": "<%=  @obpobu['obpui_server']['listen_port_ssl'] %>",
+                                        "targetName": "${_.name}"
+                                    }
+                                ],
+                                "middlewareList": [
+                                    {
+                                        "installationName": "obp-ui",
+                                        "targetList": [
+                                            {
+                                              "type": "Cluster",
+                                              "names":
+                                              [
+                                                "<%= @obpobu['obpui_server']['cluster_name'] %>"
+                                              ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "configurationList": [
+
+                                     <%= render "common-settings-configs.erb"  %>
+                                    ,
+                                    {
+                                        "resourceName": "GenericServerSettings_auto_1",
+                                        "type": "Server",
+                                        "properties": [
+                                            {
+                                                "name": "serverName",
+                                                "value": "obpui_server1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "ClusterStartupParameters",
+                                        "type": "StartupParameter",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobu['obpui_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "JpsConfigSettings",
+                                        "type": "JpsConfig",
+                                        "properties": [
+                                          {
+                                            "name": "serverInstance",
+                                            "value": "idstore.ldap"
+                                          }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "JdbcSharedSettings",
+                                        "type": "JDBCSystemResource",
+                                        "properties":
+                                        [
+                                            {
+                                                "name": "dataSourceName",
+                                                "value": "opss-data-source,opss-audit-DBDS,opss-audit-viewDS"
+                                            },
+                                            {
+                                                "name": "noTarget",
+                                                "value": "true"
+                                            }
+                                        ],
+                                        "targets": []
+                                    },
+                                    {
+                                        "resourceName": "OBP_SYS_CONFIG",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobu['obpui_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "ClusterClassPathParameters",
+                                        "type": "ClassPath",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobu['obpui_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "JMSFileStore_obpui_server1",
+                                        "type": "FileStore",
+                                        "targets": [
+                                          {
+                                            "type": "SERVER",
+                                            "names": [
+                                              "obpui_server1"
+                                            ]
+                                          }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsserver_obpui_server1",
+                                        "type": "JMSServer",
+                                        "properties": [
+                                          {
+                                            "name": "fileStore",
+                                            "value": "JMSFileStore_obpui_server1"
+                                          }
+                                        ],
+                                        "targets": [
+                                          {
+                                            "type": "SERVER",
+                                            "names": [
+                                              "obpui_server1"
+                                            ]
+                                          }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAsyncAuditModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsAsyncAuditModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobu['obpui_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAsyncAuditModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "jmsserver_obpui_server1"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OAMIdentityAsserter",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OIDAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DefaultAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "serverStartMode",
+                                        "value": "prod",
+                                        "target": "wls.production.mode"
+                                    },
+                                    {
+                                        "name": "backupEnvironmentName",
+                                        "value": "<%= environment_name %>",
+                                        "target": "environment.name"
+                                    },
+                                    {
+                                        "name": "tlogsLocationPath",
+                                        "value": "<%= base_domain_path %>/${/domain.name}",
+                                        "target": "wls.tlogs.location.path"
+                                    },
+                                    {
+                                        "name": "odlLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}",
+                                        "target": "wls.odl.log.location"
+                                    },
+                                    {
+                                        "value": "<%= @common['odl_log_retentionPeriod'] %>",
+                                        "target": "wls.odl.log.retentionPeriod"
+                                    },
+                                    {
+                                        "name": "defaultJMSLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}"
+                                    },
+                                    {
+                                        "target": "wls.admin.listen.port.admin",
+                                        "value": "<%= @obpobu['admin']['listen_port_admin'] %>"
+                                    },
+                                    {
+                                        "target": "wls.skip.em.template",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "mintpress.startup_parallel",
+                                        "target": "mintpress.startup_parallel",
+                                        "value": "10"
+                                    }
+                                ],
+                                "groupRefs": [
+                                    "OBPUI_Config",
+                                    "Policy_Store_Reassociation_Configuration"
+                                ],
+                                "templateList": [
+                                    {
+                                        "name": "obp-ui"
+                                    },
+                                    {
+                                        "name": "owsm"
+                                    }
+                                ],
+                                "repositoryList": [
+                                    {
+                                        "componentList": [
+                                            "OPSS"
+                                        ],
+                                        "id": "rcu01",
+                                        "dbName": "<%= environment_name %><%= asset_code %>db",
+                                        "prefix": "<%= @obpobu['database']['rcu_schema_prefix'].upcase %>",
+                                        "dbUser": "<%= @obpobu['database']['sysdba_username'].upcase %>",
+                                        "schemaPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobu['database']['rcu_schema_prefix'].upcase ) %>",
+                                        "defaultRepository": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "properties": [
+                            {
+                                "name": "targetPlatform",
+                                "value": "EXA"
+                            }
+                        ],
+                        "hostInstallationList": [
+                            {
+                                "installationName": "obp-ui",
+                                "hostIdentifierList": [
+                                    "<%= @obpobu['hostnameList'][0] %>"
+                                ]
+                            }
+                        ],
+                        "transferList": [
+
+                            <%= render "common-certs-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpobu['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :keystore_name => @obpobu['hostnameList'][0][0...-2],
+                                    :certs_source_path => @common['certs_source'],
+                                    :cert_destination_path => certs_location_path,
+                                    :truststore => @common['trustStore']
+                                }
+                            %>
+                            ,
+                            <%= render "common-jdk-policy-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpobu['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :jdk_version => jdk_version,
+                                    :java_install_path => java_install_path
+                                }
+                            %>
+                            ,
+                            <%= render "common-transfer-ovd-keystore.erb",
+                                :variables => {
+                                    :environment_name => environment_name,
+                                    :host_identifier => @obpobu['hostnameList'][0],
+                                    :certs_source_path => @common['certs_source'] ,
+                                    :admin_server_top => obu_admin_server_top,
+                                    :domain_name => @obpobu['wls_domain_name']
+                                }
+                            %>
+                            ,
+                            {
+                                "name": "HealthCheckFileCopy",
+                                "hostIdentifierList": [
+                                  "<%= @obpobu['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= "#{@common['custom_source']}/common/HealthCheck.war" %>",
+                                "destinationFile": "<%= "#{base_domain_path}/applications/#{@obpobu['wls_domain_name']}/HealthCheck.war" %>",
+                                "permissions": "755",
+                                "transferWhenList": [
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "SIEMCustomAuditor",
+                                "hostIdentifierList": [
+                                  "<%= @obpobu['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['custom_source'] %>/common/SIEMCustomAuditor.jar",
+                                "destinationFile": "<%= fmw_install_path %>/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries",
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "executeList": [
+                            {
+                                "name": "UpdateAdaptersOSXml",
+                                "hostIdentifierList": [
+                                    "<%= @obpobu['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-wls-ldap-adapters]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            },
+                            {
+                                "name": "UpdateJpsConfigParams",
+                                "hostIdentifierList": [
+                                    "<%= @obpobu['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-jps-config]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "pre-online"
+                                ]
+                            },
+                            {
+                                "name": "updateOBPConnector",
+                                "hostIdentifierList": [
+                                  "<%= @obpobu['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= "#{fmw_install_path}/oracle_common/common/bin/wlst.sh #{@common['custom_source']}/obpsoa/updateOBPConnector.py weblogic ${execute.weblogicAdminPassword} t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']} ra/FCRJConnectorSOA #{@obpsoa['soa_admin_user']} ${execute.soaAdminPassword}" %>",
+                                "properties": [
+                                  {
+                                    "name": "execute.weblogicAdminPassword",
+                                    "target": "execute.weblogicAdminPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user'] ) %>"
+                                  },
+                                  {
+                                    "name": "execute.soaAdminPassword",
+                                    "target": "execute.soaAdminPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpsoa['soa_admin_user'] ) %>"
+                                  },
+                                  {
+                                    "name": "scaleout",
+                                    "value": "false"
+                                  }
+                                ],
+                                "executeWhenList": [
+                                  "pre-online"
+                                ]
+                            },
+                            <%= render "common-deploy-healthcheck.erb",
+                                :variables => {
+                                    :host_identifier => @obpobu['hostnameList'][0],
+                                    :asset_code => asset_code,
+                                    :custom_source => @common['custom_source'],
+                                    :fmw_install_path => fmw_install_path,
+                                    :t3_connect_url => "t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']}",
+                                    :admin_username => @obpobu['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user'] ),
+                                    :app_target => "#{@obpobu['obpui_server']['cluster_name']},#{@obpobu['obpui_server']['cluster_name']}",
+                                    :app_path => "#{base_domain_path}/applications/#{@obpobu['wls_domain_name']}"
+                                }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "CreateOBPUILogger",
+                                      :host_identifier => @obpobu['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/createOBPODLLoggers.py",
+                                      :t3_connect_url => "t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']}",
+                                      :admin_username => @obpobu['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user']),
+                                      :args => "#{log_location_path}/#{@obpobu['wls_domain_name']}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                              :variables => {
+                                  :name => "securityJMXAuthEnable",
+                                  :host_identifier => @obpobu['hostnameList'][0],
+                                  :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                  :script => "#{@common['custom_source']}/common/securityAccessAndRoles.py",
+                                  :t3_connect_url => "t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']}",
+                                  :admin_username => @obpobu['wls_admin_user'],
+                                  :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user']),
+                                  :args => 'JMXAuth true',
+                                  :when => 'post-configure'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+								 :variables => {
+									 :name => "jmsMsgView",
+									 :host_identifier => @obpobu['hostnameList'][0],
+									 :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+									 :script => "#{@common['custom_source']}/common/securityAccessAndRoles.py",
+									 :t3_connect_url => "t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']}",
+									 :admin_username => @obpobu['wls_admin_user'],
+									 :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user']),
+									 :args => 'JMSView',
+									 :when => 'post-online'
+								 }
+							 %>
+	                        ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "Redeploy-com.ofss.fc.ui.view.mds",
+                                      :host_identifier => @obpobu['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/redeployApplication.py",
+                                      :t3_connect_url => "t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']}",
+                                      :admin_username => @obpobu['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user']),
+                                      :args => "com.ofss.fc.ui.view.mds #{fmw_install_path}/obpinstall/obp/ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.view.mds.ear",
+                                      :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "deleteDefaultAuditor",
+                                      :host_identifier => @obpobu['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/deleteDefaultAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']}",
+                                      :admin_username => @obpobu['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user']),
+                                      :args => "#{@obpobu['wls_domain_name']}",
+                                      :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "updateSIEMAuditor",
+                                      :host_identifier => @obpobu['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/updateSIEMAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpobu['admin']['listen_address']}#{@obpobu['dns_domain_name']}:#{@obpobu['admin']['listen_port']}",
+                                      :admin_username => @obpobu['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobu['wls_admin_user']),
+                                      :args => "#{@obpobu['wls_domain_name']} #{asset_code}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                            ,
+                            {
+                                "name": "UpdateODLLogLevel",
+                                "hostIdentifierList": [
+                                    "<%= @obpobu['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-odl-log-level]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            }
+                            
+                        ]
+                    }
+                ]
+            }
+        ],
+        "databaseList": [
+            {
+                "name": "<%= environment_name %><%= asset_code %>db",
+                "port": "<%= @obpobu['database']['listen_port'] %>",
+                "serviceName": "<%= @obpobu['database']['service_name'] %>",
+                "properties": [
+                    {
+                        "name": "rcu.datafile.initialsize",
+                        "value": "200M",
+                        "target": "rcu.datafile.initialsize"
+                    },
+                    {
+                        "target": "rcu.extra.parameters",
+                        "value": " -encryptTablespace <%= @obpobu['database'].key?('encryption') ? @obpobu['database']['encryption'] : 'false' %>"
+                    },
+                    {
+                        "name": "jdbcUrl",
+                        "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=${_.host.address})(Port=${_.port}))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=${_.serviceName})))"
+                    }
+                ],
+                "hostIdentifier": "db_server",
+                "schemaList": [
+                  {
+                    "name": "<%= @obpobu['database']['sysdba_username'].upcase %>",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobu['database']['sysdba_username'].upcase) %>"
+                  }
+                ]
+            }
+        ],
+        "resourceList": [
+
+            <%= render "common-settings-resources.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :domain_name => @obpobu['wls_domain_name'],
+                    :log_location_path => log_location_path,
+                    :certs_location_path => certs_location_path,
+                    :admin_kestore_alias => @obpobu['hostnameList'][0],
+                    :managed_keystore_alias => '%ListenAddress/noprefix%',
+                    :keystore_name => @obpobu['hostnameList'][0][0...-2],
+                    :common => @common,
+                    :frontend => @obpobu['frontend'],
+                    :database => @obpobu['database'],
+                    :set_dual_site_url => @obpobu['database'].key?('set_dual_site_url') ? @obpobu['database']['set_dual_site_url'].downcase : "false",
+                    :enable_dbssl => @common.key?('enable_dbssl') ? @common['enable_dbssl'].downcase : "false" 
+                }
+            %>
+            ,
+            <%= render "common-oid-authenticator.erb",
+                :variables => {
+                    :name => 'OIDAuthenticator',
+                    :hostname => @obpoid['frontend']['managed_host'],
+                    :port => @obpoid['frontend']['ldap_port'],
+                    :username => 'cn=obpobu_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au',
+                    :password => PasswordVault.get_password(password_vault_name, 'obpoid', 'obpobu_readonly'),
+                    :group_base_dn => 'ou=obp,ou=apps,dc=westpac,dc=com,dc=au',
+                    :user_base_dn => 'cn=users,dc=westpac,dc=com,dc=au',
+                    :common => @common
+                }
+            %>
+            ,
+            {
+                "name": "OAMIdentityAsserter",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "oracle.security.wls.oam.providers.asserter.OAMIdentityAsserter",
+                    "ControlFlag": "OPTIONAL"
+                 }
+            },
+            {
+                "name": "JpsConfigSettings",
+                "type": "JpsConfig",
+                "attributes": {
+                  "java.naming.ldap.factory.socket": "javax.net.ssl.SSLSocketFactory"
+                }
+            },
+            {
+                "name": "jmsAsyncAuditModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "AsyncAuditQ",
+                        "attributes": {
+                            "JNDIName": "jms/AsyncAuditQ",
+                            "SubDeploymentName": "jmsAsyncAuditModule_sub"
+                        }
+                    },
+                    {
+                        "name": "AsyncAuditQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "AsyncAuditQCF",
+                            "JNDIName": "jms/AsyncAuditQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+                    ]
+                    }
+                ]
+            },
+            {
+            "name": "JdbcSharedSettings",
+            "type": "JDBCSystemResource",
+            "params": [
+                    {
+                    "type": "JDBCResource",
+                        "params": [
+                            {
+                                "type": "JDBCDriverParams",
+                                "attributes": {
+                                <% if @common['enable_dbssl'] == "true" %>
+                                "Url": "<%= @obpsoa['database']['soa_db_url_ssl']%>"
+                                <% else %>
+                                "Url": "<%= @obpsoa['database']['soa_db_url']%>"
+                                <% end %>
+                                },
+                                "properties": {
+                                  <% if @common['enable_dbssl'] == "true" %>
+                                  "javax.net.ssl.trustStoreType": "JKS",
+                                  "javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpobu', 'truststorepass') %>",
+                                  "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+								  "oracle.net.ssl_version": "1.2",
+                                    "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                                  <% end %>
+                                  "oracle.jdbc.ReadTimeout": "300000"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+            "name": "OBP_SYS_CONFIG",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                 {
+                   "type": "JDBCConnectionPoolParams",
+                   "attributes": {
+                       "RemoveInfectedConnections": "true"
+                       }
+                  },
+                  {
+                    "type": "JDBCDriverParams",
+                    "attributes": {
+                        "DriverName": "oracle.jdbc.xa.client.OracleXADataSource",
+                        <% if @common['enable_dbssl'] == "true" %>
+                        "Url": "<%= @obpobh['database']['sysconfig_url_ssl'] %>",
+                        <% else %>
+                        "Url": "<%= @obpobh['database']['sysconfig_url'] %>",
+                        <% end %>
+                        "Password": "<%= PasswordVault.get_password(password_vault_name, 'obpobh', @obpobh['database']['rcu_schema_prefix'].upcase) %>"
+                    },
+                    "properties": {
+                      <% if @common['enable_dbssl'] == "true" %>
+                      "javax.net.ssl.trustStoreType": "JKS",
+                      "javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpobu', 'truststorepass') %>",
+                      "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+					  "oracle.net.ssl_version": "1.2",
+                        "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                      <% end %>
+                      "user": "<%= "#{@obpobh['database']['rcu_schema_prefix']}_OBP" %>"
+                    }
+                  },
+                {
+                    "type": "JDBCXAParams",
+                    "attributes": {
+                        "XaSetTransactionTimeout": "true"
+                    }
+                }
+                ]
+              }
+            ]
+          },
+            {
+                "name": "DefaultAuthenticator",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "null",
+                    "ControlFlag": "SUFFICIENT"
+                }
+            },
+            {
+                "name": "AdminStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpobu["admin"]['ms_heap'] %> -Xmx<%= @obpobu["admin"]['mx_heap']  %> -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+					"2": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "ClusterStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpobu["obpui_server"]['ms_heap'] %> -Xmx<%= @obpobu["obpui_server"]['mx_heap'] %>",
+                    "2": "-XX:+UseG1GC -XX:MaxGCPauseMillis=500 -verbosegc -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:ParallelGCThreads=8 -XX:ConcGCThreads=4 -XX:G1HeapRegionSize=4M -XX:+UseStringDeduplication",
+                    "3": "-Djbo.load.components.lazily=true -Djps.combiner.optimize.lazyeval=TRUE -Djps.combiner.optimize=TRUE -Djps.policystore.hybrid.mode=false -Djps.authz=ACC -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+                    "4": "-Dweblogic.configuration.schemaValidationEnabled=false -Duser.home=<%= fmw_install_path %>/obpinstall/obp/config ",
+                    "5": "-Dobp.http.staleCheckEnabled=true -Dweblogic.servlet.DIDisabled=true -Dobp.http.idleTimeoutPollInterval=5000 -Dobp.http.maxRetryCount=3 -Dobp.http.socketBufferSize=8192 -Dobp.http.expireAndRetry=false -Djbo.ampool.doampooling=false -Dobp.http.connectionTimeout=600000 -Dobp.http.maxConnectionsPerHost=150 ",
+                    "6": "-Dfacade.security.check=false -DOriginationUIPropertiesConstant:enableEnrichmentLink=false -Dcom.sun.jndi.ldap.connect.pool.protocol=ssl -Dcom.sun.jndi.ldap.connect.pool=true -Dcom.sun.jndi.ldap.connect.pool.initsize=10 -Dcom.sun.jndi.ldap.connect.pool.prefsize=20 -DSecurityConstants:BLACKOUT.RELOAD.INTERVAL=86400000",
+                    "7": "<%= "-javaagent:#{@common['appdynamics_agent']} -Dappdynamics.agent.tierName=OBP-UI -Dappdynamics.agent.nodeName=%ListenAddress/noprefix%#{@obpobu['dns_domain_name']}:%ListenPort+1000%" if @common['enable_appdynamics'] == "true" %>",
+					"8": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "obp-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "attributes": {
+                    "AdministrationPort": "<%= @obpobu['admin']['listen_port_admin'] %>",
+                    "AdministrationPortEnabled": "false"
+                },
+                "type": "Domain",
+                "name": "DomainAdministrationPortConfiguration"
+            },
+            {
+                "name": "ClusterClassPathParameters",
+                "type": "ClassPath",
+                "attributes": {
+                    "Auto01": "<%= fmw_install_path %>/obpinstall/obp/ob.ui.web/ob.ui.sh/WEB-INF/lib/com.ofss.fc.lz.au.ui.OptionCC.jar:<%= fmw_install_path %>/obpinstall/obp/ob.ui.web/ob.ui.cz/WEB-INF/lib/com.ofss.fc.cz.ui.OptionCC.jar"
+                 }
+            },
+            {
+                "name": "JMSFileStore_obpui_server1",
+                "type": "FileStore",
+                "attributes": {
+                  "Directory": "<%= obu_admin_server_top %>/jms/<%= @obpobu['wls_domain_name'] %>"
+                }
+            }
+        ],
+        "propertyGroupList":
+        [
+            <%= render "common-config-groups.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :asset_code => asset_code,
+                    :inventory_install_path => inventory_install_path,
+                    :fmw_install_path => fmw_install_path,
+                    :temp_location => temp_location
+                }
+            %>
+            ,
+            {
+                "name": "Node_Manager_Common_Config",
+                "description": "Common Node Manager configuration",
+                "properties": [
+                    {
+                        "target": "wls.nodemanager.shared.domain.dir",
+                        "value": "true"
+                    },
+                    {
+                        "name": "wlInstallationName",
+                        "value": "fmwinfra"
+                    },
+                    {
+                        "name": "nodemanagerTop",
+                        "value": "<%= node_manager_top %>",
+                        "target": "wls.nodemanager.top"
+                    }
+                ]
+            },
+            <%= render "common-nm-ssl-config.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :certs_location_path => certs_location_path,
+                    :truststore => @common['trustStore']
+                }
+            %>
+            ,
+            {
+            "name": "OBPUI_Config",
+            "description": "Post OBP Config Tasks",
+            "properties": [
+              {
+                "target": "obp.host.serviceEjbUrl",
+                "value": "<%= "t3://#{@obpobh['hostnameList'][0]}#{@obpobh['dns_domain_name']}:#{@obpobh['obphost_server']['listen_port']}" %>"
+              },
+              {
+                "target": "obp.offlinechannelOutboundUsername",
+                "value": "offlineuser"
+              },
+              {
+                "target": "obp.offlinechannelOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', 'offlineuser' ) %>"
+              },
+              {
+                "target": "obp.ipmUsername",
+                "value": "<%= @obpipm['ipm_admin_user'] %>"
+              },
+              {
+                "target": "obp.ipmPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpipm['ipm_admin_user'] ) %>"
+              },
+              {
+                "name": "deployLocalization",
+                "value": "true"
+              },
+              {
+                "target": "obp.localization.country",
+                "value": "au"
+              },
+              {
+                "target": "obp.policy.opssusername",
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_opss"
+                },
+                {
+                "target": "obp.policy.opsspassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>"
+                },
+                {
+                "target": "obp.policy.opssauditusername",
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_IAU_APPEND"
+                },
+                {
+                "target": "obp.policy.opssauditpassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>"
+                },
+                {
+                "target": "obp.policy.opssauditviewusername",
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_IAU_VIEWER"
+                },
+                {
+                "target": "obp.policy.opssauditviewpassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>"
+                },
+                {
+                "target": "obp.policy.db.hostname",
+                "value": "<%= @obpsoa['database']['scan_address'] %>"
+                },
+                {
+                "target": "obp.policy.db.port",
+                "value": "<%= @obpsoa['database']['listen_port'] %>"
+                },
+                {
+                "target": "obp.policy.db.servicename",
+                "value": "<%= @obpsoa['database']['service_name'] %>"
+                }
+            ]
+          },
+          {
+            "name": "Policy_Store_Reassociation_Configuration",
+            "description": "Commong JPS configuration to reassociated",
+            "properties": [
+                {
+                "name": "reassociateSecurityStoreDB",
+                "value": "true"
+                },
+                {
+                "name": "jpsdomainname",
+                "value": "opssSecurityStore",
+                "target": "jps.domain.name"
+                },
+                {
+                "value": "cn=opssRoot",
+                "target": "db.jpsroot"
+                },
+                {
+                "name": "joindomain",
+                "value": "true",
+                "target": "join.domain"
+                },
+                {
+                "value": "/oracle/app/binaries/obpsoa/fmw",
+                "target": "jps.source.fmw.home"
+                },
+                {
+                "value": "/oracle/app/runtime/obpsoa/domains/obpsoa_domain",
+                "target": "jps.source.domain.dir"
+                },
+                {
+                "target": "jps.source.ssh.hostname",
+                <% if @obpobh['alter_site_reassociate_hostname'] %> 
+                    "value": "<%= @obpobh['alter_site_reassociate_hostname'] %>"
+                <% else %>
+                    "value": "<%= @obpsoa['hostnameList'][0] %><%= @obpsoa['dns_domain_name'] %>"
+                    <% end %>
+                },
+                {
+                "value": "true",
+                "target": "jps.force.reassociate"
+                },
+                {
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_opss",
+                "target": "jps.db.username"
+                },
+                {
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>",
+                "target": "jps.db.userpassword"
+                },
+                {
+                "value": "<%= @obpsoa['database']['soa_db_url'] %>",
+                "target": "jps.db.url"
+                }
+             ]
+        }
+        ]
+    }
+}

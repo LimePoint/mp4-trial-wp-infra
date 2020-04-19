@@ -1,0 +1,36 @@
+SET serverout on size unlimited for WORD_WRAPPED
+
+BEGIN
+    FOR s in (select 'Alter database datafile '||file_id||' autoextend on maxsize unlimited' sql_stmt
+                from dba_data_files
+               where (AUTOEXTENSIBLE <> 'YES' or MAXBYTES <> 34359721984))
+   loop
+      DBMS_OUTPUT.PUT_LINE('Executing => '||s.sql_stmt);
+      EXECUTE IMMEDIATE s.sql_stmt;
+   end loop;
+END;
+/
+
+set lines 200 pages 50000 colsep "|"
+col "TS(GB)" for 999999.00 hea "Size(GB)" Jus C
+col "Used(GB)" Jus C
+col "% Used" Jus C
+col CONTENTS for a10 Jus C
+col tablespace_name hea "Tablespace" Jus C
+col DFNO for 999 hea "Datafile|Count" jus c
+
+ SELECT T.TABLESPACE_NAME
+       ,ROUND((U.USED_SPACE*T.BLOCK_SIZE/(1024*1024*1024)),2)              "Used(GB)"
+       ,U.used_space*T.block_size                                          "Bytes Used"
+       ,ROUND((U.TABLESPACE_SIZE*T.BLOCK_SIZE/(1024*1024*1024)),2)         "TS(GB)"
+       ,ROUND(U.USED_PERCENT,2)                                            "% Used"
+       ,T.CONTENTS
+       ,DF.AUTOEXTENSIBLE
+       ,T.STATUS
+       ,COUNT(DF.file_id)                                                  "DFNO"
+   FROM DBA_TABLESPACE_USAGE_METRICS U,dba_tablespaces T,dba_data_files DF
+  WHERE U.tablespace_name(+)=T.tablespace_name
+    AND T.tablespace_name   =DF.tablespace_name(+)
+    AND T.CONTENTS = 'PERMANENT'
+  GROUP BY T.tablespace_name,U.used_space,U.tablespace_size,U.used_percent,T.block_size,T.contents,DF.autoextensible,T.status
+  ORDER BY 5 desc,1;

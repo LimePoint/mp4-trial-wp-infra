@@ -1,0 +1,27 @@
+#DB storage rule for file store
+IPM_FILE_STORAGE_DB=CSHIPMDB
+#IMPORT USER
+OwcImportJobUser=DCMS_OWC_IMPORT_USER
+#Imaging Metadata Set for DCMS Document
+DocRsn=xIPM_APP_<%= @IPMAppId %>_0
+DRUID=xIPM_APP_<%= @IPMAppId %>_1
+DocumentType=xIPM_APP_<%= @IPMAppId %>_2
+OriginalDocType=xIPM_APP_<%= @IPMAppId %>_3
+TitleReferenceVolume=xIPM_APP_<%= @IPMAppId %>_4
+TitleReferenceFolio=xIPM_APP_<%= @IPMAppId %>_5
+TitleState=xIPM_APP_<%= @IPMAppId %>_6
+ImageStatus=xIPM_APP_<%= @IPMAppId %>_7
+DocumentCheckSum=xIPM_APP_<%= @IPMAppId %>_8
+ImageConversionStatus=xIPM_APP_<%= @IPMAppId %>_9
+DocumentSource=xIPM_APP_<%= @IPMAppId %>_10
+UploadDate=xIPM_APP_<%= @IPMAppId %>_11
+DocumentScanDate=xIPM_APP_<%= @IPMAppId %>_12
+TransactionId=xIPM_APP_<%= @IPMAppId %>_13
+ProcessBatchId=xIPM_APP_<%= @IPMAppId %>_14
+SecurityGroup=IPMSYS_APP_<%= @IPMAppId %>
+IdcProfile=IpmApp_<%= @IPMAppId %>
+MaxResults=1000
+OwcCleanupProcessedFilesEventHour=4
+DocumentReconProcessEventHours=3,9,23
+OwcCleanupDirAndAge=/oracle/app/dcms/owcimport/successfiles/images|28,/oracle/app/dcms/owcimport/successfiles/xmls|180,/oracle/app/dcms/owcimport/failedfiles/images|28,/oracle/app/dcms/owcimport/failedfiles/xmls|180
+OWCWBCSiteID=<%= @DC %>

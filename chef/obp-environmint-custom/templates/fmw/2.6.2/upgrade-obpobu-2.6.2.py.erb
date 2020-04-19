@@ -1,0 +1,174 @@
+#!/bin/bash
+# This script upgrades ui domain from 2.6.1 to 2.6.2
+
+# arg1 - weblogic username
+# arg2 - weblogic password
+# arg3 - weblogic admin url
+
+import sys
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+
+unDeployAppArray = ['com.ofss.cloud.ui.view','com.ofss.fc.api.swaggerui']
+
+unDeployLibArray = ['obp.fusion.internal#2.6.1.0.0@2.6.1.0.0','obp.host.domain#2.6.1.0.0@2.6.1.0.0','obp.thirdparty.domain#2.6.1.0.0@2.6.1.0.0','obp.ui.domain#2.6.1.0.0@2.6.1.0.0','obp.cz.host.domain#2.6.1.0.0@2.6.1.0.0','obp.cz.thirdparty.domain#2.6.1.0.0@2.6.1.0.0','obp.cz.ui.domain#2.6.1.0.0@2.6.1.0.0','obp.lz.au.ui.domain#2.6.1.0.0@2.6.1.0.0','obp.lz.au.host.domain#2.6.1.0.0@2.6.1.0.0']
+
+deployLibArray = ['ob.app.client.coll#2.6.2.0.0@2.6.2.0.0','ob.app.client.communications#2.6.2.0.0@2.6.2.0.0','ob.app.client.cz#2.6.2.0.0@2.6.2.0.0','ob.app.client.deposit#2.6.2.0.0@2.6.2.0.0','ob.app.client.fw#2.6.2.0.0@2.6.2.0.0','ob.app.client.lcm#2.6.2.0.0@2.6.2.0.0','ob.app.client.lending#2.6.2.0.0@2.6.2.0.0','ob.app.client.or#2.6.2.0.0@2.6.2.0.0','ob.app.client.party#2.6.2.0.0@2.6.2.0.0','ob.app.client.pm#2.6.2.0.0@2.6.2.0.0','ob.app.client.pricing#2.6.2.0.0@2.6.2.0.0','ob.app.client.sh#2.6.2.0.0@2.6.2.0.0','ob.ui.coll#2.6.2.0.0@2.6.2.0.0','ob.ui.communications#2.6.2.0.0@2.6.2.0.0','ob.ui.cz#2.6.2.0.0@2.6.2.0.0','ob.ui.deposit#2.6.2.0.0@2.6.2.0.0','ob.ui.fusion#2.6.2.0.0@2.6.2.0.0','ob.ui.lcm#2.6.2.0.0@2.6.2.0.0','ob.ui.lending#2.6.2.0.0@2.6.2.0.0','ob.ui.or#2.6.2.0.0@2.6.2.0.0','ob.ui.party#2.6.2.0.0@2.6.2.0.0','ob.ui.pm#2.6.2.0.0@2.6.2.0.0','ob.ui.pricing#2.6.2.0.0@2.6.2.0.0','ob.ui.sh#2.6.2.0.0@2.6.2.0.0','ob.ui.tp#2.6.2.0.0@2.6.2.0.0','ob.ui.tp.cz#2.6.2.0.0@2.6.2.0.0']
+deployLibSourceArray = ['ob.ui.client/ob.app.client.coll','ob.ui.client/ob.app.client.communications','ob.ui.client/ob.app.client.cz','ob.ui.client/ob.app.client.deposit','ob.ui.client/ob.app.client.fw','ob.ui.client/ob.app.client.lcm','ob.ui.client/ob.app.client.lending','ob.ui.client/ob.app.client.or','ob.ui.client/ob.app.client.party','ob.ui.client/ob.app.client.pm','ob.ui.client/ob.app.client.pricing','ob.ui.client/ob.app.client.sh','ob.ui.web/ob.ui.coll','ob.ui.web/ob.ui.communications','ob.ui.web/ob.ui.cz','ob.ui.web/ob.ui.deposit','ob.ui.web/ob.ui.fusion','ob.ui.web/ob.ui.lcm','ob.ui.web/ob.ui.lending','ob.ui.web/ob.ui.or','ob.ui.web/ob.ui.party','ob.ui.web/ob.ui.pm','ob.ui.web/ob.ui.pricing','ob.ui.web/ob.ui.sh','ob.ui.web/ob.ui.tp','ob.ui.web/ob.ui.tp.cz']
+
+deployAppArray = ['com.ofss.fc.ui.view.admin.dashboard','com.ofss.fc.ui.view.qa','com.ofss.fc.ui.view.developer']
+deployAppSourceArray = ['ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.view.admin.dashboard.ear','ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.view.qa.ear','ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.view.developer.ear']
+
+updateAppArray = ['com.ofss.fc.ui.view.obepm','com.ofss.fc.ui.view.obeo','com.ofss.fc.ui.view','com.ofss.fc.app.ui.connector','com.ofss.fc.ui.view.admin','com.ofss.fc.app.monitoring','com.ofss.fc.ui.rest.ops','com.ofss.fc.ui.view.mds']
+updateAppSourceArray = ['ob.ui.applications/ob_ui_pm/com.ofss.fc.ui.view.obepm.ear','ob.ui.applications/ob_ui_or/com.ofss.fc.ui.view.obeo.ear','ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.view.ear','ob.ui.applications/ob_ui_sh/com.ofss.fc.app.ui.connector.ear','ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.view.admin.ear','ob.ui.applications/ob_ui_fw/com.ofss.fc.app.monitoring.war','ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.rest.ops.ear','ob.ui.applications/ob_ui_sh/com.ofss.fc.ui.view.mds.ear']
+
+currentAppArray = cmo.getAppDeployments()
+listOfCurrentAppNames=[]
+for name in currentAppArray:
+	aName=str(name.getName())
+	listOfCurrentAppNames.append(aName)
+currentLibArray = cmo.getLibraries()
+listOfCurrentLibNames=[]
+for name in currentLibArray:
+	aName=str(name.getName())
+	listOfCurrentLibNames.append(aName)
+
+
+print "Undeploying Below Apps"
+print unDeployAppArray
+print "\n"
+for appName in unDeployAppArray:
+        if appName in listOfCurrentAppNames:
+                print "Undeploying Application - " +appName
+                undeployProgress=undeploy(appName)
+                status=undeployProgress.getState()
+                print "App UnDeploy Status is " +status
+                if status == 'completed' :
+                        print "Undeployed Application Successfully " +appName
+                else :
+                        print "Error in Undeploying Application " +appName
+                        sys.exit(1)
+        else:
+                print appName + " doesn't exist in the domain...Skipping"
+
+print "Undeploying Below Libs"
+print unDeployLibArray
+print "\n"
+for libName in unDeployLibArray:
+        if libName in listOfCurrentLibNames:
+                print "Undeploying Library - " +libName
+                undeployProgress=undeploy(libName)
+                status=undeployProgress.getState()
+                print "Lib UnDeploy Status is " +status
+                if status == 'completed' :
+                        print "Undeployed Library Successfully " +libName
+                else :
+                        print "Error in Undeploying Library " +libName
+                        sys.exit(1)
+        else:
+                print libName + " doesn't exist in the domain...Skipping"
+
+print 'Deploying Below Libs'
+print deployLibArray
+print "\n"
+libCounter = 0
+for libName in deployLibArray:
+    if libName in listOfCurrentLibNames:
+        print "Library - " + libName + " - Exists.. Skipping"
+        #updateProgress = redeploy(libName,'/oracle/app/binaries/obpobu/fmw/obpinstall/obp/'+deployLibSourceArray[libCounter])
+        #status=updateProgress.getState()
+        #print "Lib Update Status is " +status
+        #if status == 'completed' :
+        #       print "Redeployed Library Successfully " +libName
+        #else :
+        #       print "Error in Redeploying Library " +libName
+        #       sys.exit(1)
+        libCounter = libCounter + 1
+    else:
+        deployProgress=deploy(libName,'/oracle/app/binaries/obpobu/fmw/obpinstall/obp/'+deployLibSourceArray[libCounter],targets='obpui_cluster',stageMode='nostage',libraryModule='true')
+        status=deployProgress.getState()
+        print "Lib Deploy Status is " +status
+        if status == 'completed' :
+                print "Deployed Library Successfully " +libName
+        else :
+                print "Error in Deploying Library " +libName
+                sys.exit(1)
+        try:
+            libStartProgress=startApplication(libName)
+            status=libStartProgress.getState()
+            print "Library Start Status is " +status
+            if status == 'completed' :
+                    print "Library Started Successfully " +libName
+            else :
+                    print "Error in Starting Library " +libName
+                    sys.exit(1)
+        except:
+            print "Error in Starting Library " +libName
+            print "Ignoring this... as a restart of servers may be required sometimes before start of application."
+        libCounter = libCounter + 1
+
+print 'Deploying Below Apps'
+print deployAppArray
+print "\n"
+appCounter = 0
+currentAppArray = cmo.getAppDeployments()
+for appName in deployAppArray:
+    if appName in listOfCurrentAppNames:
+        print "App - " + appName + " - Exists..Skipping"
+        #updateProgress = redeploy(appName,appPath=deployAppSourceArray[appCounter])
+        #status=updateProgress.getState()
+        #print "App Update Status is " +status
+        #if status == 'completed' :
+        #       print "Redeployed App Successfully " +appName
+        #else :
+        #       print "Error in Redeploying App " +appName
+        #       sys.exit(1)
+        appCounter = appCounter + 1
+    else:
+        deployProgress=deploy(appName,'/oracle/app/binaries/obpobu/fmw/obpinstall/obp/'+deployAppSourceArray[appCounter],targets='obpui_cluster',stageMode='nostage')
+        status=deployProgress.getState()
+        print "App Deploy Status is " +status
+        if status == 'completed' :
+                print "Deployed App Successfully " +appName
+        else :
+                print "Error in Deploying App " +appName
+                sys.exit(1)
+        try:
+            appStartProgress=startApplication(appName)
+            status=appStartProgress.getState()
+            print "App Start Status is " +status
+            if status == 'completed' :
+                    print "App Started Successfully " +appName
+            else :
+                    print "Error in Starting App " +appName
+                    sys.exit(1)
+        except:
+            print "Error in Starting App " +appName
+            print "Ignoring this... as a restart of servers may be required sometimes before start of application."
+        appCounter = appCounter + 1
+
+print 'Updating Below Apps'
+print updateAppArray
+print "\n"
+appCounter = 0
+for appName in updateAppArray:
+    deployProgress=redeploy(appName,appPath='/oracle/app/binaries/obpobu/fmw/obpinstall/obp/'+updateAppSourceArray[appCounter])
+    status=deployProgress.getState()
+    print "App Deploy Status is " +status
+    if status == 'completed' :
+            print "Updated App Successfully " +appName
+    else :
+            print "Error in Updating App " +appName
+            sys.exit(1)
+    try:
+        appStartProgress=startApplication(appName)
+        status=appStartProgress.getState()
+        print "App Start Status is " +status
+        if status == 'completed' :
+                print "App Started Successfully " +appName
+        else :
+                print "Error in Starting App " +appName
+                sys.exit(1)
+    except:
+        print "Error in Starting App " +appName
+        print "Ignoring this... as a restart of servers may be required sometimes before start of application."
+    appCounter = appCounter + 1

@@ -1,0 +1,60 @@
+{
+  "name" : "Step 2 -- Deploy OBP BIP Reports",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Download Reports",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache;${bamboo.GRADLE_HOME}/bin/gradle -b bipDown.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.PRODUCT_RELEASE_PATH} -PbiHome=${bamboo.BIHOME} -PbipVersion=${bamboo.BIVERSION} -g ../../cache deploy clean -i -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Execute the Reports upload",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b bipScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PbipPubHome=${bamboo.BIHOME} -PenvName=LOCAL -PmintDeployHome=../../ deploy clean -i -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    } ]
+  } ],
+  "vars" : {
+    "BIHOME" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpbip/fmw/bi",
+    "BIVERSION" : "<%= @manifest_vars['deployments']['bip']['extension_version']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpbip.json",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpBIPDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obpbip']['hostnameList'][0]%><%= @dataBag['obpbip']['dns_domain_name']%>",
+    "PRODUCT_RELEASE_PATH" : "<%= @manifest_vars['deployments']['bip']['cemli_release_path']%>",
+    "debug" : "false",
+    "productArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>"
+  },
+  "labels" : null,
+  "permissions" : null
+}

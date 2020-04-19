@@ -1,0 +1,15 @@
+import sys
+
+def dumpErrorData():
+    dumpVariables()
+    dumpStack()
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+try:
+	appName="OBPAPI"
+	appLocation="/oracle/app/binaries/obpobh/fmw/obpinstall/OBPAPI/OBPAPI"
+	target="obphost_cluster"
+	deploy(appName,appLocation,target,stageMode="nostage")
+except:
+	dumpErrorData()
+	raise

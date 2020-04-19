@@ -1,0 +1,107 @@
+
+<%
+  uniquifier = Time.now.strftime('%Y%h%d_%H%M')
+  puts "uniquifier      #{uniquifier}"
+
+  #Get all DCMS Hosts
+  DOMAIN_NAME = @dataBag['obpipm']['dns_domain_name']
+  dcmsDeployHosts = []
+  if @dataBag['obpipm']['ucm_server']['hostnameList'].nil?
+    @dataBag['obpipm']['hostnameList'].each do |host|
+      dcmsDeployHosts << host + DOMAIN_NAME
+    end
+  else
+    @dataBag['obpipm']['ucm_server']['hostnameList'].each do |host|
+      dcmsDeployHosts << host + DOMAIN_NAME
+    end
+    @dataBag['obpipm']['ipm_server']['hostnameList'].each do |host|
+      dcmsDeployHosts << host + DOMAIN_NAME
+    end
+  end
+  puts "List of all hosts ===> #{dcmsDeployHosts}"
+
+ %>
+
+<%
+    BUILD_DATE  = @dataBag['dcms']['build_version'][0..9].gsub("-","")
+
+    PLAN_NAME = @environment_name.upcase+"_DCMSDEPLOYMENTS_"+BUILD_DATE+"_"+uniquifier.upcase
+    TRIMMED_PLAN_NAME = PLAN_NAME.gsub("_","").upcase
+
+%>
+{
+  "name": "<%= PLAN_NAME%>",
+  "description": null,
+  "params": {},
+  "plans": [
+    {
+      "name" : "Step 1 -- DCMS DEPLOYMENT",
+      "description" : null,
+      "params" : { },
+      "stages" : 
+      [
+        {
+          "name" : "DCMS Deploy Stage",
+          "description" : null,
+          "params" : { },
+          "manual" : false,
+          "jobs" : 
+          [ 
+            {
+              "name" : "DCMS Deploy Job  on <%= dcmsDeployHosts[0] %>",
+              "description" : null,
+              "params" : { },
+              "tasks" : [ {
+                "name" : null,
+                "description" : "Deploying DCMS",
+                "params" : {
+                  "argument" : "",
+                  "scriptLocation" : "INLINE",
+                  "environmentVariables" : "",
+                  "scriptBody" : "ssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= dcmsDeployHosts[0] %> \"sudo -u oracle -- sh -c 'chef-client -c /home/oracle/chef/client.rb -o 'recipe[csh-deployments::dcms-deployment]' -l info'\";\n    echo \"------------------------------\";\n",
+                  "interpreter" : "LEGACY_SH_BAT",
+                  "script" : "",
+                  "workingSubDirectory" : ""
+                },
+                "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                "finalising" : false,
+                "enabled" : true
+              } ]
+            }
+            <% if dcmsDeployHosts.length > 1 %>
+              <% dcmsDeployHosts[1..-1].each do |hostname| %>
+                ,
+                {
+                  "name" : "DCMS Deploy Job  on <%= hostname %>",
+                  "description" : null,
+                  "params" : { },
+                  "tasks" : [ {
+                    "name" : null,
+                    "description" : "Deploying DCMS",
+                    "params" : {
+                      "argument" : "",
+                      "scriptLocation" : "INLINE",
+                      "environmentVariables" : "",
+                      "scriptBody" : "ssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no <%= hostname %> \"sudo -u oracle -- sh -c 'chef-client -c /home/oracle/chef/client.rb -o 'recipe[csh-deployments::dcms-deployment]' -l info'\";\n    echo \"------------------------------\";\n",
+                      "interpreter" : "LEGACY_SH_BAT",
+                      "script" : "",
+                      "workingSubDirectory" : ""
+                    },
+                    "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                    "finalising" : false,
+                    "enabled" : true
+                  } ]
+                }
+              <% end %>
+            <% end %>
+          ]
+        }
+      ],
+      "vars" : {
+        "debug" : "false"
+      },
+      "labels" : null,
+      "permissions" : null
+    }
+ ]
+}

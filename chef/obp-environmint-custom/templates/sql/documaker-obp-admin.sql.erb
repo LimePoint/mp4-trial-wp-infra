@@ -1,0 +1,333 @@
+/*
+	*** This file MUST only be run once per new Documaker Build **
+
+	Author: Romil Bhagat
+	Last Updated: 13-09-2016
+	This file configures Oracle Documaker with OBP
+	This is a direct modification of the Application Contexts that you can alternatively do using the Documaker Administrator GUI
+	This file is for Documakmer 12.3.0
+	This file must be run as DMKR_ADMIN User
+
+	The following values in the database table DMKR_ADMIN.APPS is assumed:
+	SYS_ID AL_ID APP_ID APPNAME APPTYPE APPDESCR
+	1	1	1	Supervisor	1	Document Factory Supervisor
+	1	1	2	Scheduler	2	Scheduler Process
+	1	1	3	Receiver	3	Receiver Process
+	1	1	4	Identifier	4	Identifier Process
+	1	1	5	Assembler	5	Assembler Process
+	1	1	6	Distributor	6	Distributor Process
+	1	1	7	Presenter	7	Presenter Process
+	1	1	8	Batcher	8	Batcher Process
+	1	1	9	Archiver	9	Archiver Process
+	1	1	10	Publisher	10	Publisher Process
+	1	1	11	PubNotifier	11	Publish Notifier Process
+	1	1	12	Historian	12	Historian Process
+	1	1	201	Correspondence	201	Documaker Interactive Correspondence Web Application
+	1	1	211	IDS	211	Docupresentment IDS Server 1 1
+	1	1	221	Contracts	221	Documaker Interactive Contracts Web Application
+	1	0	101	DocumakerAdmin	101	Documaker Administrator Application
+	1	0	111	DocumakerDashboard	111	Documaker Dashboard Application
+
+*/
+
+/* Block for configuring APPCONFIGCONTEXT table for properties */
+DECLARE
+	/* Variable Definitions */
+	v_ResultsWriterBaseDir VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/results-archive';
+	v_DispatchWriterBaseDir VARCHAR2(500):= '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/results-archive';
+	v_IPMConnectString VARCHAR2(500) := 'https://<%= @dataBag['obpipm']['frontend']['otd_vip_name'] %>/imaging/ws';
+	v_IPMConnectUsername VARCHAR2(500) := '<%= @dataBag['obpipm']['ipm_admin_user'] %>';
+	v_IPMConnectPassword VARCHAR2(500) := '<%= Mint::AesEncryption.decrypt(PasswordVault.secret("databag://#{@dataBag['common']['password_vault_name']}/obpoid/#{@dataBag['obpipm']['ipm_admin_user']}").value) %>';
+	v_PostScratchDir VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/scratch';
+	v_PostBaseDir VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/post';
+	v_PcfTemplateFile VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/printcontroltemplate.xml';
+	v_EmailScratchDir VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/scratch';
+	v_EmailBaseDir VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/post';
+	v_EmailTemplateFile VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/printcontroltemplate.xml';
+	v_OBPUsername VARCHAR2(500) := 'OFSSUser';
+		v_OBPPassword VARCHAR2(500) := '<%= Mint::AesEncryption.decrypt(PasswordVault.secret("databag://#{@dataBag['common']['password_vault_name']}/obpoid/OFSSUser").value) %>';
+	v_OBPResultsBaseDir VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/results-archive';
+	v_OBPIPMAlternateDir VARCHAR2(500) := '/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/brochure';
+	v_OBPWSDL VARCHAR2(500) := 'https://<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>:<%= @dataBag['obpobh']['frontend']['obh_port'] %>/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi?WSDL';
+	v_SMTPHost VARCHAR2(500) := 'localhost';
+
+BEGIN
+	/*
+		Application - Receiver
+		System 1 | Assembly 1 | Receiver
+	*/
+	UPDATE APPCONFIGCONTEXT SET ACTIVE=0 WHERE CONTEXT_NAME='FILERECEIVER' AND GROUP_NAME='FileReceiver' AND CATEGORY='CFG' AND PROPERTY='TextDelimiter';
+	UPDATE APPCONFIGCONTEXT SET ACTIVE=0 WHERE CONTEXT_NAME='FILERECEIVER' AND GROUP_NAME='FileReceiver' AND CATEGORY='CFG' AND PROPERTY='XMLDelimiter';
+	UPDATE APPCONFIGCONTEXT SET VALUE='Recipient', ACTIVE=1 WHERE CONTEXT_NAME='FILERECEIVER' AND GROUP_NAME='FileReceiver' AND CATEGORY='CFG' AND PROPERTY='XMLTagDelimiter';
+	UPDATE APPCONFIGCONTEXT SET VALUE='true', ACTIVE=1 WHERE CONTEXT_NAME='FILERECEIVER' AND GROUP_NAME='FileReceiver' AND CATEGORY='CFG' AND PROPERTY='StripNameSpace';
+	
+	/*
+		Application - Identifier
+		System 1 | Assembly 1 | Identifier
+	*/
+	UPDATE APPCONFIGCONTEXT SET ACTIVE=0 WHERE CONTEXT_NAME='IDENTIFIER' AND GROUP_NAME='Identifier' AND CATEGORY='CFG' AND PROPERTY='TextDelimiter';
+	UPDATE APPCONFIGCONTEXT SET ACTIVE=0 WHERE CONTEXT_NAME='IDENTIFIER' AND GROUP_NAME='Identifier' AND CATEGORY='CFG' AND PROPERTY='XMLDelimiter';
+	UPDATE APPCONFIGCONTEXT SET VALUE='Recipient', ACTIVE=1 WHERE CONTEXT_NAME='IDENTIFIER' AND GROUP_NAME='Identifier' AND CATEGORY='CFG' AND PROPERTY='XMLTagDelimiter';
+	UPDATE APPCONFIGCONTEXT SET VALUE='true', ACTIVE=1 WHERE CONTEXT_NAME='IDENTIFIER' AND GROUP_NAME='Identifier' AND CATEGORY='CFG' AND PROPERTY='StripNameSpace';
+	
+	/*
+		Application - Archiver
+		System 1 | Assembly 1 | Archiver
+	*/
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phase.name','oracle.documaker.ecmconnector.ngpcomponents.NGPPDFBurster','OBPPDFBurster',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phaselistener.pdfburster.ipm.alternateFilePath',v_OBPIPMAlternateDir,'OBPPDFBurster',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phaselistener.pdfburster.require.form.index','true','OBPPDFBurster',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phaselistener.pdfburster.ipm.alternateFilePath',v_OBPIPMAlternateDir,'PDFBurster',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phase.name','oracle.documaker.ecmconnector.ngpcomponents.archiveresults.NGPResultsWriter','OBPResultsWriter',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phaselistener.ngpresultswriter.base.directory',v_ResultsWriterBaseDir,'OBPResultsWriter',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phaselistener.ngpresultswriter.ngpsubmit.type','ARCHIVE','OBPResultsWriter',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phase.name','oracle.documaker.ecmconnector.ngpcomponents.archiveresults.NGPResultsWriter','OBPDispatchResultsWriter',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phaselistener.ngpresultswriter.base.directory',v_DispatchWriterBaseDir,'OBPDispatchResultsWriter',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LISTENER','Configuration','phaselistener.ngpresultswriter.ngpsubmit.type','DISTRIBUTION','OBPDispatchResultsWriter',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.name','oracle.documaker.ecmconnector.ngpcomponents.NGPIPMDestination','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ipm.application.name','MAIN','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ipm.connection.string',v_IPMConnectString,'OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ipm.user.name',v_IPMConnectUsername,'OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ipm.password',v_IPMConnectPassword,'OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','phaselistener','OBPPDFBurster','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','phaselistener','OBPResultsWriter','OBP_Archive',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Defaults','default','','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','DocTypeCode','{TRNS.DESCR}','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','PartyID','{TRNS.TRNCUSSTR001}','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.jobId','{JOBS.JOB_ID}','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.recipId','{RCPS.RCP_ID}','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.setId','{TRNS.TRN_ID}','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.bankCode','{TRNS.TRNCUSSTR002}','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.transactionBranch','{TRNS.TRNCUSSTR003}','OBP_Archive',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.userId','{TRNS.CURRUSER}','OBP_Archive',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.name','oracle.documaker.ecmconnector.ngpcomponents.NGPPrintDestination','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngp.scratch.directory',v_PostScratchDir,'OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpprint.base.directory',v_PostBaseDir,'OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpprint.pcf.template.file',v_PcfTemplateFile,'OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','phaselistener','OBPPDFBurster','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','phaselistener','OBPDispatchResultsWriter','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngp.file.pattern','${TRNS.TRNCUSSTR011!?replace("-", "")}${TRNS.TRN_ID!?right_pad(10, "0")}_${AFORM.userAttributes.DocID!?right_pad(27, "0")}.pdf','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngp.pcffile.pattern','${TRNS.TRNCUSSTR011!?replace("-", "")}${TRNS.TRN_ID!?right_pad(10, "0")}.xml','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpprint.zipfile.pattern','ST_${TRNS.TRNCUSSTR015}_CPU_DOCSET_${TRNS.TRNCUSSTR011!?replace("-", "")}${TRNS.TRN_ID!?right_pad(10, "0")}','OBP_Post',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Defaults','default','','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','documentSet.recipient.context.bankName','{TRNS.KEY1}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.bankCode','{TRNS.TRNCUSSTR002}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.transactionBranch','{TRNS.TRNCUSSTR003}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.userId','{TRNS.CURRUSER}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.jobId','{JOBS.JOB_ID}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.recipId','{RCPS.RCP_ID}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.setId','{TRNS.TRN_ID}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','BCHS.BCH_ID','{BCHS.BCH_ID}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','BCHS.BCHSTARTTIME','{BCHS.BCHSTARTTIME}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','BCHS.BCHSHEETCOUNT','{BCHS.BCHSHEETCOUNT}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','BCHS.BCHRCPCOUNT','{BCHS.BCHRCPCOUNT}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','BCHS.BCHPRTTYPE','{BCHS.BCHPRTTYPE}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','TRNS.KEY2','{TRNS.KEY2}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','RCPS.ADR_POSTALCODE','{RCPS.ADR_POSTALCODE}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','RCPS.ADR_COUNTRY','{RCPS.ADR_COUNTRY}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','RCPS.ADR_NAME','{RCPS.ADR_NAME}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','RCPS.ADR_CITY','{RCPS.ADR_CITY}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','RCPS.ADR_ADDRESS1','{RCPS.ADR_ADDRESS1}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','RCPS.ADR_ADDRESS2','{RCPS.ADR_ADDRESS2}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','RCPS.ADR_STATE','{RCPS.ADR_STATE}','OBP_Post',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','TRNS.TRNCUSSTR015','{TRNS.TRNCUSSTR015}','OBP_Post',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.name','oracle.documaker.ecmconnector.ngpcomponents.NGPEmailDestination','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngp.scratch.directory',v_EmailScratchDir,'OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpemail.from.address','admin@docfactory.com','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpemail.mail.host',v_SMTPHost,'OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpemail.message.template.file',v_EmailTemplateFile,'OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpemail.subject.text','${documentSet.recipient.context.bankName}${FORMNAMELIST}','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.ngpprint.base.directory',v_EmailBaseDir,'OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','phaselistener','OBPDispatchResultsWriter','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','phaselistener','OBPPDFBurster','OBP_Email',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Defaults','default','','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Defaults','documentSet.recipient.context.bankName','Model Bank','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','destination.ngpemail.to.address','{RCPS.ADR_EMAIL}','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.bankCode','{TRNS.TRNCUSSTR002}','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.transactionBranch','{TRNS.TRNCUSSTR003}','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.sessionContext.userId','{TRNS.TRNCUSSTR004}','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.jobId','{JOBS.JOB_ID}','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.recipId','{RCPS.RCP_ID}','OBP_Email',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Mappings','updateDocument.outboundDocumentListDTO.documentListRecordDTOs.documentDTO.setId','{TRNS.TRN_ID}','OBP_Email',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','destination.name','oracle.documaker.ecmconnector.mockdestination.MockDestination','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.username',v_OBPUsername,'OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.password',v_OBPPassword,'OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.security.enable','true','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.collection.instance.class','oracle.documaker.ecmconnector.ngpcomponents.archiveresults.NGPSubmitProcess','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.proc ess.collection.instance.count','1','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.base.directory',v_OBPResultsBaseDir,'OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.retry.count','5','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.retry.wait','30000','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.type','ARCHIVE','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.ngpsubmit.wsdl',v_OBPWSDL,'OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.repetition.count','0','OBPResultsUploader',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'DESTINATION','Configuration','periodic.process.repetition.wait','2000','OBPResultsUploader',1,'installer');
+	
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LOG4J','oracle.documaker.ecmconnector.ngpcomponents','priority','error','Logger',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LOG4J','oracle.documaker.ecmconnector.ngpcomponents','additivity','false','Logger',0,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LOG4J','oracle.documaker.ecmconnector.ngpcomponents','appender-ref','ErrorAppender','Logger',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LOG4J','oracle.documaker.ecmconnector.ngpcomponents','appender-ref','LogAppender','Logger',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LOG4J','oracle.documaker.ecmconnector.ngpcomponents','appender-ref','stdout','Logger',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LOG4J','oracle.documaker.ecmconnector.ngpcomponents','appender-ref','roll','Logger',1,'installer');
+	INSERT INTO APPCONFIGCONTEXT (SYS_ID, AL_ID, APP_ID, CONTEXT_NAME, GROUP_NAME, PROPERTY, VALUE, CATEGORY, ACTIVE, USER_NAME) VALUES
+	(1, 1, 9, 'LOG4J','oracle.documaker.ecmconnector.ngpcomponents','class','oracle.documaker.log4jlogger.DFLogger','Logger',1,'installer');
+	
+	COMMIT;
+END;
+/
+
+/*
+	Updates to DMKR_TRANSLAT table for Documaker Translations
+*/
+DECLARE
+	v_seq NUMBER;
+BEGIN
+	SELECT max(DISPLAYSEQ) INTO v_seq FROM DMKR_TRANSLAT WHERE GROUP_ID='BCHINGS.BCHINGARCDEST';
+	v_seq := v_seq + 1;
+	INSERT INTO DMKR_TRANSLAT (SYS_ID, AL_ID, APP_ID, LOCALE_ID, GROUP_ID, ID, DISPLAY, DESCRIPTION, DISPLAYSEQ) VALUES
+	(1, 1, 0, 'en', 'BCHINGS.BCHINGARCDEST', 'OBP_Post', 'OBP_Post', 'OBP Post Destination', v_seq);
+	COMMIT;
+	
+	SELECT max(DISPLAYSEQ) INTO v_seq FROM DMKR_TRANSLAT WHERE GROUP_ID='BCHINGS.BCHINGARCDEST';
+	v_seq := v_seq + 1;
+	INSERT INTO DMKR_TRANSLAT (SYS_ID, AL_ID, APP_ID, LOCALE_ID, GROUP_ID, ID, DISPLAY, DESCRIPTION, DISPLAYSEQ) VALUES
+	(1, 1, 0, 'en', 'BCHINGS.BCHINGARCDEST', 'OBP_Email', 'OBP_Email', 'OBP Email Destination', v_seq);
+	COMMIT;
+	
+	SELECT max(DISPLAYSEQ) INTO v_seq FROM DMKR_TRANSLAT WHERE GROUP_ID='BCHINGS.BCHINGSGNDEST';
+	v_seq := v_seq + 1;
+	INSERT INTO DMKR_TRANSLAT (SYS_ID, AL_ID, APP_ID, LOCALE_ID, GROUP_ID, ID, DISPLAY, DESCRIPTION, DISPLAYSEQ) VALUES
+	(1, 1, 0, 'en', 'BCHINGS.BCHINGSGNDEST', 'OBP_Archive', 'OBP_Archive', 'OBP IPM Archive Destination', v_seq);
+	COMMIT;
+	
+	UPDATE DMKR_TRANSLAT SET DISPLAY='Dispatch-Delivery', DESCRIPTION='Batchings Archive Destination Label'  WHERE GROUP_ID = 'BCHINGS.BCHINGARCLBL' AND ID='Archive' and DISPLAY='Archive';
+	
+	UPDATE DMKR_TRANSLAT SET DISPLAY='Archive-Generation', DESCRIPTION='Batchings Sign Destination Label'  WHERE GROUP_ID = 'BCHINGS.BCHINGSGNLBL' AND ID='Sign' and DISPLAY='Sign';
+	COMMIT;
+END;
+/
+
+/*
+	Fix for Documaker Corrspondence
+*/
+
+BEGIN
+	MERGE INTO DMKR_ADMIN.DMKR_ENTITY_ABILITYSET acc
+	  USING (select 1025 ENTITYID, 1 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 2 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 3 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 6 ABILITYSETID, 101 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 1001 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 1003 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 1022 ABILITYSETID, 201 APP_ID FROM DUAL) src
+	    ON (acc.ENTITYID = src.ENTITYID and acc.ABILITYSETID=src.ABILITYSETID and acc.APP_ID=src.APP_ID)
+	  WHEN NOT MATCHED THEN
+	    INSERT (acc.ENTITYID,acc.ABILITYSETID,acc.APP_ID)
+	    VALUES(src.ENTITYID,src.ABILITYSETID,src.APP_ID);
+	COMMIT;
+END;
+/

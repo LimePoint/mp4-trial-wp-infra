@@ -1,0 +1,4 @@
+asset_code=$1
+WHOAMI=`whoami` ;  NM_PID=`ps -u $WHOAMI -opid,cmd | grep -e "weblogic.NodeManager" | grep -e $asset_code | grep -v grep | awk '{print $1}'`;echo $NM_PID
+if [ "$NM_PID" = "" ] ;then echo "Node Manager not running, ignoring";exit;else NM_HOME=`pwdx $NM_PID| awk '{print $2}'`; kill -9 $NM_PID;fi;echo $NM_HOME;export NODEMGR_HOME=$NM_HOME;echo $NODEMGR_HOME;
+if [ -f $NM_HOME/../config/config.xml ] ;then START_NM_SCRIPT_LOC=$NM_HOME/../bin ;else START_NM_SCRIPT_LOC=$NM_HOME/../../server/bin ;fi; echo $START_NM_SCRIPT_LOC;cd $START_NM_SCRIPT_LOC;nohup ./startNodeManager.sh >& /dev/null & echo "Called $START_NM_SCRIPT_LOC/startNodeManager.sh"

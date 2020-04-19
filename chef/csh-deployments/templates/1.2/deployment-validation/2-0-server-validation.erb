@@ -1,0 +1,64 @@
+{
+  "name": "Step 2 -- Server Status Validation",
+  "params": {},
+  "stages": [
+    {
+      "name": "Default Stage",
+      "params": {},
+      "manual": false,
+      "jobs": []
+    },
+    {
+      "name": "OBP Server status Validation",
+      "description": "OBP Inspec tests for pre & post deployment ",
+      "params": {},
+      "manual": false,
+      "jobs": [
+
+        <% @hash_admins.each_with_index do |(key,value), index| %>
+        <%= "," if index > 0 %>
+
+        {
+          "name": "<%= key %> Server test",
+          "description": "<%= key %> Server test",
+          "params": {},
+          "tasks": [
+            {
+              "description": "<%= key %> Inspec Provision ",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "ssh <%= @ssh_key_string %> -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no mintpress@<%= value %> \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::inspec-provision] -l info'\";",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            },
+            {
+              "description": "<%= key %> Inspec Validation Task",
+              "params": {
+                "argument": "",
+                "scriptLocation": "INLINE",
+                "environmentVariables": "",
+                "scriptBody": "/usr/bin/inspec  exec /environmint/gitrepos/mp-001_techstack/tools/inspec/server-status/controls/<%= key %>.rb  <%= @ssh_key_string %> -t ssh://mintpress@<%= value %> -l debug",
+                "interpreter": "LEGACY_SH_BAT",
+                "script": "",
+                "workingSubDirectory": ""
+              },
+              "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+              "finalising": false,
+              "enabled": true
+            }
+          ]
+        }
+        <% end %>
+
+      ]
+    }
+  ],
+  "vars": {}
+}

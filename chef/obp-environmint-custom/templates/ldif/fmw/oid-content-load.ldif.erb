@@ -1,0 +1,2640 @@
+dn: cn=groups,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: groups
+
+dn: cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: users
+
+dn: cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: serviceaccounts
+
+dn: cn=staff,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: staff
+
+dn: cn=obpbip_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obpbip_domain
+uid: obpbip_readonly
+givenName: obpbip_readonly
+sn: obpbip_readonly
+orclSAMAccountName: obpbip_readonly
+cn: obpbip_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpbip_readonly %>
+
+dn: cn=obpdoc_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obpdoc_domain
+uid: obpdoc_readonly
+givenName: obpdoc_readonly
+sn: obpdoc_readonly
+orclSAMAccountName: obpdoc_readonly
+cn: obpdoc_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpdoc_readonly %>
+
+dn: cn=obpipm_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obpipm_domain
+uid: obpipm_readonly
+givenName: obpipm_readonly
+sn: obpipm_readonly
+orclSAMAccountName: obpipm_readonly
+cn: obpipm_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpipm_readonly %>
+
+dn: cn=obpurm_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obpurm_domain
+uid: obpurm_readonly
+givenName: obpurm_readonly
+sn: obpurm_readonly
+orclSAMAccountName: obpurm_readonly
+cn: obpurm_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpurm_readonly %>
+
+dn: cn=obpobh_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obphost_domain
+uid: obpobh_readonly
+givenName: obpobh_readonly
+sn: obpobh_readonly
+orclSAMAccountName: obpobh_readonly
+cn: obpobh_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpobh_readonly %>
+
+dn: cn=obpobu_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obpui_domain
+uid: obpobu_readonly
+givenName: obpobu_readonly
+sn: obpobu_readonly
+orclSAMAccountName: obpobu_readonly
+cn: obpobu_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpobu_readonly %>
+
+dn: cn=obposb_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obposb_domain
+uid: obposb_readonly
+givenName: obposb_readonly
+sn: obposb_readonly
+orclSAMAccountName: obposb_readonly
+cn: obposb_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obposb_readonly %>
+
+dn: cn=obpsoa_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obpsoa_domain
+uid: obpsoa_readonly
+givenName: obpsoa_readonly
+sn: obpsoa_readonly
+orclSAMAccountName: obpsoa_readonly
+cn: obpsoa_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpsoa_readonly %>
+
+dn: cn=OFSSUser,cn=serviceaccounts,cn=Users,dc=westpac,dc=com,dc=au
+changetype: add
+orclsamaccountname: OFSSUser
+givenname: OFSSUser
+sn: OFSSUser
+mail: OFSSUser@oracle.com
+objectclass: top
+objectclass: person
+objectclass: fcperson
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: orclUserV2
+homebranch: 2006
+uid: OFSSUser
+orclactivestartdate: 20110421000000z
+cn: OFSSUser
+description: OFSS user
+preferredlanguage: en
+businessunit: PBWP
+accessiblebusinessunits: PBWP
+accessibletargetunits: PBWP
+targetunit: PBWP
+userpassword: <%= @OFSSUser %>
+
+dn: cn=OFSSUser2,cn=serviceaccounts,cn=Users,dc=westpac,dc=com,dc=au
+changetype: add
+orclsamaccountname: OFSSUser2
+givenname: OFSSUser2
+sn: OFSSUser2
+mail: OFSSUser2@oracle.com
+objectclass: top
+objectclass: person
+objectclass: fcperson
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: orclUserV2
+homebranch: 2006
+uid: OFSSUser2
+orclactivestartdate: 20110421000000z
+cn: OFSSUser2
+description: OFSS user2
+preferredlanguage: en
+businessunit: PBWP
+accessiblebusinessunits: PBWP
+accessibletargetunits: PBWP
+targetunit: PBWP
+userpassword: <%= @OFSSUser %>
+
+dn: cn=offlineuser,cn=serviceaccounts,cn=Users,dc=westpac,dc=com,dc=au
+changetype: add
+orclsamaccountname: offlineuser
+givenname: offlineuser
+sn: offlineuser
+mail: offlineuser@oracle.com
+objectclass: top
+objectclass: person
+objectclass: fcperson
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: orclUserV2
+homebranch: 2006
+uid: offlineuser
+orclactivestartdate: 20110421000000z
+cn: offlineuser
+description: Offline user
+preferredlanguage: en
+businessunit: PBWP
+accessiblebusinessunits: PBWP
+accessibletargetunits: PBWP
+targetunit: PBWP
+userpassword: <%= @offlineuser %>
+
+dn: cn=atmuser,cn=serviceaccounts,cn=Users,dc=westpac,dc=com,dc=au
+changetype: add
+orclsamaccountname: atmuser
+givenname: atmuser
+sn: atmuser
+mail: atmuser@oracle.com
+objectclass: top
+objectclass: person
+objectclass: fcperson
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: orclUserV2
+homebranch: 2006
+uid: atmuser
+orclactivestartdate: 20110421000000z
+cn: atmuser
+description: atmuser user
+preferredlanguage: en
+businessunit: PBWP
+accessiblebusinessunits: PBWP
+accessibletargetunits: PBWP
+targetunit: PBWP
+userpassword: <%= @atmuser %>
+
+dn: cn=posuser,cn=serviceaccounts,cn=Users,dc=westpac,dc=com,dc=au
+changetype: add
+orclsamaccountname: posuser
+givenname: posuser
+sn: posuser
+mail: posuser@oracle.com
+objectclass: top
+objectclass: person
+objectclass: fcperson
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: orclUserV2
+homebranch: 2006
+uid: posuser
+orclactivestartdate: 20110421000000z
+cn: posuser
+description: posuser user
+preferredlanguage: en
+businessunit: PBWP
+accessiblebusinessunits: PBWP
+accessibletargetunits: PBWP
+targetunit: PBWP
+userpassword: <%= @posuser %>
+
+dn: cn=obpsoa_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for SOA Administrators for OBP
+uid: obpsoa_admin
+givenName: obpsoa_admin
+sn: obpsoa_admin
+orclSAMAccountName: obpsoa_admin
+cn: obpsoa_admin
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpsoa_admin %>
+
+dn: cn=obpbip_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for BIP Administrators for OBP
+uid: obpbip_admin
+givenName: obpbip_admin
+sn: obpbip_admin
+orclSAMAccountName: obpbip_admin
+cn: obpbip_admin
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpbip_admin %>
+
+dn: cn=obpipm_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for IPM Administrators for OBP
+uid: obpipm_admin
+givenName: obpipm_admin
+sn: obpipm_admin
+orclSAMAccountName: obpipm_admin
+cn: obpipm_admin
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpipm_admin %>
+
+dn: cn=obphost_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for OBPHOST Administrators for OBP
+uid: obphost_admin
+givenName: obphost_admin
+sn: obphost_admin
+orclSAMAccountName: obphost_admin
+cn: obphost_admin
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obphost_admin %>
+
+dn: cn=documaker,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for Documaker Administrators for OBP
+uid: documaker
+givenName: documaker
+sn: documaker
+orclSAMAccountName: documaker
+cn: documaker
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @documaker %>
+
+dn: cn=SA_DOCUMAKER_IPM_MANAGE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for Documakar to IPM system integration
+uid: SA_DOCUMAKER_IPM_MANAGE_USER
+givenName: SA_DOCUMAKER_IPM_MANAGE_USER
+sn: SA_DOCUMAKER_IPM_MANAGE_USER
+orclSAMAccountName: SA_DOCUMAKER_IPM_MANAGE_USER
+cn: SA_DOCUMAKER_IPM_MANAGE_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_DOCUMAKER_IPM_MANAGE_USER %>
+
+dn: cn=SA_DOCUMAKER_OBP_MANAGE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for Documaker to OBP system integration
+uid: SA_DOCUMAKER_OBP_MANAGE_USER
+givenName: SA_DOCUMAKER_OBP_MANAGE_USER
+sn: SA_DOCUMAKER_OBP_MANAGE_USER
+orclSAMAccountName: SA_DOCUMAKER_OBP_MANAGE_USER
+cn: SA_DOCUMAKER_OBP_MANAGE_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_DOCUMAKER_OBP_MANAGE_USER %>
+
+dn: cn=SA_OBP_OSB_APIGATEWAY_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for OSB APIGATEWAY to OBP system integration
+uid: SA_OBP_OSB_APIGATEWAY_USER
+givenName: SA_OBP_OSB_APIGATEWAY_USER
+sn: SA_OBP_OSB_APIGATEWAY_USER
+orclSAMAccountName: SA_OBP_OSB_APIGATEWAY_USER
+cn: SA_OBP_OSB_APIGATEWAY_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_OBP_OSB_APIGATEWAY_USER %>
+
+dn: cn=healthcheck,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for GTM Health Check
+uid: healthcheck
+givenName: healthcheck
+sn: healthcheck
+orclSAMAccountName: healthcheck
+cn: healthcheck
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @healthcheck %>
+
+dn: cn=readonly,cn=serviceaccounts,cn=Users,dc=westpac,dc=com,dc=au
+changetype: add
+description: readonly user
+uid: readonly
+givenname: readonly
+sn: readonly
+orclsamaccountname: readonly
+cn: readonly
+objectclass: orclUserV2
+objectclass: orclUser
+objectclass: inetOrgPerson
+objectclass: organizationalPerson
+objectclass: fcperson
+objectclass: person
+objectclass: top
+mail: readonly@wbg-test.com
+preferredlanguage: en
+userPassword: <%= @readonly %>
+
+dn: cn=SA_DLM_API_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for DLM to OBP OSB system integration
+orclsamaccountname: SA_DLM_API_OSB_USER
+givenname: SA_DLM_API_OSB_USER
+sn: SA_DLM_API_OSB_USER
+userpassword: <%= @SA_DLM_API_OSB_USER %>
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+uid: SA_DLM_API_OSB_USER
+cn: SA_DLM_API_OSB_USER
+
+dn: cn=SA_VALEX_API_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for VALEX to OBP OSB system integration
+orclsamaccountname: SA_VALEX_API_OSB_USER
+givenname: SA_VALEX_API_OSB_USER
+sn: SA_VALEX_API_OSB_USER
+userpassword: <%= @SA_VALEX_API_OSB_USER %>
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+uid: SA_VALEX_API_OSB_USER
+cn: SA_VALEX_API_OSB_USER
+
+dn: ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: apps
+
+DN: ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: bam
+
+DN: cn=BAM_CreditOpsManager,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_CreditOpsManager
+description: BAM_CreditOpsManager
+displayname: BAM_CreditOpsManager
+
+DN: cn=BAM_PricingOpsManager,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_PricingOpsManager
+description: BAM_PricingOpsManager
+displayname: BAM_PricingOpsManager
+
+DN: cn=BAM_HOSOpsManager,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_HOSOpsManager
+description: BAM_HOSOpsManager
+displayname: BAM_HOSOpsManager
+
+DN: cn=BAM_MiscOpsManager,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_MiscOpsManager
+description: BAM_MiscOpsManager
+displayname: BAM_MiscOpsManager
+
+DN: cn=BAM_MortgageOriginationsGroupManager,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_MortgageOriginationsGroupManager
+description: BAM_MortgageOriginationsGroupManager
+displayname: BAM_MortgageOriginationsGroupManager
+
+DN: cn=BAM-TechnicalPIV,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM-TechnicalPIV
+description: BAM-TechnicalPIV
+displayname: BAM-TechnicalPIV
+
+dn: ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: bpm
+
+dn: cn=Administrators,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: delete
+
+dn: cn=obpsoa_administrators,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:obpsoa_administrators
+uniquemember: cn=obpsoa_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of obpsoa_administrators
+cn:obpsoa_administrators
+
+dn: cn=Monitors,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:Monitors
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Monitors
+cn:Monitors
+
+DN: cn=WLAT_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_VERIFICATION
+description: WLAT_VERIFICATION
+displayname: WLAT_VERIFICATION
+
+DN: cn=WLAT_CREDIT,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_CREDIT
+description: WLAT_CREDIT
+displayname: WLAT_CREDIT
+
+DN: cn=WLAT_DOCS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_DOCS
+description: WLAT_DOCS
+displayname: WLAT_DOCS
+
+DN: cn=WLAT_FULFILMENT,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_FULFILMENT
+description: WLAT_FULFILMENT
+displayname: WLAT_FULFILMENT
+
+DN: cn=WLAT_LMI,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_LMI
+description: WLAT_LMI
+displayname: WLAT_LMI
+
+DN: cn=WLAT_PRICING,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_PRICING
+description: WLAT_PRICING
+displayname: WLAT_PRICING
+
+DN: cn=STRUCTURE_SOLUTION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: STRUCTURE_SOLUTION
+description: STRUCTURE_SOLUTION
+displayname: STRUCTURE_SOLUTION
+
+DN: cn=VERIFY_APPLICATION_COMPLEX,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: VERIFY_APPLICATION_COMPLEX
+description: VERIFY_APPLICATION_COMPLEX
+displayname: VERIFY_APPLICATION_COMPLEX
+
+DN: cn=VERIFY_TITLESEARCH,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: VERIFY_TITLESEARCH
+description: VERIFY_TITLESEARCH
+displayname: VERIFY_TITLESEARCH
+
+DN: cn=VALUATIONS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: VALUATIONS
+description: VALUATIONS
+displayname: VALUATIONS
+
+DN: cn=VERIFY_APPLICATION_APPROVAL,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: VERIFY_APPLICATION_APPROVAL
+description: VERIFY_APPLICATION_APPROVAL
+displayname: VERIFY_APPLICATION_APPROVAL
+
+DN: cn=VERIFY_APPLICATION_SIMPLE,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: VERIFY_APPLICATION_SIMPLE
+description: VERIFY_APPLICATION_SIMPLE
+displayname: VERIFY_APPLICATION_SIMPLE
+
+DN: cn=LEVEL_11_0_TO_50000,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_11_0_TO_50000
+description: LEVEL_11_0_TO_50000
+displayname: LEVEL_11_0_TO_50000
+
+DN: cn=LEVEL_10_50000_TO_100000,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_10_50000_TO_100000
+description: LEVEL_10_50000_TO_100000
+displayname: LEVEL_10_50000_TO_100000
+
+DN: cn=LEVEL_9_100000_TO_150000,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_9_100000_TO_150000
+description: LEVEL_9_100000_TO_150000
+displayname: LEVEL_9_100000_TO_150000
+
+DN: cn=LEVEL_8_150000_TO_1M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_8_150000_TO_1M
+description: LEVEL_8_150000_TO_1M
+displayname: LEVEL_8_150000_TO_1M
+
+DN: cn=LEVEL_7_1M_TO_3M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_7_1M_TO_3M
+description: LEVEL_7_1M_TO_3M
+displayname: LEVEL_7_1M_TO_3M
+
+DN: cn=LEVEL_6_3M_TO_5M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_6_3M_TO_5M
+description: LEVEL_6_3M_TO_5M
+displayname: LEVEL_6_3M_TO_5M
+
+DN: cn=LEVEL_5_5M_TO_10M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_5_5M_TO_10M
+description: LEVEL_5_5M_TO_10M
+displayname: LEVEL_5_5M_TO_10M
+
+DN: cn=LEVEL_4_10M_TO_15M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_4_10M_TO_15M
+description: LEVEL_4_10M_TO_15M
+displayname: LEVEL_4_10M_TO_15M
+
+DN: cn=LEVEL_3_15M_TO_20M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_3_15M_TO_20M
+description: LEVEL_3_15M_TO_20M
+displayname: LEVEL_3_15M_TO_20M
+
+DN: cn=LEVEL_2_20M_TO_30M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_2_20M_TO_30M
+description: LEVEL_2_20M_TO_30M
+displayname: LEVEL_2_20M_TO_30M
+
+DN: cn=LEVEL_1_30M_TO_40M,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: LEVEL_1_30M_TO_40M
+description: LEVEL_1_30M_TO_40M
+displayname: LEVEL_1_30M_TO_40M
+
+DN: cn=ACCEPT_OFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: ACCEPT_OFFER
+description: ACCEPT_OFFER
+displayname: ACCEPT_OFFER
+
+DN: cn=ACCEPT_OFFER_APPROVAL,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: ACCEPT_OFFER_APPROVAL
+description: ACCEPT_OFFER_APPROVAL
+displayname: ACCEPT_OFFER_APPROVAL
+
+DN: cn=SETTLEMENT_INSTRUCTIONS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: SETTLEMENT_INSTRUCTIONS
+description: SETTLEMENT_INSTRUCTIONS
+displayname: SETTLEMENT_INSTRUCTIONS
+
+DN: cn=SETTLEMENT_INSTRUCTIONS_APPROVAL,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: SETTLEMENT_INSTRUCTIONS_APPROVAL
+description: SETTLEMENT_INSTRUCTIONS_APPROVAL
+displayname: SETTLEMENT_INSTRUCTIONS_APPROVAL
+
+DN: cn=SETTLEMENT_INSTRUCTIONS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: SETTLEMENT_INSTRUCTIONS
+description: SETTLEMENT_INSTRUCTIONS
+displayname: SETTLEMENT_INSTRUCTIONS
+
+DN: cn=SETTLEMENT_INSTRUCTIONS_APPROVAL,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: SETTLEMENT_INSTRUCTIONS_APPROVAL
+description: SETTLEMENT_INSTRUCTIONS_APPROVAL
+displayname: SETTLEMENT_INSTRUCTIONS_APPROVAL
+
+DN: cn=COLLATERAL_PERFECTION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: COLLATERAL_PERFECTION
+description: COLLATERAL_PERFECTION
+displayname: COLLATERAL_PERFECTION
+
+DN: cn=REFERRED_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: REFERRED_VERIFICATION
+description: REFERRED_VERIFICATION
+displayname: REFERRED_VERIFICATION
+
+DN: cn=CREATE_OFFER_TASK_OWNER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREATE_OFFER_TASK_OWNER
+description: CREATE_OFFER_TASK_OWNER
+displayname: CREATE_OFFER_TASK_OWNER
+
+dn: ou=documaker,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: documaker
+
+dn: cn=Documaker Administrators,ou=documaker,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+uniquemember: cn=documaker,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+displayname:Documaker Administrators
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Documaker Administrators
+cn:Documaker Administrators
+
+dn: cn=Monitors,ou=documaker,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:Monitors
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Monitors
+cn:Monitors
+
+dn: cn=Documaker - Tech Support - Core Banking,ou=documaker,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: Documaker - Tech Support - Core Banking
+description: Documaker - Tech Support - Core Banking
+displayname: Documaker - Tech Support - Core Banking
+
+dn: cn=Documaker - Enterprise Configuration Approver,ou=documaker,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: Documaker - Enterprise Configuration Approver
+description: Documaker - Enterprise Configuration Approver
+displayname: Documaker - Enterprise Configuration Approver
+
+dn: cn=Documaker - Document Processor,ou=documaker,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: Documaker - Document Processor
+description: Documaker - Document Processor
+displayname: Documaker - Document Processor
+
+DN: cn=Documaker-TechnicalPIV,ou=documaker,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: Documaker-TechnicalPIV
+description: Documaker-TechnicalPIV
+displayname: Documaker-TechnicalPIV
+
+dn: ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: ipm
+
+dn: cn=Administrators,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:Administrators
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Administrators
+cn:Administrators
+
+dn: cn=Monitors,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:Monitors
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Monitors
+cn:Monitors
+
+dn: cn=obpipm_administrators,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:obpipm_administrators
+uniquemember: cn=obpipm_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of obpipm_administrators
+cn:obpipm_administrators
+
+dn: cn=IPM-Admin,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: IPM-Admin
+description: IPM-Admin
+displayname: IPM-Admin
+
+dn: cn=IPM-Redaction,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: IPM-Redaction
+description: IPM-Redaction
+displayname: IPM-Redaction
+
+dn: cn=IPM-Viewer,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: IPM-Viewer
+description: IPM-Viewer
+displayname: IPM-Viewer
+
+DN: cn=IPM-TechnicalPIV,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: IPM-TechnicalPIV
+description: IPM-TechnicalPIV
+displayname: IPM-TechnicalPIV
+
+DN: cn=DCMSApp_Admins,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: DCMSApp_Admins
+description: DCMSApp_Admins
+displayname: DCMSApp_Admins
+
+DN: cn=DCMSDocs_Admins,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: DCMSDocs_Admins
+description: DCMSDocs_Admins
+displayname: DCMSDocs_Admins
+
+DN: cn=DCMSDocs_Readers,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: DCMSDocs_Readers
+description: DCMSDocs_Readers
+displayname: DCMSDocs_Readers
+
+DN: cn=DCMSJob_Admins,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: DCMSJob_Admins
+description: DCMSJob_Admins
+displayname: DCMSJob_Admins
+
+DN: ou=obiee,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: obiee
+
+DN: cn=BIConsumer,ou=obiee,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BIConsumer
+description: BIConsumer
+displayname: BIConsumer
+
+DN: cn=BIAuthor,ou=obiee,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BIAuthor
+description: BIAuthor
+displayname: BIAuthor
+
+DN: cn=BIAdministrator,ou=obiee,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+uniquemember: cn=obpbip_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BIAdministrator
+description: BIAdministrator
+displayname: BIAdministrator
+
+DN: cn=BI-TechnicalPIV,ou=obiee,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BI-TechnicalPIV
+description: BI-TechnicalPIV
+displayname: BI-TechnicalPIV
+
+dn: ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: obp
+
+dn: cn=Administrators,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+uniquemember: cn=ofssuser2,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+uniquemember: cn=obphost_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+displayname:Administrators
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Administrators
+cn:Administrators
+
+dn: cn=Monitors,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:Monitors
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Monitors
+cn:Monitors
+
+dn: cn=ATM_Role,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:ATM_Role
+uniquemember:cn=atmuser,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of ATM users
+cn:ATM_Role
+
+dn: cn=POS_Role,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:POS_Role
+uniquemember:cn=posuser,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of POS users
+cn:POS_Role
+
+dn: cn=OfflineRole,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+displayname:OfflineRole
+uniquemember:cn=offlineuser,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+objectclass:top
+objectclass:groupOfUniqueNames
+objectclass:orclGroup
+description:Group of Offline users
+cn:OfflineRole
+
+DN: cn=OBP-Lender,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Lender
+description: OBP-Lender
+displayname: OBP-Lender
+
+DN: cn=OBP-Level11CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level11CreditManager
+description: OBP-Level11CreditManager
+displayname: OBP-Level11CreditManager
+
+DN: cn=OBP-Level10CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level10CreditManager
+description: OBP-Level10CreditManager
+displayname: OBP-Level10CreditManager
+
+DN: cn=OBP-Level9CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level9CreditManager
+description: OBP-Level9CreditManager
+displayname: OBP-Level9CreditManager
+
+DN: cn=OBP-Level8CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level8CreditManager
+description: OBP-Level8CreditManager
+displayname: OBP-Level8CreditManager
+
+DN: cn=OBP-Level7CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level7CreditManager
+description: OBP-Level7CreditManager
+displayname: OBP-Level7CreditManager
+
+DN: cn=OBP-Level6CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level6CreditManager
+description: OBP-Level6CreditManager
+displayname: OBP-Level6CreditManager
+
+DN: cn=OBP-Level5CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level5CreditManager
+description: OBP-Level5CreditManager
+displayname: OBP-Level5CreditManager
+
+DN: cn=OBP-Level4CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level4CreditManager
+description: OBP-Level4CreditManager
+displayname: OBP-Level4CreditManager
+
+DN: cn=OBP-Level3CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level3CreditManager
+description: OBP-Level3CreditManager
+displayname: OBP-Level3CreditManager
+
+DN: cn=OBP-Level2CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level2CreditManager
+description: OBP-Level2CreditManager
+displayname: OBP-Level2CreditManager
+
+DN: cn=OBP-Level1CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Level1CreditManager
+description: OBP-Level1CreditManager
+displayname: OBP-Level1CreditManager
+
+DN: cn=OBP-CreditHindsighterQA,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditHindsighterQA
+description: OBP-CreditHindsighterQA
+displayname: OBP-CreditHindsighterQA
+
+DN: cn=OBP-WLMIInsuranceAssessor,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-WLMIInsuranceAssessor
+description: OBP-WLMIInsuranceAssessor
+displayname: OBP-WLMIInsuranceAssessor
+
+DN: cn=OBP-WLMIOperations,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-WLMIOperations
+description: OBP-WLMIOperations
+displayname: OBP-WLMIOperations
+
+DN: cn=OBP-OperationsApplicationVerification,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-OperationsApplicationVerification
+description: OBP-OperationsApplicationVerification
+displayname: OBP-OperationsApplicationVerification
+
+DN: cn=OBP-PricingOfficer,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-PricingOfficer
+description: OBP-PricingOfficer
+displayname: OBP-PricingOfficer
+
+DN: cn=OBP-OperationsDocumentManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-OperationsDocumentManager
+description: OBP-OperationsDocumentManager
+displayname: OBP-OperationsDocumentManager
+
+DN: cn=OBP-OperationsFulfillmentExpert,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-OperationsFulfillmentExpert
+description: OBP-OperationsFulfillmentExpert
+displayname: OBP-OperationsFulfillmentExpert
+
+DN: cn=OBP-Viewer,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Viewer
+description: OBP-Viewer
+displayname: OBP-Viewer
+
+DN: cn=OBP-ReportingAnalyst,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-ReportingAnalyst
+description: OBP-ReportingAnalyst
+displayname: OBP-ReportingAnalyst
+
+DN: cn=OBP-TechSupportL1,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-TechSupportL1
+description: OBP-TechSupportL1
+displayname: OBP-TechSupportL1
+
+DN: cn=OBP-Configurator,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-Configurator
+description: OBP-Configurator
+displayname: OBP-Configurator
+
+DN: cn=OBP-P&PConfigurator,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-P&PConfigurator
+description: OBP-P&PConfigurator
+displayname: OBP-P&PConfigurator
+
+DN: cn=OBP-TechSupportL2,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-TechSupportL2
+description: OBP-TechSupportL2
+displayname: OBP-TechSupportL2
+
+DN: cn=OBP-ExternalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-ExternalApplication
+description: OBP-ExternalApplication
+displayname: OBP-ExternalApplication
+
+DN: cn=OBP-SOAAdmin,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-SOAAdmin
+description: OBP-SOAAdmin
+displayname: OBP-SOAAdmin
+
+DN: cn=OBP-WorkflowCoordinator,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-WorkflowCoordinator
+description: OBP-WorkflowCoordinator
+displayname: OBP-WorkflowCoordinator
+
+DN: cn=OBP-BatchOperations,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-BatchOperations
+description: OBP-BatchOperations
+displayname: OBP-BatchOperations
+
+dn: cn=SA_HOST_SOA_ADMIN_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for Documakar to IPM system integration
+uid: SA_HOST_SOA_ADMIN_USER
+givenName: SA_HOST_SOA_ADMIN_USER
+sn: SA_HOST_SOA_ADMIN_USER
+orclSAMAccountName: SA_HOST_SOA_ADMIN_USER
+cn: SA_HOST_SOA_ADMIN_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_HOST_SOA_ADMIN_USER %>
+
+dn: cn=SA_OBP_IPM_MANAGE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for Documakar to IPM system integration
+uid: SA_OBP_IPM_MANAGE_USER
+givenName: SA_OBP_IPM_MANAGE_USER
+sn: SA_OBP_IPM_MANAGE_USER
+orclSAMAccountName: SA_OBP_IPM_MANAGE_USER
+cn: SA_OBP_IPM_MANAGE_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_OBP_IPM_MANAGE_USER %>
+
+dn: cn=SA_OBP_BAM_MANAGE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for Documakar to IPM system integration
+uid: SA_OBP_BAM_MANAGE_USER
+givenName: SA_OBP_BAM_MANAGE_USER
+sn: SA_OBP_BAM_MANAGE_USER
+orclSAMAccountName: SA_OBP_BAM_MANAGE_USER
+cn: SA_OBP_BAM_MANAGE_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_OBP_BAM_MANAGE_USER %>
+
+dn: cn=SA_OBP_BIP_MANAGE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for Documakar to IPM system integration
+uid: SA_OBP_BIP_MANAGE_USER
+givenName: SA_OBP_BIP_MANAGE_USER
+sn: SA_OBP_BIP_MANAGE_USER
+orclSAMAccountName: SA_OBP_BIP_MANAGE_USER
+cn: SA_OBP_BIP_MANAGE_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_OBP_BIP_MANAGE_USER %>
+
+dn: cn=DCMS_OWC_IMPORT_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account for DCMS to Import Data for IPM
+uid: DCMS_OWC_IMPORT_USER
+givenname: DCMS_OWC_IMPORT_USER
+sn: DCMS_OWC_IMPORT_USER
+orclsamaccountname: DCMS_OWC_IMPORT_USER
+cn: DCMS_OWC_IMPORT_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @DCMS_OWC_IMPORT_USER %>
+
+dn: cn=SA_CONFIGUPLOADER_OBP_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is used OBP Business Config Load
+uid: SA_CONFIGUPLOADER_OBP_USER
+givenname: SA_CONFIGUPLOADER_OBP_USER
+sn: SA_CONFIGUPLOADER_OBP_USER
+orclsamaccountname: SA_CONFIGUPLOADER_OBP_USER
+cn: SA_CONFIGUPLOADER_OBP_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_CONFIGUPLOADER_OBP_USER %>
+
+dn: cn=SA_BATCH_OBP_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is used OBP Batch execution from ODI server
+uid: SA_BATCH_OBP_USER
+givenname: SA_BATCH_OBP_USER
+sn: SA_BATCH_OBP_USER
+orclsamaccountname: SA_BATCH_OBP_USER
+cn: SA_BATCH_OBP_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_BATCH_OBP_USER %>
+
+dn: cn=SA_OCH_OBP_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is used OCH OBP Integration
+uid: SA_OCH_OBP_MANAGE_USER
+givenname: SA_OCH_OBP_MANAGE_USER
+sn: SA_OCH_OBP_MANAGE_USER
+orclsamaccountname: SA_OCH_OBP_MANAGE_USER
+cn: SA_OCH_OBP_MANAGE_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_OCH_OBP_MANAGE_USER %>
+
+dn: cn=SA_ESIGN_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is for ESIGN
+uid: SA_ESIGN_OSB_USER
+givenname: SA_ESIGN_OSB_USER
+sn: SA_ESIGN_OSB_USER
+orclsamaccountname: SA_ESIGN_OSB_USER
+cn: SA_ESIGN_OSB_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_ESIGN_OSB_USER %>
+
+dn: cn=SA_SAM_PARTY_ONBOARD_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is for SAM_PARTY
+uid: SA_SAM_PARTY_ONBOARD_USER
+givenname: SA_SAM_PARTY_ONBOARD_USER
+sn: SA_SAM_PARTY_ONBOARD_USER
+orclsamaccountname: SA_SAM_PARTY_ONBOARD_USER
+cn: SA_SAM_PARTY_ONBOARD_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_SAM_PARTY_ONBOARD_USER %>
+
+dn: cn=SA_OBP_PROCESS_UPGRADE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account is used for process upgrade utility
+uid: SA_OBP_PROCESS_UPGRADE_USER
+givenName: SA_OBP_PROCESS_UPGRADE_USER
+sn: SA_DOCUMAKER_IPM_MANAGE_USER
+orclSAMAccountName: SA_OBP_PROCESS_UPGRADE_USER
+cn: SA_OBP_PROCESS_UPGRADE_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @SA_OBP_PROCESS_UPGRADE_USER %>
+
+dn: cn=OBP-Lender,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_OBP_PROCESS_UPGRADE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: cn=OBP-SOAAdmin,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: uid=SA_HOST_SOA_ADMIN_USER,cn=serviceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: cn=Administrators,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=obphost_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=IPM-Admin,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_DOCUMAKER_IPM_MANAGE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+uniquemember: cn=SA_OBP_IPM_MANAGE_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=DCMSDocs_Admins,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=DCMS_OWC_IMPORT_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=OBP-Configurator,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_CONFIGUPLOADER_OBP_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=OBP-BatchOperations,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_BATCH_OBP_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=OBP-P&PConfigurator,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_CONFIGUPLOADER_OBP_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=OBP-ExternalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_ESIGN_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=OBP-ExternalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_SAM_PARTY_ONBOARD_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=OBP-ExternalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_DLM_API_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=OBP-ExternalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_VALEX_API_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=SA_OBP_RULE_INTRODUCER_MANAGER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is for SA_OBP_RULE_INTRODUCER_MANAGER
+uid: SA_OBP_RULE_INTRODUCER_MANAGER
+givenname: SA_OBP_RULE_INTRODUCER_MANAGER
+sn: ID
+orclsamaccountname: SA_OBP_RULE_INTRODUCER_MANAGER
+cn: SA_OBP_RULE_INTRODUCER_MANAGER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_OBP_RULE_INTRODUCER_MANAGER %>
+
+DN: cn=BAMUsers,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAMUsers
+description: BAMUsers
+displayname: BAMUsers
+
+DN: cn=BAM_SalesOpsManager,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_SalesOpsManager
+description: BAM_SalesOpsManager
+displayname: BAM_SalesOpsManager
+
+DN: cn=OBP-CreditManager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManager
+description: OBP-CreditManager
+displayname: OBP-CreditManager
+
+DN: cn=OBP-HOSLeader,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-HOSLeader
+description: OBP-HOSLeader
+displayname: OBP-HOSLeader
+
+DN: cn=OBP-ApplicationPIV,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-ApplicationPIV
+description: OBP-ApplicationPIV
+displayname: OBP-ApplicationPIV
+
+DN: cn=OBP-FCCTeam,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-FCCTeam
+description: OBP-FCCTeam
+displayname: OBP-FCCTeam
+
+DN: cn=OBP-OperationsEscalationOfficer,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-OperationsEscalationOfficer
+description: OBP-OperationsEscalationOfficer
+displayname: OBP-OperationsEscalationOfficer
+
+DN: cn=AG-Introducer-Manager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: AG-Introducer-Manager
+description: AG-Introducer-Manager
+displayname: AG-Introducer-Manager
+
+DN: cn=OBP-LenderPOSTier1,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-LenderPOSTier1
+description: OBP-LenderPOSTier1
+displayname: OBP-LenderPOSTier1
+
+DN: cn=OBP-LenderPOSTier2,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-LenderPOSTier2
+description: OBP-LenderPOSTier2
+displayname: OBP-LenderPOSTier2
+
+DN: cn=ACCEPT_OFFER_EXCEPTION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: ACCEPT_OFFER_EXCEPTION
+description: ACCEPT_OFFER_EXCEPTION
+displayname: ACCEPT_OFFER_EXCEPTION
+
+DN: cn=COMPLEX_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: COMPLEX_VERIFICATION
+description: COMPLEX_VERIFICATION
+displayname: COMPLEX_VERIFICATION
+
+DN: cn=CONSTRUCTION_ACCEPT_OFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CONSTRUCTION_ACCEPT_OFFER
+description: CONSTRUCTION_ACCEPT_OFFER
+displayname: CONSTRUCTION_ACCEPT_OFFER
+
+DN: cn=CONSTRUCTION_CREATE_OFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CONSTRUCTION_CREATE_OFFER
+description: CONSTRUCTION_CREATE_OFFER
+displayname: CONSTRUCTION_CREATE_OFFER
+
+DN: cn=CONSTRUCTION_SETTLEMENT_INSTRUCTIONS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CONSTRUCTION_SETTLEMENT_INSTRUCTIONS
+description: CONSTRUCTION_SETTLEMENT_INSTRUCTIONS
+displayname: CONSTRUCTION_SETTLEMENT_INSTRUCTIONS
+
+DN: cn=CONSTRUCTION_VALUATION_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CONSTRUCTION_VALUATION_VERIFICATION
+description: CONSTRUCTION_VALUATION_VERIFICATION
+displayname: CONSTRUCTION_VALUATION_VERIFICATION
+
+DN: cn=CREATE_OFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREATE_OFFER
+description: CREATE_OFFER
+displayname: CREATE_OFFER
+
+DN: cn=CREDIT_ACT,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_ACT
+description: CREDIT_ACT
+displayname: CREDIT_ACT
+
+DN: cn=CREDIT_NSW,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_NSW
+description: CREDIT_NSW
+displayname: CREDIT_NSW
+
+DN: cn=CREDIT_NT,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_NT
+description: CREDIT_NT
+displayname: CREDIT_NT
+
+DN: cn=CREDIT_QLD,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_QLD
+description: CREDIT_QLD
+displayname: CREDIT_QLD
+
+DN: cn=CREDIT_SA,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_SA
+description: CREDIT_SA
+displayname: CREDIT_SA
+
+DN: cn=CREDIT_TAS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_TAS
+description: CREDIT_TAS
+displayname: CREDIT_TAS
+
+DN: cn=CREDIT_TASKS_OWNERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_TASKS_OWNERS
+description: CREDIT_TASKS_OWNERS
+displayname: CREDIT_TASKS_OWNERS
+
+DN: cn=CREDIT_VIC,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_VIC
+description: CREDIT_VIC
+displayname: CREDIT_VIC
+
+DN: cn=CREDIT_WA,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_WA
+description: CREDIT_WA
+displayname: CREDIT_WA
+
+DN: cn=FAST_REFINANCE,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: FAST_REFINANCE
+description: FAST_REFINANCE
+displayname: FAST_REFINANCE
+
+DN: cn=FAST_REFINANCE_REGISTRATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: FAST_REFINANCE_REGISTRATION
+description: FAST_REFINANCE_REGISTRATION
+displayname: FAST_REFINANCE_REGISTRATION
+
+DN: cn=FAULT_TASKS_OWNERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: FAULT_TASKS_OWNERS
+description: FAULT_TASKS_OWNERS
+displayname: FAULT_TASKS_OWNERS
+
+DN: cn=FHOG,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: FHOG
+description: FHOG
+displayname: FHOG
+
+DN: cn=FINAL_CREDIT_CHECK,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: FINAL_CREDIT_CHECK
+description: FFINAL_CREDIT_CHECK
+displayname: FINAL_CREDIT_CHECK
+
+DN: cn=HOS_TASKS_OWNERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: HOS_TASKS_OWNERS
+description: HOS_TASKS_OWNERS
+displayname: HOS_TASKS_OWNERS
+
+DN: cn=PREMIUM_BANK,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: PREMIUM_BANK
+description: PREMIUM_BANK
+displayname: PREMIUM_BANK
+
+DN: cn=PRICING_APPROVAL,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: PRICING_APPROVAL
+description: PRICING_APPROVAL
+displayname: PRICING_APPROVAL
+
+DN: cn=PRICING_TASKS_OWNERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: PRICING_TASKS_OWNERS
+description: PRICING_TASKS_OWNERS
+displayname: PRICING_TASKS_OWNERS
+
+DN: cn=SALES_TASKS_OWNERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: SALES_TASKS_OWNERS
+description: SALES_TASKS_OWNERS
+displayname: SALES_TASKS_OWNERS
+
+DN: cn=SIMPLE_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: SIMPLE_VERIFICATION
+description: SIMPLE_VERIFICATION
+displayname: SIMPLE_VERIFICATION
+
+DN: cn=STANDALONE_CONSENTS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: STANDALONE_CONSENTS
+description: STANDALONE_CONSENTS
+displayname: STANDALONE_CONSENTS
+
+DN: cn=TASKS_REVIEWERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: TASKS_REVIEWERS
+description: TASKS_REVIEWERS
+displayname: TASKS_REVIEWERS
+
+DN: cn=TITLE_SEARCH_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: TITLE_SEARCH_VERIFICATION
+description: TITLE_SEARCH_VERIFICATION
+displayname: TITLE_SEARCH_VERIFICATION
+
+DN: cn=VALUATION_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: VALUATION_VERIFICATION
+description: VALUATION_VERIFICATION
+displayname: VALUATION_VERIFICATION
+
+DN: cn=VERIFICATION_TASKS_OWNERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: VERIFICATION_TASKS_OWNERS
+description: VERIFICATION_TASKS_OWNERS
+displayname: VERIFICATION_TASKS_OWNERS
+
+DN: cn=WAIVE_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WAIVE_VERIFICATION
+description: WAIVE_VERIFICATION
+displayname: WAIVE_VERIFICATION
+
+DN: cn=WLAT_CREDIT_ESCALATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_CREDIT_ESCALATION
+description: WLAT_CREDIT_ESCALATION
+displayname: WLAT_CREDIT_ESCALATION
+
+DN: cn=WLAT_HOS_ESCALATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_HOS_ESCALATION
+description: WLAT_HOS_ESCALATION
+displayname: WLAT_HOS_ESCALATION
+
+DN: cn=WLAT_TASKS_OWNERS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_TASKS_OWNERS
+description: WLAT_TASKS_OWNERS
+displayname: WLAT_TASKS_OWNERS
+
+dn: cn=AG-Introducer-Manager,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_OBP_RULE_INTRODUCER_MANAGER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: ou=urm,ou=apps,dc=westpac,dc=com,dc=au
+objectclass: top
+objectclass: organizationalUnit
+ou: urm
+
+DN: cn=URMAdministrator,ou=urm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: URMAdministrator
+description: URMAdministrator
+displayname: URMAdministrator
+
+DN: cn=URMOperator,ou=urm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: URMOperator
+description: URMOperator
+displayname: URMOperator
+
+DN: cn=URMViewer,ou=urm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: URMViewer
+description: URMViewer
+displayname: URMViewer
+
+DN: cn=URM-TechnicalPIV,ou=urm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: URM-TechnicalPIV
+description: URM-TechnicalPIV
+displayname: URM-TechnicalPIV
+
+dn: cn=OBP-ExternalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=SA_OCH_OBP_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=DCMSDocs_Admins,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=obpipm_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=DCMSApp_Admins,ou=ipm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=obpipm_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: cn=URMConfigurator,ou=urm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: delete
+
+DN: cn=URMConfigurer,ou=urm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: URMConfigurer
+description: URMConfigurer
+displayname: URMConfigurer
+
+dn: cn=SA_RB_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is for RB OSB Integration
+uid: SA_RB_OSB_USER
+givenname: SA_RB_OSB_USER
+sn: SA_RB_OSB_USER
+orclsamaccountname: SA_RB_OSB_USER
+cn: SA_RB_OSB_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_RB_OSB_USER %>
+
+dn: cn=OBP-ExternalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=SA_RB_OSB_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: cn=BAM_EDITOR,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_EDITOR
+description: BAM_EDITOR
+displayname: BAM_EDITOR
+
+DN: cn=SA_OBP_BAM_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: delete
+
+dn: cn=SA_MEDB_OBP_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is for MEDB Integration
+uid: SA_MEDB_OBP_MANAGE_USER
+givenname: SA_MEDB_OBP_MANAGE_USER
+sn: SA_MEDB_OBP_MANAGE_USER
+orclsamaccountname: SA_MEDB_OBP_MANAGE_USER
+cn: SA_MEDB_OBP_MANAGE_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_MEDB_OBP_MANAGE_USER %>
+
+dn: cn=SA_DIGITAL_OBP_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: This service account is for Digital Integration
+uid: SA_DIGITAL_OBP_MANAGE_USER
+givenname: SA_DIGITAL_OBP_MANAGE_USER
+sn: SA_DIGITAL_OBP_MANAGE_USER
+orclsamaccountname: SA_DIGITAL_OBP_MANAGE_USER
+cn: SA_DIGITAL_OBP_MANAGE_USER
+objectclass: orclUserV2
+objectclass: person
+objectclass: OrganizationalPerson
+objectclass: inetOrgPerson
+objectclass: orclUser
+objectclass: fcperson
+objectclass: top
+userpassword: <%= @SA_DIGITAL_OBP_MANAGE_USER %>
+
+dn: cn=SA_DIGITAL_OBP_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: modify
+add: homebranch
+homebranch: 2118
+
+DN: cn=COMPLEX_ACCEPTOFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: COMPLEX_ACCEPTOFFER
+description: COMPLEX_ACCEPTOFFER
+displayname: COMPLEX_ACCEPTOFFER
+
+DN: cn=COMPLEX_CREATEOFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: COMPLEX_CREATEOFFER
+description: COMPLEX_CREATEOFFER
+displayname: COMPLEX_CREATEOFFER
+
+DN: cn=COMPLEX_SETTLEMENTS,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: COMPLEX_SETTLEMENTS
+description: COMPLEX_SETTLEMENTS
+displayname: COMPLEX_SETTLEMENTS
+
+DN: cn=COMPLEX_TITLESEARCH,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: COMPLEX_TITLESEARCH
+description: COMPLEX_TITLESEARCH
+displayname: COMPLEX_TITLESEARCH
+
+DN: cn=COMPLEX_VALUATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: COMPLEX_VALUATION
+description: COMPLEX_VALUATION
+displayname: COMPLEX_VALUATION
+
+DN: cn=CONDITIONAL_APPROVAL,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CONDITIONAL_APPROVAL
+description: CONDITIONAL_APPROVAL
+displayname: CONDITIONAL_APPROVAL
+
+DN: cn=CREDIT_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_VERIFICATION
+description: CREDIT_VERIFICATION
+displayname: CREDIT_VERIFICATION
+
+DN: cn=PEXA,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: PEXA
+description: PEXA
+displayname: PEXA
+
+DN: cn=WLAT_ACCEPTOFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_ACCEPTOFFER
+description: WLAT_ACCEPTOFFER
+displayname: WLAT_ACCEPTOFFER
+
+DN: cn=WLAT_COLLATERALPERFECTION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_COLLATERALPERFECTION
+description: WLAT_COLLATERALPERFECTION
+displayname: WLAT_COLLATERALPERFECTION
+
+DN: cn=WLAT_CREATEOFFER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_CREATEOFFER
+description: WLAT_CREATEOFFER
+displayname: WLAT_CREATEOFFER
+
+DN: cn=WLAT_SETTLEMENT,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLAT_SETTLEMENT
+description: WLAT_SETTLEMENT
+displayname: WLAT_SETTLEMENT
+
+DN: cn=OBP-MEDBApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-MEDBApplication
+description: OBP-MEDBApplication
+displayname: OBP-MEDBApplication
+
+dn: cn=OBP-MEDBApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=SA_MEDB_OBP_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: cn=OBP-DigitalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-DigitalApplication
+description: OBP-DigitalApplication
+displayname: OBP-DigitalApplication
+
+dn: cn=OBP-DigitalApplication,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=SA_DIGITAL_OBP_MANAGE_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=BIAdministrator,ou=obiee,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniqueMember
+uniquemember: cn=obpbip_admin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: cn=BAM_OtherManager,ou=bam,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: BAM_OtherManager
+description: BAM_OtherManager
+displayname: BAM_OtherManager
+
+DN: cn=OBP-SalesQuality,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-SalesQuality
+description: OBP-SalesQuality
+displayname: OBP-SalesQuality
+
+DN: cn=TECH_SUPPORTL1,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: TECH_SUPPORTL1
+description: TECH_SUPPORTL1
+displayname: TECH_SUPPORTL1
+
+DN: cn=TECH_SUPPORTL2,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: TECH_SUPPORTL2
+description: TECH_SUPPORTL2
+displayname: TECH_SUPPORTL2
+
+DN: cn=WLMI_INSURANCE_ASSESSOR,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: WLMI_INSURANCE_ASSESSOR
+description: WLMI_INSURANCE_ASSESSOR
+displayname: WLMI_INSURANCE_ASSESSOR
+
+DN: cn=CREDIT_HINDSIGHTERQA,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: CREDIT_HINDSIGHTERQA
+description: CREDIT_HINDSIGHTERQA
+displayname: CREDIT_HINDSIGHTERQA
+
+DN: cn=OAV_NEWSTARTER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OAV_NEWSTARTER
+description: OAV_NEWSTARTER
+displayname: OAV_NEWSTARTER
+
+DN: cn=OFE_NEWSTARTER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OFE_NEWSTARTER
+description: OFE_NEWSTARTER
+displayname: OFE_NEWSTARTER
+
+DN: cn=ODM_NEWSTARTER,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: ODM_NEWSTARTER
+description: ODM_NEWSTARTER
+displayname: ODM_NEWSTARTER
+
+DN: cn=OBP-CreditManagerCAL1,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL1
+description: OBP-CreditManagerCAL1
+displayname: OBP-CreditManagerCAL1
+
+DN: cn=OBP-CreditManagerCAL2,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL2
+description: OBP-CreditManagerCAL2
+displayname: OBP-CreditManagerCAL2
+
+DN: cn=OBP-CreditManagerCAL3,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL3
+description: OBP-CreditManagerCAL3
+displayname: OBP-CreditManagerCAL3
+
+DN: cn=OBP-CreditManagerCAL4,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL4
+description: OBP-CreditManagerCAL4
+displayname: OBP-CreditManagerCAL4
+
+DN: cn=OBP-CreditManagerCAL5,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL5
+description: OBP-CreditManagerCAL5
+displayname: OBP-CreditManagerCAL5
+
+DN: cn=OBP-CreditManagerCAL6,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL6
+description: OBP-CreditManagerCAL6
+displayname: OBP-CreditManagerCAL6
+
+DN: cn=OBP-CreditManagerCAL7,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL7
+description: OBP-CreditManagerCAL7
+displayname: OBP-CreditManagerCAL7
+
+DN: cn=OBP-CreditManagerCAL8,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL8
+description: OBP-CreditManagerCAL8
+displayname: OBP-CreditManagerCAL8
+
+DN: cn=OBP-CreditManagerCAL9,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL9
+description: OBP-CreditManagerCAL9
+displayname: OBP-CreditManagerCAL9
+
+DN: cn=OBP-CreditManagerCAL10,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL10
+description: OBP-CreditManagerCAL10
+displayname: OBP-CreditManagerCAL10
+
+DN: cn=OBP-CreditManagerCAL11,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL11
+description: OBP-CreditManagerCAL11
+displayname: OBP-CreditManagerCAL11
+
+dn: cn=SA_API_LENDING_OBP_USER,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: Service Account is used for OBP Rest API CSH_INT_0319
+uid: SA_API_LENDING_OBP_USER
+givenName: SA_API_LENDING_OBP_USER
+sn: SA_API_LENDING_OBP_USER
+orclSAMAccountName: SA_API_LENDING_OBP_USER
+cn: SA_API_LENDING_OBP_USER
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+businessunit: PBWP
+homebranch: 2006
+accessibletargetunits: PBWP
+targetunit: PBWP
+userPassword: <%= @SA_API_LENDING_OBP_USER %>
+
+DN: cn=OBP-APILendingDigital,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-APILendingDigital
+description: OBP-APILendingDigital
+displayname: OBP-APILendingDigital
+
+dn: cn=OBP-APILendingDigital,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=SA_API_LENDING_OBP_USER,cn=ServiceAccounts,cn=users,dc=westpac,dc=com,dc=au
+
+DN: cn=OBP-CreditManagerCAL0,ou=obp,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OBP-CreditManagerCAL0
+description: OBP-CreditManagerCAL0
+displayname: OBP-CreditManagerCAL0
+
+DN: cn=NON_POS_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: NON_POS_VERIFICATION
+description: NON_POS_VERIFICATION
+displayname: NON_POS_VERIFICATION
+
+DN: cn=POS_VERIFICATION,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: POS_VERIFICATION
+description: POS_VERIFICATION
+displayname: POS_VERIFICATION
+
+DN: cn=OAV_FOLLOWUP,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OAV_FOLLOWUP
+description: OAV_FOLLOWUP
+displayname: OAV_FOLLOWUP
+
+DN: cn=ODM_FOLLOWUP,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: ODM_FOLLOWUP
+description: ODM_FOLLOWUP
+displayname: ODM_FOLLOWUP
+
+DN: cn=OFE_FOLLOWUP,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: OFE_FOLLOWUP
+description: OFE_FOLLOWUP
+displayname: OFE_FOLLOWUP
+
+DN: cn=TASKPURGE,ou=bpm,ou=apps,dc=westpac,dc=com,dc=au
+changetype: add
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+cn: TASKPURGE
+description: TASKPURGE
+displayname: TASKPURGE

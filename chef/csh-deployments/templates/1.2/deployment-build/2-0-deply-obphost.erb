@@ -1,0 +1,122 @@
+{
+  "name" : "Step 2 -- Deploy OBP Host",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Deploy Node 1",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Deploy OBP Cemli Node 1",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>chmod 755 <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/*;<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/applyHostJarSed.sh ;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b obpHostCemliDeploy.gradle -g ../../cache -PhostVersion=${bamboo.CEMLI_HOST_VERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=${bamboo.SERVERNAME} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Execute Cemli WLST",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_EXTENSION_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -g ../../cache deploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../../../mintdeploy/ -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+          "description" : "PCSM Deployment Node1",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_PCSMDEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b pcsmScript.gradle -g ../../cache -PuseDeployConfig=true -PproductHome=${bamboo.PRODUCT_HOME} -PartifactID=${bamboo.PCSM_VERSION} -PpcsmArtifactoryURL=${bamboo.pcsmArtifactoryURL} -PreleasePath=${bamboo.PCSM_RELEASE_PATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../.. -PfetchTargets=true -PenvName=LOCAL -PserverName=${bamboo.SERVERNAME}  deploy clean -s'\"",
+            "interpreter" : "RUN_AS_EXECUTABLE",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        } ]
+    }
+      <% if (@dataBag['obpobh']['hostnameList'][1] != nil) then %>
+    , {
+      "name" : "Deploy Node 2",
+      "description" : "Deploy Node 2",
+      "params" : { },
+      "tasks" : [  {
+        "name" : null,
+        "description" : "Deploy OBP Cemli Node 2",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b obpHostCemliDeploy.gradle -g ../../cache -PhostVersion=${bamboo.CEMLI_HOST_VERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=${bamboo.SERVERNAME2} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+          "description" : "PCSM Deployment Node2",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c 'cd ${bamboo.OBP_PCSMDEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b pcsmScript.gradle -g ../../cache -PuseDeployConfig=true -PproductHome=${bamboo.PRODUCT_HOME} -PartifactID=${bamboo.PCSM_VERSION} -PpcsmArtifactoryURL=${bamboo.pcsmArtifactoryURL} -PreleasePath=${bamboo.PCSM_RELEASE_PATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../.. -PfetchTargets=true -PenvName=LOCAL -PserverName=${bamboo.SERVERNAME2} deploy clean -s'\"",
+            "interpreter" : "RUN_AS_EXECUTABLE",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        } ]
+    }
+    <% end %>
+    
+    ]
+  } ],
+  "vars" : {
+    "CEMLI_HOST_VERSION" : "<%= @manifest_vars['deployments']['host']['extension_version']%>",
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['host']['cemli_release_path']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obphost.json",
+    "DOMAIN_HOME" : "/oracle/app/runtime/obpobh/domains/obphost_domain",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpHostDeploy",
+    "OBP_EXTENSION_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpHostWlstDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obpobh']['hostnameList'][0]%><%= @dataBag['obpobh']['dns_domain_name']%>",
+    <% if (@dataBag['obpobh']['hostnameList'][1] != nil) then %>   "OBP_NODE_2" : "<%= @dataBag['obpobh']['hostnameList'][1]%><%= @dataBag['obpobh']['dns_domain_name']%>",<% end %>
+    "OBP_PCSMDEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpPCSMDeploy",
+    "PCSM_VERSION" : "<%= @MANIFEST_PCSM_VERSION%>",
+    "PRODUCT_HOME" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpobh/fmw",
+    "PCSM_RELEASE_PATH" : "<%= @dataBag['deployment']['PCSM_RELEASE_PATH'] %>",
+    "SERVERNAME" : "obphost_server1",
+    "SERVERNAME2" : "obphost_server2",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "debug" : "false",
+    "pcsmArtifactoryURL" : "<%= @dataBag['deployment']['PCSM_ARTIFACTORY_URL']%>"
+  },
+  "labels" : null,
+  "permissions" : null
+}

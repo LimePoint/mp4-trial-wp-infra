@@ -1,0 +1,11 @@
+dn: cn=host_<%= @shortname %>,ou=host,ou=netgroup,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+objectClass: nisNetgroup
+objectClass: top
+nisNetgroupTriple: (<%= @fqdn %>,,westpac.com.au)
+memberNisNetgroup: csh_team_<%= @environment %>_root
+memberNisNetgroup: csh_team_<%= @environment %>_oracle
+memberNisNetgroup: csh_team_<%= @environment %>_readonly
+<% if @shortname =~ /odi/ -%>
+memberNisNetgroup: csh_team_<%= @environment %>_ctmagent
+<% end -%>
+cn: host_<%= @shortname %>

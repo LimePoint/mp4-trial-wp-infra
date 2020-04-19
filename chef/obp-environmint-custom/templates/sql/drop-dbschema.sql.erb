@@ -1,0 +1,22 @@
+whenever SQLERROR EXIT SQL.SQLCODE
+
+set verify off termout off serverout on
+
+col TGT_SCHEMA new_val TGT_SCHEMA noprint
+select upper('<%= @username %>') TGT_SCHEMA from dual;
+
+Begin
+  execute immediate 'Alter user &&TGT_SCHEMA account lock';
+  dbms_lock.sleep(10);
+  for i in (select 1 from dual
+             where exists (select null from gv$session
+                           where schemaname='&&TGT_SCHEMA'))
+  loop
+   RAISE_APPLICATION_ERROR(-20911, 'Found sessions connected to &&TGT_SCHEMA.. PLEASE DISCONNECT SESSIONS AND RETRY!!!');
+  end loop;
+End;
+/
+
+drop user &&TGT_SCHEMA cascade;
+
+-- << END OF SCRIPT >> --

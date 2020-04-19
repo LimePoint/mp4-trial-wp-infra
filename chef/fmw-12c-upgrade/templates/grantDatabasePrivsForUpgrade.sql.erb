@@ -1,0 +1,12 @@
+-- This file must be run with a user that has SYS or SYSDBA privileges
+
+GRANT CONNECT TO <%= @rcu_prefix %>_OIM;
+GRANT SELECT ON SYS.DBA_2PC_PENDING TO <%= @rcu_prefix %>_OIM;
+GRANT SELECT ON SYS.DBA_PENDING_TRANSACTIONS TO <%= @rcu_prefix %>_OIM;
+GRANT EXECUTE ON SYS.DBMS_SHARED_POOL TO <%= @rcu_prefix %>_OIM;
+GRANT EXECUTE ON SYS.DBMS_SYSTEM TO <%= @rcu_prefix %>_OIM;
+GRANT SELECT ON SYS.PENDING_TRANS$ TO <%= @rcu_prefix %>_OIM;
+GRANT RESOURCE TO <%= @rcu_prefix %>_OIM;
+GRANT SELECT ON SYS.V$XATRANS$ TO <%= @rcu_prefix %>_OIM ;
+
+EXIT;

@@ -1,0 +1,65 @@
+# This script updates WLS Domain LDAP Adapter Config
+
+# arg1 - weblogic
+# arg2 - password
+# arg3 - admin url
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+
+libovdObject = ObjectName('com.oracle:name=OIDAuthenticator,context=default,type=OVD.AdaptersConfig,OVD=AdaptersConfig')
+new_protocol = 'TLSv1.2'
+new_cipher = 'TLS_RSA_WITH_AES_256_CBC_SHA256'
+_setProtocols = Attribute('Protocols',new_protocol)
+
+try:
+  domainRuntime()
+  print '-----------------------> Setting Protocols'
+  cur_protocol = mbs.getAttribute(libovdObject,'Protocols')
+  if cur_protocol != new_protocol :
+    print 'Current protocol do not match what it should be. Changing it.'
+    mbs.setAttribute(libovdObject,_setProtocols)
+    print 'Changed to protocol: ' + new_protocol
+  else:
+    print 'Skipping changes protocol is same.'
+
+  cur_ciphersuites = mbs.invoke(libovdObject,'listCipherSuites',None,None)
+  params = [new_cipher]
+  sign = ['java.lang.String']
+  if new_cipher not in cur_ciphersuites:
+    mbs.invoke(libovdObject,'addCipher',params,sign)
+    print 'Added new cipher: ' + new_cipher
+    serverConfig()
+    activateLibOVDConfigChanges()
+  else:
+    print 'Skipping changes as cipher already exists'
+except:
+  print 'ERROR: Could not set Protocols or CipherSuites'
+  dumpErrorData()
+  raise
+
+if sys.argv[4] == 'obpobh':
+ new_maxpoolsize = 50
+ _setMaxPoolSize = Attribute('MaxPoolSize', new_maxpoolsize)
+ libovdOIDObject = ObjectName('com.oracle:name=OIDAuthenticator,context=default,type=OVD.AdaptersConfig,OVD=AdaptersConfig')
+ libovdCIDObject = ObjectName('com.oracle:name=CIDAuthenticator,context=default,type=OVD.AdaptersConfig,OVD=AdaptersConfig')
+ print '-----------------------> Setting MaxPoolSize For OIDAuthenticator'
+ cur_maxpoolsize = mbs.getAttribute(libovdOIDObject,'MaxPoolSize')
+ if cur_maxpoolsize != new_maxpoolsize :
+  print 'Current MaxPoolSize of OIDAuthenticator do not match what it should be. Changing it.'
+  mbs.setAttribute(libovdOIDObject,_setMaxPoolSize)
+  cur_maxpoolsize = mbs.getAttribute(libovdOIDObject,'MaxPoolSize')
+  print 'Updated maxpoolsize to : ' + str(cur_maxpoolsize)
+ else:
+  print 'Skipping changes, OID Authn maxpoolsize is same.'
+ print '-----------------------> Setting MaxPoolSize For CIDAuthenticator'
+ cur_maxpoolsize = mbs.getAttribute(libovdCIDObject,'MaxPoolSize')
+ if cur_maxpoolsize != new_maxpoolsize :
+  print 'Current MaxPoolSize of CIDAuthenticator do not match what it should be. Changing it.'
+  mbs.setAttribute(libovdCIDObject,_setMaxPoolSize)
+  cur_maxpoolsize = mbs.getAttribute(libovdCIDObject,'MaxPoolSize')
+  print 'Updated maxpoolsize to : ' + str(cur_maxpoolsize)
+ else:
+  print 'Skipping changes, CID Authn maxpoolsize is same.'
+
+else:
+ print 'No addtional change required for this asset'

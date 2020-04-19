@@ -1,0 +1,39 @@
+#!/bin/bash
+# This script deploys weblogic library application
+
+# arg1 - weblogic username
+# arg2 - weblogic password
+# arg3 - weblogic admin url
+# arg4 - Library Name
+# arg5 - Library Path
+# arg6 - TargetName
+# arg7 - Deployment Staging Type
+
+
+import sys
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+
+deployLibName=sys.argv[4]
+deployLibPath=sys.argv[5]
+targetName=sys.argv[6]
+stageType=sys.argv[7]
+
+deployProgress=deploy(deployLibName,deployLibPath,targets=targetName,stageMode=stageType,libraryModule='true')
+status=deployProgress.getState()
+print "Lib Deploy Status is " +status
+if status == 'completed' :
+        print "Deployed Library Successfully " +deployLibName
+else :
+        print "Error in Deploying Library " +deployLibName
+        sys.exit(1)
+try:
+    libStartProgress=startApplication(deployLibName)
+    status=libStartProgress.getState()
+    print "Library Start Status is " +status
+    if status == 'completed' :
+            print "Library Started Successfully " +deployLibName
+    else :
+            print "Error in Starting Library " +deployLibName
+except:
+    print "Error in Starting Library " +deployLibName
+    print "Ignoring this... as a restart of servers may be required sometimes before start of application."

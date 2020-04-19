@@ -1,0 +1,32 @@
+{
+  "name" : "Step 0 -- Disable All Plans",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Disable All Plans",
+        "params" : {
+          "argument" : "/home/mintpress/mintpress/bin/disablePlans.rb <%= @TRIMMED_PLAN_NAME %>",
+          "environmentVariables" : "",
+          "label" : "ruby",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.command",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    } ]
+  }],
+"vars" : { },
+"labels" : null,
+"permissions" : null
+}

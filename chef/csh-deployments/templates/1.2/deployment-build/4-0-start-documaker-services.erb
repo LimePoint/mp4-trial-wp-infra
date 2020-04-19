@@ -1,0 +1,73 @@
+{
+  "name" : "Step 4 -- Start Documaker Services",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Start Documaker Services",
+    "description" : "Start Documaker Services",
+    "params" : { },
+    "manual" : false,
+    "jobs" : [  {
+      "name" : "Start Documaker Services in Node 1",
+      "description" : "Start Documaker Services in Node 1",
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Start Documaker Services",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b docScript.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=/oracle/app/binaries/deployments/mintdeploy/envScripts/docmstartup.sh deploy clean -s -i'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%= @restart_dependency_array.include?'documaker' %>"
+
+      }
+      <%= unless @restart_dependency_array.include?'documaker' then render '1.2/deployment-build/disabled-task-placeholder.erb' end%>
+      ]
+    }
+    <% if (@dataBag['obpdoc']['hostnameList'][1] != nil) then %>
+    ,{
+      "name" : "Start Documaker Services in Node 2",
+      "description" : "Start Documaker Services in Node 2",
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Start Documaker Services",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b docScript.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=/oracle/app/binaries/deployments/mintdeploy/envScripts/docmstartup.sh deploy clean -s -i'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%= @restart_dependency_array.include?'documaker' %>"
+
+      }
+        <%= unless @restart_dependency_array.include?'documaker' then render '1.2/deployment-build/disabled-task-placeholder.erb' end%>
+
+      ]
+    }
+       <% end %>
+     ]
+  } ],
+  "vars" : {
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpDocMDep",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpdoc.json",
+    "OBP_NODE_1" : "<%= @dataBag['obpdoc']['hostnameList'][0]%><%= @dataBag['obpdoc']['dns_domain_name']%>",
+    <% if (@dataBag['obpdoc']['hostnameList'][1] != nil) then %>   "OBP_NODE_2" : "<%= @dataBag['obpdoc']['hostnameList'][1]%><%= @dataBag['obpdoc']['dns_domain_name']%>", <% end %>
+    "debug" : "false"
+  },
+  "labels" : null,
+  "permissions" : null
+}

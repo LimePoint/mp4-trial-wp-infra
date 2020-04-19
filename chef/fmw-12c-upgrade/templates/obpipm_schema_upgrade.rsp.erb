@@ -1,0 +1,43 @@
+[GENERAL]
+fileFormatVersion = 3
+
+[UAWLSINTERNAL.UAWLS]
+pluginInstance = 1
+
+UASVR.path = <%= @domain_home %>
+
+[IPM.IPM]
+pluginInstance = 13
+
+IPM.databaseType = Oracle Database
+IPM.databaseConnectionString = <%= @db_url %>
+IPM.schemaConnectionString = <%= @db_url %>
+IPM.schemaUserName = <%= @rcu_prefix %>_IPM
+IPM.cleartextSchemaPassword = <%= @schema_password %>
+IPM.dbaUserName = <%= @dba_user %> as sysdba
+IPM.cleartextDbaPassword = <%= @sysdba_password %>
+
+[UCM.UCM]
+pluginInstance = 14
+
+OCS.databaseType = Oracle Database
+OCS.databaseConnectionString = <%= @db_url %>
+OCS.schemaConnectionString = <%= @db_url %>
+OCS.schemaUserName = <%= @rcu_prefix %>_OCS
+OCS.cleartextSchemaPassword = <%= @schema_password %>
+OCS.dbaUserName = <%= @dba_user %> as sysdba
+OCS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[CREATE-SCHEMAS]
+
+databaseType = Oracle Database
+databaseConnectionString = <%= @db_url %>
+dbaUserName = <%= @dba_user %> as sysdba
+cleartextDbaPassword = <%= @sysdba_password %>
+schemaPrefix = <%= @rcu_prefix %>
+STB.cleartextSchemaPassword = <%= @schema_password %>
+OPSS.cleartextSchemaPassword = <%= @schema_password %>
+IAU.cleartextSchemaPassword = <%= @schema_password %>
+IAU_APPEND.cleartextSchemaPassword = <%= @schema_password %>
+IAU_VIEWER.cleartextSchemaPassword = <%= @schema_password %>
+WLS.cleartextSchemaPassword = <%= @schema_password %>

@@ -1,0 +1,142 @@
+dn: cn=groups,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: groups
+
+dn: cn=customer,cn=groups,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: customer
+
+dn: cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: users
+
+dn: cn=customer,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: customer
+
+dn: cn=reserve,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: reserve
+
+dn: cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+objectClass: orclContainer
+objectClass: top
+cn: serviceaccounts
+
+dn: cn=ldapsyncadmin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for LDAP Sync for CIM
+uid: ldapsyncadmin
+givenName: ldapsyncadmin
+sn: ldapsyncadmin
+orclSAMAccountName: ldapsyncadmin
+cn: ldapsyncadmin
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: top
+userPassword: <%= @ldapsyncadmin %>
+
+dn: cn=healthcheck,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: User for GTM Health Check
+uid: healthcheck
+givenName: healthcheck
+sn: healthcheck
+orclSAMAccountName: healthcheck
+cn: healthcheck
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: top
+userPassword: <%= @healthcheck %>
+
+dn: cn=readonly,cn=serviceaccounts,cn=Users,dc=westpac,dc=com,dc=au
+changetype: add
+description: readonly user
+uid: readonly
+givenname: readonly
+sn: readonly
+orclsamaccountname: readonly
+cn: readonly
+objectclass: orclUserV2
+objectclass: orclUser
+objectclass: inetOrgPerson
+objectclass: organizationalPerson
+objectclass: fcperson
+objectclass: top
+mail: readonly@wbg-test.com
+preferredlanguage: en
+userPassword: <%= @readonly %>
+
+# add ldapsync user to privs group
+dn: cn=RealmAdministrators, cn=Groups, cn=OracleContext,dc=westpac,dc=com,dc=au
+changetype: modify
+add: uniquemember
+uniquemember: cn=ldapsyncadmin,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+
+dn: cn=obpobh_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obphost_domain
+uid: obpobh_readonly
+givenName: obpobh_readonly
+sn: obpobh_readonly
+orclSAMAccountName: obpobh_readonly
+cn: obpobh_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpobh_readonly %>
+
+dn: cn=obposb_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obposb_domain
+uid: obposb_readonly
+givenName: obposb_readonly
+sn: obposb_readonly
+orclSAMAccountName: obposb_readonly
+cn: obposb_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obposb_readonly %>
+
+dn: cn=obpsoa_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au
+changetype: add
+description: LDAP Read Only User for obpsoa_domain
+uid: obpsoa_readonly
+givenName: obpsoa_readonly
+sn: obpsoa_readonly
+orclSAMAccountName: obpsoa_readonly
+cn: obpsoa_readonly
+objectClass: orclUserV2
+objectClass: person
+objectClass: OrganizationalPerson
+objectClass: inetOrgPerson
+objectClass: orclUser
+objectClass: fcperson
+objectClass: top
+userPassword: <%= @obpsoa_readonly %>

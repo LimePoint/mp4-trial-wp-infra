@@ -1,0 +1,59 @@
+{
+  "name" : "Step 2 -- Deploy OAM Policy",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Download OAM Artifact",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b oamArtifactDwld.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PsecurityVersion=${bamboo.CEMLIVERSION} -PfetchTargets=true -PenvName=LOCAL deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } , {
+        "name" : null,
+        "description" : "Deploy OAM Policy",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b oamScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PenvName=LOCAL -PmintDeployHome=../../ deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }]
+    } ]
+  } ],
+  "vars" : {
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpoam.json",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpOAMDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obpoam']['hostnameList'][0]%><%= @dataBag['obpoam']['dns_domain_name']%>",
+    "debug" : "false",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "CEMLIVERSION" : "<%= @manifest_vars['deployments']['oam']['extension_version']%>",
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['oam']['cemli_release_path']%>"
+  },
+  "labels" : null,
+  "permissions" : null
+}

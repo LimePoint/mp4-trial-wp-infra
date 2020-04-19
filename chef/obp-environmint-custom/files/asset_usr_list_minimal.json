@@ -1,0 +1,106 @@
+{
+  "all": [
+    "truststorepass"
+  ],
+  "database": [
+    "dbsyspassword"
+  ],
+  "obpobh": [
+    "OBPHOST",
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPCROSSDOMAIN"
+  ],
+  "obpoam": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPOAM-MDS"
+  ],
+  "obposb": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPOSB"
+  ],
+  "obpbip": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPBIP"
+  ],
+  "obpcim": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPCIM-MDS",
+    "obpcimadmin"
+  ],
+  "obpsoa": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPSOA"
+  ],
+  "obpobu": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPUI"
+  ],
+  "obpoid": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "ODS"
+  ],
+  "obpipm": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPIPM"
+  ],
+  "obpidm": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPIDM-MDS"
+  ],
+  "obpurm": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPURM"
+  ],
+  "obpoim": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPOIM-MDS"
+  ],
+  "obpodi": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPODI"
+  ],
+  "obpdoc": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OBPDOC",
+    "documaker"
+  ],
+  "obpcid": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "healthcheck",
+    "ODS",
+    "cn=orcladmin"
+  ],
+  "oemmonitoring": [
+    "odemmon"
+  ]
+}

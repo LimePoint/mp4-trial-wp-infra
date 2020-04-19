@@ -1,0 +1,18 @@
+<%
+BAM_SERVER_LISTEN_ADDRESS = @tvars['obpsoa']['bam_server']['listen_address']+@tvars['obpsoa']['dns_domain_name']
+BAM_SERVER_LISTEN_PORT = @tvars['obpsoa']['bam_server']['listen_port']
+WLS_ADMIN_USER = @tvars['obpsoa']['wls_admin_user']
+WLS_ADMIN_PWD = Mint::AesEncryption.decrypt(PasswordVault.get_password(@tvars['common']['password_vault_name'], 'obpsoa', @tvars['obpsoa']['wls_admin_user'] ))
+SOA_INFRASTRUCTURE_SCHEMA_USER = @tvars['obpsoa']['database']['rcu_schema_prefix']+"_SOAINFRA"
+DB_SOCKET = @tvars['obpsoa']['database']['scan_address']+":"+@tvars['obpsoa']['database']['listen_port']
+DB_SERVICE = @tvars['obpsoa']['database']['service_name']
+%>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BAMCommandConfig>
+    <host><%= BAM_SERVER_LISTEN_ADDRESS%></host>
+    <port><%= BAM_SERVER_LISTEN_PORT%></port>
+    <username><%= WLS_ADMIN_USER%></username>
+    <password><%= WLS_ADMIN_PWD%></password>
+    <dbusername><%= SOA_INFRASTRUCTURE_SCHEMA_USER%></dbusername>
+    <dburl>jdbc:oracle:thin:@<%= DB_SOCKET%>/<%= DB_SERVICE%></dburl>
+</BAMCommandConfig>

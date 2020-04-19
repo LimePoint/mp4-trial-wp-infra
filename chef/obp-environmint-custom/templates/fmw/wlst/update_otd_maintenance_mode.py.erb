@@ -1,0 +1,62 @@
+# WLST Script to Update Origin Server Pool Maintenance Mode
+#arg1 : Domain adminuser name (ex:weblogic)
+#arg2 : Domain adminuser password
+#arg3 : Domain admin url
+#arg4 : name of the otd config
+#arg5 : enable or disable Maintenance Mode
+#Usage: update_otd_maintenance_mode.py weblogic ****** t3://localhost:7001 obposb enable
+
+def disableMM(config,pool):
+    props = {}
+    props['configuration'] = config
+    props['origin-server-pool'] = pool
+    otd_disableOriginServerPoolMaintenance(props)
+    print 'Disabled Maintenance Mode on Origin Server Pool ' + pool + ' of OTD Config ' + config
+
+def enableMM(config,pool):
+    props = {}
+    props['configuration'] = config
+    props['origin-server-pool'] = pool
+    props['response-code'] = '503'
+    otd_enableOriginServerPoolMaintenance(props)
+    print 'Enabled Maintenance Mode on Origin Server Pool ' + pool + ' of OTD Config ' + config+'\n'
+
+def enableMMwithRespFile(config,pool):
+    props = {}
+    props['configuration'] = config
+    props['origin-server-pool'] = pool
+    props['response-code'] = '503'
+    props['response-file'] = '/oracle/app/runtime/obpotd/domains/obpotd_domain/maintenance_pages/maintenance.html'
+    otd_enableOriginServerPoolMaintenance(props)
+    print 'Enabled Maintenance Mode on Origin Server Pool ' + pool + ' of OTD Config ' + config+'\n'
+
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+otd_config_list=sys.argv[4].split(',')
+print str(otd_config_list) +'\n'
+for otd_config in otd_config_list:
+    print 'UPDATING MAINTENANCE MODE FOR OTD CONFIG '+otd_config+'\n'
+    props = {}
+    props['configuration'] = otd_config
+    pool_list=otd_listOriginServerPools(props)
+    print str(pool_list) +'\n'
+    edit()
+    startEdit()
+    for pool in pool_list:
+        if java.lang.String.contains(pool,'tcp'):
+            print 'Skipping tcp pool'+ pool +'\n'
+        else:
+            if sys.argv[5] == 'disable':
+                disableMM(otd_config,pool)
+            elif sys.argv[5] == 'enable':
+                if otd_config in ['obp-banker','obp-worklist','obp-files','obp-reports','obp-records','obp-sso']:
+                    enableMMwithRespFile(otd_config,pool)
+                else:
+                    enableMM(otd_config,pool)    
+            else:
+                print 'Incorrect option select either enable or disable. Exiting \n'
+                dumpStack()
+                undo(defaultAnswer='y')
+                cancelEdit('y')
+                sys.exit(1)
+    activate()

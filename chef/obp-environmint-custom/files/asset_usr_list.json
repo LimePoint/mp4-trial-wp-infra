@@ -1,0 +1,182 @@
+{
+  "all": [
+    "truststorepass"
+  ],
+  "database": [
+    "dbsyspassword"
+  ],
+  "obpobh": [
+    "OBPHOST",
+    "weblogic",
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "obpreadonly",
+    "wlsmonitor",
+    "OBPCROSSDOMAIN"
+  ],
+  "obpoam": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPOAM-MDS",
+    "wlsmonitor"
+  ],
+  "obposb": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPOSB",
+    "wlsmonitor",
+    "sa_obp_och_password",
+    "sa_obp_netiq_password",
+    "sa_sts_hlrf_password"
+  ],
+  "obpbip": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPBIP",
+    "wlsmonitor"
+  ],
+  "obpcim": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPCIM-MDS",
+    "wlsmonitor",
+    "obpcimadmin"
+  ],
+  "obpsoa": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPSOA",
+    "wlsmonitor"
+  ],
+  "obpobu": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPUI",
+    "wlsmonitor"
+  ],
+  "obpoid": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "OFSSUser",
+    "offlineuser",
+    "atmuser",
+    "posuser",
+    "obpsoa_admin",
+    "obpbip_admin",
+    "obpipm_admin",
+    "obphost_admin",
+    "documaker",
+    "SA_DOCUMAKER_IPM_MANAGE_USER",
+    "SA_DOCUMAKER_OBP_MANAGE_USER",
+    "SA_OBP_OSB_APIGATEWAY_USER",
+    "healthcheck",
+    "readonly",
+    "SA_VALEX_API_OSB_USER",
+    "SA_DLM_API_OSB_USER",
+    "SA_HOST_SOA_ADMIN_USER",
+    "SA_OBP_IPM_MANAGE_USER",
+    "SA_OBP_BAM_MANAGE_USER",
+    "SA_OBP_BIP_MANAGE_USER",
+    "DCMS_OWC_IMPORT_USER",
+    "SA_CONFIGUPLOADER_OBP_USER",
+    "SA_BATCH_OBP_USER",
+    "SA_OCH_OBP_MANAGE_USER",
+    "SA_ESIGN_OSB_USER",
+    "SA_SAM_PARTY_ONBOARD_USER",
+    "SA_OBP_RULE_INTRODUCER_MANAGER",
+    "SA_RB_OSB_USER",
+    "obpbip_readonly",
+    "obpdoc_readonly",
+    "obpobh_readonly",
+    "obpobu_readonly",
+    "obpsoa_readonly",
+    "obpipm_readonly",
+    "obpurm_readonly",
+    "obposb_readonly",
+    "weblogic",
+    "ODS",
+    "cn=orcladmin"
+  ],
+  "obpipm": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPIPM",
+    "wlsmonitor"
+  ],
+  "obpidm": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPIDM-MDS",
+    "wlsmonitor"
+  ],
+  "obpurm": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPURM",
+    "wlsmonitor"
+  ],
+  "obpoim": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPOIM-MDS",
+    "wlsmonitor"
+  ],
+  "obpodi": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPODI",
+    "wlsmonitor"
+  ],
+  "obpdoc": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "weblogic",
+    "OBPDOC",
+    "wlsmonitor",
+    "documaker",
+    "jmsadmin",
+    "smtpuser",
+    "ucm_user",
+    "ums_user"
+  ],
+  "obpcid": [
+    "SYS",
+    "truststorepass",
+    "keystorepass",
+    "healthcheck",
+    "readonly",
+    "ldapsyncadmin",
+    "obpobh_readonly",
+    "obposb_readonly",
+    "ODS",
+    "cn=orcladmin"
+  ],
+  "oemmonitoring": [
+    "odemmon"
+  ]
+}

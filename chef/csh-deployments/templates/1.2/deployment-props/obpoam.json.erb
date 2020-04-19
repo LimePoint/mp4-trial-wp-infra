@@ -1,0 +1,87 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-oam",
+      "type": "oam",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17002"
+        },
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "OAM Server"
+        }]
+    },
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+    "/getDeploymentProperties.json?environment=LOCAL": [
+        {
+          "name": "user",
+          "value": "<%= @obpoam['wls_admin_user'] %>"
+        },
+        {
+          "name": "password",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpoam', @obpoam['wls_admin_user'] ) %>"
+        },
+        {
+          "name": "hostname",
+          "value": "<%=@obpoam['admin']['listen_address']%><%=@obpoam['dns_domain_name']%>"
+        },
+<% if @obpoam['release_version'] == "1.7.0" %>
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpoam/fmw/wlserver"
+        },
+        {
+          "name": "oamHome",
+          "value": "/oracle/app/binaries/obpoam/fmw/oracle_common"
+        },
+<% else %>
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpoam/fmw/wlserver_10.3"
+        },
+        {
+          "name": "oamHome",
+          "value": "/oracle/app/binaries/obpoam/fmw/iam_11.1"
+        },
+<% end %>
+        {
+          "name": "ohshostname",
+          "value": "<%=@obpoam['frontend']['friendly_name']%>"
+        },
+        {
+          "name": "ohsipaddress",
+          "value": "10.32.116.111"
+        }
+        
+    ]
+}

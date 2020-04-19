@@ -1,0 +1,38 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "db_targetSchema",
+      "type": "db",
+      "properties": [
+        {
+        "name": "logon",
+        "value": "OBPHOST_OBP/<%= Mint::AesEncryption.decrypt(PasswordVault.get_password(@common['password_vault_name'], 'obpobh', @obpobh['database']['rcu_schema_prefix'].upcase )) %>@HOSTDB"
+        }
+      ]
+    },
+    {
+      "name": "host_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        }]
+    }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+  {
+      "name": "DB.PASSWORD",
+      "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpobh', 'OBPHOST' ) %>"
+  },
+  {
+      "name": "CONFIGTOOL_PASSWORD",
+      "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obpoid', 'SA_CONFIGUPLOADER_OBP_USER') %>"
+  },
+        {
+          "name": "cwalletpassword",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'deployment', 'cwalletpassword' ) %>"
+        }
+  ]
+}
+

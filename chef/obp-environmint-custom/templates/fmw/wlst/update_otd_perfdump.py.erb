@@ -1,0 +1,56 @@
+# WLST Script to Update certificate of OTD configurations
+#arg1 : Domain adminuser name (ex:weblogic)
+#arg2 : Domain adminuser password
+#arg3 : Domain admin url
+#arg4 : name of the otd config
+#arg5 : enable or disable perfdump
+#Usage: update_otd_cert.py weblogic ****** t3://localhost:7001 all disable
+
+def disablePerfDump(config,vserver):
+    props = {}
+    props['configuration'] = config
+    props['virtual-server'] = vserver
+    otd_disablePerfDump(props)
+    print 'Disabled perfdump for VirtualServer ' + vserver + 'of OTD Config ' + config
+
+def enablePerfDump(config,vserver):
+    props = {}
+    props['configuration'] = config
+    props['virtual-server'] = vserver
+    props['uri'] = '/perf'
+    otd_enablePerfDump(props)
+    print 'Enabled perfdump for VirtualServer ' + vserver + 'of OTD Config ' + config
+
+def updateServerHeader(config):
+    props = {}
+    props['configuration'] = config
+    props['server-header'] = 'Westpac'
+    otd_setHttpProperties(props)
+    print 'Updated server-header param  for OTD Config ' + config
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+if sys.argv[4] == 'all':
+    otd_config_list=otd_listConfigurations()
+else:
+    otd_config_list=[sys.argv[4]]
+print otd_config_list
+for otd_config in otd_config_list:
+    print 'UPDATING PERFDUMP FOR OTD CONFIG '+otd_config
+    props = {}
+    props['configuration'] = otd_config
+    vserver_list=otd_listVirtualServers(props)
+    edit()
+    startEdit()
+    updateServerHeader(otd_config)
+    for vserver in vserver_list:
+        if sys.argv[5] == 'disable':
+            disablePerfDump(otd_config,vserver)
+        elif sys.argv[5] == 'enable':
+            enablePerfDump(otd_config,vserver)
+        else:
+            print 'Incorrect option select either enable or disable. Exiting'
+            dumpStack()
+            undo(defaultAnswer='y')
+            cancelEdit('y')
+            sys.exit(1)
+    activate()

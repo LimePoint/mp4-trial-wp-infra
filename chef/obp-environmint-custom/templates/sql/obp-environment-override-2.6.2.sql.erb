@@ -1,0 +1,195 @@
+/*
+How to update this file:
+
+This file must be updated in a way that it works for both on cloud and on-prem
+On cloud, there is no OTD and hence all urls must have a port
+
+*/
+
+
+/*
+
+	Author: Romil Bhagat
+	Last Updated: 23-10-2017
+	This file configures Environment specific values for OBP Host.
+
+*/
+/* Turn off variable substitution */
+SET DEFINE OFF;
+
+/* Block for configuring FLX_FW_CONFIG_VAR_B table for properties */
+DECLARE
+	/* Variable Definitions */
+	v_OPBCIMADMINPassword VARCHAR2(500) := '<%= Mint::AesEncryption.decrypt(PasswordVault.secret("databag://#{@dataBag['common']['password_vault_name']}/obpcim/obpcimadmin").value) %>';
+	
+BEGIN
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='reports' WHERE F.PROP_ID='env.name';
+	
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpdoc']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='documaker.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpdoc']['frontend']['dmkr_port'] %>' WHERE F.PROP_ID='documaker.server.port';
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpbip']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='bip.server.ip';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpbip']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='bip.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpbip']['frontend']['bip_port'] %>' WHERE F.PROP_ID='bip.server.port';
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpipm']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='ipm.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpipm']['frontend']['ipm_port'] %>' WHERE F.PROP_ID='ipm.server.port';
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobh']['admin']['listen_address'] %><%= @dataBag['obpobh']['dns_domain_name'] %>' WHERE F.PROP_ID='host.admin.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobh']['admin']['listen_port_ssl'] %>' WHERE F.PROP_ID='host.admin.port';
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobh']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='host.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobh']['frontend']['obh_port'] %>' WHERE F.PROP_ID='host.server.port';
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['admin']['listen_address'] %><%= @dataBag['obpobu']['dns_domain_name'] %>' WHERE F.PROP_ID='ui.admin.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['admin']['listen_port_ssl'] %><%= @dataBag['obpobu']['dns_domain_name'] %>' WHERE F.PROP_ID='ui.admin.port';
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='ui.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpobu']['frontend']['obu_port'] %>' WHERE F.PROP_ID='ui.server.port';
+	
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='soa.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['soa_port'] %>' WHERE F.PROP_ID='soa.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='bam.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['bam_port'] %>' WHERE F.PROP_ID='bam.server.port';
+
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpcim']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='oim-external.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obpcim']['frontend']['otd_cim_tcp_port'] %>' WHERE F.PROP_ID='oim-external.server.port';
+	
+	UPDATE FLX_FW_CONFIG_ALL_B F SET F.PROP_VALUE='t3s://${oim-external.server.name}:${oim-external.server.port}' WHERE F.PROP_ID='OIM_URL';
+	UPDATE FLX_FW_CONFIG_ALL_B F SET F.PROP_VALUE='obpcimadmin' WHERE F.PROP_ID='OIM_USER_NAME';
+	UPDATE FLX_FW_CONFIG_ALL_B F SET F.PROP_VALUE=v_OPBCIMADMINPassword WHERE F.PROP_ID='OIM_USER_PASSWORD';
+
+	UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='default' WHERE PROP_ID='soa.partition.name.origination';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'false' WHERE PROP_ID = 'ebo.integration.flag';
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET CATEGORY_ID='AdapterFactoriesOverride' WHERE PROP_ID='PARTY_COLLECTION_ADAPTER_MOCKED';
+	
+	--This configure OBP host to point OSB - obpOSBVIPName
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obposb']['frontend']['otd_vip_name'] %>' WHERE F.PROP_ID='osb.o2o.server.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='<%= @dataBag['obposb']['frontend']['osb_port'] %>' WHERE F.PROP_ID='osb.o2o.port.ssl.name';
+	UPDATE FLX_FW_CONFIG_VAR_B F SET F.PROP_VALUE='https' WHERE F.PROP_ID='osb.o2o.server.protocol';
+	
+	
+	-- Updates the Webhelp folders
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='/oracle/app/binaries/obpui/fmw/obpinstall/obp/' WHERE PROP_ID='web.help.url' AND CATEGORY_ID='UiConfig';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='/oracle/app/binaries/obpui/fmw/obpinstall/obp/obp.ui.domain/userfiles/images/' WHERE PROP_ID='UI_IMAGE_FOLDER_PATH' AND CATEGORY_ID='UiConfig';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='/oracle/app/binaries/obpui/fmw/obpinstall/obp/obp.ui.domain/userfiles/files/' WHERE PROP_ID='UI_IMAGE_FILE_PATH' AND CATEGORY_ID='UiConfig';
+
+	-- This configures the OBP Host to point to the correct IPM Application
+	UPDATE FLX_CM_DOC_TYP_META_DATA SET APP_ID='2' WHERE DOC_TYP_ID='MAIN';
+	UPDATE FLX_CM_DOC_TYP_META_DATA SET APP_ID='3' WHERE DOC_TYP_ID='TEMP';
+	
+	-- This configures the OBP UI to point to the correct IPM Application
+    UPDATE FLX_FW_CONFIG_ALL_B set prop_value='2' where prop_id = 'applicationId';
+	
+	-- To make this cloud compatible
+	<% if node['dns'] and node['dns']['zone']=='wpdev.mintpress.io' %>
+		-- This configures OBP UI to setup the correct link to open the documents
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>:<%= @dataBag['obpipm']['frontend']['friendly_port'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_PREFIX';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>:<%= @dataBag['obpipm']['frontend']['friendly_port'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_SUFFIX';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>/com.ofss.fc.ui.view.obeo/faces/quoteTracker.jspx' WHERE PROP_ID = 'SIM01';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpoam']['frontend']['friendly_name'] %>:<%= @dataBag['obpoam']['frontend']['friendly_port'] %>/oam/server/logout' WHERE PROP_ID='SSO_LOGOUT_URL';
+
+		-- Task code URL config on FLX_FW_CONFIG_VAR_B
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>:<%= @dataBag['obpsoa']['frontend']['friendly_port'] %>' where PROP_ID='soasso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='soasso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpipm']['frontend']['friendly_name'] %>:<%= @dataBag['obpipm']['frontend']['friendly_port'] %>' where PROP_ID='ipmsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='ipmsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpbip']['frontend']['friendly_name'] %>:<%= @dataBag['obpbip']['frontend']['friendly_port'] %>' where PROP_ID='bipsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='bipsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>:<%= @dataBag['obpsoa']['frontend']['friendly_port'] %>' where PROP_ID='bamsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='bamsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpobu']['frontend']['friendly_name'] %>:<%= @dataBag['obpobu']['frontend']['friendly_port'] %>' where PROP_ID='uisso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='uisso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpbip']['frontend']['friendly_name'] %>:<%= @dataBag['obpbip']['frontend']['friendly_port'] %>' where PROP_ID='oasso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='oasso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpipm']['frontend']['friendly_name'] %>:<%= @dataBag['obpipm']['frontend']['friendly_port'] %>' where PROP_ID='docsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='docsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpurm']['frontend']['friendly_name'] %>:<%= @dataBag['obpurm']['frontend']['friendly_port'] %>' where PROP_ID='urmsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='urmsso.server.port';
+	<% else %>
+		-- This configures OBP UI to setup the correct link to open the documents
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_PREFIX';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://<%= @dataBag['obpipm']['frontend']['friendly_name'] %>/imaging/faces/Pages/Viewer.jspx?_afrWindowMode=0&documentId=' WHERE PROP_ID='PROPERTY_IPM_VIEWER_SUFFIX';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpobu']['frontend']['friendly_name'] %>/com.ofss.fc.ui.view.obeo/faces/quoteTracker.jspx' WHERE PROP_ID = 'SIM01';
+		UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE = 'https://<%= @dataBag['obpoam']['frontend']['friendly_name'] %>/oam/server/logout' WHERE PROP_ID='SSO_LOGOUT_URL';
+
+		-- Task code URL config on FLX_FW_CONFIG_VAR_B
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>' where PROP_ID='soasso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='soasso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpipm']['frontend']['friendly_name'] %>' where PROP_ID='ipmsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='ipmsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpbip']['frontend']['friendly_name'] %>' where PROP_ID='bipsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='bipsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpsoa']['frontend']['friendly_name'] %>' where PROP_ID='bamsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='bamsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpobu']['frontend']['friendly_name'] %>' where PROP_ID='uisso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='uisso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpbip']['frontend']['friendly_name'] %>' where PROP_ID='oasso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='oasso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpipm']['frontend']['friendly_name'] %>' where PROP_ID='docsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='docsso.server.port';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='<%= @dataBag['obpurm']['frontend']['friendly_name'] %>' where PROP_ID='urmsso.server.name';
+		UPDATE FLX_FW_CONFIG_VAR_B set PROP_VALUE='443' where PROP_ID='urmsso.server.port';
+	<% end %>
+	
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${host.server.name}:${host.server.port}/com.ofss.fc.channel.branch/HTTPListener' WHERE PROP_ID='host.service.json.url';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${soa.server.name}:${soa.server.port}/bpm/workspace/faces/jsf/worklist/worklist.jspx' WHERE PROP_ID='worklistapp.url';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${soa.server.name}:${soa.server.port}' WHERE PROP_ID='workflow.provider.http.url';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='t3s://${soa.server.name}:${soa.server.port}' WHERE PROP_ID='SOA_URL';
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${ipm.server.name}:${ipm.server.port}/imaging/ws' WHERE PROP_ID='PROPERTY_IPM_URL';
+	
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${ipm.server.name}:${ipm.server.port}/imaging/faces/Pages/Welcome.jspx' WHERE PROP_ID='EXT03';
+	
+	-- This makes all SOA calls SSL
+	UPDATE FLX_FW_CONFIG_OUT_WS_CFG_B SET ENDPOINT_URL = REPLACE(ENDPOINT_URL, 'http://', 'https://') WHERE ENDPOINT_URL LIKE 'http://%';
+	UPDATE FLX_FW_CONFIG_OUT_WS_CFG_B SET URL = REPLACE(URL, 'http://', 'https://') WHERE URL LIKE 'http://%';
+
+    -- Earlier as per Enable LISA Integration Flag which is disabled
+    UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='true' WHERE PROP_ID = 'mdm.Search.flag';
+    UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='true' WHERE PROP_ID = 'ebo.integration.flag';
+
+    -- Updates to Flx_Fw_Config_All_B as per stubbed parameter
+    <% if @dataBag['common']['stubbed'] == "true" %>
+       <%= "Delete From Flx_Fw_Config_All_B Where Prop_Id='CZ_CUSTOMER_UPDATE_ENABLE' And Category_Id='CZ_FEATURE_ENABLE';" %>
+       <%= "Insert into FLX_FW_CONFIG_ALL_B (PROP_ID,CATEGORY_ID,PROP_VALUE,FACTORY_SHIPPED_FLAG,PROP_COMMENTS,SUMMARY_TEXT,CREATED_BY,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER) values ('CZ_CUSTOMER_UPDATE_ENABLE','CZ_FEATURE_ENABLE','false','Y','Customer update from OBP to OCH feature enabled or disabled','PROP_VALUE=true means Enabled and PROP_VALUE=false means Disabled','ofssuser',sysdate,'ofssuser',sysdate,'A',1);" %>
+    <% else %>
+       <%= "Delete From Flx_Fw_Config_All_B Where Prop_Id='CZ_CUSTOMER_UPDATE_ENABLE' And Category_Id='CZ_FEATURE_ENABLE';" %>
+       <%= "Insert into FLX_FW_CONFIG_ALL_B (PROP_ID,CATEGORY_ID,PROP_VALUE,FACTORY_SHIPPED_FLAG,PROP_COMMENTS,SUMMARY_TEXT,CREATED_BY,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATED_DATE,OBJECT_STATUS_FLAG,OBJECT_VERSION_NUMBER) values ('CZ_CUSTOMER_UPDATE_ENABLE','CZ_FEATURE_ENABLE','true','Y','Customer update from OBP to OCH feature enabled or disabled','PROP_VALUE=true means Enabled and PROP_VALUE=false means Disabled','ofssuser',sysdate,'ofssuser',sysdate,'A',1);" %>
+    <% end %>
+
+	-- Enable SSO
+	
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='true' WHERE PROP_ID='IS_SSO_ENABLED';
+
+	<% if @enable_virus_scan == "true" %>
+		<%= "delete from flx_fw_config_all_b where prop_id ='ScanAdapter';" %>
+		<%= "insert into flx_fw_config_all_b (prop_id, category_id, prop_value, factory_shipped_flag, prop_comments, summary_text, object_status_flag, object_version_number) values ('ScanAdapter', 'UiConfig','com.ofss.fc.ui.scan.MetaScanAdapter','Y',null,'ScanAdapter com.ofss.fc.ui.scan.MetaScanAdapter  UiConfig','A',1);" %>
+	<% else %>
+		<%= "DELETE FROM FLX_FW_CONFIG_ALL_B WHERE PROP_ID ='ScanAdapter';" %>
+	<% end %>
+	
+	-- fix to change the OBP report output path for batch
+	UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='/oracle/app/runtime/obphost/domains/resources/' WHERE PROP_ID='fc.io.dir';
+
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE=REPLACE(PROP_VALUE, '${fc.io.dir}', '/oracle/app/runtime/obphost/domains/resources') WHERE PROP_ID IN ('Request.Response.Folder','receipt.base.out.location','UPLOAD_FILE_LOCATION','REPOUT', 'NGP_BASOUT','NGP.BASEOUT_BACKUP', 'NGP.BASEIN_BACKUP', 'NGP.WORKAREA', 'NGP.DOWNLOAD_AREA','NGP.UPLOAD_AREA','EXPORT.LOCATION','Request.Response.Folder');
+ 
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE=REPLACE(PROP_VALUE, '${default.legal.entity}', '03') WHERE PROP_ID IN ('Request.Response.Folder','receipt.base.out.location','UPLOAD_FILE_LOCATION','REPOUT', 'NGP_BASOUT','NGP.BASEOUT_BACKUP', 'NGP.BASEIN_BACKUP', 'NGP.WORKAREA', 'NGP.DOWNLOAD_AREA','NGP.UPLOAD_AREA','EXPORT.LOCATION','Request.Response.Folder');
+	
+	-- fix to for the ODI DB client path for RCMS
+	UPDATE FLX_LZ_AU_SUB_INTER_TYPE SET SCHEMA_FILE_PATH='/oracle/app/binaries/obpodi/dbclient' where SUB_INTERFACE_NAME = 'RCMS_UPLOAD';
+
+	-- fix to change the BIP url to HTTPS
+	UPDATE FLX_FW_CONFIG_ALL_B SET PROP_VALUE='https://${bip.server.name}:${bip.server.port}/xmlpserver/services/PublicReportService' WHERE PROP_ID='PROPERTY_BIP_URL';
+
+	-- fix to change the SOA Protocol to HTTPS
+	UPDATE FLX_FW_CONFIG_VAR_B SET PROP_VALUE='https' WHERE PROP_ID='soa.server.protocol';
+
+	-- Update db deploy log table with env name
+	UPDATE CZ_AF_DB_DEPLOY_LOG SET envname ='<%= @envname %>';
+
+	COMMIT;
+END;
+/

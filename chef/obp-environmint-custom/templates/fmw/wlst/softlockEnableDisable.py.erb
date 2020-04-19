@@ -1,0 +1,31 @@
+import os, sys
+oamConfigObjectName = "oracle.oam:type=Config"
+
+from java.lang import System
+from java.lang import Integer
+from oracle.security.am.admin.config.mgmt.model import IntegerSettings
+from javax.management.openmbean import CompositeData
+#Modify the server details as per environment
+wls_username=sys.argv[1]
+wls_password=sys.argv[2]
+t3_connect_url=sys.argv[3]
+connect(wls_username,wls_password,t3_connect_url)
+domainRuntime()
+#-1/0 means softlock is disabled, any positive integer means softlock is enabled
+ivalue=0
+ipath = "/DeployedComponent/Server/NGAMServer/Profile/ssoengine"
+ikey = "DefaultRetryLimit"
+on = ObjectName(oamConfigObjectName)
+path = ipath + '/' + ikey
+isValidPath(path)
+signatureAdd = ["java.lang.Integer"]
+ls = IntegerSettings(ikey,ivalue)
+cd = ls.toCompositeData(IntegerSettings.toCompositeType());
+newParams = [path, cd]
+signature = ["java.lang.String","javax.management.openmbean.CompositeData"]
+try:
+    mbs.invoke(on, "applyIntegerProperty", newParams, signature)
+except Exception,e:
+        print "setInteger for " + path + " failed."
+        print e.getLocalizedMessage()
+exit()

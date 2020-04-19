@@ -1,0 +1,230 @@
+{
+  "name" : "Step 2 -- Deploy Documaker",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Deploy Node 1",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Download Documaker DayZero Setup and Copy to the destinations",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroDep.gradle -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PdocVersion=${bamboo.DOCVERSION} -g ../../cache --refresh-dependencies -Padminuser=${bamboo.ADMINUSER} -Paslineuser=${bamboo.ASLINEUSER} -Podee_home=${bamboo.ODEE_HOME} -PipmServerName=${bamboo.IPMServName} -PipmPort=${bamboo.IPMPort} -PipmApplicationName=${bamboo.IPMAppName} -PipmUsername=${bamboo.IPMUsername} -PdocAppWSDLURL=${bamboo.docAppWSDLURL} -PdocAppWSDLUser=${bamboo.docAppWSDLUSer} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Run Day Zero DMKR_Admin SQL",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>echo \\\"DMKRDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/doc_exports.sh; . <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/doc_exports.sh; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroDb.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%= @dataBag['deployment']['SECONDARY_SITE'] == "false"  %>"
+      }, {
+        "name" : null,
+        "description" : "Run Day Zero DMKR Asline SQL",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>echo \\\"DMKRDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/doc_exports.sh; . <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/doc_exports.sh; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroDbAsline.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%=  @dataBag['deployment']['SECONDARY_SITE'] == "false" %>"
+      },
+      {
+        "name" : null,
+        "description" : "Execute JPS Query ",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroJPSQuery.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy  clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%=  @dataBag['deployment']['SECONDARY_SITE'] == "false" %>"
+      },
+
+        {
+        "name" : null,
+        "description" : "Copy Updated Docclient and DocServere XML Files",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docXMLTask.gradle -PfetchTargets=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PenvName=LOCAL -PmintDeployHome=../../../mintdeploy deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Deploy Doc Master files",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b docExtDep.gradle -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PdocVersion=${bamboo.DOCVERSION} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -g ../../cache deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Run DMKR_ASLINE Sql Scripts",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>echo \\\"DMKRDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/doc_exports.sh; . <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/doc_exports.sh; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b docDBTask.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%=  @dataBag['deployment']['SECONDARY_SITE'] == "false"  %>"
+      }, {
+        "name" : null,
+        "description" : "Run Deploy MRL Script",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b docScript.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=${bamboo.SCRIPT} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : "<%=  @dataBag['deployment']['SECONDARY_SITE'] == "false"  %>"
+      } ]
+    }
+      <% if (@dataBag['obpdoc']['hostnameList'][1] != nil) then %>
+    , {
+      "name" : "Deploy Node 2",
+      "description" : "Deploy Node 2",
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Download Documaker DayZero Setup and Copy to the destinations",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroDep.gradle -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PdocVersion=${bamboo.DOCVERSION} -g ../../cache --refresh-dependencies -Padminuser=${bamboo.ADMINUSER} -Paslineuser=${bamboo.ASLINEUSER} -Podee_home=${bamboo.ODEE_HOME} -PipmServerName=${bamboo.IPMServName} -PipmPort=${bamboo.IPMPort} -PipmApplicationName=${bamboo.IPMAppName} -PipmUsername=${bamboo.IPMUsername} -PdocAppWSDLURL=${bamboo.docAppWSDLURL} -PdocAppWSDLUser=${bamboo.docAppWSDLUSer} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Copy Updated Docclient and DocServere XML Files",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docXMLTask.gradle -PfetchTargets=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PenvName=LOCAL -PmintDeployHome=../../../mintdeploy deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Deploy Doc Master files",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b docExtDep.gradle -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PdocVersion=${bamboo.DOCVERSION} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -g ../../cache deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    }
+    <% end %>
+    ]
+  } ],
+  "vars" : {
+    "ADMINUSER" : "<%= @dataBag['deployment']['ADMINUSER']%>",
+    "ASLINEUSER" : "<%= @dataBag['deployment']['ASLINEUSER']%>",
+    <% if (@manifest_vars['deployments']['documaker_dayZero'] != nil) then %>
+      "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['documaker_dayZero']['cemli_release_path']%>",
+    <% elsif (@manifest_vars['deployments']['documaker_cemli'] != nil) then %>
+      "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['documaker_cemli']['cemli_release_path']%>",
+    <% elsif (@manifest_vars['deployments']['documaker'] != nil) then %>
+      "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['documaker']['cemli_release_path']%>",
+    <% end %>
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpdoc.json",
+    "DBSTRING" : "<%= @dataBag['obpdoc']['database']['doc_db_url'].partition('jdbc:oracle:thin:@').last %>",
+    <% if (@manifest_vars['deployments']['documaker_dayZero'] != nil) then %>
+      "DOCVERSION" : "<%= @manifest_vars['deployments']['documaker_dayZero']['extension_version']%>",
+    <% elsif (@manifest_vars['deployments']['documaker_cemli'] != nil) then %>
+      "DOCVERSION" : "<%= @manifest_vars['deployments']['documaker_cemli']['extension_version']%>",
+    <% elsif (@manifest_vars['deployments']['documaker'] != nil) then %>
+      "DOCVERSION" : "<%= @manifest_vars['deployments']['documaker']['extension_version']%>",
+    <% end %>
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "IPMAppName" : "MAIN",
+    "IPMPort" : "<%= @dataBag['obpipm']['ipm_server']['listen_port_ssl']%>",
+    "IPMServName" : "<%= @dataBag['obpipm']['frontend']['otd_vip_name']%>",
+    "IPMUsername" : "<%= @dataBag['obpipm']['ipm_admin_user']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpDocMDep",
+    "OBP_NODE_1" : "<%= @dataBag['obpdoc']['hostnameList'][0]%><%= @dataBag['obpdoc']['dns_domain_name']%>",
+    <% if (@dataBag['obpdoc']['hostnameList'][1] != nil) then %>   "OBP_NODE_2" : "<%= @dataBag['obpdoc']['hostnameList'][1]%><%= @dataBag['obpdoc']['dns_domain_name']%>", <% end %>
+    "ODEE_HOME" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpdoc/fmw/odee_12",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "debug" : "false",
+    "SCRIPT" : "./scripts/docuScript.sh",
+    "docAppWSDLURL" : "https://<%= @dataBag['obpobh']['frontend']['otd_vip_name']%>:<%= @dataBag['obpobh']['frontend']['obh_port']%>/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi?WSDL",
+    "docAppWSDLUSer" : "<%= @dataBag['deployment']['docAppWSDLUSer']%>"
+  },
+  "labels" : null,
+  "permissions" : null
+}

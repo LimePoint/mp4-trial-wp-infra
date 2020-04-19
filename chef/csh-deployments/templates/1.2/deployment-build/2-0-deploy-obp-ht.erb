@@ -1,0 +1,192 @@
+{
+  "name" : "Step 2 -- Deploy OBP HT",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Deploy Node 1",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "OBP HT Cemli Node 1",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>chmod 755 <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/*;<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/applyHtJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf /tmp/cache ;${bamboo.GRADLE_HOME}/bin/gradle -b obpHTCemliDeploy.gradle -g /tmp/cache -PcemliHTVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=${bamboo.SERVERNAME} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Execute WLST for CZ Apps",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_EXTENSION_HOME};${bamboo.GRADLE_HOME}/bin/gradle -g /tmp/cache --refresh-dependencies deploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../../../mintdeploy/ -i -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    }
+      <% if (@dataBag['obpsoa']['hostnameList'][1] != nil) then %>
+      , {
+      "name" : "Deploy Node2",
+      "description" : "Deploy Node 2",
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "OBP HT Cemli Node 2",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_2} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>chmod 755 <%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/*;<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/envScripts/applyHtJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf /tmp/cache ;${bamboo.GRADLE_HOME}/bin/gradle -b obpHTCemliDeploy.gradle -g /tmp/cache -PcemliHTVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=${bamboo.SERVERNAME2} deploy clean -s'\"",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    }
+      <% end %>
+      <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][0] != nil) then %>
+      , {
+        "name": "Deploy Node 3",
+        "description": "Deploy Node 3",
+        "params": {},
+        "tasks": [
+          {
+            "name": null,
+            "description": "OBP HT Cemli Node 3",
+            "params": {
+              "argument": "",
+              "scriptLocation": "INLINE",
+              "environmentVariables": "",
+              "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_3_OBT} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;/oracle/app/binaries/deployments/mintdeploy/envScripts/applyHtJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf /tmp/cache ;${bamboo.GRADLE_HOME}/bin/gradle -b obpHTCemliDeploy.gradle -g /tmp/cache -PcemliHTVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=skip deploy clean -s'\"",
+              "interpreter": "LEGACY_SH_BAT",
+              "script": "",
+              "workingSubDirectory": ""
+            },
+            "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+            "finalising": false,
+            "enabled": true
+          }
+        ]
+      }
+      <% end %>
+       <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) &&  (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][1] != nil) then %>
+      , {
+        "name" : "Deploy Node 4",
+        "description" : "Deploy Node 4",
+        "params" : { },
+        "tasks" : [ {
+          "name" : null,
+          "description" : "OBP HT Cemli Node 4",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_4_OBT} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;/oracle/app/binaries/deployments/mintdeploy/envScripts/applyHtJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf /tmp/cache ;${bamboo.GRADLE_HOME}/bin/gradle -b obpHTCemliDeploy.gradle -g /tmp/cache -PcemliHTVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=skip deploy clean -s'\"",
+            "interpreter" : "LEGACY_SH_BAT",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        } ]
+      }
+      <% end %>
+       <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) &&  (@dataBag['obpsoa']['bam_server']['hostnameList'][0] != nil) then %>
+      ,{
+        "name": "Deploy Node 5",
+        "description": null,
+        "params": {},
+        "tasks": [
+          {
+            "name": null,
+            "description": "OBP HT Cemli Node 5",
+            "params": {
+              "argument": "",
+              "scriptLocation": "INLINE",
+              "environmentVariables": "",
+              "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_5_BAM} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;/oracle/app/binaries/deployments/mintdeploy/envScripts/applyHtJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf /tmp/cache ; ${bamboo.GRADLE_HOME}/bin/gradle -b obpHTCemliDeploy.gradle -g /tmp/cache -PcemliHTVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=skip deploy clean -s'\"",
+              "interpreter": "LEGACY_SH_BAT",
+              "script": "",
+              "workingSubDirectory": ""
+            },
+            "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+            "finalising": false,
+            "enabled": true
+          }
+        ]
+      }
+      <% end %>
+      <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['bam_server']['hostnameList'][1] != nil) then %>
+      ,{
+        "name": "Deploy Node 6",
+        "description": "Deploy Node 6",
+        "params": {},
+        "tasks": [
+          {
+            "name": null,
+            "description": "OBP HT Cemli Node 6",
+            "params": {
+              "argument": "",
+              "scriptLocation": "INLINE",
+              "environmentVariables": "",
+              "scriptBody": "<%= @script_init_string %>\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_6_BAM} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;/oracle/app/binaries/deployments/mintdeploy/envScripts/applyHtJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf /tmp/cache ;${bamboo.GRADLE_HOME}/bin/gradle -b obpHTCemliDeploy.gradle -g /tmp/cache -PcemliHTVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=skip deploy clean -s'\"",
+              "interpreter": "LEGACY_SH_BAT",
+              "script": "",
+              "workingSubDirectory": ""
+            },
+            "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+            "finalising": false,
+            "enabled": true
+          }
+        ]
+      }
+      <% end %>
+    ]
+  } ],
+  "vars" : {
+    "CEMLIVERSION" : "<%= @manifest_vars['deployments']['humanTask']['extension_version']%>",
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['humanTask']['cemli_release_path']%>",
+    "CONFIGPROVIDERPATH" : "../../deploymentProperties/<%= @environment_name %>/obpht.json",
+    "DOMAIN_HOME" : "/oracle/app/runtime/obpsoa/domains/obpsoa_domain",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpHTDeploy",
+    "OBP_EXTENSION_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpHTWlstDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obpsoa']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>",
+    <% if (@dataBag['obpsoa']['hostnameList'][1] != nil) then %>   "OBP_NODE_2" : "<%= @dataBag['obpsoa']['hostnameList'][1]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][0] != nil) then %>   "OBP_NODE_3_OBT" : "<%= @dataBag['obpsoa']['obphumantask_server']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    <% if (@dataBag['obpsoa']['obphumantask_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['obphumantask_server']['hostnameList'][1] != nil) then %>   "OBP_NODE_4_OBT" : "<%= @dataBag['obpsoa']['obphumantask_server']['hostnameList'][1]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['bam_server']['hostnameList'][0] != nil) then %>   "OBP_NODE_5_BAM" : "<%= @dataBag['obpsoa']['bam_server']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    <% if (@dataBag['obpsoa']['bam_server']['hostnameList'] != nil) && (@dataBag['obpsoa']['bam_server']['hostnameList'][1] != nil) then %>   "OBP_NODE_6_BAM" : "<%= @dataBag['obpsoa']['bam_server']['hostnameList'][1]%><%= @dataBag['obpsoa']['dns_domain_name']%>", <% end %>
+    "PRODUCT_HOME" : "<%= @dataBag['deployment']['BINARYPATH']%>/obpsoa/fmw",
+    "SERVERNAME" : "obphumantask_server1",
+    "SERVERNAME2" : "obphumantask_server2",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "debug" : "false"
+  },
+
+  "labels" : null,
+  "permissions" : null
+}

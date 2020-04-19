@@ -1,0 +1,8 @@
+dn: cn=csh_sudo_mintpress_oracle,ou=sudo,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+objectClass: sudoRole
+objectClass: top
+sudoCommand: ALL
+sudoRunAsUser: oracle
+sudoHost: ALL
+cn: csh_sudo_mintpress_oracle
+sudoUser: +csh_mintpress_oracle

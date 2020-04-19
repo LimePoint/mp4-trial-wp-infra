@@ -1,0 +1,18 @@
+#Script for IPM App Creation/Update
+#Author: Harsha Gurram
+
+import sys
+
+connect(sys.argv[1],sys.argv[2],'t3://'+sys.argv[3]+':17102')
+IPMAppName=sys.argv[4]
+StorageType=sys.argv[5]
+try :
+    importIPMApplication(exportFile="<%= @app_definition_xml %>", action="AddOrUpdate", name=IPMAppName, repository="UCM Connection", securityOption="ValidOnly", docSecurityOption="ValidOnly", storageOption=StorageType)
+    print 'Successfully imported Application - ' +IPMAppName
+except :
+    dumpStack()
+    print 'Failed import of Application - ' +IPMAppName
+    sys.exit(1)
+
+disconnect()
+exit()

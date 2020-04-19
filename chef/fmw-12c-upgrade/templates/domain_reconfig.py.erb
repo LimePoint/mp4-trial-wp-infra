@@ -1,0 +1,42 @@
+readDomainForUpgrade('<%= @domain_home %>')
+
+new_url = 'jdbc:oracle:thin:@<%= @db_url %>'
+dbpass = '<%= @schema_password %>'
+prefix ='<%= @rcu_prefix %>_'
+
+if prefix in ('obpoim_',  'obpcim_'):
+  print 'Setting WeblogicAdminKey in OIM Credential Store'
+  cd('/Credential/TargetStore/oim/TargetKey/WeblogicAdminKey')
+  create('c', 'Credential')
+  cd('Credential')
+  set('Username', 'weblogic')
+  set('Password', '<%= @wls_admin_pwd %>')
+
+cd ('/')
+myds = ls('/JDBCSystemResource', returnMap='true')
+for i in myds:
+  if i == 'DCMS':
+    print 'Skipping DCMS'
+  else:
+    print 'Inspecting data source: ' + i
+    cd ('/')
+    cd ('/JDBCSystemResource/' + i + '/JdbcResource/' + i + '/JDBCDriverParams/NO_NAME_0')
+    old_url = get('URL')
+    if old_url != new_url:
+      print '-- Changing JDBC Url and Password'
+      print '  -- Old URL: ' + old_url
+      print '  -- New URL: ' + new_url
+      set('URL',new_url)
+      set('PasswordEncrypted',dbpass)
+    cd ('/JDBCSystemResource/' + i + '/JdbcResource/' + i + '/JDBCDriverParams/NO_NAME_0/Properties/NO_NAME_0/Property/user')
+    old_username = get('Value').lower()
+    new_username = prefix + "_".join(old_username.split('_')[1:]).lower()
+    if old_username != new_username:
+      print '-- Changing username'
+      print '  -- Old Username: ' + old_username
+      print '  -- New Username: ' + new_username
+      set('Value',new_username)
+    cd ('/')
+
+updateDomain()
+closeDomain()

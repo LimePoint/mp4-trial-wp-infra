@@ -1,0 +1,45 @@
+#Script to RemoveBIResource and this needs to used only part of OIM 12c Upgrade activities
+#arg1 : Domain adminuser name (ex:weblogic)
+#arg2 : Domain adminuser password
+#arg3 : Domain admin url
+#Usage : RemoveBIResource.py weblogic ****** t3://localhost:17001
+
+import sys
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+
+try :
+    domainConfig()
+    edit()
+    startEdit()
+    editService.getConfigurationManager().removeReferencesToBean(getMBean('/MigratableTargets/bi_server1 (migratable)'))
+    cd('/')
+    cmo.destroyMigratableTarget(getMBean('/MigratableTargets/bi_server1 (migratable)'))
+    cd('/Servers/bi_server1')
+    cmo.setCluster(None)
+    cmo.setMachine(None)
+    editService.getConfigurationManager().removeReferencesToBean(getMBean('/Servers/bi_server1'))
+    cd('/')
+    cmo.destroyServer(getMBean('/Servers/bi_server1'))
+    editService.getConfigurationManager().removeReferencesToBean(getMBean('/MigratableTargets/bi_server2 (migratable)'))
+    cmo.destroyMigratableTarget(getMBean('/MigratableTargets/bi_server2 (migratable)'))
+    cd('/Servers/bi_server2')
+    cmo.setCluster(None)
+    cmo.setMachine(None)
+    editService.getConfigurationManager().removeReferencesToBean(getMBean('/Servers/bi_server2'))
+    cd('/')
+    cmo.destroyServer(getMBean('/Servers/bi_server2'))
+    editService.getConfigurationManager().removeReferencesToBean(getMBean('/Clusters/bi_cluster'))
+    cmo.destroyCluster(getMBean('/Clusters/bi_cluster'))
+    activate()
+    print '######################################'
+    print 'Successfully deleted bi information'
+    print '######################################'
+    disconnect()
+    exit()
+except :
+    print 'Unable to Delete BIResources' 
+    dumpStack()
+    undo(defaultAnswer='y')
+    cancelEdit('y')
+    sys.exit(1)

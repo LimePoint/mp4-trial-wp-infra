@@ -1,0 +1,34 @@
+import sys
+
+def getServerState(server):
+  cd('/ServerLifeCycleRuntimes/'+server.getName())
+  print "got server name"
+  return cmo.getState()
+
+connect('weblogic',sys.argv[1], sys.argv[2])
+print "Connected"
+try:
+  domainConfig()
+  svrs=cmo.getServers()
+  domainRuntime()
+
+  for servers in svrs:
+    print "CURRENT STATE OF "+servers.getName()+" IS "+getServerState(servers)
+
+  serverConfig()
+  cd ('/AppDeployments/')
+  myapps=cmo.getAppDeployments()
+
+  for appName in myapps:
+    domainConfig()
+    cd ('/AppDeployments/'+appName.getName()+'/Targets')
+    mytargets = ls(returnMap='true')
+    domainRuntime()
+    cd('AppRuntimeStateRuntime')
+    cd('AppRuntimeStateRuntime')
+    for targetinst in mytargets:
+      curstate4=cmo.getCurrentState(appName.getName(),targetinst)
+      print "STATE:",sys.argv[1],'-----------', curstate4, '-----------', appName.getName()
+
+except:
+  dumpStack()

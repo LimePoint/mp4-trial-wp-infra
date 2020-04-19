@@ -1,0 +1,61 @@
+# arg1 - weblogic username
+# arg2 - weblogic password
+# arg3 - weblogic admin url
+
+import sys
+import time as systime
+
+def err(val):
+    log("ERROR", val)
+
+def dumpErrorData():
+    dumpVariables()
+    dumpStack()
+
+def getServerState(server):
+    cd('/ServerLifeCycleRuntimes/'+server.getName())
+    return cmo.getState()
+
+def log(lvl, val):
+    print "[" + str(systime.strftime("%Y-%m-%d %H:%M:%S", systime.localtime())) + "] --" + str(lvl) + "-- " + str(val)
+
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+try:
+    domainConfig()
+    svrs=cmo.getServers()
+    domainRuntime()
+    for servers in svrs:
+       if "obphost_server" in servers.getName():
+            print "Current State of "+servers.getName()+" is "+getServerState(servers)
+            currentState=getServerState(servers)
+            if getServerState(servers) == "SHUTDOWN" or getServerState(servers) == "FAILED_NOT_RESTARTABLE":
+                    print "Starting "+servers.getName()+" which is in "+getServerState(servers)
+                    start(servers.getName(),'Server',block='false')
+    for servers in svrs:
+       if "obphost_server" in servers.getName():
+            print "Current State of "+servers.getName()+" is "+getServerState(servers)
+            currentState=getServerState(servers)
+            externalSystem=0
+            adminStateCheck=0
+            while currentState != "RUNNING":
+                            print "Waiting for 30 secs before getting the State"
+                            systime.sleep(30)
+                            print "Current state of "+servers.getName()+" is "+getServerState(servers)
+                            currentState=getServerState(servers)
+                            if currentState == "SHUTDOWN":
+                                if externalSystem == 1:
+                                    sys.exit(1)
+                                print "Server Shutdown trigger from externalSystem trying to start once again"
+                                start(servers.getName(),'Server',block='false')
+                                externalSystem=externalSystem+1
+                                print "Current state of "+servers.getName()+" is "+getServerState(servers)
+                            if currentState == "ADMIN" and adminStateCheck == 0:
+                                adminStateCheck=adminStateCheck+1
+                                continue
+                            if currentState == "ADMIN" or currentState == "FAILED_NOT_RESTARTABLE" or currentState == "FAILED":
+                                print "Server is in "+currentState+" Mode"
+                                sys.exit(1)
+except:
+    dumpErrorData()
+    raise

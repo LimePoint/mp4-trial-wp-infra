@@ -1,0 +1,16 @@
+{
+  "environment": "<%= @environment_name %>",
+  "mintdeploy_version": "<%= node.default['mintdeploy_version'] %>",
+  "deployment_status": "success",
+  "deployment_type": "enterprise",
+  "config_tool_version": "<%= node.default['config_tool_version'] %>",
+  "deployments": {
+    "enterprise": {
+      "businessconfig_release_path": "<%= node.default['deployments']['host']['businessconfig_release_path']%>",
+      "cemli_release_path": "<%= node.default['deployments']['host']['cemli_release_path']%>",
+      "product_release_path": "<%= node.default['deployments']['host']['product_release_path']%>",
+      "productVersion": "<%= node.default['deployments']['host']['productVersion'] %>",
+      "extension_version": "<%= node.default['deployments']['host']['extension_version']%>"
+    }
+  }
+}

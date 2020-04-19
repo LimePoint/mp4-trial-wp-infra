@@ -1,0 +1,72 @@
+[GENERAL]
+fileFormatVersion = 3
+
+[UAWLSINTERNAL.UAWLS]
+pluginInstance = 1
+
+UASVR.path = /oracle/app/runtime/<%= @rcu_prefix %>/domains/<%= @rcu_prefix %>_domain
+
+[OPSS.OPSS_SCHEMA_PLUGIN]
+pluginInstance = 11
+
+OPSS.databaseType = Oracle Database
+OPSS.databaseConnectionString = <%= @db_url %>
+OPSS.schemaConnectionString = <%= @db_url %>
+OPSS.schemaUserName = <%= @rcu_prefix %>_OPSS
+OPSS.cleartextSchemaPassword = <%= @schema_password %>
+OPSS.dbaUserName = <%= @dba_user %> as sysdba
+OPSS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[UCSUMS.UCSUMS_SCHEMA_PLUGIN]
+pluginInstance = 8
+
+UMS.databaseType = Oracle Database
+UMS.databaseConnectionString = <%= @db_url %>
+UMS.schemaConnectionString = <%= @db_url %>
+UMS.schemaUserName = <%= @rcu_prefix %>_ORASDPM
+UMS.cleartextSchemaPassword = <%= @schema_password %>
+UMS.dbaUserName = <%= @dba_user %> as sysdba
+UMS.cleartextDbaPassword = <%= @sysdba_password %>
+
+[SOA.SOA1]
+pluginInstance = 18
+
+SOAINFRA.databaseType = Oracle Database
+SOAINFRA.databaseConnectionString = <%= @db_url %>
+SOAINFRA.schemaConnectionString = <%= @db_url %>
+SOAINFRA.schemaUserName = <%= @rcu_prefix %>_SOAINFRA
+SOAINFRA.cleartextSchemaPassword = <%= @schema_password %>
+SOAINFRA.dbaUserName = <%= @dba_user %> as sysdba
+SOAINFRA.cleartextDbaPassword = <%= @sysdba_password %>
+
+[OIM.OIM1]
+pluginInstance = 14
+
+OIM.databaseType = Oracle Database
+OIM.databaseConnectionString = <%= @db_url %>
+OIM.schemaConnectionString = <%= @db_url %>
+OIM.schemaUserName = <%= @rcu_prefix %>_OIM
+OIM.cleartextSchemaPassword = <%= @schema_password %>
+OIM.dbaUserName = <%= @dba_user %> as sysdba
+OIM.cleartextDbaPassword = <%= @sysdba_password %>
+
+[UCSUMS.UCSUMS_CONFIGURATION_PLUGIN]
+pluginInstance = 9
+
+[OIM.CONFIGPLUGIN]
+pluginInstance = 15
+
+11GOIMHOME.sourceIs12 = no
+11GOIMHOME.instancePath.0 = /oracle/app/binaries/<%= @rcu_prefix %>/fmw
+
+[JRF.JRF_CONFIG_PLUGIN]
+pluginInstance = 6
+
+[CAM.SYSCOMP]
+pluginInstance = 7
+
+[WSM.WSMPLUGIN]
+pluginInstance = 12
+
+[FMWCONFIG.CIE_CONFIG_PLUGIN]
+pluginInstance = 4

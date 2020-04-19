@@ -1,0 +1,139 @@
+<% case
+   when @username == "OBPHOST_OBP" %>
+    <% if node['dns'] and node['dns']['zone']=='wpdev.mintpress.io' %>
+        PROMPT 'CREATION OF <%= @username %>_archive in Ocloud environments is yet TBD.'
+    <% elsif ['svp3r','svp3w','prd3r','prd3w','psp3'].include?@env_name %>
+        CREATE TABLESPACE <%= @username %>_archive datafile '+DATAC1' size 10G autoextend on next 128M maxsize 30G ENCRYPTION DEFAULT STORAGE (ENCRYPT);
+    <% else %>
+        CREATE TABLESPACE <%= @username %>_archive datafile '+DATAC1' size 10G autoextend on next 128M maxsize 30G;
+    <% end %>
+<% when @username == "OIM_BAM_USER" %>
+  CREATE USER <%= @username %> IDENTIFIED BY <%= @password %>;
+  GRANT CREATE SESSION TO <%= @username %>;
+  CREATE OR REPLACE SYNONYM OIM_BAM_USER.CZ_OIM_BAM_USER_PROVISION FOR obphost_obp.CZ_OIM_BAM_USER_PROVISION;
+<% when @username == "OBPA_GTA" %>
+  CREATE USER <%= @username %> IDENTIFIED BY <%= @password %>;
+
+  BEGIN
+    for i in (select owner||'.'||object_name "OBJ"
+                from dba_objects
+               where owner in ('OBP_ANALYTICS','OBPA_EXT')
+                 and object_type in ('TABLE','VIEW'))
+    loop
+        execute immediate 'grant select on '|| i.OBJ ||' to <%= @username %>';
+    end loop;
+  END;
+  /
+
+  GRANT CREATE SESSION,CREATE SYNONYM TO <%= @username %>;
+  ALTER USER <%= @username %> default role all;
+<% when @username == "OBPA_EXT" %>
+    <% ts_suffix = ['DATA','IDX','STG']
+       ts_list = ts_suffix.map{|s| @username + "_" + s}.to_a
+       ts_list.each do |ts_name| %>
+      <% if node['dns'] and node['dns']['zone']=='wpdev.mintpress.io' %>
+        CREATE TABLESPACE <%= ts_name %> datafile '/oracle/app/oradata/<%= @dbname %>/<%= @username %>.dbf' size 5G autoextend on next 128M maxsize 30g;
+      <% elsif ['svp3r','svp3w','prd3r','prd3w','psp3'].include?@env_name %>
+        CREATE TABLESPACE <%= ts_name %> datafile '+DATAC1' size 10G autoextend on next 128M maxsize 30G ENCRYPTION DEFAULT STORAGE (ENCRYPT);
+      <% else %>
+        CREATE TABLESPACE <%= ts_name %> datafile '+DATAC1' size 10G autoextend on next 128M maxsize 30G;
+      <% end %>
+    <% end %>
+    CREATE USER <%= @username %> IDENTIFIED BY <%= @password %> default tablespace <%= @username %>_DATA quota unlimited on <%= @username %>_DATA;
+
+    BEGIN
+      for i in (select owner||'.'||object_name "OBJ"
+                  from dba_objects
+                 where owner='OBP_ANALYTICS'
+                   and object_type in ('TABLE','VIEW'))
+      loop
+        execute immediate 'grant select on '|| i.OBJ ||' to <%= @username %>';
+      end loop;
+    END;
+    /
+
+  GRANT CREATE SESSION TO <%= @username %>;
+  GRANT <%= @username %>_RO_ROLE to <%= @username %>;
+  ALTER USER <%= @username %> QUOTA UNLIMITED ON <%= @username %>_IDX;
+  ALTER USER <%= @username %> QUOTA UNLIMITED ON <%= @username %>_STG;
+  ALTER USER <%= @username %> default role all;
+<% else %>
+-- Do this so that this is same for cloud and on-prem
+    <% if node['dns'] and node['dns']['zone']=='wpdev.mintpress.io' %>
+        CREATE TABLESPACE <%= @username %> datafile '/oracle/app/oradata/<%= @dbname %>/<%= @username %>.dbf' size 5G autoextend on next 128M maxsize 30g;
+    <% elsif ['svp3r','svp3w','prd3r','prd3w','psp3'].include?@env_name %>
+        CREATE TABLESPACE <%= @username %> datafile '+DATAC1' size 10G autoextend on next 128M maxsize 30G ENCRYPTION DEFAULT STORAGE (ENCRYPT);
+    <% else %>
+        CREATE TABLESPACE <%= @username %> datafile '+DATAC1' size 10G autoextend on next 128M maxsize 30G;
+    <% end %>
+    CREATE USER <%= @username %> IDENTIFIED BY <%= @password %> default TABLESPACE <%= @username %> quota unlimited on <%= @username %>;
+    GRANT CONNECT TO <%= @username %>;
+<% end %>
+
+<% if @username.scan(/JMS|CSA_REPO/).size > 0 %>
+    GRANT RESOURCE TO <%= @username %>;
+<% end %>
+
+<% if @username == "DCMS" %>
+	GRANT ALTER SESSION TO <%= @username %>;
+<% end %>
+
+--- OBP_ANALYTICS Schema Grants
+
+<% if @username == "OBP_ANALYTICS" %>
+	GRANT CREATE SESSION TO <%= @username %>;
+	GRANT CREATE DATABASE LINK TO <%= @username %>;
+	GRANT CREATE VIEW TO <%= @username %>;
+	GRANT CREATE TABLE TO <%= @username %>;
+	GRANT CREATE SEQUENCE TO <%= @username %>;
+	GRANT CREATE PROCEDURE TO <%= @username %>;
+	GRANT CREATE SYNONYM TO <%= @username %>;
+<% end %>
+
+--- OBPA_EXT Schema Grants
+
+<% if @username == "OBPA_EXT" %>
+    GRANT CREATE JOB TO OBPA_EXT;
+    GRANT CREATE PROCEDURE TO OBPA_EXT;
+    GRANT CREATE SEQUENCE TO OBPA_EXT;
+    GRANT CREATE SESSION TO OBPA_EXT;
+    GRANT CREATE SYNONYM TO OBPA_EXT;
+    GRANT CREATE TABLE TO OBPA_EXT;
+    GRANT CREATE VIEW TO OBPA_EXT;
+    GRANT CREATE MATERIALIZED VIEW  TO OBPA_EXT ;
+    GRANT GLOBAL QUERY REWRITE TO OBPA_EXT ;
+<% end %>
+
+--- Schema Objects OBP_ANALYTICS and OBPA_EXT
+
+<% if @username.scan(/OBP_ANALYTICS|OBPA_EXT/).size > 0 %>
+    CREATE TABLE <%= @username %>."CZ_AF_DB_DEPLOY_LOG"
+    (   "CHANGE_TYPE" VARCHAR2(255 BYTE),
+        "FILENAME" VARCHAR2(255 BYTE),
+        "BUILDDATE" VARCHAR2(255 BYTE),
+        "OBJECTTYPE" VARCHAR2(255 BYTE),
+        "RUNFLAG" VARCHAR2(255 BYTE),
+        "RERUNNABLE" VARCHAR2(255 BYTE),
+        "STATUS" VARCHAR2(255 BYTE),
+        "RUNDATE" TIMESTAMP (6),
+        "RUNBY" VARCHAR2(255 BYTE),
+        "ENVNAME" VARCHAR2(255 BYTE),
+        "RUNLOG" CLOB
+    );
+<% end %>
+--- CDE Schema Grants
+
+<% if @username == "CDE" %>
+
+	GRANT CREATE VIEW TO <%= @username %>;
+	GRANT CREATE TABLE TO <%= @username %>;
+	GRANT CREATE SESSION TO <%= @username %>;
+	CREATE TABLE CDE.REPORTING ( DECISION_ID VARCHAR2(50) NOT NULL ENABLE, TOUCHPOINT  VARCHAR2(50) NOT NULL ENABLE, REPORTING   CLOB, CREATED_AT  TIMESTAMP(6) NOT NULL ENABLE ) PARTITION BY RANGE (CREATED_AT) INTERVAL (NUMTODSINTERVAL(1, 'DAY')) ( PARTITION p0 VALUES LESS THAN (TO_DATE('01-01-1990', 'DD-MM-YYYY')));
+
+<% end %>
+
+--- BDPUSER Schema Grants
+
+<% if @username == "BDPUSER" %>
+	GRANT CREATE SESSION TO <%= @username %>;
+<% end %>

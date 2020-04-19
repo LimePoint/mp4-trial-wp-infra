@@ -1,0 +1,116 @@
+/*
+
+	Author: Romil Bhagat
+	Last Updated: 27-07-2017
+	This file will update the DMKR configurations that MintPress enforces. This file will update
+	all configurations that are related to integrated components, e.g JMS URLs, startup args, SOA URLs, etc
+	Before running this file for the first time, ENSURE that the initial OBP configuration has been complete.
+	This file must be run as DMKR_ADMIN User
+
+	The following values in the database table DMKR_ADMIN.APPS is assumed:
+	SYS_ID AL_ID APP_ID APPNAME APPTYPE APPDESCR
+	1	1	1	Supervisor	1	Document Factory Supervisor
+	1	1	2	Scheduler	2	Scheduler Process
+	1	1	3	Receiver	3	Receiver Process
+	1	1	4	Identifier	4	Identifier Process
+	1	1	5	Assembler	5	Assembler Process
+	1	1	6	Distributor	6	Distributor Process
+	1	1	7	Presenter	7	Presenter Process
+	1	1	8	Batcher	8	Batcher Process
+	1	1	9	Archiver	9	Archiver Process
+	1	1	10	Publisher	10	Publisher Process
+	1	1	11	PubNotifier	11	Publish Notifier Process
+	1	1	12	Historian	12	Historian Process
+	1	1	201	Correspondence	201	Documaker Interactive Correspondence Web Application
+	1	1	211	IDS	211	Docupresentment IDS Server 1 1
+	1	1	221	Contracts	221	Documaker Interactive Contracts Web Application
+	1	0	101	DocumakerAdmin	101	Documaker Administrator Application
+	1	0	111	DocumakerDashboard	111	Documaker Dashboard Application
+
+*/
+
+/* Block for configuring APPCONFIGCONTEXT table for properties */
+
+/*
+	Fix for Documaker Corrspondence
+*/
+
+BEGIN
+	MERGE INTO DMKR_ADMIN.DMKR_ENTITY_ABILITYSET acc
+	  USING (select 1025 ENTITYID, 1 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 2 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 3 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 6 ABILITYSETID, 101 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 1001 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 1003 ABILITYSETID, 201 APP_ID FROM DUAL  UNION ALL
+	                select 1025 ENTITYID, 1022 ABILITYSETID, 201 APP_ID FROM DUAL) src
+	    ON (acc.ENTITYID = src.ENTITYID and acc.ABILITYSETID=src.ABILITYSETID and acc.APP_ID=src.APP_ID)
+	  WHEN NOT MATCHED THEN
+	    INSERT (acc.ENTITYID,acc.ABILITYSETID,acc.APP_ID)
+	    VALUES(src.ENTITYID,src.ABILITYSETID,src.APP_ID);
+	COMMIT;
+END;
+/
+
+BEGIN
+
+	MERGE INTO DMKR_ADMIN.APPCONFIGCONTEXT acc
+		USING (
+		SELECT 1 SYS_ID,1 AL_ID,201 APP_ID,TO_NCHAR('WORKFLOW') CONTEXT_NAME, TO_NCHAR('BPEL_CLIENT_DATA') GROUP_NAME,TO_NCHAR('documakerServiceAddress') PROPERTY,TO_NCHAR('{DMKR_COMPOSITION_SERVICE_WSDL}') VALUE,0 VALUE_TYPE, TO_NCHAR(null) VALUE_REF,1 GROUPSEQ,TO_NCHAR('BPEL_CLIENT_DATA') CATEGORY,1 ACTIVE,0 IS_SECRET,0 IS_ENCRYPT,to_timestamp('23/APR/14 11:37:32.138047 AM', 'DD/MON/RR HH12:MI:SS.FF AM' ) CREATETIME, to_timestamp('28/APR/14 12:09:27.112452 PM', 'DD/MON/RR HH12:MI:SS.FF AM' ) MODIFYTIME, TO_NCHAR(null) USERTAG1,TO_NCHAR(null) NOTES,2 USER_ID,TO_NCHAR('documaker') USER_NAME FROM DUAL 
+		) src
+		ON (acc.SYS_ID = src.SYS_ID and acc.AL_ID = src.AL_ID and acc.APP_ID = src.APP_ID and acc.CONTEXT_NAME = src.CONTEXT_NAME and acc.GROUP_NAME = src.GROUP_NAME and acc.PROPERTY = src.PROPERTY and acc.CATEGORY = src.CATEGORY)
+		WHEN MATCHED THEN
+		UPDATE SET
+		acc.VALUE        = CASE WHEN acc.VALUE        = src.VALUE        THEN acc.VALUE ELSE src.VALUE END,
+		acc.VALUE_TYPE   = CASE WHEN acc.VALUE_TYPE   = src.VALUE_TYPE   THEN acc.VALUE_TYPE ELSE src.VALUE_TYPE END,
+		acc.VALUE_REF    = CASE WHEN acc.VALUE_REF    = src.VALUE_REF    THEN acc.VALUE_REF ELSE src.VALUE_REF END,
+		acc.GROUPSEQ     = CASE WHEN acc.GROUPSEQ     = src.GROUPSEQ     THEN acc.GROUPSEQ ELSE src.GROUPSEQ END,
+		acc.ACTIVE       = CASE WHEN acc.ACTIVE       = src.ACTIVE       THEN acc.ACTIVE ELSE src.ACTIVE END,
+		acc.IS_SECRET    = CASE WHEN acc.IS_SECRET    = src.IS_SECRET    THEN acc.IS_SECRET ELSE src.IS_SECRET END,
+		acc.IS_ENCRYPT   = CASE WHEN acc.IS_ENCRYPT   = src.IS_ENCRYPT   THEN acc.IS_ENCRYPT ELSE src.IS_ENCRYPT END,
+		acc.CREATETIME   = CASE WHEN acc.CREATETIME   = src.CREATETIME   THEN acc.CREATETIME ELSE src.CREATETIME END,
+		acc.MODIFYTIME   = CASE WHEN acc.MODIFYTIME   = src.MODIFYTIME   THEN acc.MODIFYTIME ELSE src.MODIFYTIME END,
+		acc.USERTAG1     = CASE WHEN acc.USERTAG1     = src.USERTAG1     THEN acc.USERTAG1 ELSE src.USERTAG1 END,
+		acc.NOTES        = CASE WHEN acc.NOTES        = src.NOTES        THEN acc.NOTES ELSE src.NOTES END,
+		acc.USER_ID      = CASE WHEN acc.USER_ID      = src.USER_ID      THEN acc.USER_ID ELSE src.USER_ID END,
+		acc.USER_NAME    = CASE WHEN acc.USER_NAME    = src.USER_NAME    THEN acc.USER_NAME ELSE src.USER_NAME END
+		WHEN NOT MATCHED THEN
+		INSERT (acc.SYS_ID,acc.AL_ID,acc.APP_ID,acc.CONTEXT_NAME,acc.GROUP_NAME,acc.PROPERTY,acc.VALUE,acc.VALUE_TYPE,
+		acc.VALUE_REF,acc.GROUPSEQ,acc.CATEGORY,acc.ACTIVE,acc.IS_SECRET,acc.IS_ENCRYPT,acc.CREATETIME,acc.MODIFYTIME,
+		acc.USERTAG1,acc.NOTES,acc.USER_ID,acc.USER_NAME)
+		VALUES (src.SYS_ID,src.AL_ID,src.APP_ID,src.CONTEXT_NAME,src.GROUP_NAME,src.PROPERTY,src.VALUE,src.VALUE_TYPE,
+		src.VALUE_REF,src.GROUPSEQ,src.CATEGORY,src.ACTIVE,src.IS_SECRET,src.IS_ENCRYPT,src.CREATETIME,src.MODIFYTIME,
+		src.USERTAG1,src.NOTES,src.USER_ID,src.USER_NAME);
+	COMMIT;
+END;
+/	
+
+DECLARE
+	/* Variable Definitions */
+BEGIN
+	/*
+		Application - Receiver
+		System 1 | Assembly 1 | Receiver
+	*/
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='-Djava.security.egd=file:///dev/urandom -Xmx256m -Djava.library.path=/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/bin -Dweblogic.security.SSL.enableJSSE=true -Dweblogic.security.SSL.protocolVersion=TLS1.2 -Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2' WHERE CONTEXT_NAME='STARTUP' AND GROUP_NAME='Archiver' AND PROPERTY='JVMOptions';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @jmshosts %>' WHERE CONTEXT_NAME='MESSAGE_PROTOCOL' AND GROUP_NAME='idsConnection' AND PROPERTY='providerURL';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @jmshosts %>' WHERE CONTEXT_NAME='MESSAGE_PROTOCOL' AND GROUP_NAME='SYSTEM_IDSWLSJMSConnection' AND PROPERTY='providerURL';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @documakerSOAVIP %>/soa-infra/services/default/iDMkr_Correspondence/correspondenceprocesses_client_ep?WSDL' WHERE CONTEXT_NAME='WORKFLOW' AND GROUP_NAME='BPEL_CLIENT_DATA' AND PROPERTY='urlText';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @documakerDMKRVIP %>/DWSV0AL1/CompositionService?WSDL' WHERE CONTEXT_NAME='WORKFLOW' AND GROUP_NAME='BPEL_CLIENT_DATA' AND PROPERTY='documakerServiceAddress';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @documakerSOAVIP %>/soa-infra/services/default/iDMkrApprovalRulesProj/iDMkrApprovalRules_DecisionService_ep' WHERE CONTEXT_NAME='WORKFLOW' AND GROUP_NAME='BPEL_CLIENT_DATA' AND PROPERTY='decisionServiceAddress';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @obpHostVIP %>/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi?WSDL' WHERE CATEGORY='OBPResultsUploader' AND CONTEXT_NAME='DESTINATION' AND GROUP_NAME='Configuration' AND PROPERTY='periodic.process.ngpsubmit.wsdl';
+
+	UPDATE APPCONFIGCONTEXT SET VALUE='<%= @ipmVIP %>/imaging/ws' WHERE CATEGORY='OBP_Archive' AND CONTEXT_NAME='DESTINATION' AND GROUP_NAME='Configuration' AND PROPERTY='destination.ipm.connection.string';
+	
+	UPDATE ALCONFIGCONTEXT SET VALUE='<%= @jmshosts %>' WHERE CONTEXT_NAME='QUEUES' AND GROUP_NAME='Bus' AND PROPERTY='jms.provider.URL';
+
+	COMMIT;
+END;
+/

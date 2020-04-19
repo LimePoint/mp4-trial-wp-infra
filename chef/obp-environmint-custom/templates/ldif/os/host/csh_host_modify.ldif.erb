@@ -1,0 +1,6 @@
+dn: cn=host_<%= @shortname %>,ou=host,ou=netgroup,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+changetype: modify
+add: memberNisNetgroup
+<% @groupnames.each do |grp| -%>
+memberNisNetgroup: csh_team_<%= @environment %>_<%= grp %>
+<% end -%> 

@@ -1,0 +1,8 @@
+<% if @username == "OIM_BAM_USER" %>
+	DROP USER <%= @username %> CASCADE;
+<% elsif @username == "OBPHOST_OBP" %>
+    DROP TABLESPACE <%= @username %>_ARCHIVE INCLUDING CONTENTS AND DATAFILES;
+<% else %>
+    DROP USER <%= @username %> CASCADE;
+    DROP TABLESPACE <%= @username %> INCLUDING CONTENTS AND DATAFILES;
+<% end %>

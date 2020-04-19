@@ -1,0 +1,54 @@
+# arg1 - weblogic username
+# arg2 - weblogic password
+# arg3 - weblogic admin url
+
+import sys
+import time as systime
+
+def err(val):
+    log("ERROR", val)
+
+def dumpErrorData():
+    dumpVariables()
+    dumpStack()
+
+def getServerState(server):
+    cd('/ServerLifeCycleRuntimes/'+server.getName())
+    return cmo.getState()
+
+def log(lvl, val):
+    print "[" + str(systime.strftime("%Y-%m-%d %H:%M:%S", systime.localtime())) + "] --" + str(lvl) + "-- " + str(val)
+
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+try:
+    domainConfig()
+    svrs=cmo.getServers()
+    domainRuntime()
+    for servers in svrs:
+       if "obphost_server" in servers.getName():
+            print "Current State of "+servers.getName()+" is "+getServerState(servers)
+            currentState=getServerState(servers)
+            externalSystem=0
+            if currentState == "RUNNING" or currentState == "ADMIN" or currentState == "FAILED":
+                    print "Shutting down "+servers.getName()+" which is in "+getServerState(servers)
+                    shutdown(servers.getName(),'Server','true',1000,force='true',block='false')
+                    print "Current state of "+servers.getName()+" is "+getServerState(servers)
+            while currentState != "SHUTDOWN":
+                    print "Waiting for 10 secs before getting the State"
+                    systime.sleep(10)
+                    print "Current state of "+servers.getName()+" is "+getServerState(servers)
+                    currentState=getServerState(servers)
+                    if currentState == "FAILED_NOT_RESTARTABLE":
+                        print "Server State is "+getServerState(servers)
+                        currentState="SHUTDOWN"
+                    if currentState == "STARTING" or currentState == "RUNNING" or currentState == "RESUMING" or currentState == "FAILED" or currentState == "ADMIN":
+                        print "Server Start initiated from external system"
+                        if externalSystem == 1:
+                            sys.exit(1)
+                        shutdown(servers.getName(),'Server','true',1000,force='true',block='false')
+                        externalSystem=externalSystem+1;
+
+except:
+    dumpErrorData()
+    raise

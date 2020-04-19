@@ -1,0 +1,1219 @@
+<% environment_name = @environment['name'] %>
+<% password_vault_name = @common['password_vault_name'] %>
+<% dns_domain = @obpbip["dns_domain_name"] ; if dns_domain.nil? then dns_domain=".mintpress.io" end %>
+<% asset_code = @code.downcase  %>
+<% uniquifier = @uuid.tr('-', '') %>
+
+<% base_install_path = '/oracle/app/binaries/' + asset_code  %>
+<% base_domain_path  = '/oracle/app/runtime/' + asset_code + '/domains' %>
+<% bip_managed_server_top  = '/oracle/app/binaries/runtime/' + asset_code + '/domains' %>
+
+<% log_location_path   = '/oracle/app/logs/' + asset_code %>
+<% certs_location_path = '/oracle/app/runtime/' + environment_name + '/certs' %>
+
+<% java_install_path      = base_install_path + '/java' %>
+<% jdk_version            = '8' %>
+<% oracle_install_path      = base_install_path + '/dbclient' %>
+
+<% fmw_install_path       = base_install_path + '/fmw' %>
+<% inventory_install_path = base_install_path + '/oraInventory' %>
+<% temp_location          = base_install_path + '/tmp' %>
+
+<% bip_admin_server_top   = base_domain_path %>
+<% node_manager_top       = bip_managed_server_top + '/' +  @obpbip['wls_domain_name'] +'/nodemanager' %>
+<% obiee_singleton_folder = '/oracle/app/runtime/' + asset_code + '/bidata'  %>
+
+{
+    "internalVariables":
+    {
+        "environmentName": "<%= environment_name %>",
+        "assetCode": "<%= asset_code %>",
+        "stageRootDir": "/oracle/stage"
+    },
+    "projectName": "<%= environment_name %>_<%= asset_code %>_<%= uniquifier %>",
+    "uniquifier": "<%= uniquifier %>",
+    "site": {
+        "hostList": [
+            {
+                "id": "<%= @obpbip['hostnameList'][0] %>",
+                "address": "${_.basename}<%= @obpbip['dns_domain_name'] %>",
+                "properties": [
+                    {
+                        "name": "basename",
+                        "value": "<%= @obpbip['hostnameList'][0] %>"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Host_Details",
+                    "List_Of_TVT_Tests"
+                ]
+            },
+            {
+                "id": "db_server",
+                "address": "<%= @obpbip['database']['scan_address'] %>",
+                "groupRefs":
+                [
+                    "Common_Host_Details"
+                ],
+                "properties": [
+                    {
+                        "name": "scaleout",
+                        "value": "false"
+                    }
+                ]
+            }
+        ],
+        "installationList": [
+
+            {
+                "name": "jdk",
+                "product": "jdk",
+                "version": "1.8.0_221",
+                "installPath": "<%= java_install_path %>",
+                "softwareStage": "${stageRootDir}/jdk/jdk-8u221-linux-x64.tar.gz",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "fmwinfra",
+                "product": "fmwinfra",
+                "version": "12.2.1.2",
+                "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/fmw_12.2.1.2.0_infrastructure.jar",
+                "installPath": "<%= fmw_install_path %>",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "jdk"
+                ],
+                "patchset": [
+                    {
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "25860645",
+                        "aru": "25860645"
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "27338939",
+                        "aru": "27338939",
+                        "properties": [
+                          {
+                            "name": "action",
+                            "value": "rollback"
+                          }
+                        ]
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "27741413",
+                        "aru": "27741413"
+                    }
+                ]
+            },
+            {
+                "name": "oracleclient",
+                "product": "oracleclient",
+                "version": "12.1.0.2",
+                "installPath": "<%= oracle_install_path %>",
+                "softwareStage": "${stageRootDir}/rdbms/12.1.0.2/client",
+                "dependsonList": [
+                    "jdk"
+                ],
+                "properties": [
+                    {
+                        "target": "oracle.home",
+                        "value": "${_.installPath}"
+                    },
+                    {
+                        "target": "oracle.base",
+                        "value": "<%= base_install_path %>"
+                    },
+                    {
+                        "target": "oracle.hostname",
+                        "value": "<%= "#{@obpbip['hostnameList'][0]}#{@obpbip['dns_domain_name']}" %>"
+                    },
+                    {
+                        "target": "oracle.install.type",
+                        "value": "Administrator"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "obiee",
+                "product": "obiee",
+                "version": "12.2.1.2",
+                "installPath": "<%= fmw_install_path %>/bi",
+                "softwareStage": "${stageRootDir}/obiee/12.2.1.2/bi_platform-12.2.1.2.0_linux64.bin",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "fmwinfra",
+					"oracleclient"
+                ],
+                "patchset": [
+                    {
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/obiee/12.2.1.2/patches",
+                        "name": "24965741",
+                        "aru": "24965741"
+                    },
+                    {
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/obiee/12.2.1.2/patches",
+                        "name": "23197569",
+                        "aru": "23197569"
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/obiee/12.2.1.2/patches",
+                        "name": "27072632",
+                        "aru": "27072632"
+                    },
+                    {
+                        "targetOracleHome": "${_.installPath}/bi",
+                        "softwareStage": "${stageRootDir}/obiee/12.2.1.2/patches",
+                        "name": "26146793",
+                        "aru": "26146793",
+						"properties": [
+						  {
+							"name": "action",
+							"value": "rollback"
+						  }
+						]
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/obiee/12.2.1.2/patches",
+                        "name": "27916905",
+                        "aru": "27916905"
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/obiee/12.2.1.2/patches",
+                        "name": "25853222",
+                        "aru": "25853222"
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/obiee/12.2.1.2/patches",
+                        "name": "27066409",
+                        "aru": "27066409"
+                    }
+                ],
+                "properties": [
+                    {
+                        "target": "obiee.install.samples",
+                        "value": "true"
+                    }
+                ]
+                    
+            }
+        ],
+        "environmentList": [
+            {
+                "name": "<%= environment_name %>",
+                "mwTopologyList": [
+                    {
+                        "name": "<%= asset_code %>",
+                        "description": "<%= environment_name %> <%= asset_code %> Environment",
+                        "nodeManagerList": [
+                            {
+                                "name": "nm-<%= @obpbip['hostnameList'][0] %>",
+                                "listenAddress": "<%= @obpbip['nm']['listen_address'] %><%= @obpbip['dns_domain_name'] %>",
+                                "listenPort": "<%= @obpbip['nm']['listen_port'] %>",
+                                "hostIdentifier": "<%= @obpbip['hostnameList'][0] %>",
+                                "groupRefs": [
+                                    "Node_Manager_Common_Config",
+                                    "Node_Manager_SSL_Config"
+                                ],
+                                "properties": [
+                                    {
+                                        "target": "wls.nodemanager.log.path",
+                                        "value": "<%= log_location_path %>/${/host.basename}"
+                                    },
+                                    {
+                                        "value": "${/host.basename}",
+                                        "target": "wls.nodemanager.identityname"
+                                    },
+                                    {
+                                        "value": "<%= certs_location_path %>/<%= @obpbip['hostnameList'][0][0...-2] %>.jks",
+                                        "target": "wls.nodemanager.identitystorefile"
+                                    }
+                                ]
+                            }
+                        ],
+                        "domainList": [
+                            {
+                                "name": "<%= @obpbip['wls_domain_name'] %>",
+                                "locationPath": "<%= bip_admin_server_top %>",
+                                "adminUser": "<%= @obpbip['wls_admin_user'] %>",
+                                "adminPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user'] ) %>",
+                                "adminServer": {
+                                    "name": "AdminServer",
+                                    "machineName": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                    "listenAddress": "<%= @obpbip['admin']['listen_address'] %><%= @obpbip['dns_domain_name'] %>",
+                                    "listenAddressPort": "<%= @obpbip['admin']['listen_port'] %>",
+                                    "listenAddressPortSSL": "<%= @obpbip['admin']['listen_port_ssl'] %>",
+                                    "targetName": "<%= asset_code[3..-1] %>AdminServer"
+                                },
+                                "machineList": [
+                                    {
+                                        "name": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                        "nodeManagerName": "nm-<%= @obpbip['hostnameList'][0] %>"
+                                    }
+                                ],
+                                "clusterList": [
+                                  {
+                                    "name": "<%= @obpbip['bi_server']['cluster_name'] %>",
+                                    "messageMode": "Unicast"
+                                  }
+                                ],
+                                "systemComponentList": [
+                                  {
+                                    "name": "OBICCS_${_.nodeid}",
+                                    "machineName": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                    "componentType": "OBICCS"
+                                  },
+                                  {
+                                    "name": "OBISCH_${_.nodeid}",
+                                    "machineName": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                    "componentType": "OBISCH"
+                                  },
+                                  {
+                                    "name": "OBIPS_${_.nodeid}",
+                                    "machineName": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                    "componentType": "OBIPS"
+                                  },
+                                  {
+                                    "name": "OBIJH_${_.nodeid}",
+                                    "machineName": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                    "componentType": "OBIJH"
+                                  },
+                                  {
+                                    "name": "obis${_.nodeid}",
+                                    "machineName": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                    "componentType": "OBIS"
+                                  }
+                                ],
+                                "managedServerList": [
+                                  {
+                                        "name": "bi_server1",
+                                        "machineName": "Machine-<%= @obpbip['hostnameList'][0] %>",
+                                        "clusterName": "<%= @obpbip['bi_server']['cluster_name'] %>",
+                                        "listenAddress": "<%=  @obpbip['bi_server']['listen_address'] %><%= @obpbip['dns_domain_name'] %>",
+                                        "listenAddressPort": "<%=  @obpbip['bi_server']['listen_port'] %>",
+                                        "listenAddressPortSSL": "<%=  @obpbip['bi_server']['listen_port_ssl'] %>",
+                                        "targetName": "${_.name}",
+                                        "properties": [
+                                              {
+                                                  "target": "obiee.instance.name",
+                                                  "value": "bi_instance${_.nodeid}"
+                                              },
+                                              {
+                                                  "value": "${_.listenAddressPort}",
+                                                  "target": "obiee.managed.server.listen.port"
+                                              },
+                                              {
+                                                  "value": "${_.listenAddressPortSSL}",
+                                                  "target": "obiee.managed.server.listen.port.ssl"
+                                              }
+                                        ]
+                                  }
+                                ],
+                                "middlewareList": [
+                                    {
+                                        "installationName": "obiee",
+                                        "targetList": [
+                                            {
+                                              "type": "Cluster",
+                                              "names":
+                                              [
+                                                "<%= @obpbip['bi_server']['cluster_name'] %>"
+                                              ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "configurationList": [
+
+                                     <%= render "common-settings-configs.erb"  %>
+                                    ,
+                                    {
+                                        "resourceName": "GenericServerSettings_auto_1",
+                                        "type": "Server",
+                                        "properties": [
+                                            {
+                                                "name": "serverName",
+                                                "value": "bi_server1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "ClusterStartupParameters",
+                                        "type": "StartupParameter",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpbip['bi_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "obpReportsDataSource",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpbip['bi_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OAMIdentityAsserter",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OIDAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DefaultAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_1",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_2",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_3",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_4",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_5",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                      "resourceName": "obiee-scheduler-config",
+                                      "type": "FmwCredentials"
+                                    }
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "serverStartMode",
+                                        "value": "prod",
+                                        "target": "wls.production.mode"
+                                    },
+                                    {
+                                        "name": "backupEnvironmentName",
+                                        "value": "<%= environment_name %>",
+                                        "target": "environment.name"
+                                    },
+                                    {
+                                        "name": "tlogsLocationPath",
+                                        "value": "<%= base_domain_path %>/${/domain.name}",
+                                        "target": "wls.tlogs.location.path"
+                                    },
+                                    {
+                                        "name": "odlLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}",
+                                        "target": "wls.odl.log.location"
+                                    },
+                                    {
+                                        "value": "<%= @common['odl_log_retentionPeriod'] %>",
+                                        "target": "wls.odl.log.retentionPeriod"
+                                    },
+                                    {
+                                        "name": "defaultJMSLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}"
+                                    },
+                                    {
+                                        "target": "wls.admin.listen.port.admin",
+                                        "value": "<%= @obpbip['admin']['listen_port_admin'] %>"
+                                    },
+                                    {
+                                        "name": "managedTopLocation",
+                                        "value": "<%= bip_managed_server_top %>",
+                                        "target": "wls.domain.managed.top"
+                                    },
+                                    {
+                                        "name": "mintpress.startup_parallel",
+                                        "target": "mintpress.startup_parallel",
+                                        "value": "10"
+                                    }
+                                ],
+                                "groupRefs": [
+                                    "OBIEE_Config"
+                                ],
+                                "templateList": [
+                                    {
+                                        "name": "obiee"
+                                    }
+                                ],
+                                "repositoryList": [
+                                    {
+                                        "componentList": [
+                                          "BIPLATFORM"
+                                        ],
+                                        "id": "rcu01",
+                                        "dbName": "<%= environment_name %><%= asset_code %>db",
+                                        "prefix": "<%= @obpbip['database']['rcu_schema_prefix'].upcase %>",
+                                        "dbUser": "<%= @obpbip['database']['sysdba_username'].upcase %>",
+                                        "schemaPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpbip['database']['rcu_schema_prefix'].upcase ) %>",
+                                        "defaultRepository": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "properties": [
+                            {
+                                "name": "targetPlatform",
+                                "value": "EXA"
+                            }
+                        ],
+                        "hostInstallationList": [
+                            {
+                                "installationName": "obiee",
+                                "hostIdentifierList": [
+                                    "<%= @obpbip['hostnameList'][0] %>"
+                                ]
+                            }
+                        ],
+                        "transferList": [
+
+                            <%= render "common-certs-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpbip['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :keystore_name => @obpbip['hostnameList'][0][0...-2],
+                                    :certs_source_path => @common['certs_source'],
+                                    :cert_destination_path => certs_location_path,
+                                    :truststore => @common['trustStore']
+                                }
+                            %>
+                            ,
+                            <%= render "common-jdk-policy-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpbip['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :jdk_version => jdk_version,
+                                    :java_install_path => java_install_path
+                                }
+                            %>                            ,
+                            <%= render "common-transfer-ovd-keystore.erb",
+                                :variables => {
+                                    :environment_name => environment_name,
+                                    :host_identifier => @obpbip['hostnameList'][0],
+                                    :certs_source_path => @common['certs_source'] ,
+                                    :admin_server_top => bip_admin_server_top,
+                                    :domain_name => @obpbip['wls_domain_name']
+                                }
+                            %>,
+                            {
+                                "name": "HealthCheckFileCopy",
+                                "hostIdentifierList": [
+                                  "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= "#{@common['custom_source']}/common/HealthCheck.war" %>",
+                                "destinationFile": "<%= "#{base_domain_path}/applications/#{@obpbip['wls_domain_name']}/HealthCheck.war" %>",
+                                "permissions": "755",
+                                "transferWhenList": [
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "SIEMCustomAuditor",
+                                "hostIdentifierList": [
+                                  "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['custom_source'] %>/common/SIEMCustomAuditor.jar",
+                                "destinationFile": "<%= fmw_install_path %>/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries",
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "executeList": [
+                            {
+                                "name": "UpdateAdaptersOSXml",
+                                "hostIdentifierList": [
+                                    "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-wls-ldap-adapters]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            }
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "deleteDefaultAuditor",
+                                      :host_identifier => @obpbip['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/deleteDefaultAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+                                      :admin_username => @obpbip['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+                                      :args => "#{@obpbip['wls_domain_name']}",
+                                      :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "updateSIEMAuditor",
+                                      :host_identifier => @obpbip['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/updateSIEMAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+                                      :admin_username => @obpbip['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+                                      :args => "#{@obpbip['wls_domain_name']} #{asset_code}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-deploy-healthcheck.erb",
+                                :variables => {
+                                    :host_identifier => @obpbip['hostnameList'][0],
+                                    :asset_code => asset_code,
+                                    :custom_source => @common['custom_source'],
+                                    :fmw_install_path => fmw_install_path,
+                                    :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+                                    :admin_username => @obpbip['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user'] ),
+                                    :app_target => @obpbip['bi_server']['cluster_name'],
+                                    :app_path => "#{base_domain_path}/applications/#{@obpbip['wls_domain_name']}"
+                                }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                :variables => {
+                                    :name => "ConfigureJMSView",
+                                    :host_identifier => @obpbip['hostnameList'][0],
+                                    :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                    :script => "#{@common['custom_source']}/common/configureJmsAccess.py",
+                                    :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+                                    :admin_username => @obpbip['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+                                    :args => '',
+                                    :when => 'post-online'
+                                }
+                            %>
+                            ,
+                            <%= render "common-enable-sso.erb",
+                                :variables => {
+                                    :host_identifier => @obpbip['hostnameList'][0],
+                                    :fmw_install_path => "#{fmw_install_path}",
+                                    :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+                                    :admin_username => @obpbip['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+                                    :domain_home => "#{bip_admin_server_top}/#{@obpbip['wls_domain_name']}",
+                                    :logout_url => @common['OAMLogoutURL']
+                                }
+                            %>,
+                            <%= render "common-enable-sso-obiee.erb",
+                                :variables => {
+                                    :host_identifier => @obpbip['hostnameList'][0],
+                                    :fmw_install_path => "#{fmw_install_path}",
+                                    :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+                                    :admin_username => @obpbip['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+                                    :domain_home => "#{bip_admin_server_top}/#{@obpbip['wls_domain_name']}",
+                                    :logout_url => @common['OAMLogoutURL'],
+                                    :logon_url => @obpbip['OAMLogonURL'],
+                                    :custom_source => @common['custom_source']
+                                }
+                            %>,
+                            <%= render "common-run-wlst.erb",
+							   :variables => {
+								   :name => "securityJMXAuthEnable",
+								   :host_identifier => @obpbip['hostnameList'][0],
+								   :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+								   :script => "#{@common['custom_source']}/common/securityAccessAndRoles.py",
+								   :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+								   :admin_username => @obpbip['wls_admin_user'],
+								   :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+								   :args => 'JMXAuth true',
+								   :when => 'post-configure'
+							   }
+						   %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+							   :variables => {
+								   :name => "jmsMsgView",
+								   :host_identifier => @obpbip['hostnameList'][0],
+								   :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+								   :script => "#{@common['custom_source']}/common/securityAccessAndRoles.py",
+								   :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+								   :admin_username => @obpbip['wls_admin_user'],
+								   :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+								   :args => 'JMSView',
+								   :when => 'post-online'
+							   }
+						   %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+							   :variables => {
+								   :name => "deletedefaultMachine",
+								   :host_identifier => @obpbip['hostnameList'][0],
+								   :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+								   :script => "#{@common['custom_source']}/common/deleteWeblogicMachine.py",
+								   :t3_connect_url => "t3://#{@obpbip['admin']['listen_address']}#{@obpbip['dns_domain_name']}:#{@obpbip['admin']['listen_port']}",
+								   :admin_username => @obpbip['wls_admin_user'],
+								   :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpbip['wls_admin_user']),
+								   :args => "#{@obpbip['admin']['listen_address']}",
+								   :when => 'post-configure'
+							   }
+						   %>
+                           ,
+                            {
+                                "name": "clobberOBIEESingletonFolder",
+                                "hostIdentifierList": [
+                                    "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "rm -rf <%= obiee_singleton_folder %>",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-clobber"
+                                ]
+                            },
+                            {
+                                "name": "CreateBIPDatasource",
+                                "hostIdentifierList": [
+                                    "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obpbip-create-datasource]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "pre-online"
+                                ]
+                            },
+                            {
+                                "name": "CreateDatabaseObjects",
+                                "hostIdentifierList": [
+                                    "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::create-db-users]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-rcu"
+                                ]
+                            },
+                            {
+                                "name": "DeleteDatabaseObjects",
+                                "hostIdentifierList": [
+                                    "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::drop-db-users]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-clobber"
+                                ]
+                            },
+                            {
+                                "name": "FMW-App-Role-Mapping",
+                                "hostIdentifierList": [
+                                    "<%= @obpbip['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::fmw-app-role-mapping]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "databaseList": [
+            {
+                "name": "<%= environment_name %><%= asset_code %>db",
+                "port": "<%= @obpbip['database']['listen_port'] %>",
+                "serviceName": "<%= @obpbip['database']['service_name'] %>",
+                "properties": [
+                    {
+                        "name": "rcu.datafile.initialsize",
+                        "value": "200M",
+                        "target": "rcu.datafile.initialsize"
+                    },
+                    {
+                        "target": "rcu.extra.parameters",
+                        "value": " -encryptTablespace <%= @obpbip['database'].key?('encryption') ? @obpbip['database']['encryption'] : 'false' %>"
+                    },
+                    {
+                        "name": "jdbcUrl",
+                        "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=${_.host.address})(Port=${_.port}))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=${_.serviceName})))"
+                    }
+                ],
+                "hostIdentifier": "db_server",
+                "schemaList": [
+                  {
+                    "name": "<%= @obpbip['database']['sysdba_username'].upcase %>",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpbip['database']['sysdba_username'].upcase) %>"
+                  }
+                ]
+            }
+        ],
+        "resourceList": [
+
+            <%= render "common-settings-resources.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :domain_name => @obpbip['wls_domain_name'],
+                    :log_location_path => log_location_path,
+                    :certs_location_path => certs_location_path,
+                    :admin_kestore_alias => @obpbip['hostnameList'][0],
+                    :managed_keystore_alias => '%ListenAddress/noprefix%',
+                    :keystore_name => @obpbip['hostnameList'][0][0...-2],
+                    :common => @common,
+                    :frontend => @obpbip['frontend'],
+                    :database => @obpbip['database'],
+                    :set_dual_site_url => @obpbip['database'].key?('set_dual_site_url') ? @obpbip['database']['set_dual_site_url'].downcase : "false",
+                    :enable_dbssl => "false"
+                }
+            %>
+            ,
+            <%= render "common-oid-authenticator.erb",
+                :variables => {
+                    :name => 'OIDAuthenticator',
+                    :hostname => @obpoid['frontend']['managed_host'],
+                    :port => @obpoid['frontend']['ldap_port'],
+                    :username => 'cn=obpbip_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au',
+                    :password => PasswordVault.get_password(password_vault_name, 'obpoid', 'obpbip_readonly'),
+                    :group_base_dn => 'ou=obiee,ou=apps,dc=westpac,dc=com,dc=au',
+                    :user_base_dn => 'cn=users,dc=westpac,dc=com,dc=au',
+                    :common => @common
+                }
+            %>
+            ,
+            {
+                "name": "OAMIdentityAsserter",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "oracle.security.wls.oam.providers.asserter.OAMIdentityAsserter",
+                    "ControlFlag": "OPTIONAL"
+                }
+            },
+            {
+                "name": "DefaultAuthenticator",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "null",
+                    "ControlFlag": "SUFFICIENT"
+                }
+            },
+            {
+                "name": "AdminStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpbip["admin"]['ms_heap'] %> -Xmx<%= @obpbip["admin"]['mx_heap']  %> -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+					"2": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "ClusterStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpbip["bi_server"]['ms_heap'] %> -Xmx<%= @obpbip["bi_server"]['mx_heap'] %>",
+                    "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m ",
+                    "3": "-Dserver.group=obi -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+                    "4": "<%= "-javaagent:#{@common['appdynamics_agent']} -Dappdynamics.agent.tierName=OBP-BIP -Dappdynamics.agent.nodeName=%ListenAddress/noprefix%#{@obpbip['dns_domain_name']}:%ListenPort+1000%" if @common['enable_appdynamics'] == "true" %>",
+                    "5": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "attributes": {
+                    "AdministrationPort": "<%= @obpbip['admin']['listen_port_admin'] %>",
+                    "AdministrationPortEnabled": "false"
+                },
+                "type": "Domain",
+                "name": "DomainAdministrationPortConfiguration"
+            },
+            {
+                "name": "obpReportsDataSource",
+                "type": "JDBCSystemResource",
+                "params": [
+                  {
+                    "type": "JDBCResource",
+                    "params": [
+                      {
+                        "type": "JDBCDataSourceParams",
+                        "attributes": {
+                          "JNDINames": "jdbc/FCBDataSource"
+                        }
+                      },
+                      {
+                        "type": "JDBCDriverParams",
+                        "attributes": {
+                          <% if @common['enable_dbssl'] == "true" %>
+                          "Url": "<%= @obpobh['database']['sysconfig_url'] %>",
+                          <% else %>
+                          "Url": "<%= @obpobh['database']['sysconfig_url'] %>",
+                          <% end %>
+                          "Password": "<%= PasswordVault.get_password(password_vault_name, 'obpobh', @obpobh['database']['rcu_schema_prefix'].upcase) %>",
+                          "DriverName": "oracle.jdbc.OracleDriver"
+                        },
+                        "properties": {
+                          <% if @common['enable_dbssl'] == "true" %>
+                          "javax.net.ssl.trustStoreType": "JKS",
+                          "javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpbip', 'truststorepass') %>",
+                          "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+						  "oracle.net.ssl_version": "1.2",
+                            "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                          <% end %>
+                          "user": "<%= @obpobh['database']['rcu_schema_prefix'] %>_OBP",
+                          "oracle.jdbc.ReadTimeout": "300000"
+                        }
+                      }
+                    ]
+                  }
+                ]
+            },
+            {
+            "name": "WeblogicPolicyPermission_1",
+            "type": "WeblogicPolicyPermission",
+            "attributes": {
+                "appStripe": "obi",
+                "principalClass": "oracle.security.jps.service.policystore.ApplicationRole",
+                "principalName": "BIServiceAdministrator",
+                "permClass": "oracle.security.jps.ResourcePermission",
+                "permTarget": "resourceType=oracle.bi.publisher.permission,resourceName=oracle.bi.publisher.administerServer",
+                "permActions": "_all_"
+                }
+            },
+            {
+            "name": "WeblogicPolicyPermission_2",
+            "type": "WeblogicPolicyPermission",
+            "attributes": {
+                "appStripe": "obi",
+                "principalClass": "oracle.security.jps.service.policystore.ApplicationRole",
+                "principalName": "BIServiceAdministrator",
+                "permClass": "oracle.security.jps.ResourcePermission",
+                "permTarget": "resourceType=oracle.bi.publisher.permission,resourceName=oracle.bi.publisher.developReport",
+                "permActions": "_all_"
+                }
+            },
+            {
+                "name": "WeblogicPolicyPermission_3",
+                "type": "WeblogicPolicyPermission",
+                "attributes": {
+                    "appStripe": "obi",
+                    "principalClass": "oracle.security.jps.service.policystore.ApplicationRole",
+                    "principalName": "BIServiceAdministrator",
+                    "permClass": "oracle.security.jps.ResourcePermission",
+                    "permTarget": "resourceType=oracle.bi.publisher.permission,resourceName=oracle.bi.publisher.accessReportOutput",
+                    "permActions": "_all_"
+                }
+            },
+            {
+                "name": "WeblogicPolicyPermission_4",
+                "type": "WeblogicPolicyPermission",
+                "attributes": {
+                    "appStripe": "obi",
+                    "principalClass": "oracle.security.jps.service.policystore.ApplicationRole",
+                    "principalName": "BIServiceAdministrator",
+                    "permClass": "oracle.security.jps.ResourcePermission",
+                    "permTarget": "resourceType=oracle.bi.publisher.permission,resourceName=oracle.bi.publisher.runReportOnline",
+                    "permActions": "_all_"
+                }
+            },
+            {
+            "name": "WeblogicPolicyPermission_5",
+            "type": "WeblogicPolicyPermission",
+            "attributes": {
+                "appStripe": "obi",
+                "principalClass": "oracle.security.jps.service.policystore.ApplicationRole",
+                "principalName": "BIServiceAdministrator",
+                "permClass": "oracle.security.jps.ResourcePermission",
+                "permTarget": "resourceType=oracle.bi.publisher.permission,resourceName=oracle.bi.publisher.developDataModel",
+                "permActions": "_all_"
+            }
+            },
+            {
+              "name": "obiee-scheduler-config",
+              "type": "FmwCredentials",
+              "attributes": {
+                "map": "oracle.bi.system",
+                "key": "jms.queue.auth",
+                "username": "<%= @obpbip['bip_admin_user'] %>",
+                "password": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpbip['bip_admin_user']) %>",
+              }
+            }
+        ],
+        "propertyGroupList":
+        [
+            <%= render "common-config-groups.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :asset_code => asset_code,
+                    :inventory_install_path => inventory_install_path,
+                    :fmw_install_path => fmw_install_path,
+                    :temp_location => temp_location
+                }
+            %>
+            ,
+            {
+                "name": "Node_Manager_Common_Config",
+                "description": "Common Node Manager configuration",
+                "properties": [
+                    {
+                      "target": "wls.nodemanager.domainbased",
+                      "value": "true"
+                    },
+                    {
+                        "target": "wls.nodemanager.shared.domain.dir",
+                        "value": "true"
+                    },
+                    {
+                        "name": "wlInstallationName",
+                        "value": "fmwinfra"
+                    },
+                    {
+                        "name": "nodemanagerTop",
+                        "value": "<%= node_manager_top %>",
+                        "target": "wls.nodemanager.top"
+                    }
+                ]
+            },
+            <%= render "common-nm-ssl-config.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name, 
+                    :asset_code => asset_code,
+                    :certs_location_path => certs_location_path,
+                    :truststore => @common['trustStore']
+                }
+            %>
+            ,
+            {
+                "name": "OBIEE_Config",
+                "description": "OBIEE Instance configuration",
+                "properties": [
+                    {
+                        "value": "false",
+                        "target": "obiee.configure.bisystem"
+                    },
+                    {
+                        "value": "<%= @obpbip['admin']['listen_port'] %>",
+                        "target": "obiee.managed.server.listen.port"
+                    },
+                    {
+                        "value": "<%= @obpbip['admin']['listen_port_ssl'] %>",
+                        "target": "obiee.managed.server.listen.port.ssl"
+                    },
+                    {
+                        "value": "<%= @obpbip['wls_domain_name'] %>",
+                        "target": "obiee.domain.name"
+                    },
+                    {
+                        "value": "false",
+                        "target": "obiee.use.default.ports"
+                    },
+                    {
+                        "target": "obiee.instance.top",
+                        "value": "<%= bip_admin_server_top %>"
+                    },
+                    {
+                        "value": "6700",
+                        "target": "obiee.opmn.local.port"
+                    },
+                    {
+                        "value": "6701",
+                        "target": "obiee.opmn.remote.port"
+                    },
+                    {
+                        "value": "6702",
+                        "target": "obiee.opmn.request.port"
+                    },
+                    {
+                        "value": "9903",
+                        "target": "obiee.server.listen.port"
+                    },
+                    {
+                        "value": "9904",
+                        "target": "obiee.server.monitor.port"
+                    },
+                    {
+                        "value": "9910",
+                        "target": "obiee.presention.listen.port"
+                    },
+                    {
+                        "value": "9905",
+                        "target": "obiee.scheduler.listen.port"
+                    },
+                    {
+                        "value": "9908",
+                        "target": "obiee.scheduler.monitor.port"
+                    },
+                    {
+                        "value": "9907",
+                        "target": "obiee.scheduler.scriptrpc.port"
+                    },
+                    {
+                        "value": "9706",
+                        "target": "obiee.clustercontroller.listen.port"
+                    },
+                    {
+                        "value": "9900",
+                        "target": "obiee.clustercontroller.monitor.port"
+                    },
+                    {
+                        "value": "9810",
+                        "target": "obiee.javahost.listen.port"
+                    },
+                    {
+                        "value": "1423",
+                        "target": "obiee.essbase.agent.listen.port"
+                    },
+                    {
+                        "value": "5300",
+                        "target": "obiee.essbase.studio.listen.port"
+                    },
+                    {
+                        "value": "<%= @obpbip['bi_server']['cluster_name'] %>",
+                        "target": "obiee.cluster.name"
+                    },
+                    {
+                        "value": "false",
+                        "target": "obiee.configure.rtd"
+                    },
+                    {
+                        "value": "true",
+                        "target": "obiee.configure.bip"
+                    },
+                    {
+                        "value": "false",
+                        "target": "obiee.configure.essbase"
+                    },
+                    {
+                        "value": "<%= @obpbip['nm']['listen_port'] %>",
+                        "target": "wls.nodemanager.listen.port"
+                    },
+                    {
+                        "name": "sharedBITemp",
+                        "value": "<%= temp_location %>/BITEMP"
+                    },
+                    {
+                        "target": "obiee.bar.file",
+                        "value": "<%= fmw_install_path %>/bi/bifoundation/samples/sampleapplite/SampleAppLite.bar"
+                    },
+                    {
+                        "target": "obiee.service.name",
+                        "value": "ssi"
+                    },
+                    {
+                        "target": "obiee.singleton.folder",
+                        "value": "<%= obiee_singleton_folder %>"
+                    }
+                ]
+            }
+        ]
+    }
+}

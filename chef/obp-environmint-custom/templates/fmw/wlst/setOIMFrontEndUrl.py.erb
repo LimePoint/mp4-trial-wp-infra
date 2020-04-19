@@ -1,0 +1,17 @@
+# This script sets the OIM Mbeans
+# arg1 - weblogic
+# arg2 - password
+# arg3 - admin url
+# arg4 - OimFrontEndURL
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+_OimFrontEndURL = Attribute('OimFrontEndURL',sys.argv[4])
+print '-----------------------> Setting OIM MBeans <--------------------- '
+try:
+  domainRuntime()
+  oimBean = ObjectName('oracle.iam:Location=oim_server1,name=Discovery,type=XMLConfig.DiscoveryConfig,XMLConfig=Config,Application=oim')
+  print '-----------------------> Setting OimFrontEndURL for oim cluster'
+  mbs.setAttribute(oimBean,_OimFrontEndURL)
+except:
+  print 'ERROR: Could not set OIM MBean ....'
+  dumpStack()
+  sys.exit(1)

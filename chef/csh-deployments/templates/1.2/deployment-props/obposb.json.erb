@@ -1,0 +1,173 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-osb",
+      "type": "osb",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17002"
+        },
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "OSB Server"
+        }]
+    },
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+}]
+    }],
+    "/getDeploymentProperties.json?environment=LOCAL": [
+        {
+          "name": "user",
+          "value": "<%= @obposb['wls_admin_user'] %>"
+        },
+        {
+          "name": "password",
+          "value": "<%= PasswordVault.get_password(@common['password_vault_name'], 'obposb', @obposb['wls_admin_user'] ) %>"
+        },
+        {
+          "name": "hostname",
+          "value": "<%=@obposb['admin']['listen_address']%><%=@obposb['dns_domain_name']%>"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obposb/fmw/wlserver"
+        },
+        {
+          "name": "osbHome",
+          "value": "/oracle/app/binaries/obposb/fmw/osb"
+        },
+        {
+          "name": "netIq.bix.getSAMLAssertion",
+          "value": "https://login-dev.stgeorge.com.au/nidp/wstrust/sts"
+        },
+        {
+          "name": "common.logging.jndi",
+          "value": "jca://eis/DB/AuditLog"
+        },
+        {
+          "name": "common.config.jndi",
+          "value": "jca://eis/DB/AuditLog"
+        },
+        {
+          "name": "frontofc.bix.allocateAccountNum",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/allocateAccountNumber/v1"
+        },
+        {
+          "name": "och.bix.retrieveDetailsandArrangementsBS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/retrieveDetailsAndArrangementRelationshipsForIPs/v12"
+        },
+        {
+          "name": "och.bix.createXrefBS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/recordIPIdentifiers/v1"
+        },
+        {
+          "name": "och.bix.searchAndMatchPartyBS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/searchIPByDetails/v3"
+        },
+        {
+          "name": "enterpriseInq.bix.retrievePartyForAccountBS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/retrieveIPRolesForArrangement/v4"
+        },
+        {
+          "name": "enterpriseInq.bix.retrieveAccountForPartyBS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/retrieveDetailsAndArrangementRelationshipsForIPs/v12"
+        },
+        {
+          "name": "bankwow.bix.createDemandDepositAccountBS",
+	        "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/account/create/depositAccountFulfilment"
+        },
+        {
+          "name": "cafe.retreiveDDA.bix.retrieveDDABS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/retrieveDemandDepositArrangementDetails/v3"
+        },
+        {
+          "name": "cafe.retreiveDDA.bix.modifyDDABS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/modifyDemandDepositArrangement/v2"
+        },
+        {
+          "name": "qas.bix.retrieveAddressPickListsBS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/qas/api/address/query"
+        },
+        {
+          "name": "qas.bix.retrieveAddressDetailsBS",
+          "value": "https://auyxuap659wbcx2.rcc.nsw.westpac.com.au:9457/services/soap/retrievePostalAddress/v1"
+        },
+	      {
+          "name": "digitalServices.host.url",
+          "value": "https://<%= @obpobh['frontend']['otd_vip_name']%>:<%= @obpobh['frontend']['obh_port']%>/com.ofss.fc.webservice/services/origination/DetailedApplicationTrackerApplicationServiceSpi"
+        },
+        {
+          "name": "ipm.bix.docCreateBS",
+          "value": "https://<%=@obpipm['frontend']['otd_vip_name']%>:<%=@obpipm['frontend']['ipm_port']%>/imaging/ws/DocumentService"
+        },
+        {
+          "name": "ipm.bix.documentUploadBS",
+          "value": "https://<%=@obpipm['frontend']['otd_vip_name']%>:<%=@obpipm['frontend']['ipm_port']%>/imaging/ws/DocumentContentService"
+        },
+        {
+          "name": "ipm.bix.loginBS",
+          "value": "https://<%=@obpipm['frontend']['otd_vip_name']%>:<%=@obpipm['frontend']['ipm_port']%>/imaging/ws/LoginService"
+        },
+        {
+          "name": "ipm.bix.logoutBS",
+          "value": "https://<%=@obpipm['frontend']['otd_vip_name']%>:<%=@obpipm['frontend']['ipm_port']%>/imaging/ws/LoginService"
+        },
+        {
+          "name": "apigsa.serviceaccount.username",
+          "value": "797518bc-4928-4f47-aff2-f495c7b19358"
+        },
+        {
+          "name": "apigsa.serviceaccount.password",
+          "value": "909a11ec-14b6-4054-bb2b-4387e7454c84"
+        },
+        {
+          "name": "loggingdbjca.obphost.schema",
+          "value": "OBPHOST_OBP"
+        },
+        {
+          "name": "buildManifestRepoURL",
+          "value": "<%= @deployment['MANIFEST_REPO_URL'] %>"
+        },
+        {
+
+          "name": "buildManifestRawURL",
+          "value": "<%= @deployment['MANIFEST_REPO_URL'] %>/raw/<%= @environment_name.upcase %>"
+
+        },
+        {
+
+          "name": "environment",
+          "value": "<%= @environment_name.upcase %>"
+
+        }
+
+    ]
+}
+

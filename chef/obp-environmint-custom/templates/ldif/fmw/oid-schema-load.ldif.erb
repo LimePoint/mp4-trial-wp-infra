@@ -1,0 +1,89 @@
+######
+#  OBP Schema Extensions
+######
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 1.3.5.2.5.7.8.3.2 NAME 'homeBranch' DESC 'Home Branch' EQUALITY caseIgnoreMatch USAGE UserApplications SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 1.3.5.2.5.7.8.3.3 NAME 'lastLoggedInDateTime' DESC 'Last Logged In Date Time' EQUALITY integerMatch USAGE UserApplications SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.5.1.1106 NAME '2faStatusNonActiveBeginDate' DESC '2fa Status Non Active Begin Date' SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.5.1.1108 NAME '2faStatusNonActiveEndDate' DESC '2fa Status Non Active End Date' SYNTAX 1.3.6.1.4.1.1466.115.121.1.24  SINGLE-VALUE ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.39 NAME '2faStatus' DESC '2faStatus' EQUALITY caseIgnoreMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15  SINGLE-VALUE ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.36 NAME 'brand' DESC 'Brand' EQUALITY caseIgnoreMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15  SINGLE-VALUE ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.98.12345 NAME 'businessUnit' DESC 'Business Unit' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.38 NAME 'isEnrolledFor2fa' DESC 'Is enrolled for 2fa' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.99.12345 NAME 'partyId' DESC 'Party Id' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.41 NAME 'forumNickname' DESC 'Forum Nick Name' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.37 NAME 'accessibleBusinessUnits' DESC 'Accessible Business Units' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.40 NAME 'corporatePartyId' DESC 'Corporate Party Id' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.97 NAME 'accreditation' DESC 'Accreditation' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.42 NAME 'targetUnit' DESC 'Target Unit' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE  ) 
+
+dn: cn=subschemasubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.43 NAME 'accessibleTargetUnits' DESC 'Accessible Target Units' EQUALITY caseIgnoreMatch SYNTAX  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE ) 
+
+dn: cn=subSchemaSubentry
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.200.1.94 NAME 'stgAliasID' DESC 'STG ID (E/C) for Lender' EQUALITY caseIgnoreMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE TRUE )
+
+dn: cn=subschemasubentry
+changetype: modify
+add: objectClasses
+objectClasses: ( 2.5.6.47  NAME 'fcPerson' DESC 'An entry which represents a person in OBP' SUP top AUXILIARY MAY ( homeBranch $ lastLoggedInDateTime $ 2faStatusNonActiveBeginDate $ 2faStatusNonActiveEndDate $ 2faStatus $ brand $ businessUnit $ isEnrolledFor2fa $ partyId $ accessibleBusinessUnits $ corporatePartyId $ forumNickName $ accreditation $ targetUnit $ accessibleTargetUnits $ stgAliasID ))
+

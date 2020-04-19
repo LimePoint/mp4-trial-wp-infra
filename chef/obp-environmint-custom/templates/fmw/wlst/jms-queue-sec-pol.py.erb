@@ -1,0 +1,33 @@
+#!/bin/bash
+# This script sets access to a JMS Queue
+
+# arg1 - weblogic username
+# arg2 - weblogic password
+# arg3 - weblogic admin url
+# arg4 - JMS Module Name
+# arg5 - JMS Queue Name
+# arg6 - User Name
+
+import sys
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+try :
+    defRealm=cmo.getSecurityConfiguration().getDefaultRealm()
+    xacmlAuth=defRealm.lookupAuthorizer('XACMLAuthorizer')
+    try :
+        xacmlAuth.removePolicy('type=<jms>, application=<%= @JMSModule %>')
+        xacmlAuth.removePolicy('type=<jms>, application=<%= @JMSModule %>, destinationType=queue, resource=<%= @JMSQueue %>')
+    except :
+        print 'No Polices to be removed'
+    try :
+        xacmlAuth.createPolicy('type=<jms>, application=<%= @JMSModule %>, destinationType=queue, resource=<%= @JMSQueue %>, action=send', 'Usr(<%= @UserName %>)|Usr(weblogic)')
+        print 'Successfully created security policy'
+    except :
+        xacmlAuth.setPolicyExpression('type=<jms>, application=<%= @JMSModule %>, destinationType=queue, resource=<%= @JMSQueue %>, action=send','Usr(<%= @UserName %>)|Usr(weblogic)')
+        print 'Successfully updated security policy' 
+    print '#############################'
+    print 'JMS Queue Security Policy Configured for User <%= @UserName %> Successfully'
+    print '#############################'
+except :
+    dumpStack()
+    print '################# Unable to set Security Policy for JMS Queue <%= @JMSQueue %> #################'
+    sys.exit(1)

@@ -1,0 +1,11 @@
+import sys
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+codeUrl=sys.argv[4]
+classPerm=sys.argv[5]
+actions=sys.argv[6]
+target=sys.argv[7]
+try:
+ print 'Revoking the Permission on ' + codeUrl + '#####'
+ revokePermission(codeBaseURL=codeUrl, permClass=classPerm , permActions=actions, permTarget=target )
+except:
+ print '################# Unable to revoke the permissions on' + codeUrl + '#################'

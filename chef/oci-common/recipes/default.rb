@@ -1,0 +1,158 @@
+# Set the TZ to AU
+timezone 'Australia/Sydney'
+
+# Disable the Firewalld Service
+service 'firewalld' do
+  action :stop
+end
+
+service 'firewalld' do
+  action :disable
+end
+
+# Set the resolv.conf to the internal DNS servers
+template '/etc/resolv.conf' do
+  source 'resolv.conf'
+  owner 'root'
+  group 'root'
+end
+
+# Create the MintPress Group
+group 'mintpress' do
+  comment 'Group for MintPress User'
+  gid 1011
+end
+
+# Create the MintPress user
+user 'mintpress' do
+  comment 'User for MintPress'
+  uid 601
+  gid 'mintpress'
+  home '/home/mintpress'
+  shell '/bin/bash'
+  manage_home true
+end
+
+# Create the .ssh directory
+directory '/home/mintpress/.ssh' do
+  owner 'mintpress'
+  group 'mintpress'
+  mode '0700'
+end
+
+# Create the Oracle Group
+group 'oinstall' do
+  comment 'Group for Oracle User'
+  gid 5001
+end
+
+# Create the Oracle user
+user 'oracle' do
+  comment 'User for Oracle'
+  uid 5001
+  gid 'oinstall'
+  home '/home/oracle'
+  shell '/bin/bash'
+  manage_home true
+end
+
+# Create the .ssh directory
+directory '/home/oracle/.ssh' do
+  owner 'oracle'
+  group 'oinstall'
+  mode '0700'
+end
+
+# Create the directory for stage mount, we have to use execute coz directory resource fails on subsequent runs
+# It tries to create the directory which by that point has become a mount, and throws Read-only file system @ apply2files - /oracle/stage
+execute 'mkdir -p /oracle/stage'
+
+# Mount the stage area, we need this first coz we have gems here that we install later, also mint shd have rw on it
+if node.name.include?('mintpress-')
+  mount '/oracle/stage' do
+    device 'stage.wpdev.mintpress.io:/stage'
+    fstype 'nfs'
+    options 'rw'
+  end
+else
+  mount '/oracle/stage' do
+    device 'stage.wpdev.mintpress.io:/stage'
+    fstype 'nfs'
+    options 'ro'
+  end
+end
+
+# Install Standard Packages
+include_recipe '::oracle-packages'
+
+### --- Set up SSSD For LDAP Authentication --- ###
+# Setup the SSSD Subsystem. This is from the sssd_ldap cookbook
+include_recipe 'sssd_ldap'
+
+# We then clear up the cache
+execute '/usr/sbin/sss_cache -E' do
+  ignore_failure true
+end
+
+# RB: Do this to for a workaround on sudoers not working;
+# RB: there is no guarantee that this fixes it but this has worked all the time
+service 'sssd' do
+  ignore_failure true
+  action :restart
+end
+
+# Ensure /oracle is owned by Oracle
+directory '/oracle' do
+  owner 'oracle'
+  group 'oinstall'
+end
+
+# Add the sudoers for MintPress user
+template '/etc/sudoers.d/mintpress' do
+  source 'sudoers-mintpress'
+  owner 'root'
+  group 'root'
+end
+
+# Add the Authorized keys for mintpress user
+# This allows MintPress application to logon to all users
+template '/home/mintpress/.ssh/authorized_keys' do
+  source 'mintpress-authz'
+  owner 'mintpress'
+  group 'mintpress'
+  mode '0600'
+end
+
+# Ensure oracle user can run chef-client
+directory '/home/oracle/chef' do
+  owner 'oracle'
+  group 'oinstall'
+end
+
+# Add the client.rb to /home/oracle/chef for middleware to use
+remote_file '/home/oracle/chef/client.rb' do
+  source 'file:///etc/chef/client.rb'
+  owner 'oracle'
+  group 'oinstall'
+  mode '0600'
+end
+
+
+# Cleanup the Auditor logs
+# cleanup _all_ defaultauditrecorder files
+# TODO: Harsha to fix this as this might be deleting files that are being used
+execute 'rm -f /oracle/app/runtime/*/domains/*/servers/*/logs/DefaultAuditRecorder.* /oracle/app/logs/*/*/*/DefaultAuditRecorder.*' do
+  ignore_failure true
+end
+
+# Include recipe for adding VM into the LDAP
+include_recipe '::ldap-client-configs'
+
+# Make the chef-client a system service
+include_recipe 'chef-client::systemd_service'
+
+# Asset specific recipes
+if node.name.include?('doc')
+	include_recipe "::batch-folders"
+end
+

@@ -1,0 +1,84 @@
+{
+  "name" : "Step 2 -- Deploy SOA Incremental Deploy",
+  "description" : null,
+  "params" : { },
+  "stages" : [ {
+    "name" : "Default Stage",
+    "description" : null,
+    "params" : { },
+    "manual" : false,
+    "jobs" : [ {
+      "name" : "Default Job",
+      "description" : null,
+      "params" : { },
+      "tasks" : [ {
+        "name" : null,
+        "description" : "Deploy SOA Metadata",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\nfor i in ${bamboo.METADATA_VERSION}; do\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME};rm -rf ../../../cache;  ${bamboo.GRADLE_HOME}/bin/gradle -b deployMetadata.gradle -g ../../../cache -PuseDeployConfig=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PenvName=LOCAL -PmetadataVersion=${bamboo.METADATA_VERSION} -PbankCode=${bamboo.BANK_CODE} -PbankTransactionCode=${bamboo.BANK_TRANSACTION_CODE} -PbankTargetUnit=${bamboo.BANK_TARGET_UNIT} -PfcServer=${bamboo.FCSERVER} -PsoaServer=${bamboo.SOASERVERWITHPORT} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} --refresh-dependencies deploy clean'\"\ndone;",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Download Extension Artefact",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\necho \"Downloading the soa extensions version ${prodVersion} from artifactory\"\n\tssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME1}; rm -rf ../../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b soaExtenComp.gradle -g ../../../cache -PuseDeployConfig=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH1} -PfetchTargets=true -PenvName=LOCAL --refresh-dependencies -PsoaExtensionsVersion=${bamboo.SOA_COMPOSITE_VERSION} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"\n\t",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      }, {
+        "name" : null,
+        "description" : "Run SOA Incremental",
+        "params" : {
+          "argument" : "",
+          "scriptLocation" : "INLINE",
+          "environmentVariables" : "",
+          "scriptBody" : "<%= @script_init_string %>\n\techo \"Execting the soa incremental Script\"\n\tssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME1}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b soaIncrScript.gradle -g ../../../cache -PuseDeployConfig=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH1} -PfetchTargets=true -PenvName=LOCAL --refresh-dependencies -PmintDeployHome=../../../mintdeploy deploy clean -s'\"\n",
+          "interpreter" : "LEGACY_SH_BAT",
+          "script" : "",
+          "workingSubDirectory" : ""
+        },
+        "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+        "finalising" : false,
+        "enabled" : true
+      } ]
+    } ]
+  } ],
+  "vars" : {
+    "BANK_CODE" : "03",
+    "BANK_TARGET_UNIT" : "PBWP",
+    "BANK_TRANSACTION_CODE" : "2006",
+    "CEMLI_RELEASE_PATH" : "<%= @manifest_vars['deployments']['soa']['cemli_release_path']%>",
+    "CONFIGPROVIDERPATH" : "../../../deploymentProperties/<%= @environment_name %>/obpht.json",
+    "CONFIGPROVIDERPATH1" : "../../deploymentProperties/<%= @environment_name %>/obpht.json",
+    "FCSERVER" : "https://<%= @dataBag['obpobh']['frontend']['managed_host']%>:<%= @dataBag['obpobh']['frontend']['obh_port']%>",
+    "GRADLE_HOME" : "<%= @dataBag['deployment']['GRADLE_HOME']%>",
+    "METADATA_VERSION" : "<%= @manifest_vars['deployments']['soa']['extension_version']%>",
+    "OBP_DEPLOY_HOME" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpSoaDeploy/obpSoaCompTask",
+    "OBP_DEPLOY_HOME1" : "<%= @dataBag['deployment']['MINT_DEPLOY_HOME']%>/obpProductDeploy/obpSoaDeploy",
+    "OBP_NODE_1" : "<%= @dataBag['obpsoa']['hostnameList'][0]%><%= @dataBag['obpsoa']['dns_domain_name']%>",
+    "PRODUCT_RELEASE_PATH" : "<%= @manifest_vars['cemli_release_path']%>",
+    "SOASERVERWITHPORT" : "https://<%= @dataBag['obpotd']['otd_config']['obpsoa']['server_name']%>:18002",
+    "SOA_COMPOSITE_VERSION" : "<%= @manifest_vars['deployments']['soa']['extension_version']%>",
+    "cemliArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>",
+    "debug" : "false",
+    "productArtifactoryURL" : "<%= @dataBag['deployment']['CEMLI_ARTIFACTORY_URL']%>"
+  },
+  "labels" : null,
+  "permissions" : null
+}

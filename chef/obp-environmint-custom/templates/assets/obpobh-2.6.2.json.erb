@@ -1,0 +1,3212 @@
+<% environment_name = @environment['name'] %>
+<% password_vault_name = @common['password_vault_name'] %>
+<% dns_domain = @obpobh["dns_domain_name"] ; if dns_domain.nil? then dns_domain=".mintpress.io" end %>
+<% asset_code = @code.downcase  %>
+<% uniquifier = @uuid.tr('-', '') %>
+
+<% base_install_path = '/oracle/app/binaries/' + asset_code  %>
+<% base_domain_path  = '/oracle/app/runtime/' + asset_code + '/domains' %>
+
+<% log_location_path   = '/oracle/app/logs/' + asset_code %>
+<% certs_location_path = '/oracle/app/runtime/' + environment_name + '/certs' %>
+
+<% oracle_install_path      = base_install_path + '/dbclient' %>
+<% java_install_path      = base_install_path + '/java' %>
+<% jdk_version            = '8' %>
+
+<% fmw_install_path           = base_install_path + '/fmw' %>
+<% inventory_install_path = base_install_path + '/oraInventory' %>
+<% temp_location          = '/oracle/app/binaries/tmp' %>
+
+<% obh_admin_server_top   = base_domain_path %>
+<% obh_managed_server_top = obh_admin_server_top %>
+<% node_manager_top       = fmw_install_path + '/wlserver/common/nodemanager' %>
+
+{
+    "internalVariables":
+    {
+        "environmentName": "<%= environment_name %>",
+        "assetCode": "<%= asset_code %>",
+        "stageRootDir": "/oracle/stage"
+    },
+    "projectName": "<%= environment_name %>_<%= asset_code %>_<%= uniquifier %>",
+    "uniquifier": "<%= uniquifier %>",
+    "site": {
+        "hostList": [
+            {
+                "id": "<%= @obpobh['hostnameList'][0] %>",
+                "address": "${_.basename}<%= @obpobh['dns_domain_name'] %>",
+                "properties": [
+                    {
+                        "name": "basename",
+                        "value": "<%= @obpobh['hostnameList'][0] %>"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Host_Details",
+                    "List_Of_TVT_Tests"
+                ]
+            },
+            {
+                "id": "db_server",
+                "address": "<%= @obpobh['database']['scan_address'] %>",
+                "groupRefs":
+                [
+                    "Common_Host_Details"
+                ],
+                "properties": [
+                    {
+                        "name": "scaleout",
+                        "value": "false"
+                    }
+                ]
+            }
+        ],
+        "installationList": [
+            {
+                "name": "jdk",
+                "product": "jdk",
+                "version": "1.8.0_221",
+                "installPath": "<%= java_install_path %>",
+                "softwareStage": "${stageRootDir}/jdk/jdk-8u221-linux-x64.tar.gz",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "fmwinfra",
+                "product": "fmwinfra",
+                "version": "12.2.1.2",
+                "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/fmw_12.2.1.2.0_infrastructure.jar",
+                "installPath": "<%= fmw_install_path %>",
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ],
+                "dependsonList": [
+                    "jdk"
+                ],
+                "patchset": [
+                    {
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "25860645",
+                        "aru": "25860645"
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "27338939",
+                        "aru": "27338939",
+                        "properties": [
+                          {
+                            "name": "action",
+                            "value": "rollback"
+                          }
+                        ]
+                    },
+					{
+                        "targetOracleHome": "${_.installPath}",
+                        "softwareStage": "${stageRootDir}/fmwinfra/12.2.1.2/patches",
+                        "name": "27741413",
+                        "aru": "27741413"
+                    }
+                ]
+            },
+            {
+                "name": "oracleclient",
+                "product": "oracleclient",
+                "version": "12.1.0.2",
+                "installPath": "<%= oracle_install_path %>",
+                "softwareStage": "${stageRootDir}/rdbms/12.1.0.2/client",
+                "dependsonList": [
+                    "jdk"
+                ],
+                "properties": [
+                    {
+                        "target": "oracle.home",
+                        "value": "${_.installPath}"
+                    },
+                    {
+                        "target": "oracle.base",
+                        "value": "<%= base_install_path %>"
+                    },
+                    {
+                        "target": "oracle.hostname",
+                        "value": "<%= "#{@obpobh['hostnameList'][0]}#{@obpobh['dns_domain_name']}" %>"
+                    },
+                    {
+                        "target": "oracle.install.type",
+                        "value": "Administrator"
+                    }
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "soa",
+                "product": "soa",
+                "version": "12.2.1.2",
+                "installPath": "<%= fmw_install_path %>/soa",
+                "softwareStage": "${stageRootDir}/soa/12.2.1.2/fmw_12.2.1.2.0_soa.jar",
+                "dependsonList": [
+                    "fmwinfra"
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details"
+                ]
+            },
+            {
+                "name": "obp-host",
+                "product": "obp-host",
+                "version": "2.6.2",
+                "installPath": "<%= fmw_install_path %>/obpinstall",
+                "softwareStage": "${stageRootDir}/obp/2.6.2/obp-host",
+                "dependsonList": [
+                    "soa",
+                    "oracleclient"
+                ],
+                "groupRefs":
+                [
+                    "Common_Installation_Details",
+                    "OBPHOST_Config"
+                ],
+                "properties": [
+                    {
+                        "target": "obp.install.java.home",
+                        "value": "<%= java_install_path %>"
+                    },
+                    {
+                        "target": "obp.soa.wsdlurl",
+                        "value": "<%= "https://#{@obpsoa['frontend']['otd_vip_name']}:#{@obpsoa['frontend']['soa_port']}" %>"
+                    },
+                    {
+                        "target": "obp.host.serviceEjbUrl",
+                        "value": "<%= "t3://#{@obpobh['hostnameList'][0]}#{@obpobh['dns_domain_name']}:#{@obpobh['obphost_server']['listen_port']}" %>"
+                    },
+                    {
+                        "target": "obp.soa.install.home",
+                        "value": "<%= fmw_install_path %>/soa"
+                    },
+                    {
+                        "name": "installLocalization",
+                        "value": "true"
+                    },
+                    {
+                        "target": "obp.localization.country",
+                        "value": "au"
+                    },
+                    {
+                        "target": "obphost.host.clustername",
+                        "value": "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                    }
+                ]
+            }
+            
+        ],
+        "environmentList": [
+            {
+                "name": "<%= environment_name %>",
+                "mwTopologyList": [
+                    {
+                        "name": "<%= asset_code %>",
+                        "description": "<%= environment_name %> <%= asset_code %> Environment",
+                        "nodeManagerList": [
+                            {
+                                "name": "nm-<%= @obpobh['hostnameList'][0] %>",
+                                "listenAddress": "<%= @obpobh['nm']['listen_address'] %><%= @obpobh['dns_domain_name'] %>",
+                                "listenPort": "<%= @obpobh['nm']['listen_port'] %>",
+                                "hostIdentifier": "<%= @obpobh['hostnameList'][0] %>",
+                                "groupRefs": [
+                                    "Node_Manager_Common_Config",
+                                    "Node_Manager_SSL_Config"
+                                ],
+                                "properties": [
+                                    {
+                                        "target": "wls.nodemanager.log.path",
+                                        "value": "<%= log_location_path %>/${/host.basename}"
+                                    },
+                                    {
+                                        "value": "${/host.basename}",
+                                        "target": "wls.nodemanager.identityname"
+                                    },
+                                    {
+                                        "value": "<%= certs_location_path %>/<%= @obpobh['hostnameList'][0][0...-2] %>.jks",
+                                        "target": "wls.nodemanager.identitystorefile"
+                                    }
+                                ]
+                            }
+                        ],
+                        "domainList": [
+                            {
+                                "name": "<%= @obpobh['wls_domain_name'] %>",
+                                "locationPath": "<%= obh_admin_server_top %>",
+                                "adminUser": "<%= @obpobh['wls_admin_user'] %>",
+                                "adminPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user'] ) %>",
+                                "adminServer": {
+                                    "name": "AdminServer",
+                                    "machineName": "Machine-<%= @obpobh['hostnameList'][0] %>",
+                                    "listenAddress": "<%= @obpobh['admin']['listen_address'] %><%= @obpobh['dns_domain_name'] %>",
+                                    "listenAddressPort": "<%= @obpobh['admin']['listen_port'] %>",
+                                    "listenAddressPortSSL": "<%= @obpobh['admin']['listen_port_ssl'] %>",
+                                    "targetName": "<%= asset_code[3..-1] %>AdminServer"
+                                },
+                                "machineList": [
+                                    {
+                                        "name": "Machine-<%= @obpobh['hostnameList'][0] %>",
+                                        "nodeManagerName": "nm-<%= @obpobh['hostnameList'][0] %>"
+                                    }
+                                ],
+                                "clusterList": [
+                                  {
+                                    "name": "<%= @obpobh['obphost_server']['cluster_name'] %>",
+                                    "messageMode": "Unicast"
+                                  }
+                                ],
+                                "managedServerList": [
+                                    {
+                                        "name": "obphost_server1",
+                                        "machineName": "Machine-<%= @obpobh['hostnameList'][0] %>",
+                                        "clusterName": "<%= @obpobh['obphost_server']['cluster_name'] %>",
+                                        "listenAddress": "<%=  @obpobh['obphost_server']['listen_address'] %><%= @obpobh['dns_domain_name'] %>",
+                                        "listenAddressPort": "<%=  @obpobh['obphost_server']['listen_port'] %>",
+                                        "listenAddressPortSSL": "<%=  @obpobh['obphost_server']['listen_port_ssl'] %>",
+                                        "targetName": "${_.name}"
+                                    }
+                                ],
+                                "middlewareList": [
+                                    {
+                                        "installationName": "obp-host",
+                                        "targetList": [
+                                            {
+                                              "type": "Cluster",
+                                              "names":
+                                              [
+                                                "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                              ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "configurationList": [
+
+                                     <%= render "common-settings-configs.erb"  %>
+                                    ,
+                                    {
+                                        "resourceName": "GenericServerSettings_auto_1",
+                                        "type": "Server",
+                                        "properties": [
+                                            {
+                                                "name": "serverName",
+                                                "value": "obphost_server1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "ClusterStartupParameters",
+                                        "type": "StartupParameter",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "ClusterClassPathParameters",
+                                        "type": "ClassPath",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "JTASettings",
+                                        "type": "JTA"
+                                    },
+                                    {
+                                        "resourceName": "CrossDomainSecurityConfiguration",
+                                        "type": "SecurityConfiguration"
+                                    },
+                                    {
+                                        "resourceName": "JdbcSharedSettings",
+                                        "type": "JDBCSystemResource",
+                                        "properties":
+                                        [
+                                            {
+                                                "name": "dataSourceName",
+                                                "value": "opss-data-source,opss-audit-DBDS,opss-audit-viewDS,LocalSvcTblDataSource"
+                                            },
+                                            {
+                                                "name": "noTarget",
+                                                "value": "true"
+                                            }
+                                        ],
+                                        "targets": []
+                                    },
+                                    {
+                                        "resourceName": "JpsConfigSettings",
+                                        "type": "JpsConfig",
+                                        "properties": [
+                                          {
+                                            "name": "serverInstance",
+                                            "value": "idstore.ldap"
+                                          }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "mds-owsm",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            },
+                                            {
+                                                "type": "SERVER",
+                                                "names": [
+                                                    "AdminServer"
+                                                ]
+                                            }
+                                        ]
+                                    },
+									{
+                                        "resourceName": "PCSMDataSource",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OBP_HOST_CONFIG",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OBP_HOST_DS_NONXA",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OBP_HOST_DS_XA",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OBP_HOST_LOCK",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "OBP_SYS_CONFIG",
+                                        "type": "JDBCSystemResource",
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAccountingModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsAccountingModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAccountingModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAsyncAuditModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsAsyncAuditModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAsyncAuditModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsCasaModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsCasaModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsCasaModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsCollectionModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsCollectionModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsCollectionModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsDomainPublishModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsDomainPublishModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsDomainPublishModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsPaymentModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsPaymentModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsPaymentModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsPricingAnalysisModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsPricingAnalysisModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsPricingAnalysisModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsTitleSearchModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsTitleSearchModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsTitleSearchModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsValuationModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsValuationModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsValuationModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsReportModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsReportModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsReportModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsEventProcessModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsEventProcessModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsEventProcessModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "collateralModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "collateralModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "collateralModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "workflowModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "workflowModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "workflowModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsODIModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsODIModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsODIModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsOriginationModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsOriginationModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsOriginationModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAnalyticsModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsAnalyticsModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsAnalyticsModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsDocumentOutboundModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsDocumentOutboundModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsDocumentOutboundModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "SystemModule-ODI",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "SystemModule-ODI_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "SystemModule-ODI_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsPartyModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsPartyModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsPartyModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsRuleModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsRuleModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsRuleModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsBatchModule",
+                                        "type": "JMSSystemResource",
+                                        "properties": [
+                                            {
+                                                "name": "subDeployment",
+                                                "value": "jmsBatchModule_sub"
+                                            }
+                                        ],
+                                        "targets": [
+                                            {
+                                                "type": "CLUSTER",
+                                                "names": [
+                                                    "<%= @obpobh['obphost_server']['cluster_name'] %>"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "jmsBatchModule_sub",
+                                        "type": "SubDeployment",
+                                        "targets": [
+                                            {
+                                                "type": "JMSServer",
+                                                "names": [
+                                                    "obphost_server1jmsserver"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_1",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_2",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                        "resourceName": "WeblogicPolicyPermission_3",
+                                        "type": "WeblogicPolicyPermission"
+                                    },
+                                    {
+                                        "resourceName": "OIDAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "CIDAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "DefaultAuthenticator",
+                                        "type": "AuthenticationProvider",
+                                        "properties": [
+                                            {
+                                                "name": "realmName",
+                                                "value": "myrealm"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "LocalUser_SA_VALEX_API_OSB_USER",
+                                        "type": "User",
+                                        "properties": [
+                                            {
+                                                "name": "authenticatorName",
+                                                "value": "DefaultAuthenticator"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "resourceName": "LocalUser_SA_ESIGN_OSB_USER" ,
+                                        "type": "User",
+                                        "properties": [
+                                            {
+                                                "name": "authenticatorName",
+                                                "value": "DefaultAuthenticator"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "serverStartMode",
+                                        "value": "prod",
+                                        "target": "wls.production.mode"
+                                    },
+                                    {
+                                        "name": "backupEnvironmentName",
+                                        "value": "<%= environment_name %>",
+                                        "target": "environment.name"
+                                    },
+                                    {
+                                        "name": "tlogsLocationPath",
+                                        "value": "<%= base_domain_path %>/${/domain.name}",
+                                        "target": "wls.tlogs.location.path"
+                                    },
+                                    {
+                                        "name": "odlLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}",
+                                        "target": "wls.odl.log.location"
+                                    },
+                                    {
+                                        "value": "<%= @common['odl_log_retentionPeriod'] %>",
+                                        "target": "wls.odl.log.retentionPeriod"
+                                    },
+                                    {
+                                        "name": "defaultJMSLogLocation",
+                                        "value": "<%= log_location_path %>/${/domain.name}"
+                                    },
+                                    {
+                                        "target": "wls.admin.listen.port.admin",
+                                        "value": "<%= @obpobh['admin']['listen_port_admin'] %>"
+                                    },
+                                    {
+                                        "target": "wls.skip.em.template",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "mintpress.startup_parallel",
+                                        "target": "mintpress.startup_parallel",
+                                        "value": "10"
+                                    }
+                                ],
+                                "groupRefs": [
+                                    "OBPHOST_Config",
+                                    "OBPHOST_PolicySeed",
+                                    "OBPHOST_DatabaseSeed",
+                                    "OBPHOST_BIPReports",
+                                    "Policy_Store_Reassociation_Configuration"
+                                ],
+                                "templateList": [
+                                    {
+                                        "name": "obp-host"
+                                    },
+                                    {
+                                        "name": "owsm"
+                                    }
+                                ],
+                                "repositoryList": [
+                                    {
+                                        "componentList": [
+                                            "MDS",
+                                            "OPSS"
+                                        ],
+                                        "id": "rcu01",
+                                        "dbName": "<%= environment_name %><%= asset_code %>db",
+                                        "prefix": "<%= @obpobh['database']['rcu_schema_prefix'].upcase %>",
+                                        "dbUser": "<%= @obpobh['database']['sysdba_username'].upcase %>",
+                                        "schemaPassword": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobh['database']['rcu_schema_prefix'].upcase ) %>",
+                                        "defaultRepository": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "properties": [
+                            {
+                                "name": "targetPlatform",
+                                "value": "EXA"
+                            }
+                        ],
+                        "hostInstallationList": [
+                            {
+                                "installationName": "obp-host",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ]
+                            }
+                        ],
+                        "transferList": [
+
+                            <%= render "common-certs-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpobh['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :keystore_name => @obpobh['hostnameList'][0][0...-2],
+                                    :certs_source_path => @common['certs_source'],
+                                    :cert_destination_path => certs_location_path,
+                                    :truststore => @common['trustStore']
+                                }
+                            %>
+                            ,
+                            <%= render "common-jdk-policy-transfer.erb",
+                                :variables => {
+                                    :host_identifier => @obpobh['hostnameList'][0],
+                                    :environment_name => environment_name,
+                                    :asset_code => asset_code,
+                                    :jdk_version => jdk_version,
+                                    :java_install_path => java_install_path
+                                }
+                            %>
+                            ,
+                            <%= render "common-transfer-ovd-keystore.erb",
+                                :variables => {
+                                    :environment_name => environment_name,
+                                    :host_identifier => @obpobh['hostnameList'][0],
+                                    :certs_source_path => @common['certs_source'] ,
+                                    :admin_server_top => obh_admin_server_top,
+                                    :domain_name => @obpobh['wls_domain_name']
+                                }
+                            %>,
+                            {
+                                "name": "oimclient",
+                                "hostIdentifierList": [
+                                  "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['custom_source'] %>/<%= asset_code %>/oimclient.jar",
+                                "destinationFile": "<%= obh_admin_server_top %>/<%= @obpobh['wls_domain_name'] %>/lib/oimclient.jar",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "fcIODir",
+                                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                                "content": "ZHVtbXkK",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "destinationFile": "<%= base_domain_path %>/resources/.dummy",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                    "pre-online"
+                                ]
+                            },
+                            {
+                                "name": "HealthCheckFileCopy",
+                                "hostIdentifierList": [
+                                  "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= "#{@common['custom_source']}/common/HealthCheck.war" %>",
+                                "destinationFile": "<%= "#{base_domain_path}/applications/#{@obpobh['wls_domain_name']}/HealthCheck.war" %>",
+                                "permissions": "755",
+                                "transferWhenList": [
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "SIEMCustomAuditor",
+                                "hostIdentifierList": [
+                                  "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= @common['custom_source'] %>/common/SIEMCustomAuditor.jar",
+                                "destinationFile": "<%= fmw_install_path %>/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                                "permissions": "600",
+                                "transferWhenList": [
+                                  "post-binaries",
+                                  "pre-online"
+                                ],
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ],
+                        "executeList": [
+                            <% if is_running_on_cloud %>
+                            {
+                                "name": "data-load-obp",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obpobh-load-rcu-data]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-rcu"
+                                ]
+                            },
+                            {
+                                "name": "override-env-variables-obp",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obp-override-environment-variables]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-rcu"
+                                ]
+                            },
+                            <% end %>
+                            {
+                                "name": "UpdateAdaptersOSXml",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-wls-ldap-adapters]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            },
+                            {
+                                "name": "UpdateJpsConfigParams",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-jps-config]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "pre-online"
+                                ]
+                            },
+                            <%= render "common-deploy-healthcheck.erb",
+                                :variables => {
+                                    :host_identifier => @obpobh['hostnameList'][0],
+                                    :asset_code => asset_code,
+                                    :custom_source => @common['custom_source'],
+                                    :fmw_install_path => fmw_install_path,
+                                    :t3_connect_url => "t3://#{@obpobh['admin']['listen_address']}#{@obpobh['dns_domain_name']}:#{@obpobh['admin']['listen_port']}",
+                                    :admin_username => @obpobh['wls_admin_user'],
+                                    :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user'] ),
+                                    :app_target => "#{@obpobh['obphost_server']['cluster_name']},#{@obpobh['obphost_server']['cluster_name']}",
+                                    :app_path => "#{base_domain_path}/applications/#{@obpobh['wls_domain_name']}"
+                                }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "CreateOBPHOSTLogger",
+                                      :host_identifier => @obpobh['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/createOBPODLLoggers.py",
+                                      :t3_connect_url => "t3://#{@obpobh['admin']['listen_address']}#{@obpobh['dns_domain_name']}:#{@obpobh['admin']['listen_port']}",
+                                      :admin_username => @obpobh['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user']),
+                                      :args => "#{log_location_path}/#{@obpobh['wls_domain_name']}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                              :variables => {
+                                  :name => "securityJMXAuthEnable",
+                                  :host_identifier => @obpobh['hostnameList'][0],
+                                  :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                  :script => "#{@common['custom_source']}/common/securityAccessAndRoles.py",
+                                  :t3_connect_url => "t3://#{@obpobh['admin']['listen_address']}#{@obpobh['dns_domain_name']}:#{@obpobh['admin']['listen_port']}",
+                                  :admin_username => @obpobh['wls_admin_user'],
+                                  :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user']),
+                                  :args => 'JMXAuth true',
+                                  :when => 'post-configure'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+								 :variables => {
+									 :name => "jmsMsgView",
+									 :host_identifier => @obpobh['hostnameList'][0],
+									 :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+									 :script => "#{@common['custom_source']}/common/securityAccessAndRoles.py",
+									 :t3_connect_url => "t3://#{@obpobh['admin']['listen_address']}#{@obpobh['dns_domain_name']}:#{@obpobh['admin']['listen_port']}",
+									 :admin_username => @obpobh['wls_admin_user'],
+									 :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user']),
+									 :args => 'JMSView',
+									 :when => 'post-online'
+								 }
+							 %>,
+                            {
+                                "name": "updateOBPConnector",
+                                "hostIdentifierList": [
+                                  "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "<%= "#{fmw_install_path}/oracle_common/common/bin/wlst.sh #{@common['custom_source']}/obpobh/updateOBPConnector.py weblogic ${execute.weblogicAdminPassword} t3://#{@obpobh['admin']['listen_address']}#{@obpobh['dns_domain_name']}:#{@obpobh['admin']['listen_port']} ra/OBPConnector_OP,ra/FCRJConnectorWS_MFT,ra/FCRJConnectorFTP_BIP,ra/FCRJConnectorODI,ra/FCRJConnectorOIM,ra/FCRJConnectorBAMWS #{@obpobh['host_admin_user']},#{@obpobh['host_admin_user']},#{@obpbip['bip_admin_user']},SUPERVISOR,obpcimadmin,SA_OBP_BAM_MANAGE_USER ${execute.hostAdminPassword},${execute.hostAdminPassword},${execute.bipAdminPassword},${execute.odiSupervisorPassword},${execute.obpcimadminPassword},${execute.saObpBamPassword}" %>",
+                                "properties": [
+                                  {
+                                    "name": "execute.weblogicAdminPassword",
+                                    "target": "execute.weblogicAdminPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user'] ) %>"
+                                  },
+                                  {
+                                    "name": "execute.hostAdminPassword",
+                                    "target": "execute.hostAdminPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpobh['host_admin_user'] ) %>"
+                                  },
+                                  {
+                                    "name": "execute.obpcimadminPassword",
+                                    "target": "execute.obpcimadminPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, 'obpcim', 'obpcimadmin' ) %>"
+                                  },
+                                  {
+                                    "name": "execute.bipAdminPassword",
+                                    "target": "execute.bipAdminPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpbip['bip_admin_user'] ) %>"
+                                  },
+                                  {
+                                    "name": "execute.odiSupervisorPassword",
+                                    "target": "execute.odiSupervisorPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, 'obpodi', @obpodi['database']['rcu_schema_prefix'].upcase, minimum_password_length: 10, include_symbol: false ) %>"
+                                  },
+                                  {
+                                    "name": "execute.saObpBamPassword",
+                                    "target": "execute.saObpBamPassword",
+                                    "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', 'SA_OBP_BAM_MANAGE_USER' ) %>"
+                                  },
+                                  {
+                                    "name": "scaleout",
+                                    "value": "false"
+                                  }
+                                ],
+                                "executeWhenList": [
+                                  "pre-online"
+                                ]
+                            },
+                            {
+                                "name": "UpdateDbDetails",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obp-override-environment-variables]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "pre-online"
+                                ]
+                            },
+                            {
+                                "name": "CreateDatabaseObjects",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::create-db-users]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-rcu"
+                                ]
+                            },
+                            {
+                                "name": "DeleteDatabaseObjects",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::drop-db-users]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-clobber"
+                                ]
+                            }
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "deleteDefaultAuditor",
+                                      :host_identifier => @obpobh['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/deleteDefaultAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpobh['admin']['listen_address']}#{@obpobh['dns_domain_name']}:#{@obpobh['admin']['listen_port']}",
+                                      :admin_username => @obpobh['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user']),
+                                      :args => "#{@obpobh['wls_domain_name']}",
+                                      :when => 'pre-online'
+                              }
+                            %>
+                            ,
+                            <%= render "common-run-wlst.erb",
+                                  :variables => {
+                                      :name => "updateSIEMAuditor",
+                                      :host_identifier => @obpobh['hostnameList'][0],
+                                      :wlst_command => "#{fmw_install_path}/oracle_common/common/bin/wlst.sh",
+                                      :script => "#{@common['custom_source']}/common/updateSIEMAuditor.py",
+                                      :t3_connect_url => "t3://#{@obpobh['admin']['listen_address']}#{@obpobh['dns_domain_name']}:#{@obpobh['admin']['listen_port']}",
+                                      :admin_username => @obpobh['wls_admin_user'],
+                                      :admin_password => PasswordVault.get_password(password_vault_name, asset_code, @obpobh['wls_admin_user']),
+                                      :args => "#{@obpobh['wls_domain_name']} #{asset_code}",
+                                      :when => 'post-online'
+                              }
+                            %>
+                            ,
+                            {
+                                "name": "UpdateODLLogLevel",
+                                "hostIdentifierList": [
+                                    "<%= @obpobh['hostnameList'][0] %>"
+                                ],
+                                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-odl-log-level]' -l info",
+                                "properties": [
+                                    {
+                                        "name": "scaleout",
+                                        "value": "false"
+                                    }
+                                ],
+                                "executeWhenList": [
+                                    "post-online"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "databaseList": [
+            {
+                "name": "<%= environment_name %><%= asset_code %>db",
+                "port": "<%= @obpobh['database']['listen_port'] %>",
+                "serviceName": "<%= @obpobh['database']['service_name'] %>",
+                "properties": [
+                    {
+                        "name": "rcu.datafile.initialsize",
+                        "value": "200M",
+                        "target": "rcu.datafile.initialsize"
+                    },
+                    {
+                        "target": "rcu.extra.parameters",
+                        "value": " -encryptTablespace <%= @obpobh['database'].key?('encryption') ? @obpobh['database']['encryption'] : 'false' %>"
+                    },
+                    {
+                        "name": "jdbcUrl",
+                        "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=${_.host.address})(Port=${_.port}))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=${_.serviceName})))"
+                    }
+                ],
+                "hostIdentifier": "db_server",
+                "schemaList": [
+                  {
+                    "name": "<%= @obpobh['database']['sysdba_username'].upcase %>",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, asset_code, @obpobh['database']['sysdba_username'].upcase) %>"
+                  }
+                ]
+            }
+        ],
+        "resourceList": [
+
+            <%= render "common-settings-resources.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :domain_name => @obpobh['wls_domain_name'],
+                    :log_location_path => log_location_path,
+                    :certs_location_path => certs_location_path,
+                    :admin_kestore_alias => @obpobh['hostnameList'][0],
+                    :managed_keystore_alias => '%ListenAddress/noprefix%',
+                    :keystore_name => @obpobh['hostnameList'][0][0...-2],
+                    :common => @common,
+                    :frontend => @obpobh['frontend'],
+                    :database => @obpobh['database'],
+                    :set_dual_site_url => @obpobh['database'].key?('set_dual_site_url') ? @obpobh['database']['set_dual_site_url'].downcase : "false",
+                    :enable_dbssl => @common.key?('enable_dbssl') ? @common['enable_dbssl'].downcase : "false" 
+                }
+            %>
+            ,
+            <%= render "common-oid-authenticator.erb",
+                :variables => {
+                    :name => 'OIDAuthenticator',
+                    :hostname => @obpoid['frontend']['managed_host'],
+                    :port => @obpoid['frontend']['ldap_port'],
+                    :username => 'cn=obpobh_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au',
+                    :password => PasswordVault.get_password(password_vault_name, 'obpoid', 'obpobh_readonly'),
+                    :group_base_dn => 'ou=obp,ou=apps,dc=westpac,dc=com,dc=au',
+                    :user_base_dn => 'cn=users,dc=westpac,dc=com,dc=au',
+                    :common => @common
+                }
+            %>
+			,
+            <%= render "common-oid-authenticator.erb",
+                :variables => {
+                    :name => 'CIDAuthenticator',
+                    :hostname => @obpcid['frontend']['managed_host'],
+                    :port => @obpcid['frontend']['ldap_port'],
+                    :username => 'cn=obpobh_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au',
+                    :password => PasswordVault.get_password(password_vault_name, 'obpcid', 'obpobh_readonly'),
+                    :group_base_dn => 'cn=customer,cn=groups,dc=westpac,dc=com,dc=au',
+                    :user_base_dn => 'cn=customer,cn=users,dc=westpac,dc=com,dc=au',
+                    :common => @common
+                }
+            %>
+            ,
+            {
+                "name": "JpsConfigSettings",
+                "type": "JpsConfig",
+                "attributes": {
+                  "java.naming.ldap.factory.socket": "javax.net.ssl.SSLSocketFactory"
+                }
+            },
+            {
+                "name": "JTASettings",
+                "type": "JTA",
+                "attributes": {
+                    "TimeoutSeconds": "5400"
+                }
+            },
+            {
+                "name": "CrossDomainSecurityConfiguration",
+                "type": "SecurityConfiguration",
+                "attributes": {
+                    "CrossDomainSecurityEnabled": "false",
+                    "Credential": "<%= PasswordVault.get_password(password_vault_name, asset_code, 'OBPCROSSDOMAIN') %>"
+                }
+            },
+            {
+            "name": "JdbcSharedSettings",
+            "type": "JDBCSystemResource",
+            "params": [
+                    {
+                    "type": "JDBCResource",
+                        "params": [
+                            {
+                                "type": "JDBCDriverParams",
+                                "attributes": {
+                                <% if @common['enable_dbssl'] == "true" %>
+                                "Url": "<%= @obpsoa['database']['soa_db_url_ssl']%>"
+                                <% else %>
+                                "Url": "<%= @obpsoa['database']['soa_db_url']%>"
+                                <% end %>
+                                },
+                                "properties": {
+                                  <% if @common['enable_dbssl'] == "true" %>
+                                  "javax.net.ssl.trustStoreType": "JKS",
+                                  "javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpobh', 'truststorepass') %>",
+                                  "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+								  "oracle.net.ssl_version": "1.2",
+                                    "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                                  <% end %>
+                                  "oracle.jdbc.ReadTimeout": "300000"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+            "name": "mds-owsm",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                  {
+                    "type": "JDBCDriverParams",
+                    "attributes": {
+                        <% if @common['enable_dbssl'] == "true" %>
+                        "Url": "<%= @obpobu['database']['ui_db_url_ssl']%>",
+                        <% else %>
+                        "Url": "<%= @obpobu['database']['ui_db_url']%>",
+                        <% end %>
+                        "Password": "<%= PasswordVault.get_password(password_vault_name, 'obpobu', @obpobu['database']['rcu_schema_prefix'].upcase) %>"
+                    },
+                    "properties": {
+                      <% if @common['enable_dbssl'] == "true" %>
+                      "javax.net.ssl.trustStoreType": "JKS",
+                      "javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpobu', 'truststorepass') %>",
+                      "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+					  "oracle.net.ssl_version": "1.2",
+                        "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                      <% end %>
+                      "user": "<%= "#{@obpobu['database']['rcu_schema_prefix']}_MDS" %>"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+		  {
+            "name": "PCSMDataSource",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                  {
+                    "type": "JDBCDriverParams",
+                    "attributes": {
+                        "DriverName": "oracle.jdbc.xa.client.OracleXADataSource",
+                        <% if @common['enable_dbssl'] == "true" %>
+                        "Url": "<%= @obpipm['database']['dcms_url_ssl'] %>",
+                        <% else %>
+                        "Url": "<%= @obpipm['database']['dcms_url'] %>",
+                        <% end %>
+                        "Password": "<%= PasswordVault.get_password(password_vault_name, 'obpobh', @obpobh['database']['rcu_schema_prefix'].upcase) %>"
+                    },
+                    "properties": {
+                      <% if @common['enable_dbssl'] == "true" %>
+                      "javax.net.ssl.trustStoreType": "JKS",
+                      "javax.net.ssl.trustStorePassword": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', 'truststorepass') %>",
+                      "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+					  "oracle.net.ssl_version": "1.2",
+                        "javax.net.ssl.trustStore": "<%= certs_location_path %>/<%= @common['trustStore'] %>",
+                      <% end %>
+                      "user": "CDE"
+                    }
+                  },
+                {
+                    "type": "JDBCXAParams",
+                    "attributes": {
+                        "XaSetTransactionTimeout": "true"
+                    }
+                },
+                {
+                    "type": "JDBCDataSourceParams",
+                    "attributes": {
+                        "JNDINames": "jdbc/PCSMDataSource"
+                    }
+                }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "OBP_HOST_CONFIG",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                  {
+                    "type": "JDBCConnectionPoolParams",
+                    "attributes": {
+                        "RemoveInfectedConnections": "true"
+                        }
+                   }
+                 ]
+               }
+              ]
+            },
+          {
+            "name": "OBP_HOST_DS_NONXA",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                  {
+                    "type": "JDBCConnectionPoolParams",
+                    "attributes": {
+                        "RemoveInfectedConnections": "true"
+                        }
+                   }
+                 ]
+               }
+              ]
+            },
+          {
+            "name": "OBP_HOST_DS_XA",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                  {
+                    "type": "JDBCConnectionPoolParams",
+                    "attributes": {
+                        "RemoveInfectedConnections": "true"
+                        }
+                   }
+                 ]
+               }
+              ]
+            },
+          {
+            "name": "OBP_HOST_LOCK",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                  {
+                    "type": "JDBCConnectionPoolParams",
+                    "attributes": {
+                        "RemoveInfectedConnections": "true"
+                        }
+                   }
+                 ]
+               }
+              ]
+            },
+          {
+            "name": "OBP_SYS_CONFIG",
+            "type": "JDBCSystemResource",
+            "params": [
+              {
+                "type": "JDBCResource",
+                "params": [
+                  {
+                    "type": "JDBCConnectionPoolParams",
+                    "attributes": {
+                        "RemoveInfectedConnections": "true"
+                        }
+                   }
+                 ]
+               }
+              ]
+            },
+          {
+            "name": "WeblogicPolicyPermission_1",
+            "type": "WeblogicPolicyPermission",
+            "attributes": {
+              "permClass": "oracle.security.jps.service.trust.TrustServiceAccessPermission",
+              "permTarget": "appId=*",
+              "permActions": "issue",
+              "codeBaseURL": "<%= "file:#{obh_admin_server_top}/#{@obpobh['wls_domain_name']}/servers/-" %>"
+            }
+          },
+          {
+            "name": "WeblogicPolicyPermission_2",
+            "type": "WeblogicPolicyPermission",
+            "attributes": {
+              "permClass": "java.security.AllPermission",
+              "permTarget": "appId=*",
+              "permActions": "issue",
+				"codeBaseURL": "<%= "file:#{obh_admin_server_top}/#{@obpobh['wls_domain_name']}/servers/-" %>"
+            }
+          },
+          {
+            "name": "WeblogicPolicyPermission_3",
+            "type": "WeblogicPolicyPermission",
+            "attributes": {
+              "permClass": "java.security.AllPermission",
+              "permTarget": "None",
+              "permActions": "None",
+              "codeBaseURL": "<%= "file:#{fmw_install_path}/obpinstall/obp/obp.host.app.domain/APP-INF/lib/com.ofss.fc.ixface.sms.jar" %>"
+            }
+          },
+            {
+                "name": "DefaultAuthenticator",
+                "type": "AuthenticationProvider",
+                "attributes": {
+                    "subType": "null",
+                    "ControlFlag": "SUFFICIENT"
+                }
+            },
+            {
+                "name": "LocalUser_SA_VALEX_API_OSB_USER",
+                "type": "User",
+                "attributes": {
+                    "name": "SA_VALEX_API_OSB_USER",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', 'SA_VALEX_API_OSB_USER' ) %>",
+                    "description": "Service Account for VALEX Integration",
+                    "groupList": "OBP-ExternalApplication"
+                }
+            },
+            {
+                "name": "LocalUser_SA_ESIGN_OSB_USER",
+                "type": "User",
+                "attributes": {
+                    "name": "SA_ESIGN_OSB_USER",
+                    "password": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', 'SA_ESIGN_OSB_USER' ) %>",
+                    "description": "Service Account for ESIGN Integration",
+                    "groupList": "OBP-ExternalApplication"
+                }
+            },
+            {
+                "name": "AdminStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpobh["admin"]['ms_heap'] %> -Xmx<%= @obpobh["admin"]['mx_heap']  %> -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+					"2": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "common-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "ClusterStartupParameters",
+                "type": "StartupParameter",
+                "attributes": {
+                    "1": "-Xms<%= @obpobh["obphost_server"]['ms_heap'] %> -Xmx<%= @obpobh["obphost_server"]['mx_heap'] %>",
+                    "2": "-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ConcGCThreads=4 -XX:G1HeapRegionSize=4M  -XX:+UseStringDeduplication -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:ParallelGCThreads=8",
+                    "3": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer -Djps.combiner.optimize.lazyeval=TRUE -Djps.combiner.optimize=TRUE -Djps.policystore.hybrid.mode=false -Djps.authz=ACC",
+                    "4": "-Dweblogic.configuration.schemaValidationEnabled=false -Duser.home=<%= fmw_install_path %>/obpinstall/obp/config -Dobp.http.connectionTimeout=600000 -Dobp.http.maxConnectionsPerHost=150",
+                    "5": "-Dfacade.security.check=false -Dcom.sun.jndi.ldap.connect.pool.protocol=ssl -Dcom.sun.jndi.ldap.connect.pool=true -Dcom.sun.jndi.ldap.connect.pool.initsize=10 -Dcom.sun.jndi.ldap.connect.pool.prefsize=20 -Dfc.io.dir=<%= base_domain_path %>/resources ",
+                    "7": "-DAdapterFactories:PARTY_DUE_DILIGENCE_ADAPTER_MOCKED=true -DAdapterFactories:INS_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:PARTY_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:LN_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:LCM_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:ACCOUNT_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:DDA_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:AC_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:CS_COLLECTION_ADAPTER_MOCKED=true -DconfigDirs=<%= fmw_install_path %>/obpinstall/obp/config/pcsm/wrapperconf -Dexperian.pcsm.wrapper.config=<%= fmw_install_path %>/obpinstall/obp/config/pcsm/wrapperconf -Dlog4j.configuration=log4j.properties -Dobp.http.idleTimeoutPollInterval=10000 -Dobp.http.maxRetryCount=3 -Dobp.http.socketBufferSize=8192 -Dobp.http.expireAndRetry=false",
+                    "8": "<%= "-javaagent:#{@common['appdynamics_agent']} -Dappdynamics.agent.tierName=OBP-HOST -Dappdynamics.agent.nodeName=%ListenAddress/noprefix%#{@obpobh['dns_domain_name']}:%ListenPort+1000%" if @common['enable_appdynamics'] == "true" %>",
+					"9": "<%= "-javaagent:/oracle/app/binaries/contrast_agent/contrast.jar" if @common['enable_contrastagent'] == "true" %>",
+                    <%= render "obp-startup-params.erb",
+                        :variables => {
+                            :log_location_path => log_location_path,
+                            :certs_location_path => certs_location_path,
+                            :truststore => @common['trustStore']
+                        }
+                    %>
+                }
+            },
+            {
+                "name": "ClusterClassPathParameters",
+                "type": "ClassPath",
+                "attributes": {
+                    "Auto01": "<%= fmw_install_path %>/obpinstall/obp/config/pcsm/wrapperconf"
+                 }
+            },
+            {
+                "attributes": {
+                    "AdministrationPort": "<%= @obpobh['admin']['listen_port_admin'] %>",
+                    "AdministrationPortEnabled": "false"
+                },
+                "type": "Domain",
+                "name": "DomainAdministrationPortConfiguration"
+            },
+            {
+                "name": "jmsAccountingModule",
+                "type": "JMSSystemResource",
+                "attributes": {
+                    "Notes": "Accounting Module"
+                },
+                "params": [
+                    {
+                        "name": "FCRJ.DMS_QCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCRJ.DMS_QCF",
+                            "JNDIName": "FCRJ.DMS_QCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "name": "FCRJAccountingQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCRJAccountingQCF",
+                            "JNDIName": "FCRJ.ACCT_QCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "name": "FCRJLedgerBalanceQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCRJLedgerBalanceQCF",
+                            "JNDIName": "FCRJ.ACCT.PL.LEDGER_BALANCE_QCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "name": "FCRJ.EP_QCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCRJ.EP_QCF",
+                            "JNDIName": "jms/FCRJ.EP_QCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsAsyncAuditModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "AsyncAuditQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "AsyncAuditQCF",
+                            "JNDIName": "jms/AsyncAuditQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsCasaModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "FCBCasaQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCBCasaQCF",
+                            "JNDIName": "jms/FCBCasaQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsCollectionModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "EvtMangQM",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "EvtMangQM",
+                            "JNDIName": "jms/EvtMangQM"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsDomainPublishModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "DomainFactCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "DomainFactCF",
+                            "JNDIName": "jms/DomainFactCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsPaymentModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "paymentCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "paymentCF",
+                            "JNDIName": "jms/paymentCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "name": "PaymentAsyncTxnAuditCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "PaymentAsyncTxnAuditCF",
+                            "JNDIName": "jms/PaymentAsyncTxnAuditCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsPricingAnalysisModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "FCBPricingQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCBPricingQCF",
+                            "JNDIName": "jms/FCBPricingQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsTitleSearchModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "TitleSearchCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "TitleSearchCF",
+                            "JNDIName": "jms/TitleSearchCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsValuationModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "name": "ValuationCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "ValuationCF",
+                            "JNDIName": "jms/ValuationCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsEventProcessModule",
+                "type": "JMSSystemResource",
+                "attributes": {
+                    "Notes": "Event Process Module"
+                },
+                "params": [
+                    {
+                        "name": "EventProcessorQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "EventProcessorQCF",
+                            "JNDIName": "jms/EventProcessorQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "EventProcessorQueue",
+                        "attributes": {
+                            "JNDIName": "jms/EventProcessorQueue",
+                            "SubDeploymentName": "jmsEventProcessModule_sub"
+                        }
+                    },
+                    {
+                        "name": "DigitalEventProcessorQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "DigitalEventProcessorQCF",
+                            "JNDIName": "jms/DigitalEventProcessorQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "DigitalEventProcessorQueue",
+                        "attributes": {
+                            "JNDIName": "jms/DigitalEventProcessorQueue",
+                            "SubDeploymentName": "jmsEventProcessModule_sub"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "collateralModule",
+                "type": "JMSSystemResource",
+                "attributes": {
+                    "Notes": "Collateral Module"
+                },
+                "params": [
+                    {
+                        "name": "CollateralCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "CollateralCF",
+                            "JNDIName": "jms/CollateralCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "CollateralQueue",
+                        "attributes": {
+                            "JNDIName": "jms/CollateralQueue",
+                            "SubDeploymentName": "collateralModule_sub"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "workflowModule",
+                "type": "JMSSystemResource",
+                "attributes": {
+                    "Notes": "Workflow Module"
+                },
+                "params": [
+                    {
+                        "name": "WorkflowCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "WorkflowCF",
+                            "JNDIName": "jms/WorkflowCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "WorkflowQueue",
+						"attributes": {
+								"JNDIName": "jms/WorkflowQueue",
+								"SubDeploymentName": "workflowModule_sub"
+								},
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "1",
+                                    "ErrorDestination": "WorkflowErrorQueue",
+                                    "ExpirationPolicy": "Redirect"
+                                }
+                            },
+                            {
+                                "type": "DeliveryParamsOverrides",
+                                "attributes": {
+                                    "RedeliveryDelay": "30000"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "WorkflowErrorQueue",
+                        "attributes": {
+                            "JNDIName": "jms/WorkflowErrorQueue",
+                            "SubDeploymentName": "workflowModule_sub"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "jmsODIModule",
+                "type": "JMSSystemResource",
+                "attributes": {
+                    "Notes": "jms CZ ODI Module"
+                },
+                "params": [
+                    {
+                        "name": "CZSystemModule",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "CZSystemModule",
+                            "JNDIName": "jms/CZConnectionFactory"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "CZFileProcessMessageReceiverQueue",
+                        "attributes": {
+                            "JNDIName": "jms/CZFileProcessMessageReceiverQueue",
+                            "SubDeploymentName": "jmsODIModule_sub"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "CZMessageReceiverQueue",
+                        "attributes": {
+                            "JNDIName": "jms/CZMessageReceiverQueue",
+                            "SubDeploymentName": "jmsODIModule_sub"
+                        }
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "CZProcessMessageReceiverQueue",
+                        "attributes": {
+                            "JNDIName": "jms/CZProcessMessageReceiverQueue",
+                            "SubDeploymentName": "jmsODIModule_sub"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "jmsOriginationModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "OriginationQueue",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "1",
+                                    "ErrorDestination": "OriginationProcessErrorQueue",
+                                    "ExpirationPolicy": "Redirect"
+                                }
+                            },
+                            {
+                                "type": "DeliveryParamsOverrides",
+                                "attributes": {
+                                    "RedeliveryDelay": "30000"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "OriginationProcessErrorQueue",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "OriginationCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "OriginationCF",
+                            "JNDIName": "jms/OriginationCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsAnalyticsModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "AnalyticsQueue",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "1",
+                                    "ErrorDestination": "AnalyticsErrorQueue",
+                                    "ExpirationPolicy": "Redirect"
+                                }
+                            },
+                            {
+                                "type": "DeliveryParamsOverrides",
+                                "attributes": {
+                                    "RedeliveryDelay": "15000"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "AnalyticsErrorQueue",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "AnalyticsCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "AnalyticsCF",
+                            "JNDIName": "jms/AnalyticsCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsDocumentOutboundModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "DocumentOutboundQueue",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "DocumentOutboundCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "DocumentOutboundCF",
+                            "JNDIName": "jms/OutboundDocumentCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "SystemModule-ODI",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "jms/MessageReceiverQueue-ODI",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ConnectionFactory-ODI",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "ConnectionFactory-ODI",
+                            "JNDIName": "jms/ConnectionFactory-ODI"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "name": "ConnectionFactory-JMS-IPM",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "ConnectionFactory-JMS-IPM",
+                            "JNDIName": "jms/ConnectionFactory-JMS-IPM"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsPartyModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "PartyProcessQueue",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "PartyCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "PartyCF",
+                            "JNDIName": "jms/PartyCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsReportModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "ReportRequestQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+					{
+                        "name": "FCBReportsQM",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCBReportsQM",
+                            "JNDIName": "jms/ORAQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsRuleModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "FCBRuleQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "FCBRuleQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCBRuleQCF",
+                            "JNDIName": "jms/FCBRuleQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    }
+                ]
+            },
+            {
+                "name": "jmsBatchModule",
+                "type": "JMSSystemResource",
+                "params": [
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "FCBBatchShellQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "FCBFileProcessorQCF",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCBFileProcessorQCF",
+                            "JNDIName": "jms/FCBFileProcessorQCF"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "name": "FCBBatchQM",
+                        "type": "JMSConnectionFactory",
+                        "attributes": {
+                            "DefaultTargetingEnabled": "true",
+                            "Name": "FCBBatchQM",
+                            "JNDIName": "jms/FCBBatchQM"
+                        },
+                "params": [
+                        {
+                            "type": "TransactionParams",
+                            "attributes": {
+                                "XAConnectionFactoryEnabled": "true"
+                            }
+                        }
+					]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "FCBBatchResponseQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "FCBBatchFrameQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "FCBBatchRequestQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "FCBGEFUBatchRequestQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "UniformDistributedQueue",
+                        "name": "FCBFileProcessorQ",
+                        "params": [
+                            {
+                                "type": "DeliveryFailureParams",
+                                "attributes": {
+                                    "RedeliveryLimit": "2"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "propertyGroupList":
+        [
+            <%= render "common-config-groups.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :asset_code => asset_code,
+                    :inventory_install_path => inventory_install_path,
+                    :fmw_install_path => fmw_install_path,
+                    :temp_location => temp_location
+                }
+            %>
+            ,
+            {
+                "name": "Node_Manager_Common_Config",
+                "description": "Common Node Manager configuration",
+                "properties": [
+                    {
+                        "target": "wls.nodemanager.shared.domain.dir",
+                        "value": "true"
+                    },
+                    {
+                        "name": "wlInstallationName",
+                        "value": "fmwinfra"
+                    },
+                    {
+                        "name": "nodemanagerTop",
+                        "value": "<%= node_manager_top %>",
+                        "target": "wls.nodemanager.top"
+                    }
+                ]
+            },
+            <%= render "common-nm-ssl-config.erb",
+                :variables => {
+                    :environment_name => environment_name,
+                    :password_vault_name => password_vault_name,
+                    :asset_code => asset_code,
+                    :certs_location_path => certs_location_path,
+                    :truststore => @common['trustStore']
+                }
+            %>
+            ,
+            {
+            "name": "OBPHOST_Config",
+            "description": "Post OBP Config Tasks",
+            "properties": [
+                {
+                "target": "obp.soa.schemaPrefix",
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>"
+                },
+                {
+                "target": "obp.soa.schemaPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>"
+                },
+                {
+                "target": "obp.soa.dbURL",
+                "value": "<%= "#{@obpsoa['database']['scan_address']}:#{@obpsoa['database']['listen_port']}/#{@obpsoa['database']['service_name']}" %>"
+                },
+                {
+                "target": "obp.soa.jndiurl",
+                "value": "<%= "t3s://#{@obpsoa['frontend']['otd_vip_name']}:#{@obpsoa['frontend']['t3_port']}/soa-infra" %>"
+                },
+                {
+                "target": "obp.policy.opssusername",
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_opss"
+                },
+                {
+                "target": "obp.policy.opsspassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>"
+                },
+                {
+                "target": "obp.policy.opssauditusername",
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_IAU_APPEND"
+                },
+                {
+                "target": "obp.policy.opssauditpassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>"
+                },
+                {
+                "target": "obp.policy.opssauditviewusername",
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_IAU_VIEWER"
+                },
+                {
+                "target": "obp.policy.opssauditviewpassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>"
+                },
+                {
+                "target": "obp.policy.db.hostname",
+                "value": "<%= @obpsoa['database']['scan_address'] %>"
+                },
+                {
+                "target": "obp.policy.db.port",
+                "value": "<%= @obpsoa['database']['listen_port'] %>"
+                },
+                {
+                "target": "obp.policy.db.servicename",
+                "value": "<%= @obpsoa['database']['service_name'] %>"
+                },
+                {
+                "target": "obp.soa.wls.username",
+                "value": "<%= @obpsoa['soa_admin_user'] %>"
+                },
+                {
+                "target": "obp.soa.wls.password",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpsoa['soa_admin_user'] ) %>"
+                },
+                {
+                "target": "obp.offlinechannelOutboundUsername",
+                "value": "offlineuser"
+                },
+                {
+                "target": "obp.offlinechannelOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', 'offlineuser' ) %>"
+                },
+                {
+                "target": "obp.ipmOutboundUsername",
+                "value": "<%= @obpipm['ipm_admin_user'] %>"
+                },
+                {
+                "target": "obp.ipmOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpipm['ipm_admin_user'] ) %>"
+                },
+                {
+                "target": "obp.bipOutboundUsername",
+                "value": "<%= @obpbip['bip_admin_user'] %>"
+                },
+                {
+                "target": "obp.bipOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpbip['bip_admin_user'] ) %>"
+                },
+                {
+                "target": "obp.bipusrOutboundUsername",
+                "value": "<%= @obpbip['bip_admin_user'] %>"
+                },
+                {
+                "target": "obp.bipusrOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpbip['bip_admin_user'] ) %>"
+                },
+                {
+                "target": "obp.soaOutboundUsername",
+                "value": "<%= @obpsoa['soa_admin_user'] %>"
+                },
+                {
+                "target": "obp.soaOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpsoa['soa_admin_user'] ) %>"
+                },
+                {
+                "target": "obp.dmshostOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpobh['wls_admin_user'] ) %>"
+                },
+                {
+                "target": "obp.dmsuiOutboundPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpobu['wls_admin_user'] ) %>"
+                },
+                {
+                "target": "obp.bamUsername",
+                "value": "<%= @obpsoa['soa_admin_user'] %>"
+                },
+                {
+                "target": "obp.bamPassword",
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpoid', @obpsoa['soa_admin_user'] ) %>"
+                },
+                {
+                    "target": "obp.ui.mdsusername",
+                    "value": "<%= "#{@obpobu['database']['rcu_schema_prefix']}_MDS" %>"
+                },
+                {
+                    "target": "obp.ui.mdspassword",
+                    "value": "<%= PasswordVault.get_password(password_vault_name, 'obpobu', @obpobu['database']['rcu_schema_prefix'].upcase) %>"
+                },
+                {
+                    "target": "obp.ui.mdsJDBCUrl",
+                    "value": "<%= @obpobu['database']['ui_db_url']%>"
+                },
+                {
+                "name": "deployLocalization",
+                "value": "true"
+                },
+                {
+                "target": "obp.localization.country",
+                "value": "au"
+                }
+            ]
+            },
+            {
+            "name": "OBPHOST_PolicySeed",
+            "description": "OBP Database Policy Seed",
+            "properties": [
+                {
+                "name": "seedOIDPolicies",
+                "value": "false"
+                },
+                {
+                "target": "obp.soa.ssh.hostname",
+                <% if @obpobh['alter_site_reassociate_hostname'] %> 
+                    "value": "<%= @obpobh['alter_site_reassociate_hostname'] %>"
+                <% else %>
+                    "value": "<%= @obpsoa['hostnameList'][0] %><%= @obpsoa['dns_domain_name'] %>"
+                    <% end %>
+                },
+                {
+                "target": "obp.soa.fmw.home",
+                "value": "/oracle/app/binaries/obpsoa/fmw"
+                },
+                {
+                "target": "obp.soa.java.home",
+                "value": "/oracle/app/binaries/obpsoa/java"
+                },
+                {
+                "target": "obp.soa.jps.domain.name",
+                "value": "<%= @obpsoa['wls_domain_name'] %>"
+                },
+                {
+                "target": "obp.soa.jps.root",
+                "value": "cn=opssRoot"
+                },
+                {
+                "target": "obp.host.software.stage",
+                "value": "${stageRootDir}/obp/2.6.2/obp-host"
+                }
+               ]
+            },
+            {
+            "name": "OBPHOST_DatabaseSeed",
+            "description": "OBP DB Policy Seed",
+            "properties": [
+                {
+                "name": "seedOBPSchemaObjects",
+                    <% if environment_name =~ /^svp\d*w/ or environment_name =~ /^prd\d*w/ or is_running_on_cloud %>
+                        "value": "false"
+                    <% else %>
+                        "value": "true"
+                    <% end %>
+                },
+                {
+                "name": "updateIntegrationEndPoints",
+                "value": "false"
+                },
+                {
+                "target": "obp.oracle.client.home",
+                "value": "<%= oracle_install_path %>"
+                }
+            ]
+            },
+            {
+            "name": "OBPHOST_BIPReports",
+            "description": "Properties to upload BIP reports",
+            "properties": [
+                {
+                "name": "uploadBIPReports",
+                "value": "false"
+                }
+            ]
+            },
+            {
+            "name": "Policy_Store_Reassociation_Configuration",
+            "description": "Commong JPS configuration to reassociated",
+            "properties": [
+                {
+                "name": "reassociateSecurityStoreDB",
+                "value": "true"
+                },
+                {
+                "name": "jpsdomainname",
+                "value": "opssSecurityStore",
+                "target": "jps.domain.name"
+                },
+                {
+                "value": "cn=opssRoot",
+                "target": "db.jpsroot"
+                },
+                {
+                "name": "joindomain",
+                "value": "true",
+                "target": "join.domain"
+                },
+                {
+                "value": "/oracle/app/binaries/obpsoa/fmw",
+                "target": "jps.source.fmw.home"
+                },
+                {
+                "value": "/oracle/app/runtime/obpsoa/domains/obpsoa_domain",
+                "target": "jps.source.domain.dir"
+                },
+                {
+                "target": "jps.source.ssh.hostname",
+                <% if @obpobh['alter_site_reassociate_hostname'] %> 
+                    "value": "<%= @obpobh['alter_site_reassociate_hostname'] %>"
+                <% else %>
+                    "value": "<%= @obpsoa['hostnameList'][0] %><%= @obpsoa['dns_domain_name'] %>"
+                    <% end %>
+                },
+                {
+                "value": "true",
+                "target": "jps.force.reassociate"
+                },
+                {
+                "value": "<%= @obpsoa['database']['rcu_schema_prefix'] %>_opss",
+                "target": "jps.db.username"
+                },
+                {
+                "value": "<%= PasswordVault.get_password(password_vault_name, 'obpsoa', @obpsoa['database']['rcu_schema_prefix'].upcase ) %>",
+                "target": "jps.db.userpassword"
+                },
+                {
+                "value": "<%= @obpsoa['database']['soa_db_url'] %>",
+                "target": "jps.db.url"
+                }
+             ]
+        }
+        ]
+    }
+}

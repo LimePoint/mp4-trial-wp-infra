@@ -1,0 +1,59 @@
+# WLST Script to Update certificate of OTD configurations
+#arg1 : Domain adminuser name (ex:weblogic)
+#arg2 : Domain adminuser password
+#arg3 : Domain admin url
+#arg4 : csv of otd configs
+#arg5 : csv of keystore passwords of otd configs
+#arg6 : environment name
+#Usage: update_otd_cert.py weblogic ****** t3://localhost:7001 obpobh,obpobu keystore_password_of_obpobh,keystore_password_of_obpobu cix1
+
+def disableTlsLsnr(config,lsnr):
+    props = {}
+    props['configuration'] = config
+    props['http-listener'] = lsnr
+    props['server-cert-alias'] = None
+    props['enabled'] = 'false'
+    otd_setHttpListenerSslProperties(props)
+def enableTlsLsnr(config,lsnr,alias):
+    props = {}
+    props['configuration'] = config
+    props['http-listener'] = lsnr
+    props['server-cert-alias'] = alias
+    props['enabled'] = 'true'
+    otd_setHttpListenerSslProperties(props)
+
+connect(sys.argv[1],sys.argv[2],sys.argv[3])
+otd_ks_list=sys.argv[4].split(',')
+otd_ks_pwd_list=sys.argv[5].split(',')
+env_name=sys.argv[6]
+ks_pwd_dic=dict(zip(otd_ks_list, otd_ks_pwd_list))
+otd_config_list=otd_listConfigurations()
+print otd_config_list
+for otd_config in otd_config_list:
+    print 'UPDATING CERT FOR OTD CONFIG '+otd_config
+    props = {}
+    props['configuration'] = otd_config
+    cert_list=otd_listCertificates(props)
+    cert_alias = cert_list[0]['alias']
+    print 'Cert Alias for '+otd_config+' is '+cert_alias
+    if cert_alias.endswith('01'):
+        keystore_file_name=cert_alias.strip('01')+'.jks'
+    else:
+        keystore_file_name=cert_alias+'.jks'
+    print 'KeyStore file name for '+otd_config+' is '+keystore_file_name
+    http_lsnr_list=otd_listHttpListeners(props)
+    print http_lsnr_list
+    edit()
+    startEdit()
+    for http_lsnr in http_lsnr_list:
+        disableTlsLsnr(otd_config,http_lsnr)
+    activate()
+    keystore_password=ks_pwd_dic[otd_config]
+    svc = getOpssService('KeyStoreService')
+    svc.deleteKeyStoreEntry(appStripe='OTD', name=otd_config, password='', alias=cert_alias, keypassword=keystore_password)
+    svc.importKeyStore(appStripe='OTD', name=otd_config, password='', aliases=cert_alias, keypasswords=keystore_password, type='JKS', permission=false, filepath='/oracle/stage/certs/csh/'+env_name+'/'+keystore_file_name)
+    edit()
+    startEdit()
+    for http_lsnr in http_lsnr_list:
+        enableTlsLsnr(otd_config,http_lsnr,cert_alias)
+    activate()

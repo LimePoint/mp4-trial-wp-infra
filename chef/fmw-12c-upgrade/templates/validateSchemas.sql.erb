@@ -1,0 +1,10 @@
+-- This file must be run with a user that has SYS or SYSDBA privileges
+
+set linesize 300;
+col COMP_NAME for a40;
+col version for a30;
+select comp_name, version, status, owner from schema_version_registry where owner like '<%= @rcu_prefix.upcase %>%';
+
+select count(*) from dba_objects where owner like '<%= @rcu_prefix.upcase %>%' and status <> 'VALID';
+
+EXIT;

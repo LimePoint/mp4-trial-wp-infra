@@ -1,0 +1,8 @@
+dn: cn=csh_sudo_user_ctmagent_<%= @environment %>,ou=sudo,ou=csh,ou=app,dc=westpac,dc=com,dc=au
+changetype: modify
+add: sudoHost
+<% @hosts.each do |h| -%>
+<% if h =~ /odi/ -%>
+sudoHost: <%= h %>
+<% end -%>
+<% end -%>
