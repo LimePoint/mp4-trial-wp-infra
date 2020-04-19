@@ -10,13 +10,6 @@ service 'firewalld' do
   action :disable
 end
 
-# Set the resolv.conf to the internal DNS servers
-template '/etc/resolv.conf' do
-  source 'resolv.conf'
-  owner 'root'
-  group 'root'
-end
-
 # Create the MintPress Group
 group 'mintpress' do
   comment 'Group for MintPress User'
@@ -63,6 +56,17 @@ directory '/home/oracle/.ssh' do
   mode '0700'
 end
 
+# Install Standard Packages, this must be before updating the resolv.conf. 
+# This order helps reduce the time it takes to install the packages
+include_recipe '::oracle-packages'
+
+# Set the resolv.conf to the internal DNS servers
+template '/etc/resolv.conf' do
+  source 'resolv.conf'
+  owner 'root'
+  group 'root'
+end
+
 # Create the directory for stage mount, we have to use execute coz directory resource fails on subsequent runs
 # It tries to create the directory which by that point has become a mount, and throws Read-only file system @ apply2files - /oracle/stage
 execute 'mkdir -p /oracle/stage'
@@ -82,8 +86,6 @@ else
   end
 end
 
-# Install Standard Packages
-include_recipe '::oracle-packages'
 
 ### --- Set up SSSD For LDAP Authentication --- ###
 # Setup the SSSD Subsystem. This is from the sssd_ldap cookbook
@@ -143,6 +145,16 @@ end
 # TODO: Harsha to fix this as this might be deleting files that are being used
 execute 'rm -f /oracle/app/runtime/*/domains/*/servers/*/logs/DefaultAuditRecorder.* /oracle/app/logs/*/*/*/DefaultAuditRecorder.*' do
   ignore_failure true
+end
+
+# Install Packages for net-ldap locally, why are we using locally? Coz Internet is not allowed!
+# This must happen after the stage has been mounted
+gem_package "net-ldap" do
+  source '/oracle/stage/ruby_gems/net-ldap-0.16.2.gem'
+end
+
+gem_package "cicphash" do
+  source '/oracle/stage/ruby_gems/cicphash-1.1.0.gem'
 end
 
 # Include recipe for adding VM into the LDAP
