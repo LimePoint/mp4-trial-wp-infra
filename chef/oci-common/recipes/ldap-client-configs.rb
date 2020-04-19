@@ -9,8 +9,14 @@ search(:node, "chef_environment:#{node.chef_environment}").each do |r|
 		# do nothing
 	end
 end
-Chef::Log.info("Hosts: #{hostlist.inspect}")
 
+# [RB] - It seems that the search query above does not work if FQDN is not set for the node. 
+# The FQDN should be set during the bootstrap (see bug MINTPRESS-2166) but alternatively chef autosets it once a chef-client has run successfully
+if hostlist.empty?
+  Chef::Log.info("HostList is empty, skipping adding ldap entries. This will auto fix in next run")
+  return
+end
+  
 ldap_entry "cn=host_#{node.name.split('.')[0]},ou=host,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup']})
 	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
