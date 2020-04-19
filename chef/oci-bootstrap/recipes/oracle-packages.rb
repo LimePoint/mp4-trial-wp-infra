@@ -18,3 +18,8 @@ yum_package "nc"
 yum_package "tree"
 yum_package "psmisc"
 
+# Install the rdbms package if it is a db node
+if node.name.split(".")[0][-2..-1] == 'db'
+  yum_package "oracle-rdbms-server-12cR1-preinstall"
+end
+

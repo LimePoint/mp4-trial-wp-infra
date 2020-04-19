@@ -1,7 +1,6 @@
 # Recipe to create databases
 
-# Install the pre-reqs for DB R12.1
-yum_package "oracle-rdbms-server-12cR1-preinstall"
+password_vault_name = node.chef_environment
 
 # List of databases to create
 list_of_dbs = ['CBCD3OSBPRIM', 'CBCD3SECPRIM', 'CBCD3SOAPRIM', 'CBCD3OBPPRIM', 'CBCD3IDMPRIM']
@@ -39,7 +38,7 @@ list_of_dbs.each do | db |
 end
 
 # Override the environmint-database node attributes
-node.override['oracle']['database'].tap do | database |
+node.normal['oracle']['database'].tap do | database |
   database['datafile_top'] = '/oracle/app/oradata'
   database['archivelog_top'] = '/oracle/app/archive'
   database['flashback_top'] = '/oracle/app/flashback'
@@ -48,15 +47,15 @@ node.override['oracle']['database'].tap do | database |
     {
       'name' => 'LISTENER',
       'port' => 1521,
-      'oracle_home' => '/oracle/app/product/db/12.1.0'
+      'oracle_home' => '/oracle/app/product/db12/12.1.0'
     }
   ]
 end
 
-Chef::Log.info "Creating databases..."
-include_recipe 'recipe[environmint-database::default]'
-Chef::Log.info "Databases created successfully."
+log "Creating databases..."
+include_recipe 'environmint-database::default'
+log "Databases created successfully."
 
-Chef::Log.info "Updating Profiles & Tablespaces for the databases."
-include_recipe 'recipe[obp-environmint-custom::custom-sql-databases]'
-Chef::Log.info "Profiles & Tablespaces updated successfully."
+log "Updating Profiles & Tablespaces for the databases."
+include_recipe 'obp-environmint-custom::custom-sql-databases'
+log "Profiles & Tablespaces updated successfully."

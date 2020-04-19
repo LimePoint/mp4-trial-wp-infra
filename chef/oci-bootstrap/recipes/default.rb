@@ -49,6 +49,17 @@ user 'oracle' do
   manage_home true
 end
 
+# Create additional groups if this is a DB node
+if node.name.split(".")[0][-2..-1] == 'db'
+  db_groups = ['backupdba','dgdba','kmdba','dba','oper','backupdba','racdba'] 
+  db_groups.each do | gp | 
+    group gp  do
+      comment "Group for #{gp}" 
+      members 'oracle'
+    end
+  end
+end
+
 # Create the .ssh directory
 directory '/home/oracle/.ssh' do
   owner 'oracle'
@@ -139,6 +150,12 @@ remote_file '/home/oracle/chef/client.rb' do
   mode '0600'
 end
 
+# Add oracle limits
+template "/etc/security/limits.d/oracle.conf" do
+  source "limits/oracle.conf"
+  owner 'root'
+  group 'root'
+end
 
 # Cleanup the Auditor logs
 # cleanup _all_ defaultauditrecorder files

@@ -32,7 +32,6 @@ else
 	mp_action = ''
 end
 
-standard_run_list=['recipe[oci-cloud::default]']
 providerCode = lookup_catalogitem_providerCode(_item_code)
 host_opts = {}
 host_opts[:hostname] = "obpc#{environment_name}db.wpdev.mintpress.io"
@@ -48,6 +47,7 @@ attrs = {
   "provider_id": providerCode
 }
 host_opts[:node_attributes] = attrs
+host_opts[:run_list] = ['oci-bootstrap::default', 'obp-environmint-custom::create-databases'] 
 # Transform hash keys to symbols; no specific reason just personal preference
 host_opts.transform_keys!(&:to_sym)
 oci_host = MintOCIHost.new(host_opts)
