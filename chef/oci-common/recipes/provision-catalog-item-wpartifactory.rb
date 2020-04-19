@@ -28,7 +28,7 @@ bds = [
 
 host_opts[:block_devices] = bds
 host_opts[:disable_selinux] = true
-host_opts[:run_list] = ['oci-common::default']
+host_opts[:run_list] = ['oci-bootstrap::default']
 oci_host = MintOCIHost.new(host_opts)
 
 case 
