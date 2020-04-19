@@ -67,4 +67,3 @@ case
     Chef::Log.info("No action specified. Nothing to do")
     return
 end 
-

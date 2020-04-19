@@ -147,15 +147,10 @@ execute 'rm -f /oracle/app/runtime/*/domains/*/servers/*/logs/DefaultAuditRecord
   ignore_failure true
 end
 
-# Install Packages for net-ldap locally, why are we using locally? Coz Internet is not allowed!
-# This must happen after the stage has been mounted
-gem_package "net-ldap" do
-  source '/oracle/stage/ruby_gems/net-ldap-0.16.2.gem'
-end
+# Required for LDAP
+gem_package "net-ldap"
 
-gem_package "cicphash" do
-  source '/oracle/stage/ruby_gems/cicphash-1.1.0.gem'
-end
+gem_package "cicphash" 
 
 # Include recipe for adding VM into the LDAP
 include_recipe '::ldap-client-configs'
