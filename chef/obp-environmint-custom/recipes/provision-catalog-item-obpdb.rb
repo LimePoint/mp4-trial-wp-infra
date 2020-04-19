@@ -33,7 +33,7 @@ else
 end
 
 standard_run_list=['recipe[oci-cloud::default]']
-providerCode = lookup_catalogitem_providerCode(item_code)
+providerCode = lookup_catalogitem_providerCode(_item_code)
 host_opts = {}
 host_opts[:hostname] = "obpc#{environment_name}db.wpdev.mintpress.io"
 host_opts[:environment_name] = environment_name
