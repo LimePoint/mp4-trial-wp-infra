@@ -1,0 +1,4107 @@
+{
+  "internalVariables": {
+    "environmentName": "eng10",
+    "assetCode": "obpobh",
+    "stageRootDir": "/oracle/stage",
+    "autoBaseline": "true",
+    "projectUri": "ENG10OBPOBH2020APR202156"
+  },
+  "projectName": "eng10_obpobh2020Apr20_2156",
+  "uniquifier": "a23a6796d4454a879a8048eb5e24f2e9",
+  "site": {
+    "hostList": [
+      {
+        "id": "obpceng10obh01",
+        "address": "obpceng10obh01.wpdev.mintpress.io",
+        "properties": [
+          {
+            "name": "basename",
+            "value": "obpceng10obh01"
+          },
+          {
+            "name": "user",
+            "value": "oracle"
+          },
+          {
+            "target": "oracle.install.username",
+            "value": "oinstall"
+          },
+          {
+            "name": "password",
+            "value": "unused-key-auth"
+          },
+          {
+            "name": "targetTempDir",
+            "value": "/oracle/app/binaries/tmp",
+            "target": "target.tmp.dir"
+          }
+        ]
+      },
+      {
+        "id": "obpceng10soa01",
+        "address": "obpceng10soa01.wpdev.mintpress.io",
+        "properties": [
+          {
+            "name": "basename",
+            "value": "obpceng10soa01"
+          },
+          {
+            "name": "user",
+            "value": "oracle"
+          },
+          {
+            "target": "oracle.install.username",
+            "value": "oinstall"
+          },
+          {
+            "name": "password",
+            "value": "unused-key-auth"
+          },
+          {
+            "name": "targetTempDir",
+            "value": "/oracle/app/binaries/tmp",
+            "target": "target.tmp.dir"
+          }
+        ]
+      },
+      {
+        "id": "db_server",
+        "address": "obpceng10db-prv.wpdev.mintpress.io",
+        "properties": [
+          {
+            "name": "scaleout",
+            "value": "false"
+          },
+          {
+            "name": "user",
+            "value": "oracle"
+          },
+          {
+            "target": "oracle.install.username",
+            "value": "oinstall"
+          },
+          {
+            "name": "password",
+            "value": "unused-key-auth"
+          },
+          {
+            "name": "targetTempDir",
+            "value": "/oracle/app/binaries/tmp",
+            "target": "target.tmp.dir"
+          }
+        ]
+      }
+    ],
+    "installationList": [
+      {
+        "name": "jdk",
+        "product": "jdk",
+        "version": "1.8.0_221",
+        "installPath": "/oracle/app/binaries/obpobh/java",
+        "softwareStage": "/oracle/stage/jdk/jdk-8u221-linux-x64.tar.gz",
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpobh/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpobh/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "fmwinfra",
+        "product": "OracleFMWInfrastructure",
+        "version": "12.2.1.3",
+        "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/fmw_12.2.1.3.0_infrastructure.jar",
+        "installPath": "/oracle/app/binaries/obpobh/fmw",
+        "dependsonList": [
+          "jdk"
+        ],
+        "patchset": [
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpobh/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "29814665",
+            "aru": "29814665",
+            "properties": [
+              {
+                "name": "action",
+                "value": "rollback"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpobh/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "30386660",
+            "aru": "30386660",
+            "properties": [
+              {
+                "target": "opatch.minimum.version",
+                "value": "13.9.4.2"
+              },
+              {
+                "target": "opatch.binary.location",
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+              },
+              {
+                "target": "opatch.update.usegeneric",
+                "value": "true"
+              },
+              {
+                "name": "patchWhen",
+                "value": "post-binaries"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpobh/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "30576401",
+            "aru": "30576401",
+            "properties": [
+              {
+                "target": "opatch.minimum.version",
+                "value": "13.9.4.2"
+              },
+              {
+                "target": "opatch.binary.location",
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+              },
+              {
+                "target": "opatch.update.usegeneric",
+                "value": "true"
+              },
+              {
+                "name": "patchWhen",
+                "value": "post-binaries"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpobh/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "29909359",
+            "aru": "29909359",
+            "properties": [
+              {
+                "target": "opatch.minimum.version",
+                "value": "13.9.4.2"
+              },
+              {
+                "target": "opatch.binary.location",
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+              },
+              {
+                "target": "opatch.update.usegeneric",
+                "value": "true"
+              },
+              {
+                "name": "patchWhen",
+                "value": "post-binaries"
+              }
+            ]
+          }
+        ],
+        "properties": [
+          {
+            "name": "newworld",
+            "target": "newworld",
+            "value": "true"
+          },
+          {
+            "name": "middlewareHome",
+            "target": "middlewareHome",
+            "value": "/oracle/app/binaries/obpobh/fmw"
+          },
+          {
+            "name": "oracleInventoryLoc",
+            "target": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpobh/oraInventory"
+          },
+          {
+            "name": "OracleFMWInfrastructure.inventory_location",
+            "target": "OracleFMWInfrastructure.inventory_location",
+            "value": "/oracle/app/binaries/obpobh/oraInventory"
+          },
+          {
+            "name": "OracleFMWInfrastructure.fmw_home",
+            "target": "OracleFMWInfrastructure.fmw_home",
+            "value": "/oracle/app/binaries/obpobh/fmw"
+          },
+          {
+            "name": "OracleFMWInfrastructure.owner",
+            "target": "OracleFMWInfrastructure.owner",
+            "value": "oracle"
+          },
+          {
+            "name": "OracleFMWInfrastructure.group",
+            "target": "OracleFMWInfrastructure.group",
+            "value": "oinstall"
+          }
+        ]
+      },
+      {
+        "name": "oracleclient",
+        "product": "OracleDatabaseClient",
+        "version": "12.2.0.1",
+        "installPath": "/oracle/app/binaries/obpobh/dbclient",
+        "softwareStage": "/oracle/stage/rdbms/12.2.0.1/client",
+        "dependsonList": [
+          "jdk"
+        ],
+        "properties": [
+          {
+            "name": "newworld",
+            "target": "newworld",
+            "value": "true"
+          },
+          {
+            "name": "OracleDatabaseClient.inventory_location",
+            "target": "OracleDatabaseClient.inventory_location",
+            "value": "/oracle/app/binaries/obpobh/oraInventory"
+          },
+          {
+            "name": "OracleDatabaseClient.owner",
+            "target": "OracleDatabaseClient.owner",
+            "value": "oracle"
+          },
+          {
+            "name": "OracleDatabaseClient.group",
+            "target": "OracleDatabaseClient.group",
+            "value": "oinstall"
+          },
+          {
+            "name": "OracleDatabaseClient.oracle_home",
+            "target": "OracleDatabaseClient.oracle_home",
+            "value": "/oracle/app/binaries/obpobh/dbclient"
+          },
+          {
+            "name": "OracleDatabaseClient.oracle_base",
+            "target": "OracleDatabaseClient.oracle_base",
+            "value": "/oracle/app/binaries/obpobh"
+          },
+          {
+            "name": "OracleDatabaseClient.install_type",
+            "target": "OracleDatabaseClient.install_type",
+            "value": "Administrator"
+          }
+        ]
+      },
+      {
+        "name": "soa",
+        "product": "OracleSOASuite",
+        "version": "12.2.1.3",
+        "installPath": "/oracle/app/binaries/obpobh/fmw/soa",
+        "softwareStage": "/oracle/stage/soa/12.2.1.3/fmw_12.2.1.3.0_soa.jar",
+        "dependsonList": [
+          "fmwinfra"
+        ],
+        "properties": [
+          {
+            "name": "newworld",
+            "target": "newworld",
+            "value": "true"
+          },
+          {
+            "name": "OracleSOASuite.inventory_location",
+            "target": "OracleSOASuite.inventory_location",
+            "value": "/oracle/app/binaries/obpobh/oraInventory"
+          },
+          {
+            "name": "OracleSOASuite.fmw_home",
+            "target": "OracleSOASuite.fmw_home",
+            "value": "/oracle/app/binaries/obpobh/fmw"
+          },
+          {
+            "name": "OracleSOASuite.java_home",
+            "target": "OracleSOASuite.java_home",
+            "value": "/oracle/app/binaries/obpobh/java"
+          },
+          {
+            "name": "OracleSOASuite.owner",
+            "target": "OracleSOASuite.owner",
+            "value": "oracle"
+          },
+          {
+            "name": "OracleSOASuite.group",
+            "target": "OracleSOASuite.group",
+            "value": "oinstall"
+          }
+        ]
+      },
+      {
+        "name": "obp-host",
+        "product": "OracleBankingPlatform::GenericHostInstallation",
+        "version": "2.7.1.0.0",
+        "installPath": "/oracle/app/binaries/obpobh/fmw/obpinstall",
+        "softwareStage": "/oracle/stage/obp/2.7.1/obp-host/obpinstall-host",
+        "dependsonList": [
+          "soa",
+          "oracleclient"
+        ],
+        "properties": [
+          {
+            "name": "newworld",
+            "target": "newworld",
+            "value": "true"
+          },
+          {
+            "name": "OracleBankingPlatform::GenericHostInstallation.inventory_location",
+            "target": "OracleBankingPlatform::GenericHostInstallation.inventory_location",
+            "value": "/oracle/app/binaries/obpobh/oraInventory"
+          },
+          {
+            "name": "OracleBankingPlatform::GenericHostInstallation.installed_component",
+            "target": "OracleBankingPlatform::GenericHostInstallation.installed_component",
+            "value": "batch"
+          },
+          {
+            "name": "OracleBankingPlatform::GenericHostInstallation.java_home",
+            "target": "OracleBankingPlatform::GenericHostInstallation.java_home",
+            "value": "/oracle/app/binaries/obpobh/java"
+          },
+          {
+            "name": "OracleBankingPlatform::GenericHostInstallation.fmw_home",
+            "target": "OracleBankingPlatform::GenericHostInstallation.fmw_home",
+            "value": "/oracle/app/binaries/obpobh/fmw"
+          }
+        ]
+      }
+    ],
+    "environmentList": [
+      {
+        "name": "eng10",
+        "mwTopologyList": [
+          {
+            "name": "obpobh",
+            "description": "eng10 obpobh Environment",
+            "nodeManagerList": [
+              {
+                "name": "nm-obpceng10obh01",
+                "listenAddress": "obpceng10obh01-prv.wpdev.mintpress.io",
+                "listenPort": "16001",
+                "hostIdentifier": "obpceng10obh01",
+                "properties": [
+                  {
+                    "target": "wls.nodemanager.log.path",
+                    "value": "/oracle/app/logs/obpobh/obpceng10obh01"
+                  },
+                  {
+                    "value": "wpdev",
+                    "target": "wls.nodemanager.identityname"
+                  },
+                  {
+                    "value": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+                    "target": "wls.nodemanager.identitystorefile"
+                  },
+                  {
+                    "name": "nmwc",
+                    "target": "wls.nodemanager.wildcardcertificate",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.shared.domain.dir",
+                    "value": "true"
+                  },
+                  {
+                    "name": "wlInstallationName",
+                    "value": "fmwinfra"
+                  },
+                  {
+                    "name": "nodemanagerTop",
+                    "value": "/oracle/app/binaries/obpobh/fmw/wlserver/common/nodemanager",
+                    "target": "wls.nodemanager.top"
+                  },
+                  {
+                    "name": "type",
+                    "value": "SSL"
+                  },
+                  {
+                    "target": "wls.nodemanager.secure.listener",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.setidentity",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.usejsse",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.crashrecovery",
+                    "value": "false"
+                  },
+                  {
+                    "target": "wls.nodemanager.umask",
+                    "value": "022"
+                  },
+                  {
+                    "value": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+                    "target": "wls.nodemanager.truststorefile"
+                  },
+                  {
+                    "value": "FIXME",
+                    "target": "wls.nodemanager.identitystorekey"
+                  },
+                  {
+                    "value": "FIXME",
+                    "target": "wls.nodemanager.truststorekey"
+                  },
+                  {
+                    "value": "FIXME",
+                    "target": "wls.nodemanager.identitypassphrase"
+                  }
+                ]
+              }
+            ],
+            "domainList": [
+              {
+                "name": "obphost_domain",
+                "locationPath": "/oracle/app/runtime/obpobh/domains",
+                "adminUser": "weblogic",
+                "adminPassword": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI=",
+                "adminServer": {
+                  "name": "AdminServer",
+                  "machineName": "Machine-obpceng10obh01",
+                  "listenAddress": "obpceng10obh01.wpdev.mintpress.io",
+                  "listenAddressPort": "17001",
+                  "listenAddressPortSSL": "18001",
+                  "targetName": "obhAdminServer"
+                },
+                "machineList": [
+                  {
+                    "name": "Machine-obpceng10obh01",
+                    "nodeManagerName": "nm-obpceng10obh01"
+                  }
+                ],
+                "clusterList": [
+                  {
+                    "name": "obphost_cluster",
+                    "messageMode": "Unicast"
+                  }
+                ],
+                "managedServerList": [
+                  {
+                    "name": "obphost_server1",
+                    "machineName": "Machine-obpceng10obh01",
+                    "clusterName": "obphost_cluster",
+                    "listenAddress": "obpceng10obh01.wpdev.mintpress.io",
+                    "listenAddressPort": "17002",
+                    "listenAddressPortSSL": "18002",
+                    "targetName": "obphost_server1",
+                    "properties": [
+                      {
+                        "name": "nodeid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "serverid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "nodeonserver",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ],
+                "middlewareList": [
+                  {
+                    "installationName": "obp-host",
+                    "targetList": [
+                      {
+                        "type": "Cluster",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "configurationList": [
+                  {
+                    "resourceName": "AdminStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "AdminServer"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "WeblogicUser_wlsmonitor",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "WeblogicUser_odemmon",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "AdminServerExtChannel",
+                    "type": "NetworkAccessPoint",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "AdminServer"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "AdminServerSettings",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "AdminServer"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DomainWebappConfig",
+                    "type": "WebAppContainer"
+                  },
+                  {
+                    "resourceName": "DomainAdministrationPortConfiguration",
+                    "type": "Domain"
+                  },
+                  {
+                    "resourceName": "DomainLogConfiguration",
+                    "type": "DomainLog"
+                  },
+                  {
+                    "resourceName": "DomainSecurityConfiguration",
+                    "type": "SecurityConfiguration"
+                  },
+                  {
+                    "resourceName": "defaultCoherenceCluster",
+                    "type": "CoherenceClusterSystemResource"
+                  },
+                  {
+                    "resourceName": "JdbcCommonSettings",
+                    "type": "JDBCSystemResource",
+                    "properties": [
+                      {
+                        "name": "dataSourceName",
+                        "value": "*"
+                      },
+                      {
+                        "name": "noTarget",
+                        "value": "true"
+                      }
+                    ],
+                    "targets": [
+
+                    ]
+                  },
+                  {
+                    "resourceName": "GenericServerSettings_auto_1",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "obphost_server1"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "ClusterStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "ClusterClassPathParameters",
+                    "type": "ClassPath",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "JTASettings",
+                    "type": "JTA"
+                  },
+                  {
+                    "resourceName": "CrossDomainSecurityConfiguration",
+                    "type": "SecurityConfiguration"
+                  },
+                  {
+                    "resourceName": "JdbcSharedSettings",
+                    "type": "JDBCSystemResource",
+                    "properties": [
+                      {
+                        "name": "dataSourceName",
+                        "value": "opss-data-source,opss-audit-DBDS,opss-audit-viewDS,LocalSvcTblDataSource"
+                      },
+                      {
+                        "name": "noTarget",
+                        "value": "true"
+                      }
+                    ],
+                    "targets": [
+
+                    ]
+                  },
+                  {
+                    "resourceName": "jms-tlogs",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "mds-owsm",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      },
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "AdminServer"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "PCSMDataSource",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "OBP_HOST_CONFIG",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "OBP_HOST_DS_NONXA",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "OBP_HOST_DS_XA",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "OBP_HOST_LOCK",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "OBP_SYS_CONFIG",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "obphost_server1JDBCStore",
+                    "type": "JDBCStore",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "obphost_server1"
+                        ]
+                      }
+                    ],
+                    "properties": [
+                      {
+                        "name": "dataSource",
+                        "value": "jms-tlogs"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "obphost_server1jmsserver",
+                    "type": "JMSServer",
+                    "properties": [
+                      {
+                        "name": "jdbcStore",
+                        "value": "obphost_server1JDBCStore"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "obphost_server1"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsAccountingModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsAccountingModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsAccountingModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsAsyncAuditModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsAsyncAuditModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsAsyncAuditModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsCasaModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsCasaModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsCasaModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsCollectionModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsCollectionModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsCollectionModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsDomainPublishModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsDomainPublishModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsDomainPublishModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsPaymentModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsPaymentModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsPaymentModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsPricingAnalysisModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsPricingAnalysisModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsPricingAnalysisModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsTitleSearchModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsTitleSearchModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsTitleSearchModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsValuationModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsValuationModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsValuationModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsReportModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsReportModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsReportModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsEventProcessModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsEventProcessModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsEventProcessModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsCollateralModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsCollateralModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsCollateralModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsWorkflowModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsWorkflowModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsWorkflowModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsODIModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsODIModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsODIModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsOriginationModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsOriginationModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsOriginationModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsAnalyticsModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsAnalyticsModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsAnalyticsModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsDocumentOutboundModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsDocumentOutboundModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsDocumentOutboundModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsPartyModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsPartyModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsPartyModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsRuleModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsRuleModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsRuleModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsBatchModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "jmsBatchModule_sub"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obphost_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jmsBatchModule_sub",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "obphost_server1jmsserver"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_1",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_2",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_3",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "OIDAuthenticator",
+                    "type": "AuthenticationProvider",
+                    "properties": [
+                      {
+                        "name": "realmName",
+                        "value": "myrealm"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "CIDAuthenticator",
+                    "type": "AuthenticationProvider",
+                    "properties": [
+                      {
+                        "name": "realmName",
+                        "value": "myrealm"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DefaultAuthenticator",
+                    "type": "AuthenticationProvider",
+                    "properties": [
+                      {
+                        "name": "realmName",
+                        "value": "myrealm"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "LocalUser_SA_VALEX_API_OSB_USER",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "LocalUser_SA_ESIGN_OSB_USER",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "JpsConfigSettings",
+                    "type": "JpsConfig",
+                    "properties": [
+                      {
+                        "name": "serverInstance",
+                        "value": "idstore.ldap"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "obphost_server1StartupParameter",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "obphost_server1"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "obphost_server1Server",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "obphost_server1"
+                      }
+                    ]
+                  }
+                ],
+                "templateList": [
+                  {
+                    "name": "OracleBankingPlatform::GenericHostTemplateSet",
+                    "properties": [
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.database_client_home",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.database_client_home",
+                        "value": "/oracle/app/binaries/obpobh/dbclient"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.create_obp_schema",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.create_obp_schema",
+                        "value": "true"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.seed_obp_schema",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.seed_obp_schema",
+                        "value": "false"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.database_schema_name",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.database_schema_name",
+                        "value": "OBPHOST_OBP"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.seed_obp_security_policy",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.seed_obp_security_policy",
+                        "value": "false"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_transport",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_transport",
+                        "value": "transport[obpceng10soa01.wpdev.mintpress.io]"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_java_home",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_java_home",
+                        "value": "/oracle/app/binaries/obpsoa/java"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_fmw_home",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_fmw_home",
+                        "value": "/oracle/app/binaries/obpsoa/fmw"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_domain_home",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_domain_home",
+                        "value": "/oracle/app/runtime/obpsoa/domains/obpsoa_domain"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.configured_components",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.configured_components",
+                        "value": "marshal:/BAhbBkkiCkJhdGNoBjoGRVQ="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_opss_schema_name",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_opss_schema_name",
+                        "value": "OBPSOA_opss"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_opss_schema_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_opss_schema_password",
+                        "value": "{AES2}b/sEd/wbJCX97Iywun0bnA=={/IV}T1p986IqAMw8CP2jXeVBXunYEydGPpBfWl/sV6abTysI="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_opss_database_url",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_opss_database_url",
+                        "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_SOA_PRIM)))"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_jndi_url",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_jndi_url",
+                        "value": "t3s://obpceng10soa.wpdev.mintpress.io:18002/soa-infra"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_process_url",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_process_url",
+                        "value": "https://obpceng10soa.wpdev.mintpress.io:18002"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_offline_channel_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_offline_channel_username",
+                        "value": "offlineuser"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_offline_channel_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_offline_channel_password",
+                        "value": "{AES2}lINRYF0UBbOmwY2KUrQ1TQ=={/IV}TalTmmhUNypZJOIi9KvcneI8uVtlllPdewUV8sV1TFgs="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_ipm_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_ipm_username",
+                        "value": "obpipm_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_ipm_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_ipm_password",
+                        "value": "{AES2}lmaXx4P28wrfOq9KX3iFiQ=={/IV}Tv5JVc7cknMNo00/i6Qq/AU9vhKsPSS86SXe8QVAxzKA="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_username",
+                        "value": "obpbip_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_password",
+                        "value": "{AES2}mhQxB9vd+0vlVGYP2MobbA=={/IV}TO94zgreKKf6Y8r/KkfzpOrDVqPdkoZhWvC3vTQZgysg="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_usr_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_usr_username",
+                        "value": "obpbip_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_usr_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_bip_usr_password",
+                        "value": "{AES2}mhQxB9vd+0vlVGYP2MobbA=={/IV}TO94zgreKKf6Y8r/KkfzpOrDVqPdkoZhWvC3vTQZgysg="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_soa_outbound_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_soa_outbound_username",
+                        "value": "obpsoa_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_soa_outbound_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_soa_outbound_password",
+                        "value": "{AES2}nhoR6kdTKpl+d+/zo4f2EQ=={/IV}Tfj88pF4EZo5cmRHJfYXBPvU4zdda9w32QLVCTU93+bA="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_host_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_host_username",
+                        "value": "weblogic"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_host_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_host_password",
+                        "value": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_ui_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_ui_username",
+                        "value": "weblogic"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_ui_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_dms_ui_password",
+                        "value": "{AES2}/ZDFmQ7bghp44gsepVaDEw=={/IV}TPR9XRzzHCQX6np+C94cF6FNFBKJYQj2iXaHZgN5EQuU="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_op_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_op_username",
+                        "value": "obphost_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_op_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_op_password",
+                        "value": "{AES2}AkRY6wChxCrZttR23zQQhA=={/IV}T5pR71VYv2q/8jaZx2pMtgnNBicvbztN28E3D499i8zc="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_ws_mft_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_ws_mft_username",
+                        "value": "obphost_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_ws_mft_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_ws_mft_password",
+                        "value": "{AES2}AkRY6wChxCrZttR23zQQhA=={/IV}T5pR71VYv2q/8jaZx2pMtgnNBicvbztN28E3D499i8zc="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_ftp_bip_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_ftp_bip_username",
+                        "value": "obpbip_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_ftp_bip_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_ftp_bip_password",
+                        "value": "{AES2}mhQxB9vd+0vlVGYP2MobbA=={/IV}TO94zgreKKf6Y8r/KkfzpOrDVqPdkoZhWvC3vTQZgysg="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_odi_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_odi_username",
+                        "value": "SUPERVISOR"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_odi_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_odi_password",
+                        "value": "{AES2}0pzWJuRSTwmHz3BJDlFCxw=={/IV}TuTWj26fBsim9oui/pIyTSA=="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_oim_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_oim_username",
+                        "value": "obpcimadmin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_oim_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_oim_password",
+                        "value": "{AES2}W4upQy6qeLb2TBRGJf6Jjw=={/IV}TmR9TJx+GFHZ7RNS+BEPMIiMg/jy4nIjA8RrOG/pGMkw="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_bam_ws_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_bam_ws_username",
+                        "value": "SA_OBP_BAM_MANAGE_USER"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_bam_ws_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_bam_ws_password",
+                        "value": "{AES2}4z7R/BjTfVMxW8bF5LwziQ=={/IV}Tresavepblgdk/BW2zFS93nqnszhmidOmVsqzvCjnd8o="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_cm_bp_batch_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_cm_bp_batch_username",
+                        "value": "obpbip_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_cm_bp_batch_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_cm_bp_batch_password",
+                        "value": "{AES2}mhQxB9vd+0vlVGYP2MobbA=={/IV}TO94zgreKKf6Y8r/KkfzpOrDVqPdkoZhWvC3vTQZgysg="
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_card_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_card_username",
+                        "value": "orakey"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.ra_rule_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.ra_rule_username",
+                        "value": "orakey"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_foreign_provider_username",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_foreign_provider_username",
+                        "value": "obpsoa_admin"
+                      },
+                      {
+                        "name": "OracleBankingPlatform::GenericHostTemplateSet.soa_foreign_provider_password",
+                        "target": "OracleBankingPlatform::GenericHostTemplateSet.soa_foreign_provider_password",
+                        "value": "{AES2}nhoR6kdTKpl+d+/zo4f2EQ=={/IV}Tfj88pF4EZo5cmRHJfYXBPvU4zdda9w32QLVCTU93+bA="
+                      }
+                    ]
+                  }
+                ],
+                "repositoryList": [
+                  {
+                    "componentList": [
+                      "OPSS",
+                      "STB",
+                      "WLS",
+                      "MDS"
+                    ],
+                    "id": "rcu01",
+                    "dbName": "eng10obpobhdb",
+                    "prefix": "OBPHOST",
+                    "dbUser": "SYS",
+                    "schemaPassword": "{AES2}Nh00i3ZZoulJma58x0gVVA=={/IV}T/0jsQ/7Y0hD3G+9T3+xdja8w29Qc0ZIePnmvIRMNssk=",
+                    "defaultRepository": "true"
+                  }
+                ],
+                "properties": [
+                  {
+                    "name": "newworld",
+                    "value": "true"
+                  },
+                  {
+                    "name": "exclude_fmwinfra_template",
+                    "value": "true"
+                  },
+                  {
+                    "name": "serverStartMode",
+                    "value": "prod",
+                    "target": "wls.production.mode"
+                  },
+                  {
+                    "name": "backupEnvironmentName",
+                    "value": "eng10",
+                    "target": "environment.name"
+                  },
+                  {
+                    "name": "tlogsLocationPath",
+                    "value": "/oracle/app/runtime/obpobh/domains/obphost_domain",
+                    "target": "wls.tlogs.location.path"
+                  },
+                  {
+                    "name": "odlLogLocation",
+                    "value": "/oracle/app/logs/obpobh/obphost_domain",
+                    "target": "wls.odl.log.location"
+                  },
+                  {
+                    "name": "defaultJMSLogLocation",
+                    "value": "/oracle/app/logs/obpobh/obphost_domain"
+                  },
+                  {
+                    "name": "mintpress.startup_parallel",
+                    "value": "10",
+                    "target": "mintpress.startup_parallel"
+                  },
+                  {
+                    "target": "wls.admin.listen.port.admin",
+                    "value": "19001"
+                  },
+                  {
+                    "target": "wls.odl.log.retentionPeriod",
+                    "value": "5d"
+                  },
+                  {
+                    "name": "nodeid",
+                    "value": "1"
+                  },
+                  {
+                    "name": "nodeonserver",
+                    "value": "1"
+                  },
+                  {
+                    "name": "serverid",
+                    "value": "1"
+                  }
+                ]
+              }
+            ],
+            "properties": [
+              {
+                "name": "targetPlatform",
+                "value": "x86-64"
+              }
+            ],
+            "hostInstallationList": [
+              {
+                "installationName": "obp-host",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              }
+            ],
+            "transferList": [
+              {
+                "name": "eng10_obpobh_keystore",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/obpceng10obh.jks",
+                "destinationFile": "/oracle/app/runtime/eng10/certs/obpceng10obh.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpobh_truststore",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/wpdev.jks",
+                "destinationFile": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpobh_caCerts",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/cacerts.pem",
+                "destinationFile": "/oracle/app/runtime/eng10/certs/cacerts.pem",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpobh_UnlimitedJCEPolicyLocal",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/jdk/UnlimitedJCEPolicyJDK8/local_policy.jar",
+                "destinationFile": "/oracle/app/binaries/obpobh/java/jre/lib/security/local_policy.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpobh_UnlimitedJCEPolicyUS",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/jdk/UnlimitedJCEPolicyJDK8/US_export_policy.jar",
+                "destinationFile": "/oracle/app/binaries/obpobh/java/jre/lib/security/US_export_policy.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "ovdkeystore",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/adapters.jks",
+                "destinationFile": "/oracle/app/runtime/obpobh/domains/obphost_domain/config/fmwconfig/ovd/default/keystores/adapters.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "oimclient",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/obpobh/oimclient.jar",
+                "destinationFile": "/oracle/app/runtime/obpobh/domains/obphost_domain/lib/oimclient.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "fcIODir",
+                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                "content": "ZHVtbXkK",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "destinationFile": "/oracle/app/runtime/obpobh/domains/resources/.dummy",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "SIEMCustomAuditor",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/common/SIEMCustomAuditor.jar",
+                "destinationFile": "/oracle/app/binaries/obpobh/fmw/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries",
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "HealthCheckFileCopy",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/common/HealthCheck.war",
+                "destinationFile": "/oracle/app/runtime/obpobh/domains/applications/obphost_domain/HealthCheck.war",
+                "permissions": "755",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "wpdevKeystore",
+                "destinationFile": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+                "permissions": "600",
+                "hostIdentifierList": [
+                  "obpceng10obh01",
+                  "obpceng10soa01"
+                ],
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/wpdev.jks",
+                "properties": [
+                  {
+                    "name": "KeyAlias",
+                    "value": "wpdev"
+                  },
+                  {
+                    "name": "KeystorePassword",
+                    "value": "FIXME"
+                  }
+                ]
+              },
+              {
+                "name": "wpdevTruststore",
+                "destinationFile": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+                "permissions": "600",
+                "hostIdentifierList": [
+                  "obpceng10obh01",
+                  "obpceng10soa01"
+                ],
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/wpdev.jks",
+                "properties": [
+                  {
+                    "name": "TruststorePassword",
+                    "value": "FIXME"
+                  }
+                ]
+              }
+            ],
+            "executeList": [
+              {
+                "name": "data-load-obp",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obpobh-load-rcu-data]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "override-env-variables-obp",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obp-override-environment-variables]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "UpdateAdaptersOSXml",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-wls-ldap-adapters]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "UpdateJpsConfigParams",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-jps-config]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "DeployHealthCheck",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpobh/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/deployApplication.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10obh01-prv.wpdev.mintpress.io:17001  HealthCheck /oracle/app/runtime/obpobh/domains/applications/obphost_domain/HealthCheck.war obphost_cluster,obphost_cluster nostage 650",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "CreateOBPHOSTLogger",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpobh/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/createOBPODLLoggers.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10obh01-prv.wpdev.mintpress.io:17001 /oracle/app/logs/obpobh/obphost_domain",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "securityJMXAuthEnable",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpobh/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/securityAccessAndRoles.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10obh01-prv.wpdev.mintpress.io:17001 JMXAuth true",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "jmsMsgView",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpobh/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/securityAccessAndRoles.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10obh01-prv.wpdev.mintpress.io:17001 JMSView",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "UpdateDbDetails",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obp-override-environment-variables]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "CreateDatabaseObjects",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::create-db-users]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-rcu"
+                ]
+              },
+              {
+                "name": "DeleteDatabaseObjects",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::drop-db-users]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-clobber"
+                ]
+              },
+              {
+                "name": "deleteDefaultAuditor",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpobh/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/deleteDefaultAuditor.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10obh01-prv.wpdev.mintpress.io:17001 obphost_domain",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "updateSIEMAuditor",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpobh/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/updateSIEMAuditor.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10obh01-prv.wpdev.mintpress.io:17001 obphost_domain obpobh",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}SXX6suD80ZGw3NEAItFa+w=={/IV}TyzvpCpCTeS8YehYYoH24FuHQmrv6EZ+UTwWlimw0zGI="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "UpdateODLLogLevel",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-odl-log-level]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "UndeployApplication",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::undeployApplication]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "host-jms-retarget",
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::obpobh-retarget-jms]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "ensure-oid-working-online",
+                "sourceFile": "LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng10oid.wpdev.mintpress.io/18001' ; LOOP=$? ; echo 'contacting obpceng10oid.wpdev.mintpress.io18001' ; sleep 1 ;  done ; LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng10cid.wpdev.mintpress.io/18001' ; LOOP=$? ; echo 'contacting obpceng10cid.wpdev.mintpress.io18001' ; sleep 1 ;  done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              },
+              {
+                "name": "ensure-oid-working-start",
+                "sourceFile": "LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng10oid.wpdev.mintpress.io/18001' ; LOOP=$? ; echo 'contacting obpceng10oid.wpdev.mintpress.io18001' ; sleep 1 ;  done ; LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng10cid.wpdev.mintpress.io/18001' ; LOOP=$? ; echo 'contacting obpceng10cid.wpdev.mintpress.io18001' ; sleep 1 ;  done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              },
+              {
+                "name": "ensure-db-working-online",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPUI_MDS/RUsToNR2LIn_2X7ltGt6@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'CDE/b_14fEJaukNmKg0mYbsB@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPHOST_JMS_TLOGS/b_14fEJaukNmKg0mYbsB@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              },
+              {
+                "name": "ensure-db-working-start",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPUI_MDS/RUsToNR2LIn_2X7ltGt6@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'CDE/b_14fEJaukNmKg0mYbsB@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPHOST_JMS_TLOGS/b_14fEJaukNmKg0mYbsB@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-start"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              },
+              {
+                "name": "check-obpobh-obpsoa-admin-configure",
+                "sourceFile": "LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng10soa01-prv.wpdev.mintpress.io/17001' ; LOOP=$? ; echo 'contacting obpceng10soa01-prv.wpdev.mintpress.io/17001' ; sleep 1 ;  done",
+                "executeWhenList": [
+                  "pre-configure"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              },
+              {
+                "name": "check-db",
+                "sourceFile": "RESULT=1 ; while [ $RESULT != 0 ]; do export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; $ORACLE_HOME/bin/sqlplus llama/duck@obpceng10db-prv.wpdev.mintpress.io:1521/CBCD3_OBP_PRIM </dev/null 2>&1 | grep logon.denied ; RESULT=$? ; sleep 5 ; done",
+                "executeWhenList": [
+                  "pre-rcu"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              },
+              {
+                "name": "check-db-startup",
+                "sourceFile": "RESULT=1 ; while [ $RESULT != 0 ]; do export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; $ORACLE_HOME/bin/sqlplus llama/duck@obpceng10db-prv.wpdev.mintpress.io:1521/CBCD3_OBP_PRIM </dev/null 2>&1 | grep logon.denied ; RESULT=$? ; sleep 5 ; done",
+                "executeWhenList": [
+                  "pre-start"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10obh01"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "databaseList": [
+      {
+        "name": "eng10obpobhdb",
+        "port": "1521",
+        "serviceName": "CBCD3_OBP_PRIM",
+        "properties": [
+          {
+            "name": "rcu.datafile.initialsize",
+            "value": "200M",
+            "target": "rcu.datafile.initialsize"
+          },
+          {
+            "target": "rcu.extra.parameters",
+            "value": " -encryptTablespace false"
+          },
+          {
+            "name": "jdbcUrl",
+            "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=obpceng10db-prv.wpdev.mintpress.io)(Port=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=CBCD3_OBP_PRIM)))"
+          }
+        ],
+        "hostIdentifier": "db_server",
+        "schemaList": [
+          {
+            "name": "SYS",
+            "password": "{AES2}FeOdT3ScVdNpee6AcZZ90w=={/IV}To44cfetHhuschWVvEDrj/11oG9BzDDIpRBvEfoTxfjs="
+          }
+        ]
+      }
+    ],
+    "resourceList": [
+      {
+        "name": "WeblogicUser_wlsmonitor",
+        "type": "User",
+        "attributes": {
+          "name": "wlsmonitor",
+          "password": "{AES2}/QSex+QCvYznaLos3xCctw=={/IV}TQ8tNkpgDX+wX+QcLmPsCbrEFdS/pzKSBFr0yX+zGxJU=",
+          "description": "User with Weblogic Monitor Role",
+          "groupList": "monitors"
+        }
+      },
+      {
+        "name": "WeblogicUser_odemmon",
+        "type": "User",
+        "attributes": {
+          "name": "odemmon",
+          "password": "{AES2}SZ3SiuIsiGgzOtOfPYuQxQ=={/IV}Tpri13qkdQpfvBkvN3Tw8vvbPFoertNpesX3522cCorA=",
+          "description": "OEM User with Weblogic Monitor Role",
+          "groupList": "monitors"
+        }
+      },
+      {
+        "name": "AdminServerExtChannel",
+        "type": "NetworkAccessPoint",
+        "attributes": {
+          "Name": "AdminServerExtChannel",
+          "CustomPrivateKeyAlias": "None",
+          "Protocol": "https",
+          "ListenAddress": "obpceng10obh-adm.wpdev.mintpress.io",
+          "ListenPort": "18001",
+          "ClientCertificateEnforced": "false",
+          "Enabled": "false",
+          "TunnelingEnabled": "false",
+          "TwoWaySSLEnabled": "false",
+          "ChannelIdentityCustomized": "false",
+          "HttpEnabledForThisProtocol": "true",
+          "OutboundEnabled": "false",
+          "CustomPrivateKeyPassPhrase": "None"
+        }
+      },
+      {
+        "name": "DomainWebappConfig",
+        "type": "WebAppContainer",
+        "attributes": {
+          "WeblogicPluginEnabled": "true",
+          "XPoweredByHeaderLevel": "NONE"
+        }
+      },
+      {
+        "name": "defaultCoherenceCluster",
+        "type": "CoherenceClusterSystemResource",
+        "params": [
+          {
+            "type": "CoherenceClusterResource",
+            "params": [
+              {
+                "type": "CoherenceClusterParams",
+                "attributes": {
+                  "SecurityFrameworkEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DomainLogConfiguration",
+        "type": "DomainLog",
+        "attributes": {
+          "NumberOfFilesLimited": "true",
+          "FileMinSize": "10000",
+          "RotationTime": "05:00",
+          "FileTimeSpan": "24",
+          "RotateLogOnStartup": "true",
+          "RotationType": "byTime",
+          "FileCount": "5",
+          "FileName": "/oracle/app/logs/obpobh/obphost_domain.log"
+        }
+      },
+      {
+        "name": "DomainSecurityConfiguration",
+        "type": "SecurityConfiguration",
+        "attributes": {
+          "ConnectionLoggerEnabled": "true",
+          "ConnectionFilter": "weblogic.security.net.ConnectionFilterImpl"
+        },
+        "params": [
+          {
+            "type": "Realm",
+            "name": "myrealm",
+            "attributes": {
+              "DelegateMBeanAuthorization": "true"
+            },
+            "params": [
+              {
+                "type": "UserLockoutManager",
+                "attributes": {
+                  "LockoutThreshold": "3",
+                  "LockoutDuration": "15",
+                  "LockoutResetDuration": "15"
+                }
+              },
+              {
+                "type": "Auditor",
+                "name": "SIEMCustomAuditor:com.oracle.westpac.csh.siem.cap.SIEMCustomAuditor"
+              },
+              {
+                "type": "PasswordValidator",
+                "name": "SystemPasswordValidator:com.bea.security.providers.authentication.passwordvalidator.SystemPasswordValidator",
+                "attributes": {
+                  "MinPasswordLength": "15",
+                  "MinUppercaseCharacters": "1",
+                  "MinLowercaseCharacters": "1",
+                  "MinNumericCharacters": "1",
+                  "MinNonAlphanumericCharacters": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "CertRevoc",
+            "name": "obphost_domain",
+            "attributes": {
+              "CheckingEnabled": "false"
+            }
+          }
+        ]
+      },
+      {
+        "name": "AdminServerSettings",
+        "type": "Server",
+        "params": [
+          {
+            "type": "Log",
+            "attributes": {
+              "RotateLogOnStartup": "true",
+              "MemoryBufferSize": "500",
+              "StdoutFormat": "standard",
+              "BufferSizeKB": "8",
+              "ServerLoggingBridgeUseParentLoggersEnabled": "false",
+              "RedirectStderrToServerLogEnabled": "false",
+              "StdoutSeverity": "Off",
+              "DomainLogBroadcastSeverity": "Error",
+              "MemoryBufferSeverity": "Error",
+              "StdoutLogStack": "true",
+              "RedirectStdoutToServerLogEnabled": "false",
+              "NumberOfFilesLimited": "true",
+              "FileCount": "5",
+              "RotationType": "byTime",
+              "DomainLogBroadcasterBufferSize": "10",
+              "Log4jLoggingEnabled": "false",
+              "FileMinSize": "10000",
+              "RotationTime": "05:00",
+              "FileTimeSpan": "24",
+              "StacktraceDepth": "5",
+              "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
+              "LogFileSeverity": "Warning",
+              "FileName": "/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%.log"
+            }
+          },
+          {
+            "type": "WebServer",
+            "params": [
+              {
+                "type": "WebServerLog",
+                "attributes": {
+                  "RotateLogOnStartup": "true",
+                  "NumberOfFilesLimited": "true",
+                  "FileCount": "5",
+                  "RotationType": "byTime",
+                  "FileMinSize": "10000",
+                  "RotationTime": "05:00",
+                  "FileTimeSpan": "24",
+                  "FileName": "/oracle/app/logs/obpobh/obphost_domain/%Name%/access.log",
+                  "LogFileFormat": "extended",
+                  "ELFFields": "cs(X-Forwarded-For) c-ip auth_user date time time-taken cs-method cs-uri sc-status ctx-ecid ctx-rid"
+                }
+              }
+            ]
+          },
+          {
+            "type": "SSL",
+            "attributes": {
+              "ServerPrivateKeyAlias": "wpdev",
+              "HostnameVerificationIgnored": "false",
+              "Enabled": "true",
+              "ServerPrivateKeyPassPhrase": "FIXME",
+              "JSSEEnabled": "true",
+              "UseServerCerts": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier"
+            }
+          },
+          {
+            "type": "ServerDiagnosticConfig",
+            "attributes": {
+              "DiagnosticContextEnabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "Notes": "Server settings",
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreType": "jks",
+          "AdministrationPort": "%ListenPort+2000%"
+        }
+      },
+      {
+        "name": "GenericServerSettings_auto_1",
+        "type": "Server",
+        "params": [
+          {
+            "type": "Log",
+            "attributes": {
+              "RotateLogOnStartup": "true",
+              "MemoryBufferSize": "500",
+              "StdoutFormat": "standard",
+              "BufferSizeKB": "8",
+              "ServerLoggingBridgeUseParentLoggersEnabled": "false",
+              "RedirectStderrToServerLogEnabled": "false",
+              "StdoutSeverity": "Off",
+              "DomainLogBroadcastSeverity": "Error",
+              "MemoryBufferSeverity": "Error",
+              "StdoutLogStack": "true",
+              "RedirectStdoutToServerLogEnabled": "false",
+              "NumberOfFilesLimited": "true",
+              "FileCount": "5",
+              "RotationType": "byTime",
+              "DomainLogBroadcasterBufferSize": "10",
+              "Log4jLoggingEnabled": "false",
+              "FileMinSize": "10000",
+              "RotationTime": "05:00",
+              "FileTimeSpan": "24",
+              "StacktraceDepth": "5",
+              "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
+              "LogFileSeverity": "Warning",
+              "FileName": "/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%.log"
+            }
+          },
+          {
+            "type": "WebServer",
+            "params": [
+              {
+                "type": "WebServerLog",
+                "attributes": {
+                  "RotateLogOnStartup": "true",
+                  "NumberOfFilesLimited": "true",
+                  "FileCount": "5",
+                  "RotationType": "byTime",
+                  "FileMinSize": "10000",
+                  "RotationTime": "05:00",
+                  "FileTimeSpan": "24",
+                  "FileName": "/oracle/app/logs/obpobh/obphost_domain/%Name%/access.log",
+                  "LogFileFormat": "extended",
+                  "ELFFields": "cs(X-Forwarded-For) c-ip auth_user date time time-taken cs-method cs-uri sc-status ctx-ecid ctx-rid"
+                }
+              }
+            ]
+          },
+          {
+            "type": "SSL",
+            "attributes": {
+              "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
+              "HostnameVerificationIgnored": "false",
+              "Enabled": "true",
+              "ServerPrivateKeyPassPhrase": "{AES2}Ms5gZTM+ZeLmpeWvcE3P7Q=={/IV}TfJcW4T9igtwIpNs97+MUXGa7IxCAHlk6jWxOX1SHR/8=",
+              "JSSEEnabled": "true",
+              "UseServerCerts": "true"
+            }
+          },
+          {
+            "type": "ServerDiagnosticConfig",
+            "attributes": {
+              "DiagnosticContextEnabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "Notes": "Server settings",
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng10/certs/obpceng10obh.jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}Ms5gZTM+ZeLmpeWvcE3P7Q=={/IV}TfJcW4T9igtwIpNs97+MUXGa7IxCAHlk6jWxOX1SHR/8=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}47I7psLjgP3cg9BqxYnsBQ=={/IV}TEWHeBWZgXAxTb6anB8TknDSlotIVha8wXmfYykHRA9Q=",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreType": "jks",
+          "AdministrationPort": "%ListenPort+2000%"
+        }
+      },
+      {
+        "name": "JdbcCommonSettings",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCOracleParams",
+                "attributes": {
+                  "OnsNodeList": "None",
+                  "FanEnabled": "false"
+                }
+              },
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "MinCapacity": "1",
+                  "TestConnectionsOnReserve": "true",
+                  "TestTableName": "SQL ISVALID"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))"
+                },
+                "properties": {
+                  "javax.net.ssl.trustStoreType": "JKS",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}47I7psLjgP3cg9BqxYnsBQ=={/IV}TEWHeBWZgXAxTb6anB8TknDSlotIVha8wXmfYykHRA9Q=",
+                  "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+                  "oracle.net.ssl_version": "1.2",
+                  "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OIDAuthenticator",
+        "type": "AuthenticationProvider",
+        "attributes": {
+          "subType": "weblogic.security.providers.authentication.OracleInternetDirectoryAuthenticator",
+          "ControlFlag": "SUFFICIENT",
+          "SSLEnabled": "true",
+          "PropagateCauseForLoginException": "true",
+          "UseRetrievedUserNameAsPrincipal": "true",
+          "Host": "obpceng10oid.wpdev.mintpress.io",
+          "Port": "18001",
+          "Principal": "cn=obpobh_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au",
+          "Credential": "{AES2}8fADp7hlZG22zf+6he/jWQ=={/IV}T07NA7Gf04DF6eDlePcv0by2am2VQ8WVYZXv2aZyFxPw=",
+          "UserNameAttribute": "uid",
+          "UserFromNameFilter": "(&(uid=%u)(objectclass=person))",
+          "KeepAliveEnabled": "true",
+          "ResultsTimeLimit": "5000",
+          "AllUsersFilter": "(&(uid=*)(objectclass=person))",
+          "AllGroupsFilter": "(&(cn=*)(|(objectclass=groupofUniqueNames)(objectclass=groupofurls)))",
+          "GroupFromNameFilter": "(|(&(cn=%g)(objectclass=groupofUniqueNames))(&(cn=%g)(objectclass=groupOfURLs)))",
+          "GuidAttribute": "orclguid",
+          "GroupBaseDN": "ou=obp,ou=apps,dc=westpac,dc=com,dc=au",
+          "UserBaseDN": "cn=users,dc=westpac,dc=com,dc=au",
+          "ConnectionPoolSize": "20",
+          "ConnectTimeout": "60",
+          "ConnectionRetryLimit": "5",
+          "ParallelConnectDelay": "0",
+          "CacheSize": "10240",
+          "CacheTTL": "300",
+          "GroupMembershipSearching": "limited"
+        }
+      },
+      {
+        "name": "CIDAuthenticator",
+        "type": "AuthenticationProvider",
+        "attributes": {
+          "subType": "weblogic.security.providers.authentication.OracleInternetDirectoryAuthenticator",
+          "ControlFlag": "SUFFICIENT",
+          "SSLEnabled": "true",
+          "PropagateCauseForLoginException": "true",
+          "UseRetrievedUserNameAsPrincipal": "true",
+          "Host": "obpceng10cid.wpdev.mintpress.io",
+          "Port": "18001",
+          "Principal": "cn=obpobh_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au",
+          "Credential": "{AES2}/1kJXQ7uJ5hb1uCUmRr/bw=={/IV}TRPeIQfBd8AH6Mi1yeu4tGU8g3ArPlZpS7KJTrdCFwQg=",
+          "UserNameAttribute": "uid",
+          "UserFromNameFilter": "(&(uid=%u)(objectclass=person))",
+          "KeepAliveEnabled": "true",
+          "ResultsTimeLimit": "5000",
+          "AllUsersFilter": "(&(uid=*)(objectclass=person))",
+          "AllGroupsFilter": "(&(cn=*)(|(objectclass=groupofUniqueNames)(objectclass=groupofurls)))",
+          "GroupFromNameFilter": "(|(&(cn=%g)(objectclass=groupofUniqueNames))(&(cn=%g)(objectclass=groupOfURLs)))",
+          "GuidAttribute": "orclguid",
+          "GroupBaseDN": "cn=customer,cn=groups,dc=westpac,dc=com,dc=au",
+          "UserBaseDN": "cn=customer,cn=users,dc=westpac,dc=com,dc=au",
+          "ConnectionPoolSize": "20",
+          "ConnectTimeout": "60",
+          "ConnectionRetryLimit": "5",
+          "ParallelConnectDelay": "0",
+          "CacheSize": "10240",
+          "CacheTTL": "300",
+          "GroupMembershipSearching": "limited"
+        }
+      },
+      {
+        "name": "JpsConfigSettings",
+        "type": "JpsConfig",
+        "attributes": {
+          "java.naming.ldap.factory.socket": "javax.net.ssl.SSLSocketFactory",
+          "virtualize": "true"
+        }
+      },
+      {
+        "name": "JTASettings",
+        "type": "JTA",
+        "attributes": {
+          "TimeoutSeconds": "5400"
+        }
+      },
+      {
+        "name": "CrossDomainSecurityConfiguration",
+        "type": "SecurityConfiguration",
+        "attributes": {
+          "CrossDomainSecurityEnabled": "false",
+          "Credential": "{AES2}imZrP2aowh+2bkWSeFapXA=={/IV}TVYtI4lIq331lo3WWcM1vJpkyHTbUvY+LVuUUr0w0Ytc="
+        }
+      },
+      {
+        "name": "JdbcSharedSettings",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_SOA_PRIM)))"
+                },
+                "properties": {
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "mds-owsm",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
+                  "Password": "{AES2}aAxv497/0k4qF8gm4AEWlA=={/IV}TYfVkE0YaVzTX/HfpZEtsoFaFQe2JGWk0LRZx9FCz95Q="
+                },
+                "properties": {
+                  "user": "OBPUI_MDS"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "PCSMDataSource",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "DriverName": "oracle.jdbc.xa.client.OracleXADataSource",
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))",
+                  "Password": "{AES2}Nh00i3ZZoulJma58x0gVVA=={/IV}T/0jsQ/7Y0hD3G+9T3+xdja8w29Qc0ZIePnmvIRMNssk="
+                },
+                "properties": {
+                  "user": "CDE"
+                }
+              },
+              {
+                "type": "JDBCXAParams",
+                "attributes": {
+                  "XaSetTransactionTimeout": "true"
+                }
+              },
+              {
+                "type": "JDBCDataSourceParams",
+                "attributes": {
+                  "JNDINames": "jdbc/PCSMDataSource"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OBP_HOST_CONFIG",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "RemoveInfectedConnections": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OBP_HOST_DS_NONXA",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "RemoveInfectedConnections": "true"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "DriverName": "oracle.jdbc.OracleDriver"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OBP_HOST_DS_XA",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "RemoveInfectedConnections": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OBP_HOST_LOCK",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "RemoveInfectedConnections": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OBP_SYS_CONFIG",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "RemoveInfectedConnections": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "WeblogicPolicyPermission_1",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "oracle.security.jps.service.trust.TrustServiceAccessPermission",
+          "permTarget": "appId=*",
+          "permActions": "issue",
+          "codeBaseURL": "file:/oracle/app/runtime/obpobh/domains/obphost_domain/servers/-"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_2",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "java.security.AllPermission",
+          "permTarget": "appId=*",
+          "permActions": "issue",
+          "codeBaseURL": "file:/oracle/app/runtime/obpobh/domains/obphost_domain/servers/-"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_3",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "java.security.AllPermission",
+          "permTarget": "None",
+          "permActions": "None",
+          "codeBaseURL": "file:/oracle/app/binaries/obpobh/fmw/obpinstall/obp/obp.host.app.domain/APP-INF/lib/com.ofss.fc.ixface.sms.jar"
+        }
+      },
+      {
+        "name": "DefaultAuthenticator",
+        "type": "AuthenticationProvider",
+        "attributes": {
+          "subType": "null",
+          "ControlFlag": "SUFFICIENT"
+        }
+      },
+      {
+        "name": "LocalUser_SA_VALEX_API_OSB_USER",
+        "type": "User",
+        "attributes": {
+          "name": "SA_VALEX_API_OSB_USER",
+          "password": "{AES2}M3za4GQxgoJLb0MlHoK8zA=={/IV}TE9wXgato/YEpRS/n6zk89+wPQByaezi/jxG8y2QrhbE=",
+          "description": "Service Account for VALEX Integration",
+          "groupList": "OBP-ExternalApplication"
+        }
+      },
+      {
+        "name": "LocalUser_SA_ESIGN_OSB_USER",
+        "type": "User",
+        "attributes": {
+          "name": "SA_ESIGN_OSB_USER",
+          "password": "{AES2}sFX5aOoYc/HZhRztAo9D7w=={/IV}Tmfr33zlefPIGW5q83n43PeUaThQmUWGiZtLkHRIZwto=",
+          "description": "Service Account for ESIGN Integration",
+          "groupList": "OBP-ExternalApplication"
+        }
+      },
+      {
+        "name": "AdminStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms4g -Xmx4g -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+          "2": "",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpobh/obphost_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false",
+          "Auto19": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto20": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "ClusterStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms8g -Xmx8g",
+          "2": "-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ConcGCThreads=4 -XX:G1HeapRegionSize=4M  -XX:+UseStringDeduplication -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:ParallelGCThreads=8",
+          "3": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer -Djps.combiner.optimize.lazyeval=TRUE -Djps.combiner.optimize=TRUE -Djps.policystore.hybrid.mode=false -Djps.authz=ACC",
+          "4": "-Dweblogic.configuration.schemaValidationEnabled=false -Duser.home=/oracle/app/binaries/obpobh/fmw/obpinstall/obp/config -Dobp.http.connectionTimeout=600000 -Dobp.http.maxConnectionsPerHost=150",
+          "5": "-Dfacade.security.check=false -Dcom.sun.jndi.ldap.connect.pool.protocol=ssl -Dcom.sun.jndi.ldap.connect.pool=true -Dcom.sun.jndi.ldap.connect.pool.initsize=10 -Dcom.sun.jndi.ldap.connect.pool.prefsize=20 -Dfc.io.dir=/oracle/app/runtime/obpobh/domains/resources ",
+          "7": "-DAdapterFactories:PARTY_DUE_DILIGENCE_ADAPTER_MOCKED=true -DAdapterFactories:INS_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:PARTY_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:LN_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:LCM_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:ACCOUNT_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:DDA_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:AC_COLLECTION_ADAPTER_MOCKED=true -DAdapterFactories:CS_COLLECTION_ADAPTER_MOCKED=true -DconfigDirs=/oracle/app/binaries/obpobh/fmw/obpinstall/obp/config/pcsm/wrapperconf -Dexperian.pcsm.wrapper.config=/oracle/app/binaries/obpobh/fmw/obpinstall/obp/config/pcsm/wrapperconf -Dlog4j.configuration=log4j.properties -Dobp.http.idleTimeoutPollInterval=10000 -Dobp.http.maxRetryCount=3 -Dobp.http.socketBufferSize=8192 -Dobp.http.expireAndRetry=false",
+          "8": "",
+          "9": "",
+          "10": "-Dfile.encoding=UTF-8",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpobh/obphost_domain/%Name%/%Name%_gc.out",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpobh/obphost_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
+        }
+      },
+      {
+        "name": "ClusterClassPathParameters",
+        "type": "ClassPath",
+        "attributes": {
+          "Auto01": "/oracle/app/binaries/obpobh/fmw/obpinstall/obp/config/pcsm/wrapperconf:/oracle/app/binaries/obpobh/fmw/obpinstall/obp/ob.host.app/ob.app.host.tp/APP-INF/lib/json-20180813.jar"
+        }
+      },
+      {
+        "attributes": {
+          "AdministrationPort": "19001",
+          "AdministrationPortEnabled": "false"
+        },
+        "type": "Domain",
+        "name": "DomainAdministrationPortConfiguration"
+      },
+      {
+        "name": "jmsAccountingModule",
+        "type": "JMSSystemResource",
+        "attributes": {
+          "Notes": "Accounting Module"
+        },
+        "params": [
+          {
+            "name": "FCRJ.DMS_QCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCRJ.DMS_QCF",
+              "JNDIName": "FCRJ.DMS_QCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCRJAccountingQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCRJAccountingQCF",
+              "JNDIName": "FCRJ.ACCT_QCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCRJLedgerBalanceQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCRJLedgerBalanceQCF",
+              "JNDIName": "FCRJ.ACCT.PL.LEDGER_BALANCE_QCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCRJ.EP_QCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCRJ.EP_QCF",
+              "JNDIName": "jms/FCRJ.EP_QCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsAsyncAuditModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "AsyncAuditQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "AsyncAuditQCF",
+              "JNDIName": "jms/AsyncAuditQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsCasaModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "FCBCasaQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCBCasaQCF",
+              "JNDIName": "jms/FCBCasaQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsCollectionModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "EvtMangQM",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "EvtMangQM",
+              "JNDIName": "jms/EvtMangQM"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsDomainPublishModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "DomainFactCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "DomainFactCF",
+              "JNDIName": "jms/DomainFactCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsPaymentModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "paymentCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "paymentCF",
+              "JNDIName": "jms/paymentCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "name": "PaymentAsyncTxnAuditCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "PaymentAsyncTxnAuditCF",
+              "JNDIName": "jms/PaymentAsyncTxnAuditCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsPricingAnalysisModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "FCBPricingQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCBPricingQCF",
+              "JNDIName": "jms/FCBPricingQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsTitleSearchModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "TitleSearchCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "TitleSearchCF",
+              "JNDIName": "jms/TitleSearchCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsValuationModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "name": "ValuationCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "ValuationCF",
+              "JNDIName": "jms/ValuationCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsEventProcessModule",
+        "type": "JMSSystemResource",
+        "attributes": {
+          "Notes": "Event Process Module"
+        },
+        "params": [
+          {
+            "name": "EventProcessorQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "EventProcessorQCF",
+              "JNDIName": "jms/EventProcessorQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "EventProcessorQueue",
+            "attributes": {
+              "JNDIName": "jms/EventProcessorQueue",
+              "SubDeploymentName": "jmsEventProcessModule_sub",
+              "DefaultTargetingEnabled": "false"
+            }
+          },
+          {
+            "name": "DigitalEventProcessorQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "DigitalEventProcessorQCF",
+              "JNDIName": "jms/DigitalEventProcessorQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "DigitalEventProcessorQueue",
+            "attributes": {
+              "JNDIName": "jms/DigitalEventProcessorQueue",
+              "SubDeploymentName": "jmsEventProcessModule_sub",
+              "DefaultTargetingEnabled": "false"
+            }
+          }
+        ]
+      },
+      {
+        "name": "jmsCollateralModule",
+        "type": "JMSSystemResource",
+        "attributes": {
+          "Notes": "Collateral Module"
+        },
+        "params": [
+          {
+            "name": "CollateralCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "CollateralCF",
+              "JNDIName": "jms/CollateralCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "CollateralQueue",
+            "attributes": {
+              "JNDIName": "jms/CollateralQueue",
+              "DefaultTargetingEnabled": "false",
+              "SubDeploymentName": "jmsCollateralModule_sub"
+            }
+          }
+        ]
+      },
+      {
+        "name": "jmsWorkflowModule",
+        "type": "JMSSystemResource",
+        "attributes": {
+          "Notes": "Workflow Module"
+        },
+        "params": [
+          {
+            "name": "WorkflowCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "WorkflowCF",
+              "JNDIName": "jms/WorkflowCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "WorkflowQueue",
+            "attributes": {
+              "JNDIName": "jms/WorkflowQueue",
+              "SubDeploymentName": "jmsWorkflowModule_sub",
+              "DefaultTargetingEnabled": "false"
+            },
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "1",
+                  "ErrorDestination": "WorkflowErrorQueue",
+                  "ExpirationPolicy": "Redirect"
+                }
+              },
+              {
+                "type": "DeliveryParamsOverrides",
+                "attributes": {
+                  "RedeliveryDelay": "30000"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "WorkflowErrorQueue",
+            "attributes": {
+              "JNDIName": "jms/WorkflowErrorQueue",
+              "SubDeploymentName": "jmsWorkflowModule_sub",
+              "DefaultTargetingEnabled": "false"
+            }
+          }
+        ]
+      },
+      {
+        "name": "jmsODIModule",
+        "type": "JMSSystemResource",
+        "attributes": {
+          "Notes": "jms CZ ODI Module"
+        },
+        "params": [
+          {
+            "name": "CZSystemModule",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "CZSystemModule",
+              "JNDIName": "jms/CZConnectionFactory"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "CZFileProcessMessageReceiverQueue",
+            "attributes": {
+              "JNDIName": "jms/CZFileProcessMessageReceiverQueue",
+              "SubDeploymentName": "jmsODIModule_sub",
+              "DefaultTargetingEnabled": "false"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "CZMessageReceiverQueue",
+            "attributes": {
+              "JNDIName": "jms/CZMessageReceiverQueue",
+              "SubDeploymentName": "jmsODIModule_sub",
+              "DefaultTargetingEnabled": "false"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "CZProcessMessageReceiverQueue",
+            "attributes": {
+              "JNDIName": "jms/CZProcessMessageReceiverQueue",
+              "SubDeploymentName": "jmsODIModule_sub",
+              "DefaultTargetingEnabled": "false"
+            }
+          }
+        ]
+      },
+      {
+        "name": "jmsOriginationModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "type": "UniformDistributedQueue",
+            "name": "OriginationQueue",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "1",
+                  "ErrorDestination": "OriginationProcessErrorQueue",
+                  "ExpirationPolicy": "Redirect"
+                }
+              },
+              {
+                "type": "DeliveryParamsOverrides",
+                "attributes": {
+                  "RedeliveryDelay": "30000"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "OriginationProcessErrorQueue",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "name": "OriginationCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "OriginationCF",
+              "JNDIName": "jms/OriginationCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsAnalyticsModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "type": "UniformDistributedQueue",
+            "name": "AnalyticsQueue",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "1",
+                  "ErrorDestination": "AnalyticsErrorQueue",
+                  "ExpirationPolicy": "Redirect"
+                }
+              },
+              {
+                "type": "DeliveryParamsOverrides",
+                "attributes": {
+                  "RedeliveryDelay": "15000"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "AnalyticsErrorQueue",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "name": "AnalyticsCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "AnalyticsCF",
+              "JNDIName": "jms/AnalyticsCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsDocumentOutboundModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "type": "UniformDistributedQueue",
+            "name": "DocumentOutboundQueue",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "name": "DocumentOutboundCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "DocumentOutboundCF",
+              "JNDIName": "jms/OutboundDocumentCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsPartyModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "type": "UniformDistributedQueue",
+            "name": "PartyProcessQueue",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "name": "PartyCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "PartyCF",
+              "JNDIName": "jms/PartyCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsReportModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "type": "UniformDistributedQueue",
+            "name": "ReportRequestQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCBReportsQM",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCBReportsQM",
+              "JNDIName": "jms/ORAQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsRuleModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "type": "UniformDistributedQueue",
+            "name": "FCBRuleQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCBRuleQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCBRuleQCF",
+              "JNDIName": "jms/FCBRuleQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jmsBatchModule",
+        "type": "JMSSystemResource",
+        "params": [
+          {
+            "type": "UniformDistributedQueue",
+            "name": "FCBBatchShellQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCBFileProcessorQCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCBFileProcessorQCF",
+              "JNDIName": "jms/FCBFileProcessorQCF"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCBBatchQM",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "FCBBatchQM",
+              "JNDIName": "jms/FCBBatchQM"
+            },
+            "params": [
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "FCBBatchResponseQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "FCBBatchFrameQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "FCBBatchRequestQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "FCBGEFUBatchRequestQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "FCBFileProcessorQ",
+            "params": [
+              {
+                "type": "DeliveryFailureParams",
+                "attributes": {
+                  "RedeliveryLimit": "2"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "obphost_server1JDBCStore",
+        "type": "JDBCStore",
+        "attributes": {
+          "PrefixName": "obphost_server1"
+        }
+      },
+      {
+        "name": "jms-tlogs",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "MinCapacity": "1",
+                  "TestConnectionsOnReserve": "true",
+                  "TestTableName": "SQL SELECT 1 FROM DUAL"
+                }
+              },
+              {
+                "type": "JDBCDataSourceParams",
+                "attributes": {
+                  "JNDINames": "jdbc/jms-tlogs",
+                  "GlobalTransactionsProtocol": "None"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
+                  "Password": "{AES2}Nh00i3ZZoulJma58x0gVVA=={/IV}T/0jsQ/7Y0hD3G+9T3+xdja8w29Qc0ZIePnmvIRMNssk=",
+                  "DriverName": "oracle.jdbc.OracleDriver"
+                },
+                "properties": {
+                  "user": "OBPHOST_JMS_TLOGS",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "obphost_server1StartupParameter",
+        "type": "StartupParameter",
+        "attributes": {
+          "Auto1": "-Dweblogic.security.SSL.enableJSSE=true",
+          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "Auto4": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto5": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "obphost_server1Server",
+        "type": "Server",
+        "params": [
+          {
+            "type": "SSL",
+            "attributes": {
+              "JSSEEnabled": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+              "ServerPrivateKeyAlias": "wpdev",
+              "ServerPrivateKeyPassPhrase": "FIXME",
+              "Enabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpobh/domains/certs/wpdev.jks",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStoreType": "jks"
+        }
+      }
+    ]
+  }
+}
