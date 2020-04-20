@@ -82,20 +82,6 @@ end
 # It tries to create the directory which by that point has become a mount, and throws Read-only file system @ apply2files - /oracle/stage
 execute 'mkdir -p /oracle/stage'
 
-# Mount the stage area, we need this first coz we have gems here that we install later, also mint shd have rw on it
-if node.name.include?('mintpress-')
-  mount '/oracle/stage' do
-    device 'stage.wpdev.mintpress.io:/stage'
-    fstype 'nfs'
-    options 'rw'
-  end
-else
-  mount '/oracle/stage' do
-    device 'stage.wpdev.mintpress.io:/stage'
-    fstype 'nfs'
-    options 'ro'
-  end
-end
 
 
 ### --- Set up SSSD For LDAP Authentication --- ###
@@ -195,6 +181,13 @@ Userknownhostsfile /dev/null
       owner 'root'
       group 'root'
     end
+
+    # Add the mounts in rw mode
+    mount '/oracle/stage' do
+      device 'stage.wpdev.mintpress.io:/stage'
+      fstype 'nfs'
+      options 'rw'
+    end
 else
     # Add the sudoers for MintPress user
     template '/etc/sudoers.d/mintpress' do
@@ -202,4 +195,11 @@ else
       owner 'root'
       group 'root'
     end
+    
+    # Add the mounts in ro mode 
+    mount '/oracle/stage' do
+      device 'stage.wpdev.mintpress.io:/stage'
+      fstype 'nfs'
+      options 'ro'
+  end
 end
