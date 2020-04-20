@@ -17,7 +17,7 @@ class MintOCIHost
   attr_accessor :disable_selinux
   attr_accessor :node_attributes
   attr_accessor :create_cnames
-  attr_accessor :create_friendly_name
+  attr_accessor :create_friendly_names
 
   # init
   def initialize(opts={})
