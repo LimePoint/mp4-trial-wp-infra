@@ -135,6 +135,11 @@ module OBPOrchestration
                       host_opts = {}
                       host_opts[:hostname] = "#{h}.wpdev.mintpress.io"
                       host_opts[:environment_name] = env_name
+                      host_opts[:instance_type] = 'VM.Standard.E2.4'
+                      host_opts[:operating_system] = 'Oracle Linux'
+                      host_opts[:operating_system_version] = 7
+                      host_opts[:disk_size] = 50
+                      host_opts[:run_list] = ['oci-bootstrap::default']
                       attrs = {
                           "environmint": { "orchestration_key": "#{node.run_state['orchestration_metadata']['uuid']}" },
                           "provisioning_env": "environmint-provisioning",
