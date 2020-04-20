@@ -147,6 +147,7 @@ module OBPOrchestration
                       }
                       host_opts[:node_attributes] = attrs
                       host_opts[:create_cnames] = true
+                      host_opts[:create_friendly_names] = true
                       # Transform hash keys to symbols; no specific reason just personal preference
                       host_opts.transform_keys!(&:to_sym)
                       oci_host = MintOCIHost.new(host_opts)

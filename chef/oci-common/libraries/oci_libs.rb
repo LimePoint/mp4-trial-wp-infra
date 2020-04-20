@@ -17,6 +17,7 @@ class MintOCIHost
   attr_accessor :disable_selinux
   attr_accessor :node_attributes
   attr_accessor :create_cnames
+  attr_accessor :create_friendly_names
 
   # init
   def initialize(opts={})
@@ -69,6 +70,7 @@ class MintOCIHost
     self.disable_selinux = opts[:disable_selinux] || false
     self.node_attributes = opts[:node_attributes] || {}
     self.create_cnames = opts[:create_cnames] || false
+    self.create_friendly_names = opts[:create_friendly_names] || false
   end
 
   # Function to create a host on OCI
@@ -205,19 +207,24 @@ class MintOCIHost
     if self.create_cnames
       Chef::Log.info 'Publishing DNS CNAME Record to Internal DNS Alpha'
       cname_priv = self.host_obj.name.split(".")[0].concat('-prv.wpdev.mintpress.io')
-      cname_friendly = self.host_obj.name.split(".")[0].chomp('01').concat('.wpdev.mintpress.io')
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_priv, values: self.host_obj.name, ttl: 300)
-      d_record.create
-      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
       d_record.create
       
       # Create the entry in secondory instance
       Chef::Log.info 'Publishing DNS CNAME Record to Internal DNS Omega'
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_priv, values: self.host_obj.name, ttl: 300)
       d_record.create
-      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
+    end
+
+    if self.create_friendly_names
+      Chef::Log.info 'Publishing DNS Friendly CNAME Record to Internal DNS Alpha'
+      cname_friendly = self.host_obj.name.split(".")[0].chomp('01').concat('.wpdev.mintpress.io')
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
       d_record.create
 
+      Chef::Log.info 'Publishing DNS Friendly CNAME Record to Internal DNS Omega'
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
+      d_record.create
     end
   end
  
