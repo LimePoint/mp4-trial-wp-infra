@@ -17,14 +17,16 @@ if hostlist.empty?
   return
 end
   
-ldap_entry "cn=host_#{node.name.split('.')[0]},ou=host,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
-	attributes ({objectClass: ['top', 'nisNetgroup']})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
-	host node['ldap']['ldap_host']
-	port node['ldap']['ldap_port']
-	use_tls true
-end
+#ldap_entry "cn=host_#{node.name.split('.')[0]},ou=host,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
+#	attributes ({objectClass: ['top', 'nisNetgroup']})
+#	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+#	host node['ldap']['ldap_host']
+#	port node['ldap']['ldap_port']
+#	use_tls true
+#end
 
+# Create the super admin team, members of this group will have root acesss to every node
+# It does not looks like it is used anywhere though
 ldap_entry "cn=team_obp_all_root,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup']})
 	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
@@ -33,7 +35,26 @@ ldap_entry "cn=team_obp_all_root,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=m
 	use_tls true
 end
 
+# Create the environment specific root team, this will allow members to access hosts in this environment as root
 ldap_entry "cn=team_obp_#{node.chef_environment}_root,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
+	attributes ({objectClass: ['top', 'nisNetgroup']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	host node['ldap']['ldap_host']
+	port node['ldap']['ldap_port']
+	use_tls true
+end
+
+# Oracle team, allows members to access as oracle user
+ldap_entry "cn=team_obp_#{node.chef_environment}_oracle,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
+	attributes ({objectClass: ['top', 'nisNetgroup']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	host node['ldap']['ldap_host']
+	port node['ldap']['ldap_port']
+	use_tls true
+end
+
+# Team for read only
+ldap_entry "cn=team_obp_#{node.chef_environment}_readonly,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup']})
 	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
 	host node['ldap']['ldap_host']
@@ -43,30 +64,14 @@ end
 
 # put teams in host netgroup
 ldap_entry "cn=host_#{node.name.split('.')[0]},ou=host,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
-	attributes ({memberNisNetgroup: ["team_obp_#{node.chef_environment}_root", "team_obp_#{node.chef_environment}_oracle", "team_obp_#{node.chef_environment}_readonly"]})
+	attributes ({objectClass: ['top', 'nisNetgroup'], memberNisNetgroup: ["team_obp_#{node.chef_environment}_root", "team_obp_#{node.chef_environment}_oracle", "team_obp_#{node.chef_environment}_readonly"]})
 	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
 end
 
-ldap_entry "cn=team_obp_#{node.chef_environment}_oracle,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
-	attributes ({objectClass: ['top', 'nisNetgroup']})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
-	host node['ldap']['ldap_host']
-	port node['ldap']['ldap_port']
-	use_tls true
-end
-
-ldap_entry "cn=team_obp_#{node.chef_environment}_readonly,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
-	attributes ({objectClass: ['top', 'nisNetgroup']})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
-	host node['ldap']['ldap_host']
-	port node['ldap']['ldap_port']
-	use_tls true
-end
-
-
+# Create sudo for team, oracle
 ldap_entry "cn=obp_sudo_#{node.chef_environment}_root,ou=sudo,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'sudoRole'], sudoRunAsUser: 'root', sudoUser: ["+team_obp_#{node.chef_environment}_root", "+team_obp_all_root"], sudoCommand: 'ALL', sudoHost: hostlist})
 	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})

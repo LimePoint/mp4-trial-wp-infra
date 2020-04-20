@@ -13,6 +13,8 @@ if is_running_on_cloud and node.chef_environment != 'wptest'
     asset_vars = my_topology_vars[_item_code.downcase]
     password_vault_name = my_topology_vars['common']['password_vault_name']
 
+	keystore_pass =  Mint::AesEncryption.decrypt(PasswordVault.get_password(password_vault_name, _item_code.downcase, 'keystorepass'))
+
 	mintpress_property "fixup-ms-listen" do
 		asset "global"
 		tree "site.environmentList.*.mwTopologyList.*.domainList.*.managedServerList"
@@ -111,7 +113,8 @@ if is_running_on_cloud and node.chef_environment != 'wptest'
 			keystorename "wpdev.jks"
 			keyid "wpdev"
 			truststorename "wpdev.jks"
-			certpw PasswordVault.get_password(password_vault_name, _item_code.downcase, 'keystorepass')
+            #certpw "literal:/welcome1"
+			certpw "literal:/#{keystore_pass}"
 			certpath "${/domains.locationPath}/certs"
 			certsource "/oracle/stage/certs/wc"
 			wildcard true
