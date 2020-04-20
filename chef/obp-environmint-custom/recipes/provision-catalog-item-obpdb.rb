@@ -48,6 +48,10 @@ attrs = {
 }
 host_opts[:node_attributes] = attrs
 host_opts[:run_list] = ['oci-bootstrap::default', 'oci-bootstrap::create-databases'] 
+host_opts[:create_cnames] = true
+
+# The Db node has no friendly names
+host_opts[:create_friendly_names] = false
 # Transform hash keys to symbols; no specific reason just personal preference
 host_opts.transform_keys!(&:to_sym)
 oci_host = MintOCIHost.new(host_opts)
