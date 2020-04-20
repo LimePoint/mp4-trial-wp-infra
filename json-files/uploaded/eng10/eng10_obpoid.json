@@ -4,9 +4,9 @@
     "assetCode": "obpoid",
     "stageRootDir": "/oracle/stage",
     "autoBaseline": "true",
-    "projectUri": "ENG10OBPOID2020APR201502"
+    "projectUri": "ENG10OBPOID2020APR202138"
   },
-  "projectName": "eng10_obpoid2020Apr20_1726",
+  "projectName": "eng10_obpoid2020Apr20_2138",
   "uniquifier": "4f961e8ce4ea4184b57a8ab5b5b30854",
   "site": {
     "hostList": [
@@ -365,15 +365,15 @@
                     "target": "wls.nodemanager.truststorefile"
                   },
                   {
-                    "value": "welcome1",
+                    "value": "FIXME",
                     "target": "wls.nodemanager.identitystorekey"
                   },
                   {
-                    "value": "welcome1",
+                    "value": "FIXME",
                     "target": "wls.nodemanager.truststorekey"
                   },
                   {
-                    "value": "welcome1",
+                    "value": "FIXME",
                     "target": "wls.nodemanager.identitypassphrase"
                   }
                 ]
@@ -885,7 +885,7 @@
                   },
                   {
                     "name": "KeystorePassword",
-                    "value": "welcome1"
+                    "value": "FIXME"
                   }
                 ]
               },
@@ -903,7 +903,7 @@
                 "properties": [
                   {
                     "name": "TruststorePassword",
-                    "value": "welcome1"
+                    "value": "FIXME"
                   }
                 ]
               }
@@ -1002,16 +1002,6 @@
                 "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ;  /bin/true",
                 "executeWhenList": [
                   "pre-start"
-                ],
-                "hostIdentifierList": [
-                  "obpceng10oid01"
-                ]
-              },
-              {
-                "name": "ensure-java-trust",
-                "sourceFile": "/oracle/app/binaries/obpoid/java/bin/keytool -importkeystore -srckeystore /oracle/stage/certs/wc/eng10/wpdev.jks -srcstorepass welcome1 -destkeystore /oracle/app/binaries/obpoid/java/jre/lib/security/cacerts -deststorepass changeit -noprompt",
-                "executeWhenList": [
-                  "pre-online"
                 ],
                 "hostIdentifierList": [
                   "obpceng10oid01"
@@ -1257,7 +1247,7 @@
               "ServerPrivateKeyAlias": "wpdev",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "welcome1",
+              "ServerPrivateKeyPassPhrase": "FIXME",
               "JSSEEnabled": "true",
               "UseServerCerts": "true",
               "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier"
@@ -1275,8 +1265,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpoid/domains/certs/wpdev.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpoid/domains/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "welcome1",
-          "CustomTrustKeyStorePassPhrase": "welcome1",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1340,7 +1330,7 @@
               "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "{AES2}DSs3shGvv+zu7D4t/cgcIw=={/IV}TUKuSewNmDmJabaHVuc2tIOZyDJGtJncetpX1tvHnUSM=",
+              "ServerPrivateKeyPassPhrase": "{AES2}JNXy4VXJ3ZDVZeF0yiSwJw=={/IV}TJfOONp/wMW0PzG9WdN5341yxBfjD/pxtuxWlYy5ndPw=",
               "JSSEEnabled": "true",
               "UseServerCerts": "true"
             }
@@ -1357,8 +1347,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng10/certs/obpceng10oid.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "{AES2}DSs3shGvv+zu7D4t/cgcIw=={/IV}TUKuSewNmDmJabaHVuc2tIOZyDJGtJncetpX1tvHnUSM=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}bXI49FzMdtvB5gif/r5wrw=={/IV}TZeKEFKbYrI3jWbIuMPxJt1JJXfKVMHwutc6IRNnS9Eo=",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}JNXy4VXJ3ZDVZeF0yiSwJw=={/IV}TJfOONp/wMW0PzG9WdN5341yxBfjD/pxtuxWlYy5ndPw=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}+qum/gSZ+9qEfYHqmFBthw=={/IV}TWi+buA1DQbmYCxTt/GOS9HCyUsVu0Nf+oq02oAxJkrU=",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1393,7 +1383,7 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}bXI49FzMdtvB5gif/r5wrw=={/IV}TZeKEFKbYrI3jWbIuMPxJt1JJXfKVMHwutc6IRNnS9Eo=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}+qum/gSZ+9qEfYHqmFBthw=={/IV}TWi+buA1DQbmYCxTt/GOS9HCyUsVu0Nf+oq02oAxJkrU=",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
                   "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev.jks",
