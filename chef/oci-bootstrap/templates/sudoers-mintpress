@@ -1,5 +1,23 @@
 # This file is managed by MintPress.
 # Do NOT modify this file directly.
 
+mintpress ALL = EXEC: NOPASSWD: /usr/bin/chef-server-ctl
+mintpress ALL = EXEC: NOPASSWD: /opt/opscode/embedded/bin/gem
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/chef-server.rb
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/chef-server-running.json
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/dark_launch_features.json
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/logrotate.conf
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/logrotate.d/nginx
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/logrotate.d/redis_lb
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/pivotal.rb
+mintpress ALL = NOPASSWD: sudoedit /etc/opscode/private-chef.sh
+mintpress ALL = NOPASSWD: sudoedit /etc/systemd/system/private_chef-runsvdir-start.service
+mintpress ALL = EXEC: NOPASSWD: /bin/systemctl status caddy
+mintpress ALL = EXEC: NOPASSWD: /bin/systemctl start caddy
+mintpress ALL = EXEC: NOPASSWD: /bin/systemctl stop caddy
+mintpress ALL = EXEC: NOPASSWD: /bin/systemctl restart caddy
+mintpress ALL = NOPASSWD: sudoedit /etc/caddy/Caddyfile
+mintpress ALL = EXEC: NOPASSWD: /bin/tail /var/log/messages
+mintpress ALL = EXEC: NOPASSWD: /bin/tail -f /var/log/messages
 mintpress ALL=(oracle) NOPASSWD:ALL
 mintpress ALL=(root) NOPASSWD:/bin/su - oracle
