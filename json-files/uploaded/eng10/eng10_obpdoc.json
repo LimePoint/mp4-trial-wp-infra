@@ -1,0 +1,3479 @@
+{
+  "internalVariables": {
+    "environmentName": "eng10",
+    "assetCode": "obpdoc",
+    "defaultHostTargetTmpDirectory": "/oracle/app/binaries/obpdoc/tmp",
+    "stageRootDir": "/oracle/stage",
+    "documakerDataFileLocation": "/oracle/app/oradata/CBCD3DOCPRIM/",
+    "databaseSysUsername": "SYS",
+    "databaseSysUserPassword": "{AES2}FeOdT3ScVdNpee6AcZZ90w=={/IV}To44cfetHhuschWVvEDrj/11oG9BzDDIpRBvEfoTxfjs=",
+    "databaseSchemaPassword": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk=",
+    "autoBaseline": "true",
+    "projectUri": "ENG10OBPDOC2020APR202156"
+  },
+  "projectName": "eng10_obpdoc2020Apr20_2156",
+  "uniquifier": "fe1c0d436e5a439f89961bf29c23253a",
+  "site": {
+    "hostList": [
+      {
+        "id": "obpceng10doc01",
+        "address": "obpceng10doc01.wpdev.mintpress.io",
+        "properties": [
+          {
+            "name": "basename",
+            "value": "obpceng10doc01"
+          },
+          {
+            "name": "user",
+            "value": "oracle"
+          },
+          {
+            "target": "oracle.install.username",
+            "value": "oinstall"
+          },
+          {
+            "name": "password",
+            "value": "unused-key-auth"
+          },
+          {
+            "name": "targetTempDir",
+            "value": "/oracle/app/binaries/obpdoc/tmp",
+            "target": "target.tmp.dir"
+          }
+        ]
+      },
+      {
+        "id": "db_server",
+        "address": "obpceng10db-prv.wpdev.mintpress.io",
+        "properties": [
+          {
+            "name": "scaleout",
+            "value": "false"
+          },
+          {
+            "name": "user",
+            "value": "oracle"
+          },
+          {
+            "target": "oracle.install.username",
+            "value": "oinstall"
+          },
+          {
+            "name": "password",
+            "value": "unused-key-auth"
+          },
+          {
+            "name": "targetTempDir",
+            "value": "/oracle/app/binaries/obpdoc/tmp",
+            "target": "target.tmp.dir"
+          }
+        ]
+      }
+    ],
+    "installationList": [
+      {
+        "name": "jdk",
+        "product": "jdk",
+        "version": "1.8.0_221",
+        "installPath": "/oracle/app/binaries/obpdoc/java",
+        "softwareStage": "/oracle/stage/jdk/jdk-8u221-linux-x64.tar.gz",
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpdoc/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpdoc/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "fmwinfra",
+        "product": "fmwinfra",
+        "version": "12.2.1.2",
+        "softwareStage": "/oracle/stage/fmwinfra/12.2.1.2/fmw_12.2.1.2.0_infrastructure.jar",
+        "installPath": "/oracle/app/binaries/obpdoc/fmw",
+        "dependsonList": [
+          "jdk"
+        ],
+        "patchset": [
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpdoc/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.2/patches",
+            "name": "25860645",
+            "aru": "25860645"
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpdoc/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.2/patches",
+            "name": "30164542",
+            "aru": "30164542"
+          }
+        ],
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpdoc/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpdoc/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "soa",
+        "product": "soa",
+        "version": "12.2.1.2",
+        "installPath": "/oracle/app/binaries/obpdoc/fmw/soa",
+        "softwareStage": "/oracle/stage/soa/12.2.1.2/fmw_12.2.1.2.0_soa.jar",
+        "dependsonList": [
+          "fmwinfra"
+        ],
+        "patchset": [
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpdoc/fmw/soa",
+            "softwareStage": "/oracle/stage/soa/12.2.1.2/patches",
+            "name": "24750358",
+            "aru": "24750358"
+          }
+        ],
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpdoc/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpdoc/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "oracleclient",
+        "product": "oracleclient",
+        "version": "12.1.0.2",
+        "installPath": "/oracle/app/binaries/obpdoc/dbclient",
+        "softwareStage": "/oracle/stage/rdbms/12.1.0.2/client",
+        "dependsonList": [
+          "jdk"
+        ],
+        "properties": [
+          {
+            "target": "oracle.home",
+            "value": "/oracle/app/binaries/obpdoc/dbclient"
+          },
+          {
+            "target": "oracle.base",
+            "value": "/oracle/app/binaries/obpdoc"
+          },
+          {
+            "target": "oracle.hostname",
+            "value": "obpceng10doc01.wpdev.mintpress.io"
+          },
+          {
+            "target": "oracle.install.type",
+            "value": "Administrator"
+          },
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpdoc/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpdoc/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "documaker",
+        "product": "documaker",
+        "version": "12.6.0",
+        "installPath": "/oracle/app/binaries/obpdoc/fmw/odee_12",
+        "softwareStage": "/oracle/stage/documaker/12.6.01",
+        "dependsonList": [
+          "soa",
+          "oracleclient"
+        ],
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpdoc/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpdoc/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          },
+          {
+            "target": "documaker.oracle.home",
+            "value": "/oracle/app/binaries/obpdoc/fmw/odee_12"
+          },
+          {
+            "target": "documaker.database.host",
+            "value": "obpceng10db-prv.wpdev.mintpress.io"
+          },
+          {
+            "target": "documaker.database.port",
+            "value": "1521"
+          },
+          {
+            "target": "documaker.database.sid",
+            "value": "CBCD3_DOC_PRIM"
+          },
+          {
+            "target": "documaker.soa.admin.username",
+            "value": "weblogic"
+          },
+          {
+            "target": "documaker.soa.admin.password",
+            "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+          },
+          {
+            "target": "documaker.database.advanced.compression.enabled",
+            "value": "false"
+          },
+          {
+            "target": "documaker.database.datafile.top",
+            "value": "/oracle/app/oradata/CBCD3DOCPRIM/"
+          },
+          {
+            "target": "documaker.admin.username",
+            "value": "dmkr_admin"
+          },
+          {
+            "target": "documaker.admin.password",
+            "value": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk="
+          },
+          {
+            "target": "documaker.assemblyline.username",
+            "value": "dmkr_asline"
+          },
+          {
+            "target": "documaker.assemblyline.password",
+            "value": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk="
+          },
+          {
+            "target": "documaker.assemblyline.hotfolder",
+            "value": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/hotdirectory"
+          },
+          {
+            "target": "documaker.smtp.host",
+            "value": "notconfigured"
+          },
+          {
+            "target": "documaker.smtp.port",
+            "value": "25"
+          },
+          {
+            "target": "documaker.smtp.user",
+            "value": "smtpuser"
+          },
+          {
+            "target": "documaker.smtp.password",
+            "value": "{AES2}knDucoGT2kmGIPnGyCNVeQ=={/IV}TfPyBTahkINAni9R4Kk7MYk910xmlgxAPIwSuvJuGt1I="
+          },
+          {
+            "target": "documaker.smtp.sender",
+            "value": "documaker@example.com"
+          },
+          {
+            "target": "documaker.ucm.enable",
+            "value": "false"
+          },
+          {
+            "target": "documaker.ucm.username",
+            "value": "ucm_user"
+          },
+          {
+            "target": "documaker.ucm.password",
+            "value": "{AES2}gUmUBhI8epqbdIEOJNm4/A=={/IV}TC6K20Rbx/jJv9XHTHYnI/K/2w5Ugfpz7GSn6jcXWb5w="
+          },
+          {
+            "target": "documaker.ucm.protocol",
+            "value": "http"
+          },
+          {
+            "target": "documaker.ucm.host",
+            "value": "notconfigured"
+          },
+          {
+            "target": "documaker.ucm.ibr.port",
+            "value": "3335"
+          },
+          {
+            "target": "documaker.ucm.cs.port",
+            "value": "3334"
+          },
+          {
+            "target": "documaker.ucm.connection.string",
+            "value": "idc://ibr_host_port"
+          },
+          {
+            "target": "documaker.ucm.document.url",
+            "value": "http://ucm_host_port/cs/groups/secure/documents/document"
+          },
+          {
+            "target": "documaker.ums.enable",
+            "value": "false"
+          },
+          {
+            "target": "documaker.configure.jms",
+            "value": "false"
+          },
+          {
+            "target": "documaker.jms.principal",
+            "value": "jmsadmin"
+          },
+          {
+            "target": "documaker.jms.credential",
+            "value": "{AES2}jNZsP+IPmB6BW8CB25fQMg=={/IV}TnabMLSC0zLyqoVXBRvB2edGoZgvU4WtPwljUnhHuyI8="
+          },
+          {
+            "target": "documaker.configure.smtp",
+            "value": "false"
+          },
+          {
+            "target": "documaker.ums.host",
+            "value": "notconfigured"
+          },
+          {
+            "target": "documaker.ums.port",
+            "value": "3333"
+          },
+          {
+            "target": "documaker.ums.username",
+            "value": "ums_user"
+          },
+          {
+            "target": "documaker.ums.password",
+            "value": "{AES2}waqVrRIsEyMYjIdcHaMxVg=={/IV}Taf0+VFpX5WPDLwYfwN8XgaNi9imbp0YPsglt+Pso6qk="
+          },
+          {
+            "target": "documaker.ums.endpoint",
+            "value": "endpointURLGoesHere"
+          },
+          {
+            "target": "documaker.appdeploy.stage",
+            "value": "/oracle/app/binaries/obpdoc/fmw/odee_12"
+          },
+          {
+            "target": "documaker.dmkr.appdeploy.enabled",
+            "value": "true"
+          },
+          {
+            "target": "documaker.dmkr.appdeploy.target.name",
+            "value": "dmkr_cluster"
+          },
+          {
+            "target": "documaker.idm.appdeploy.enabled",
+            "value": "true"
+          },
+          {
+            "target": "documaker.idm.appdeploy.target.name",
+            "value": "idm_cluster"
+          },
+          {
+            "target": "documaker.soa.appdeploy.enabled",
+            "value": "true"
+          },
+          {
+            "target": "documaker.soa.partition.name",
+            "value": "default"
+          },
+          {
+            "target": "documaker.obp.integration.enabled",
+            "value": "false"
+          },
+          {
+            "name": "seedDocumakerSchemaObjects",
+            "value": "true"
+          },
+          {
+            "target": "sqlplus.oracle.home",
+            "value": "/oracle/app/binaries/obpdoc/dbclient"
+          },
+          {
+            "target": "documaker.soa.host",
+            "value": "obpceng10doc01-prv.wpdev.mintpress.io"
+          },
+          {
+            "target": "documaker.soa.port",
+            "value": "17002"
+          },
+          {
+            "target": "documaker.jms.listen.port",
+            "value": "17202"
+          },
+          {
+            "target": "documaker.webserver.endpoint",
+            "value": "https://obpceng10doc.wpdev.mintpress.io:18002/DWSV0AL1/CompositionService?WSDL"
+          },
+          {
+            "target": "documaker.approval.process.endpoint",
+            "value": "https://obpceng10doc.wpdev.mintpress.io:18002/soa-infra/services/default/iDMkr_Correspondence/correspondenceprocesses_client_ep"
+          },
+          {
+            "target": "documaker.approval.businessrules.endpoint",
+            "value": "https://obpceng10doc.wpdev.mintpress.io:18002/soa-infra/services/default/iDMkrApprovalRuleProj/iDMkrApprovalRules_DecisionService_ep"
+          }
+        ]
+      }
+    ],
+    "environmentList": [
+      {
+        "name": "eng10",
+        "mwTopologyList": [
+          {
+            "name": "obpdoc",
+            "description": "eng10 obpdoc Environment",
+            "nodeManagerList": [
+              {
+                "name": "nm-obpceng10doc01",
+                "listenAddress": "obpceng10doc01-prv.wpdev.mintpress.io",
+                "listenPort": "16001",
+                "hostIdentifier": "obpceng10doc01",
+                "properties": [
+                  {
+                    "target": "wls.nodemanager.log.path",
+                    "value": "/oracle/app/logs/obpdoc/obpceng10doc01"
+                  },
+                  {
+                    "value": "wpdev",
+                    "target": "wls.nodemanager.identityname"
+                  },
+                  {
+                    "value": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+                    "target": "wls.nodemanager.identitystorefile"
+                  },
+                  {
+                    "name": "nmwc",
+                    "target": "wls.nodemanager.wildcardcertificate",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.shared.domain.dir",
+                    "value": "true"
+                  },
+                  {
+                    "name": "wlInstallationName",
+                    "value": "fmwinfra"
+                  },
+                  {
+                    "name": "nodemanagerTop",
+                    "value": "/oracle/app/binaries/obpdoc/fmw/wlserver/common/nodemanager",
+                    "target": "wls.nodemanager.top"
+                  },
+                  {
+                    "name": "type",
+                    "value": "SSL"
+                  },
+                  {
+                    "target": "wls.nodemanager.secure.listener",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.setidentity",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.usejsse",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.crashrecovery",
+                    "value": "false"
+                  },
+                  {
+                    "target": "wls.nodemanager.umask",
+                    "value": "022"
+                  },
+                  {
+                    "value": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+                    "target": "wls.nodemanager.truststorefile"
+                  },
+                  {
+                    "value": "FIXME",
+                    "target": "wls.nodemanager.identitystorekey"
+                  },
+                  {
+                    "value": "FIXME",
+                    "target": "wls.nodemanager.truststorekey"
+                  },
+                  {
+                    "value": "FIXME",
+                    "target": "wls.nodemanager.identitypassphrase"
+                  }
+                ]
+              }
+            ],
+            "domainList": [
+              {
+                "name": "obpdoc_domain",
+                "locationPath": "/oracle/app/runtime/obpdoc/domains",
+                "adminUser": "weblogic",
+                "adminPassword": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A=",
+                "adminServer": {
+                  "name": "AdminServer",
+                  "machineName": "Machine-obpceng10doc01",
+                  "listenAddress": "obpceng10doc01.wpdev.mintpress.io",
+                  "listenAddressPort": "17001",
+                  "listenAddressPortSSL": "18001",
+                  "targetName": "docAdminServer"
+                },
+                "machineList": [
+                  {
+                    "name": "Machine-obpceng10doc01",
+                    "nodeManagerName": "nm-obpceng10doc01"
+                  }
+                ],
+                "clusterList": [
+                  {
+                    "name": "soa_cluster",
+                    "messageMode": "Unicast"
+                  },
+                  {
+                    "name": "dmkr_cluster",
+                    "messageMode": "Unicast"
+                  },
+                  {
+                    "name": "jms_cluster",
+                    "messageMode": "Unicast"
+                  },
+                  {
+                    "name": "idm_cluster",
+                    "messageMode": "Unicast"
+                  }
+                ],
+                "managedServerList": [
+                  {
+                    "name": "soa_server1",
+                    "machineName": "Machine-obpceng10doc01",
+                    "clusterName": "soa_cluster",
+                    "listenAddress": "obpceng10doc01.wpdev.mintpress.io",
+                    "listenAddressPort": "17002",
+                    "listenAddressPortSSL": "18002",
+                    "targetName": "soa_server1",
+                    "properties": [
+                      {
+                        "name": "nodeid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "serverid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "nodeonserver",
+                        "value": "1"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "dmkr_server1",
+                    "machineName": "Machine-obpceng10doc01",
+                    "listenAddress": "obpceng10doc01.wpdev.mintpress.io",
+                    "listenAddressPort": "17102",
+                    "listenAddressPortSSL": "18102",
+                    "clusterName": "dmkr_cluster",
+                    "targetName": "dmkr_server1",
+                    "properties": [
+                      {
+                        "name": "nodeid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "serverid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "nodeonserver",
+                        "value": "1"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "jms_server1",
+                    "machineName": "Machine-obpceng10doc01",
+                    "listenAddress": "obpceng10doc01.wpdev.mintpress.io",
+                    "listenAddressPort": "17202",
+                    "listenAddressPortSSL": "18202",
+                    "clusterName": "jms_cluster",
+                    "targetName": "jms_server1",
+                    "properties": [
+                      {
+                        "name": "nodeid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "serverid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "nodeonserver",
+                        "value": "1"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "idm_server1",
+                    "machineName": "Machine-obpceng10doc01",
+                    "listenAddress": "obpceng10doc01.wpdev.mintpress.io",
+                    "listenAddressPort": "17302",
+                    "listenAddressPortSSL": "18302",
+                    "clusterName": "idm_cluster",
+                    "targetName": "idm_server1",
+                    "properties": [
+                      {
+                        "name": "nodeid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "serverid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "nodeonserver",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ],
+                "middlewareList": [
+                  {
+                    "installationName": "documaker",
+                    "targetList": [
+                      {
+                        "type": "Cluster",
+                        "names": [
+                          "soa_cluster",
+                          "dmkr_cluster",
+                          "jms_cluster",
+                          "idm_cluster"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "applicationList": [
+                  {
+                    "name": "DocumakerApplications"
+                  }
+                ],
+                "configurationList": [
+                  {
+                    "resourceName": "GenericServerSettings_auto_1",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "soa_server1,dmkr_server1,jms_server1,idm_server1"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "AdminStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "AdminServer"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "WeblogicUser_wlsmonitor",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "WeblogicUser_odemmon",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "AdminServerExtChannel",
+                    "type": "NetworkAccessPoint",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "AdminServer"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "AdminServerSettings",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "AdminServer"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DomainWebappConfig",
+                    "type": "WebAppContainer"
+                  },
+                  {
+                    "resourceName": "DomainAdministrationPortConfiguration",
+                    "type": "Domain"
+                  },
+                  {
+                    "resourceName": "DomainLogConfiguration",
+                    "type": "DomainLog"
+                  },
+                  {
+                    "resourceName": "DomainSecurityConfiguration",
+                    "type": "SecurityConfiguration"
+                  },
+                  {
+                    "resourceName": "defaultCoherenceCluster",
+                    "type": "CoherenceClusterSystemResource"
+                  },
+                  {
+                    "resourceName": "JdbcCommonSettings",
+                    "type": "JDBCSystemResource",
+                    "properties": [
+                      {
+                        "name": "dataSourceName",
+                        "value": "*"
+                      },
+                      {
+                        "name": "noTarget",
+                        "value": "true"
+                      }
+                    ],
+                    "targets": [
+
+                    ]
+                  },
+                  {
+                    "resourceName": "SOAClusterStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "soa_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DmkrClusterStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "dmkr_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "JmsClusterStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "jms_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "IdmClusterStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "idm_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DMKRAdmin",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "soa_cluster",
+                          "dmkr_cluster",
+                          "jms_cluster",
+                          "idm_cluster"
+                        ]
+                      },
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "AdminServer"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DMKRAsline",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "soa_cluster",
+                          "dmkr_cluster",
+                          "jms_cluster",
+                          "idm_cluster"
+                        ]
+                      },
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "AdminServer"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jms-tlogs",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "soa_cluster",
+                          "dmkr_cluster",
+                          "jms_cluster",
+                          "idm_cluster"
+                        ]
+                      },
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "AdminServer"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "Documaker_Admin_Group",
+                    "type": "Group",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "Documaker_Admin_User",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "Documaker_JMS_User",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "JmsJdbcStore-1",
+                    "type": "JDBCStore",
+                    "targets": [
+                      {
+                        "type": "MIGRATABLE",
+                        "names": [
+                          "jms_server1 (migratable)"
+                        ]
+                      }
+                    ],
+                    "properties": [
+                      {
+                        "name": "dataSource",
+                        "value": "jms-tlogs"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DocumakerJMSServer1",
+                    "type": "JMSServer",
+                    "properties": [
+                      {
+                        "name": "jdbcStore",
+                        "value": "JmsJdbcStore-1"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "MIGRATABLE",
+                        "names": [
+                          "jms_server1 (migratable)"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DocumakerJMSModule",
+                    "type": "JMSSystemResource",
+                    "properties": [
+                      {
+                        "name": "subDeployment",
+                        "value": "DocumakerSubDeployment1"
+                      }
+                    ],
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "jms_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DocumakerSubDeployment1",
+                    "type": "SubDeployment",
+                    "targets": [
+                      {
+                        "type": "JMSServer",
+                        "names": [
+                          "DocumakerJMSServer1"
+                        ]
+                      }
+                    ],
+                    "properties": [
+                      {
+                        "name": "scaleout",
+                        "value": "false"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "OAMIdentityAsserter",
+                    "type": "AuthenticationProvider",
+                    "properties": [
+                      {
+                        "name": "realmName",
+                        "value": "myrealm"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "OIDAuthenticator",
+                    "type": "AuthenticationProvider",
+                    "properties": [
+                      {
+                        "name": "realmName",
+                        "value": "myrealm"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DefaultAuthenticator",
+                    "type": "AuthenticationProvider",
+                    "properties": [
+                      {
+                        "name": "realmName",
+                        "value": "myrealm"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jms_cluster_settings",
+                    "type": "Cluster",
+                    "properties": [
+                      {
+                        "name": "clusterName",
+                        "value": "jms_cluster"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jms_server1 (migratable)",
+                    "type": "MigratableTarget",
+                    "properties": [
+                      {
+                        "name": "noTarget",
+                        "value": "true"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "soa_server1StartupParameter",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "soa_server1"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "soa_server1Server",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "soa_server1"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "dmkr_server1StartupParameter",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "dmkr_server1"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "dmkr_server1Server",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "dmkr_server1"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jms_server1StartupParameter",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "jms_server1"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "jms_server1Server",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "jms_server1"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "idm_server1StartupParameter",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "idm_server1"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "idm_server1Server",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "idm_server1"
+                      }
+                    ]
+                  }
+                ],
+                "properties": [
+                  {
+                    "name": "serverStartMode",
+                    "value": "prod",
+                    "target": "wls.production.mode"
+                  },
+                  {
+                    "name": "backupEnvironmentName",
+                    "value": "eng10",
+                    "target": "environment.name"
+                  },
+                  {
+                    "name": "applyJRF",
+                    "value": "true",
+                    "target": "wls.apply.jrf"
+                  },
+                  {
+                    "name": "tlogsLocationPath",
+                    "value": "/oracle/app/runtime/obpdoc/domains/obpdoc_domain",
+                    "target": "wls.tlogs.location.path"
+                  },
+                  {
+                    "name": "odlLogLocation",
+                    "value": "/oracle/app/logs/obpdoc/obpdoc_domain",
+                    "target": "wls.odl.log.location"
+                  },
+                  {
+                    "value": "5d",
+                    "target": "wls.odl.log.retentionPeriod"
+                  },
+                  {
+                    "name": "defaultJMSLogLocation",
+                    "value": "/oracle/app/logs/obpdoc/obpdoc_domain"
+                  },
+                  {
+                    "target": "wls.admin.listen.port.admin",
+                    "value": "19001"
+                  },
+                  {
+                    "target": "documaker.assemblyline.system.id",
+                    "value": "1"
+                  },
+                  {
+                    "name": "mintpress.startup_parallel",
+                    "target": "mintpress.startup_parallel",
+                    "value": "10"
+                  },
+                  {
+                    "name": "nodeid",
+                    "value": "1"
+                  },
+                  {
+                    "name": "nodeonserver",
+                    "value": "1"
+                  },
+                  {
+                    "name": "serverid",
+                    "value": "1"
+                  },
+                  {
+                    "target": "documaker.oracle.home",
+                    "value": "/oracle/app/binaries/obpdoc/fmw/odee_12"
+                  },
+                  {
+                    "target": "documaker.database.host",
+                    "value": "obpceng10db-prv.wpdev.mintpress.io"
+                  },
+                  {
+                    "target": "documaker.database.port",
+                    "value": "1521"
+                  },
+                  {
+                    "target": "documaker.database.sid",
+                    "value": "CBCD3_DOC_PRIM"
+                  },
+                  {
+                    "target": "documaker.soa.admin.username",
+                    "value": "weblogic"
+                  },
+                  {
+                    "target": "documaker.soa.admin.password",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "target": "documaker.database.advanced.compression.enabled",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.database.datafile.top",
+                    "value": "/oracle/app/oradata/CBCD3DOCPRIM/"
+                  },
+                  {
+                    "target": "documaker.admin.username",
+                    "value": "dmkr_admin"
+                  },
+                  {
+                    "target": "documaker.admin.password",
+                    "value": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk="
+                  },
+                  {
+                    "target": "documaker.assemblyline.username",
+                    "value": "dmkr_asline"
+                  },
+                  {
+                    "target": "documaker.assemblyline.password",
+                    "value": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk="
+                  },
+                  {
+                    "target": "documaker.assemblyline.hotfolder",
+                    "value": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/hotdirectory"
+                  },
+                  {
+                    "target": "documaker.smtp.host",
+                    "value": "notconfigured"
+                  },
+                  {
+                    "target": "documaker.smtp.port",
+                    "value": "25"
+                  },
+                  {
+                    "target": "documaker.smtp.user",
+                    "value": "smtpuser"
+                  },
+                  {
+                    "target": "documaker.smtp.password",
+                    "value": "{AES2}knDucoGT2kmGIPnGyCNVeQ=={/IV}TfPyBTahkINAni9R4Kk7MYk910xmlgxAPIwSuvJuGt1I="
+                  },
+                  {
+                    "target": "documaker.smtp.sender",
+                    "value": "documaker@example.com"
+                  },
+                  {
+                    "target": "documaker.ucm.enable",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.ucm.username",
+                    "value": "ucm_user"
+                  },
+                  {
+                    "target": "documaker.ucm.password",
+                    "value": "{AES2}gUmUBhI8epqbdIEOJNm4/A=={/IV}TC6K20Rbx/jJv9XHTHYnI/K/2w5Ugfpz7GSn6jcXWb5w="
+                  },
+                  {
+                    "target": "documaker.ucm.protocol",
+                    "value": "http"
+                  },
+                  {
+                    "target": "documaker.ucm.host",
+                    "value": "notconfigured"
+                  },
+                  {
+                    "target": "documaker.ucm.ibr.port",
+                    "value": "3335"
+                  },
+                  {
+                    "target": "documaker.ucm.cs.port",
+                    "value": "3334"
+                  },
+                  {
+                    "target": "documaker.ucm.connection.string",
+                    "value": "idc://ibr_host_port"
+                  },
+                  {
+                    "target": "documaker.ucm.document.url",
+                    "value": "http://ucm_host_port/cs/groups/secure/documents/document"
+                  },
+                  {
+                    "target": "documaker.ums.enable",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.configure.jms",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.jms.principal",
+                    "value": "jmsadmin"
+                  },
+                  {
+                    "target": "documaker.jms.credential",
+                    "value": "{AES2}jNZsP+IPmB6BW8CB25fQMg=={/IV}TnabMLSC0zLyqoVXBRvB2edGoZgvU4WtPwljUnhHuyI8="
+                  },
+                  {
+                    "target": "documaker.configure.smtp",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.ums.host",
+                    "value": "notconfigured"
+                  },
+                  {
+                    "target": "documaker.ums.port",
+                    "value": "3333"
+                  },
+                  {
+                    "target": "documaker.ums.username",
+                    "value": "ums_user"
+                  },
+                  {
+                    "target": "documaker.ums.password",
+                    "value": "{AES2}waqVrRIsEyMYjIdcHaMxVg=={/IV}Taf0+VFpX5WPDLwYfwN8XgaNi9imbp0YPsglt+Pso6qk="
+                  },
+                  {
+                    "target": "documaker.ums.endpoint",
+                    "value": "endpointURLGoesHere"
+                  },
+                  {
+                    "target": "documaker.appdeploy.stage",
+                    "value": "/oracle/app/binaries/obpdoc/fmw/odee_12"
+                  },
+                  {
+                    "target": "documaker.dmkr.appdeploy.enabled",
+                    "value": "true"
+                  },
+                  {
+                    "target": "documaker.dmkr.appdeploy.target.name",
+                    "value": "dmkr_cluster"
+                  },
+                  {
+                    "target": "documaker.idm.appdeploy.enabled",
+                    "value": "true"
+                  },
+                  {
+                    "target": "documaker.idm.appdeploy.target.name",
+                    "value": "idm_cluster"
+                  },
+                  {
+                    "target": "documaker.soa.appdeploy.enabled",
+                    "value": "true"
+                  },
+                  {
+                    "target": "documaker.soa.partition.name",
+                    "value": "default"
+                  },
+                  {
+                    "target": "documaker.obp.integration.enabled",
+                    "value": "false"
+                  },
+                  {
+                    "name": "seedDocumakerSchemaObjects",
+                    "value": "true"
+                  },
+                  {
+                    "target": "sqlplus.oracle.home",
+                    "value": "/oracle/app/binaries/obpdoc/dbclient"
+                  },
+                  {
+                    "target": "documaker.soa.host",
+                    "value": "obpceng10doc01-prv.wpdev.mintpress.io"
+                  },
+                  {
+                    "target": "documaker.soa.port",
+                    "value": "17002"
+                  },
+                  {
+                    "target": "documaker.jms.listen.port",
+                    "value": "17202"
+                  },
+                  {
+                    "target": "documaker.webserver.endpoint",
+                    "value": "https://obpceng10doc.wpdev.mintpress.io:18002/DWSV0AL1/CompositionService?WSDL"
+                  },
+                  {
+                    "target": "documaker.approval.process.endpoint",
+                    "value": "https://obpceng10doc.wpdev.mintpress.io:18002/soa-infra/services/default/iDMkr_Correspondence/correspondenceprocesses_client_ep"
+                  },
+                  {
+                    "target": "documaker.approval.businessrules.endpoint",
+                    "value": "https://obpceng10doc.wpdev.mintpress.io:18002/soa-infra/services/default/iDMkrApprovalRuleProj/iDMkrApprovalRules_DecisionService_ep"
+                  }
+                ],
+                "templateList": [
+                  {
+                    "name": "soa"
+                  }
+                ],
+                "repositoryList": [
+                  {
+                    "componentList": [
+                      "ORASDPM",
+                      "SOAINFRA",
+                      "MDS"
+                    ],
+                    "id": "rcu01",
+                    "dbName": "eng10obpdocdb",
+                    "prefix": "OBPDOC",
+                    "dbUser": "SYS",
+                    "schemaPassword": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk=",
+                    "defaultRepository": "true"
+                  }
+                ]
+              }
+            ],
+            "instanceList": [
+              {
+                "name": "DocuMaker1",
+                "type": "documaker",
+                "installationName": "documaker",
+                "instanceTop": "/oracle/app/runtime/obpdoc/instances",
+                "hostIdentifier": "obpceng10doc01",
+                "properties": [
+                  {
+                    "name": "isSecondInstance",
+                    "value": "false"
+                  },
+                  {
+                    "name": "systemId",
+                    "value": "1"
+                  },
+                  {
+                    "target": "documaker.documentfactory.system.id",
+                    "value": "1"
+                  },
+                  {
+                    "target": "documaker.documentfactory.system.name",
+                    "value": "System 1"
+                  },
+                  {
+                    "target": "documaker.assemblyline.system.id",
+                    "value": "1"
+                  },
+                  {
+                    "target": "documaker.assemblyline.system.name",
+                    "value": "Assembly Line 1"
+                  },
+                  {
+                    "name": "nodeid",
+                    "value": "1"
+                  },
+                  {
+                    "name": "nodeonserver",
+                    "value": "1"
+                  },
+                  {
+                    "name": "serverid",
+                    "value": "1"
+                  },
+                  {
+                    "target": "documaker.oracle.home",
+                    "value": "/oracle/app/binaries/obpdoc/fmw/odee_12"
+                  },
+                  {
+                    "target": "documaker.database.host",
+                    "value": "obpceng10db-prv.wpdev.mintpress.io"
+                  },
+                  {
+                    "target": "documaker.database.port",
+                    "value": "1521"
+                  },
+                  {
+                    "target": "documaker.database.sid",
+                    "value": "CBCD3_DOC_PRIM"
+                  },
+                  {
+                    "target": "documaker.soa.admin.username",
+                    "value": "weblogic"
+                  },
+                  {
+                    "target": "documaker.soa.admin.password",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "target": "documaker.database.advanced.compression.enabled",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.database.datafile.top",
+                    "value": "/oracle/app/oradata/CBCD3DOCPRIM/"
+                  },
+                  {
+                    "target": "documaker.admin.username",
+                    "value": "dmkr_admin"
+                  },
+                  {
+                    "target": "documaker.admin.password",
+                    "value": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk="
+                  },
+                  {
+                    "target": "documaker.assemblyline.username",
+                    "value": "dmkr_asline"
+                  },
+                  {
+                    "target": "documaker.assemblyline.password",
+                    "value": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk="
+                  },
+                  {
+                    "target": "documaker.assemblyline.hotfolder",
+                    "value": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/hotdirectory"
+                  },
+                  {
+                    "target": "documaker.smtp.host",
+                    "value": "notconfigured"
+                  },
+                  {
+                    "target": "documaker.smtp.port",
+                    "value": "25"
+                  },
+                  {
+                    "target": "documaker.smtp.user",
+                    "value": "smtpuser"
+                  },
+                  {
+                    "target": "documaker.smtp.password",
+                    "value": "{AES2}knDucoGT2kmGIPnGyCNVeQ=={/IV}TfPyBTahkINAni9R4Kk7MYk910xmlgxAPIwSuvJuGt1I="
+                  },
+                  {
+                    "target": "documaker.smtp.sender",
+                    "value": "documaker@example.com"
+                  },
+                  {
+                    "target": "documaker.ucm.enable",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.ucm.username",
+                    "value": "ucm_user"
+                  },
+                  {
+                    "target": "documaker.ucm.password",
+                    "value": "{AES2}gUmUBhI8epqbdIEOJNm4/A=={/IV}TC6K20Rbx/jJv9XHTHYnI/K/2w5Ugfpz7GSn6jcXWb5w="
+                  },
+                  {
+                    "target": "documaker.ucm.protocol",
+                    "value": "http"
+                  },
+                  {
+                    "target": "documaker.ucm.host",
+                    "value": "notconfigured"
+                  },
+                  {
+                    "target": "documaker.ucm.ibr.port",
+                    "value": "3335"
+                  },
+                  {
+                    "target": "documaker.ucm.cs.port",
+                    "value": "3334"
+                  },
+                  {
+                    "target": "documaker.ucm.connection.string",
+                    "value": "idc://ibr_host_port"
+                  },
+                  {
+                    "target": "documaker.ucm.document.url",
+                    "value": "http://ucm_host_port/cs/groups/secure/documents/document"
+                  },
+                  {
+                    "target": "documaker.ums.enable",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.configure.jms",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.jms.principal",
+                    "value": "jmsadmin"
+                  },
+                  {
+                    "target": "documaker.jms.credential",
+                    "value": "{AES2}jNZsP+IPmB6BW8CB25fQMg=={/IV}TnabMLSC0zLyqoVXBRvB2edGoZgvU4WtPwljUnhHuyI8="
+                  },
+                  {
+                    "target": "documaker.configure.smtp",
+                    "value": "false"
+                  },
+                  {
+                    "target": "documaker.ums.host",
+                    "value": "notconfigured"
+                  },
+                  {
+                    "target": "documaker.ums.port",
+                    "value": "3333"
+                  },
+                  {
+                    "target": "documaker.ums.username",
+                    "value": "ums_user"
+                  },
+                  {
+                    "target": "documaker.ums.password",
+                    "value": "{AES2}waqVrRIsEyMYjIdcHaMxVg=={/IV}Taf0+VFpX5WPDLwYfwN8XgaNi9imbp0YPsglt+Pso6qk="
+                  },
+                  {
+                    "target": "documaker.ums.endpoint",
+                    "value": "endpointURLGoesHere"
+                  },
+                  {
+                    "target": "documaker.appdeploy.stage",
+                    "value": "/oracle/app/binaries/obpdoc/fmw/odee_12"
+                  },
+                  {
+                    "target": "documaker.dmkr.appdeploy.enabled",
+                    "value": "true"
+                  },
+                  {
+                    "target": "documaker.dmkr.appdeploy.target.name",
+                    "value": "dmkr_cluster"
+                  },
+                  {
+                    "target": "documaker.idm.appdeploy.enabled",
+                    "value": "true"
+                  },
+                  {
+                    "target": "documaker.idm.appdeploy.target.name",
+                    "value": "idm_cluster"
+                  },
+                  {
+                    "target": "documaker.soa.appdeploy.enabled",
+                    "value": "true"
+                  },
+                  {
+                    "target": "documaker.soa.partition.name",
+                    "value": "default"
+                  },
+                  {
+                    "target": "documaker.obp.integration.enabled",
+                    "value": "false"
+                  },
+                  {
+                    "name": "seedDocumakerSchemaObjects",
+                    "value": "true"
+                  },
+                  {
+                    "target": "sqlplus.oracle.home",
+                    "value": "/oracle/app/binaries/obpdoc/dbclient"
+                  },
+                  {
+                    "target": "documaker.soa.host",
+                    "value": "obpceng10doc01-prv.wpdev.mintpress.io"
+                  },
+                  {
+                    "target": "documaker.soa.port",
+                    "value": "17002"
+                  },
+                  {
+                    "target": "documaker.jms.listen.port",
+                    "value": "17202"
+                  },
+                  {
+                    "target": "documaker.webserver.endpoint",
+                    "value": "https://obpceng10doc.wpdev.mintpress.io:18002/DWSV0AL1/CompositionService?WSDL"
+                  },
+                  {
+                    "target": "documaker.approval.process.endpoint",
+                    "value": "https://obpceng10doc.wpdev.mintpress.io:18002/soa-infra/services/default/iDMkr_Correspondence/correspondenceprocesses_client_ep"
+                  },
+                  {
+                    "target": "documaker.approval.businessrules.endpoint",
+                    "value": "https://obpceng10doc.wpdev.mintpress.io:18002/soa-infra/services/default/iDMkrApprovalRuleProj/iDMkrApprovalRules_DecisionService_ep"
+                  }
+                ],
+                "repository": {
+                  "componentList": [
+
+                  ],
+                  "id": "rcu02",
+                  "dbName": "eng10obpdocdb",
+                  "prefix": "OBPDOC",
+                  "dbUser": "SYS",
+                  "schemaPassword": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk="
+                }
+              }
+            ],
+            "properties": [
+              {
+                "name": "targetPlatform",
+                "value": "x86-64"
+              }
+            ],
+            "hostInstallationList": [
+              {
+                "installationName": "documaker",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ]
+              }
+            ],
+            "transferList": [
+              {
+                "name": "eng10_obpdoc_keystore",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/obpceng10doc.jks",
+                "destinationFile": "/oracle/app/runtime/eng10/certs/obpceng10doc.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpdoc_truststore",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/wpdev.jks",
+                "destinationFile": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpdoc_caCerts",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/cacerts.pem",
+                "destinationFile": "/oracle/app/runtime/eng10/certs/cacerts.pem",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "cacerts_jdk",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/cacerts",
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/jre/lib/security/cacerts",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpdoc_UnlimitedJCEPolicyLocal",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/jdk/UnlimitedJCEPolicyJDK8/local_policy.jar",
+                "destinationFile": "/oracle/app/binaries/obpdoc/java/jre/lib/security/local_policy.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "eng10_obpdoc_UnlimitedJCEPolicyUS",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/jdk/UnlimitedJCEPolicyJDK8/US_export_policy.jar",
+                "destinationFile": "/oracle/app/binaries/obpdoc/java/jre/lib/security/US_export_policy.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "ovdkeystore",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/eng10/adapters.jks",
+                "destinationFile": "/oracle/app/runtime/obpdoc/domains/obpdoc_domain/config/fmwconfig/ovd/default/keystores/adapters.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "obpemailtemplate",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/documaker/23754403/obp_update/templates/obpemailtemplate.txt",
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/obpemailtemplate.txt",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "printcontroltemplate",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/documaker/23754403/obp_update/templates/printcontroltemplate.xml",
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/printcontroltemplate.xml",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "obp-dir-brochure",
+                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                "content": "ZHVtbXkK",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/brochure/.dummy",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "obp-dir-post",
+                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                "content": "ZHVtbXkK",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/post/.dummy",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "obp-dir-results-archive",
+                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                "content": "ZHVtbXkK",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/results-archive/.dummy",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "obp-dir-scratch",
+                "checksum": "f02e326f800ee26f04df7961adbf7c0a",
+                "content": "ZHVtbXkK",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/odee_12/documaker/mstrres/dmres/scratch/.dummy",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "SIEMCustomAuditor",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/common/SIEMCustomAuditor.jar",
+                "destinationFile": "/oracle/app/binaries/obpdoc/fmw/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries",
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "HealthCheckFileCopy",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/common/HealthCheck.war",
+                "destinationFile": "/oracle/app/runtime/obpdoc/domains/applications/obpdoc_domain/HealthCheck.war",
+                "permissions": "755",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "wpdevKeystore",
+                "destinationFile": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+                "permissions": "600",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/wpdev.jks",
+                "properties": [
+                  {
+                    "name": "KeyAlias",
+                    "value": "wpdev"
+                  },
+                  {
+                    "name": "KeystorePassword",
+                    "value": "FIXME"
+                  }
+                ]
+              },
+              {
+                "name": "wpdevTruststore",
+                "destinationFile": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+                "permissions": "600",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "sourceFile": "/oracle/stage/certs/wc/wpdev.jks",
+                "properties": [
+                  {
+                    "name": "TruststorePassword",
+                    "value": "FIXME"
+                  }
+                ]
+              }
+            ],
+            "executeList": [
+              {
+                "name": "UpdateAdaptersOSXml",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::update-wls-ldap-adapters]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "EnableOAMSSO",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/common/enable_sso.sh weblogic ${execute.weblogicAdminPassword} t3://obpceng10doc01-prv.wpdev.mintpress.io:17001 /oracle/app/binaries/obpdoc/fmw /oracle/app/runtime/obpdoc/domains/obpdoc_domain https://obp-sso-eng10.wpdev.mintpress.io/oam/pages/logout.jsp /oracle/stage/custom/csh/common",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "DeployHealthCheck",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpdoc/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/deployApplication.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10doc01-prv.wpdev.mintpress.io:17001  HealthCheck /oracle/app/runtime/obpdoc/domains/applications/obpdoc_domain/HealthCheck.war soa_cluster,dmkr_cluster,jms_cluster,idm_cluster nostage 650",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "DeleteDemoTrustEntry",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "cd /oracle/app/runtime/obpdoc/domains/obpdoc_domain/bin/;cp -f setDomainEnv.sh setDomainEnv.sh.mint; sed -i 's|-Djavax.net.ssl.trustStore=\\${WL_HOME}/server/lib/DemoTrust.jks||g' setDomainEnv.sh; sed -i 's|-Dtangosol.coherence.clusteraddress=227.7.7.12||g' setDomainEnv.sh; sed -i 's|-Dtangosol.coherence.clusterport=9778||g' setDomainEnv.sh",
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "CreateDatabaseObjects",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::create-db-users]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-rcu"
+                ]
+              },
+              {
+                "name": "DeleteDatabaseObjects",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::drop-db-users]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-clobber"
+                ]
+              },
+              {
+                "name": "ConfigureJMSView",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpdoc/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/configureJmsAccess.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10doc01-prv.wpdev.mintpress.io:17001 ",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "DocumakerJPSQuery",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "wget ${execute.queryUrl} -O /oracle/app/binaries/obpdoc/tmp/docu_jps.html; cat /oracle/app/binaries/obpdoc/tmp/docu_jps.html; rm -f /oracle/app/binaries/obpdoc/tmp/docu_jps.html",
+                "executeWhenList": [
+                  "post-online"
+                ],
+                "properties": [
+                  {
+                    "target": "execute.queryUrl",
+                    "value": "http://obpceng10doc01-prv.wpdev.mintpress.io:17001/jpsquery"
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "setSOACallBackURL",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": ". /oracle/app/runtime/obpdoc/domains/obpdoc_domain/bin/setDomainEnv.sh java weblogic.WLST /oracle/stage/custom/csh/common/setSOAMBeans.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10doc01-prv.wpdev.mintpress.io:17001 obpceng10doc.wpdev.mintpress.io:18002",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "UpdateDocumakerConfigs",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::documaker-configs]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "InstallDocumakerMobile",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::install-documaker-mobile]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-binaries"
+                ]
+              },
+              {
+                "name": "UpgradeJRE180172",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::upgrade-java]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-binaries"
+                ]
+              },
+              {
+                "name": "Removewlclientjar",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "rm -rf /oracle/app/binaries/obpdoc/fmw/odee_12/documaker/docupresentment/lib/wlclient.jar",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-binaries"
+                ]
+              },
+              {
+                "name": "deleteDefaultAuditor",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpdoc/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/deleteDefaultAuditor.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10doc01-prv.wpdev.mintpress.io:17001 obpdoc_domain",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "updateSIEMAuditor",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpdoc/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/updateSIEMAuditor.py weblogic ${execute.weblogicAdminPassword} t3://obpceng10doc01-prv.wpdev.mintpress.io:17001 obpdoc_domain obpdoc",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}MtncaJlwvUcR607NEdN2Bw=={/IV}TBzHFfsBEXLs5t6dFIYhyFaZnc83XevpnWYigzRea95A="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "FMW-App-Role-Mapping",
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::fmw-app-role-mapping]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "ensure-oid-working-online",
+                "sourceFile": "LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng10oid.wpdev.mintpress.io/18001' ; LOOP=$? ; echo 'contacting obpceng10oid.wpdev.mintpress.io18001' ; sleep 1 ;  done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ]
+              },
+              {
+                "name": "ensure-oid-working-start",
+                "sourceFile": "LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng10oid.wpdev.mintpress.io/18001' ; LOOP=$? ; echo 'contacting obpceng10oid.wpdev.mintpress.io18001' ; sleep 1 ;  done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ]
+              },
+              {
+                "name": "ensure-db-working-online",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_admin/tcBBrtL8kuGl_srBKHRv@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_asline/tcBBrtL8kuGl_srBKHRv@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DOCU_JMS_TLOGS/tcBBrtL8kuGl_srBKHRv@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ]
+              },
+              {
+                "name": "ensure-db-working-start",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_admin/tcBBrtL8kuGl_srBKHRv@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_asline/tcBBrtL8kuGl_srBKHRv@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DOCU_JMS_TLOGS/tcBBrtL8kuGl_srBKHRv@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-start"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ]
+              },
+              {
+                "name": "check-db",
+                "sourceFile": "RESULT=1 ; while [ $RESULT != 0 ]; do export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; $ORACLE_HOME/bin/sqlplus llama/duck@obpceng10db-prv.wpdev.mintpress.io:1521/CBCD3_DOC_PRIM </dev/null 2>&1 | grep logon.denied ; RESULT=$? ; sleep 5 ; done",
+                "executeWhenList": [
+                  "pre-rcu"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ]
+              },
+              {
+                "name": "check-db-startup",
+                "sourceFile": "RESULT=1 ; while [ $RESULT != 0 ]; do export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; $ORACLE_HOME/bin/sqlplus llama/duck@obpceng10db-prv.wpdev.mintpress.io:1521/CBCD3_DOC_PRIM </dev/null 2>&1 | grep logon.denied ; RESULT=$? ; sleep 5 ; done",
+                "executeWhenList": [
+                  "pre-start"
+                ],
+                "hostIdentifierList": [
+                  "obpceng10doc01"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "databaseList": [
+      {
+        "name": "eng10obpdocdb",
+        "port": "1521",
+        "serviceName": "CBCD3_DOC_PRIM",
+        "properties": [
+          {
+            "name": "rcu.datafile.initialsize",
+            "value": "200M",
+            "target": "rcu.datafile.initialsize"
+          },
+          {
+            "target": "rcu.extra.parameters",
+            "value": " -encryptTablespace false"
+          },
+          {
+            "name": "jdbcUrl",
+            "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=obpceng10db-prv.wpdev.mintpress.io)(Port=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=CBCD3_DOC_PRIM)))"
+          },
+          {
+            "name": "jdbcUrlTNS",
+            "value": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))"
+          },
+          {
+            "name": "gridLinkONS",
+            "value": "notrequired:6200,notrequired:6200"
+          }
+        ],
+        "hostIdentifier": "db_server",
+        "schemaList": [
+          {
+            "name": "SYS",
+            "password": "{AES2}FeOdT3ScVdNpee6AcZZ90w=={/IV}To44cfetHhuschWVvEDrj/11oG9BzDDIpRBvEfoTxfjs="
+          }
+        ]
+      }
+    ],
+    "resourceList": [
+      {
+        "name": "WeblogicUser_wlsmonitor",
+        "type": "User",
+        "attributes": {
+          "name": "wlsmonitor",
+          "password": "{AES2}oGuDXyAyAUSc9rXCR85LXA=={/IV}TwZ19rXuFo9KeO6rM3mslEGRXaUPlhIDVL42rvlQoqDs=",
+          "description": "User with Weblogic Monitor Role",
+          "groupList": "monitors"
+        }
+      },
+      {
+        "name": "WeblogicUser_odemmon",
+        "type": "User",
+        "attributes": {
+          "name": "odemmon",
+          "password": "{AES2}SZ3SiuIsiGgzOtOfPYuQxQ=={/IV}Tpri13qkdQpfvBkvN3Tw8vvbPFoertNpesX3522cCorA=",
+          "description": "OEM User with Weblogic Monitor Role",
+          "groupList": "monitors"
+        }
+      },
+      {
+        "name": "AdminServerExtChannel",
+        "type": "NetworkAccessPoint",
+        "attributes": {
+          "Name": "AdminServerExtChannel",
+          "CustomPrivateKeyAlias": "None",
+          "Protocol": "https",
+          "ListenAddress": "obpceng10doc-adm.wpdev.mintpress.io",
+          "ListenPort": "18001",
+          "ClientCertificateEnforced": "false",
+          "Enabled": "false",
+          "TunnelingEnabled": "false",
+          "TwoWaySSLEnabled": "false",
+          "ChannelIdentityCustomized": "false",
+          "HttpEnabledForThisProtocol": "true",
+          "OutboundEnabled": "false",
+          "CustomPrivateKeyPassPhrase": "None"
+        }
+      },
+      {
+        "name": "DomainWebappConfig",
+        "type": "WebAppContainer",
+        "attributes": {
+          "WeblogicPluginEnabled": "true",
+          "XPoweredByHeaderLevel": "NONE"
+        }
+      },
+      {
+        "name": "defaultCoherenceCluster",
+        "type": "CoherenceClusterSystemResource",
+        "params": [
+          {
+            "type": "CoherenceClusterResource",
+            "params": [
+              {
+                "type": "CoherenceClusterParams",
+                "attributes": {
+                  "SecurityFrameworkEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DomainLogConfiguration",
+        "type": "DomainLog",
+        "attributes": {
+          "NumberOfFilesLimited": "true",
+          "FileMinSize": "10000",
+          "RotationTime": "05:00",
+          "FileTimeSpan": "24",
+          "RotateLogOnStartup": "true",
+          "RotationType": "byTime",
+          "FileCount": "5",
+          "FileName": "/oracle/app/logs/obpdoc/obpdoc_domain.log"
+        }
+      },
+      {
+        "name": "DomainSecurityConfiguration",
+        "type": "SecurityConfiguration",
+        "attributes": {
+          "ConnectionLoggerEnabled": "true",
+          "ConnectionFilter": "weblogic.security.net.ConnectionFilterImpl"
+        },
+        "params": [
+          {
+            "type": "Realm",
+            "name": "myrealm",
+            "attributes": {
+              "DelegateMBeanAuthorization": "true"
+            },
+            "params": [
+              {
+                "type": "UserLockoutManager",
+                "attributes": {
+                  "LockoutThreshold": "3",
+                  "LockoutDuration": "15",
+                  "LockoutResetDuration": "15"
+                }
+              },
+              {
+                "type": "Auditor",
+                "name": "SIEMCustomAuditor:com.oracle.westpac.csh.siem.cap.SIEMCustomAuditor"
+              },
+              {
+                "type": "PasswordValidator",
+                "name": "SystemPasswordValidator:com.bea.security.providers.authentication.passwordvalidator.SystemPasswordValidator",
+                "attributes": {
+                  "MinPasswordLength": "15",
+                  "MinUppercaseCharacters": "1",
+                  "MinLowercaseCharacters": "1",
+                  "MinNumericCharacters": "1",
+                  "MinNonAlphanumericCharacters": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "CertRevoc",
+            "name": "obpdoc_domain",
+            "attributes": {
+              "CheckingEnabled": "false"
+            }
+          }
+        ]
+      },
+      {
+        "name": "AdminServerSettings",
+        "type": "Server",
+        "params": [
+          {
+            "type": "Log",
+            "attributes": {
+              "RotateLogOnStartup": "true",
+              "MemoryBufferSize": "500",
+              "StdoutFormat": "standard",
+              "BufferSizeKB": "8",
+              "ServerLoggingBridgeUseParentLoggersEnabled": "false",
+              "RedirectStderrToServerLogEnabled": "false",
+              "StdoutSeverity": "Off",
+              "DomainLogBroadcastSeverity": "Error",
+              "MemoryBufferSeverity": "Error",
+              "StdoutLogStack": "true",
+              "RedirectStdoutToServerLogEnabled": "false",
+              "NumberOfFilesLimited": "true",
+              "FileCount": "5",
+              "RotationType": "byTime",
+              "DomainLogBroadcasterBufferSize": "10",
+              "Log4jLoggingEnabled": "false",
+              "FileMinSize": "10000",
+              "RotationTime": "05:00",
+              "FileTimeSpan": "24",
+              "StacktraceDepth": "5",
+              "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
+              "LogFileSeverity": "Warning",
+              "FileName": "/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.log"
+            }
+          },
+          {
+            "type": "WebServer",
+            "params": [
+              {
+                "type": "WebServerLog",
+                "attributes": {
+                  "RotateLogOnStartup": "true",
+                  "NumberOfFilesLimited": "true",
+                  "FileCount": "5",
+                  "RotationType": "byTime",
+                  "FileMinSize": "10000",
+                  "RotationTime": "05:00",
+                  "FileTimeSpan": "24",
+                  "FileName": "/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/access.log",
+                  "LogFileFormat": "extended",
+                  "ELFFields": "cs(X-Forwarded-For) c-ip auth_user date time time-taken cs-method cs-uri sc-status ctx-ecid ctx-rid"
+                }
+              }
+            ]
+          },
+          {
+            "type": "SSL",
+            "attributes": {
+              "ServerPrivateKeyAlias": "wpdev",
+              "HostnameVerificationIgnored": "false",
+              "Enabled": "true",
+              "ServerPrivateKeyPassPhrase": "FIXME",
+              "JSSEEnabled": "true",
+              "UseServerCerts": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier"
+            }
+          },
+          {
+            "type": "ServerDiagnosticConfig",
+            "attributes": {
+              "DiagnosticContextEnabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "Notes": "Server settings",
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreType": "jks",
+          "AdministrationPort": "%ListenPort+2000%"
+        }
+      },
+      {
+        "name": "GenericServerSettings_auto_1",
+        "type": "Server",
+        "params": [
+          {
+            "type": "Log",
+            "attributes": {
+              "RotateLogOnStartup": "true",
+              "MemoryBufferSize": "500",
+              "StdoutFormat": "standard",
+              "BufferSizeKB": "8",
+              "ServerLoggingBridgeUseParentLoggersEnabled": "false",
+              "RedirectStderrToServerLogEnabled": "false",
+              "StdoutSeverity": "Off",
+              "DomainLogBroadcastSeverity": "Error",
+              "MemoryBufferSeverity": "Error",
+              "StdoutLogStack": "true",
+              "RedirectStdoutToServerLogEnabled": "false",
+              "NumberOfFilesLimited": "true",
+              "FileCount": "5",
+              "RotationType": "byTime",
+              "DomainLogBroadcasterBufferSize": "10",
+              "Log4jLoggingEnabled": "false",
+              "FileMinSize": "10000",
+              "RotationTime": "05:00",
+              "FileTimeSpan": "24",
+              "StacktraceDepth": "5",
+              "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
+              "LogFileSeverity": "Warning",
+              "FileName": "/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.log"
+            }
+          },
+          {
+            "type": "WebServer",
+            "params": [
+              {
+                "type": "WebServerLog",
+                "attributes": {
+                  "RotateLogOnStartup": "true",
+                  "NumberOfFilesLimited": "true",
+                  "FileCount": "5",
+                  "RotationType": "byTime",
+                  "FileMinSize": "10000",
+                  "RotationTime": "05:00",
+                  "FileTimeSpan": "24",
+                  "FileName": "/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/access.log",
+                  "LogFileFormat": "extended",
+                  "ELFFields": "cs(X-Forwarded-For) c-ip auth_user date time time-taken cs-method cs-uri sc-status ctx-ecid ctx-rid"
+                }
+              }
+            ]
+          },
+          {
+            "type": "SSL",
+            "attributes": {
+              "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
+              "HostnameVerificationIgnored": "false",
+              "Enabled": "true",
+              "ServerPrivateKeyPassPhrase": "{AES2}n7QPDH7gvQiX6Wu6oWLPAg=={/IV}TW0szKECLGBPS6U4tiepJvKzgE6RaQBQbo9IeK5ohGrQ=",
+              "JSSEEnabled": "true",
+              "UseServerCerts": "true"
+            }
+          },
+          {
+            "type": "ServerDiagnosticConfig",
+            "attributes": {
+              "DiagnosticContextEnabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "Notes": "Server settings",
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng10/certs/obpceng10doc.jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}n7QPDH7gvQiX6Wu6oWLPAg=={/IV}TW0szKECLGBPS6U4tiepJvKzgE6RaQBQbo9IeK5ohGrQ=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}uO5j1xTXcJ7qlC/4Fvterg=={/IV}TmOCRhmGyPkuW2YGYV1JdKFi5TezjJ1nIRX52HWtgI4U=",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreType": "jks",
+          "AdministrationPort": "%ListenPort+2000%"
+        }
+      },
+      {
+        "name": "JdbcCommonSettings",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCOracleParams",
+                "attributes": {
+                  "OnsNodeList": "None",
+                  "FanEnabled": "false"
+                }
+              },
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "MinCapacity": "1",
+                  "TestConnectionsOnReserve": "true",
+                  "TestTableName": "SQL SELECT 1 FROM DUAL"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))"
+                },
+                "properties": {
+                  "javax.net.ssl.trustStoreType": "JKS",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}uO5j1xTXcJ7qlC/4Fvterg=={/IV}TmOCRhmGyPkuW2YGYV1JdKFi5TezjJ1nIRX52HWtgI4U=",
+                  "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+                  "oracle.net.ssl_version": "1.2",
+                  "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OIDAuthenticator",
+        "type": "AuthenticationProvider",
+        "attributes": {
+          "subType": "weblogic.security.providers.authentication.OracleInternetDirectoryAuthenticator",
+          "ControlFlag": "SUFFICIENT",
+          "SSLEnabled": "true",
+          "PropagateCauseForLoginException": "true",
+          "UseRetrievedUserNameAsPrincipal": "true",
+          "Host": "obpceng10oid.wpdev.mintpress.io",
+          "Port": "18001",
+          "Principal": "cn=obpdoc_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au",
+          "Credential": "{AES2}4lAMhoTazFiDbw7oUXC51A=={/IV}TsaGwDxHYMsaiomd35mxrxF7y0E6ZhERaiu7FhD8QmyU=",
+          "UserNameAttribute": "uid",
+          "UserFromNameFilter": "(&(uid=%u)(objectclass=person))",
+          "KeepAliveEnabled": "true",
+          "ResultsTimeLimit": "5000",
+          "AllUsersFilter": "(&(uid=*)(objectclass=person))",
+          "AllGroupsFilter": "(&(cn=*)(|(objectclass=groupofUniqueNames)(objectclass=groupofurls)))",
+          "GroupFromNameFilter": "(|(&(cn=%g)(objectclass=groupofUniqueNames))(&(cn=%g)(objectclass=groupOfURLs)))",
+          "GuidAttribute": "orclguid",
+          "GroupBaseDN": "ou=documaker,ou=apps,dc=westpac,dc=com,dc=au",
+          "UserBaseDN": "cn=users,dc=westpac,dc=com,dc=au",
+          "ConnectionPoolSize": "20",
+          "ConnectTimeout": "60",
+          "ConnectionRetryLimit": "5",
+          "ParallelConnectDelay": "0",
+          "CacheSize": "10240",
+          "CacheTTL": "300",
+          "GroupMembershipSearching": "limited"
+        }
+      },
+      {
+        "name": "OAMIdentityAsserter",
+        "type": "AuthenticationProvider",
+        "attributes": {
+          "subType": "oracle.security.wls.oam.providers.asserter.OAMIdentityAsserter",
+          "ControlFlag": "OPTIONAL"
+        }
+      },
+      {
+        "name": "DefaultAuthenticator",
+        "type": "AuthenticationProvider",
+        "attributes": {
+          "subType": "null",
+          "ControlFlag": "SUFFICIENT"
+        }
+      },
+      {
+        "name": "AdminStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms2g -Xmx2g -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer ",
+          "2": "",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpdoc/obpdoc_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false",
+          "Auto19": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto20": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "SOAClusterStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms2g -Xmx2g",
+          "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75",
+          "3": "-Dweblogic.configuration.schemaValidationEnabled=false -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer -Djbo.passivationstore=database -Djbo.pcoll.mgr=oracle.jbo.pcoll.OraclePersistManager",
+          "4": "",
+          "5": "",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpdoc/obpdoc_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
+        }
+      },
+      {
+        "name": "DmkrClusterStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms2g -Xmx2g",
+          "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 ",
+          "3": "-Dweblogic.configuration.schemaValidationEnabled=false -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer -Djbo.passivationstore=database -Djbo.pcoll.mgr=oracle.jbo.pcoll.OraclePersistManager",
+          "4": "",
+          "5": "",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpdoc/obpdoc_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
+        }
+      },
+      {
+        "name": "JmsClusterStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms2g -Xmx2g",
+          "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC  -XX:CMSInitiatingOccupancyFraction=75 ",
+          "3": "-Dweblogic.configuration.schemaValidationEnabled=false -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+          "4": "",
+          "5": "",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpdoc/obpdoc_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
+        }
+      },
+      {
+        "name": "IdmClusterStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms2g -Xmx2g",
+          "2": " -XX:NewSize=256m -XX:MaxNewSize=1024m -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djbo.passivationstore=database -Djbo.pcoll.mgr=oracle.jbo.pcoll.OraclePersistManager -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+          "3": "",
+          "4": "",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpdoc/obpdoc_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpdoc/obpdoc_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
+        }
+      },
+      {
+        "name": "DMKRAdmin",
+        "type": "JDBCSystemResource",
+        "attributes": {
+          "Notes": "DMKRAdmin JDBC resources"
+        },
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "MinCapacity": "1",
+                  "TestConnectionsOnReserve": "true",
+                  "TestTableName": "SQL SELECT 1 FROM DUAL"
+                }
+              },
+              {
+                "type": "JDBCDataSourceParams",
+                "attributes": {
+                  "AlgorithmType": "Failover",
+                  "JNDINames": "jdbc/dmkr_admin"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
+                  "Password": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk=",
+                  "DriverName": "oracle.jdbc.xa.client.OracleXADataSource"
+                },
+                "properties": {
+                  "user": "dmkr_admin",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DMKRAsline",
+        "type": "JDBCSystemResource",
+        "attributes": {
+          "Notes": "DMKRAsline JDBC resources"
+        },
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "MinCapacity": "1",
+                  "TestConnectionsOnReserve": "true",
+                  "TestTableName": "SQL SELECT 1 FROM DUAL"
+                }
+              },
+              {
+                "type": "JDBCDataSourceParams",
+                "attributes": {
+                  "AlgorithmType": "Failover",
+                  "JNDINames": "jdbc/dmkr_asline"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
+                  "Password": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk=",
+                  "DriverName": "oracle.jdbc.xa.client.OracleXADataSource"
+                },
+                "properties": {
+                  "user": "dmkr_asline",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "jms-tlogs",
+        "type": "JDBCSystemResource",
+        "attributes": {
+        },
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "MinCapacity": "1",
+                  "TestConnectionsOnReserve": "true",
+                  "TestTableName": "SQL SELECT 1 FROM DUAL"
+                }
+              },
+              {
+                "type": "JDBCDataSourceParams",
+                "attributes": {
+                  "AlgorithmType": "Failover",
+                  "JNDINames": "jdbc/jms-tlogs",
+                  "GlobalTransactionsProtocol": "None"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
+                  "Password": "{AES2}TZBUXm4DK4Idoq52+v34NQ=={/IV}Txe8e50/fAtnNj9fwLlANDysxvlfzggR5xJVGQiYYWIk=",
+                  "DriverName": "oracle.jdbc.OracleDriver"
+                },
+                "properties": {
+                  "user": "DOCU_JMS_TLOGS",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              },
+              {
+                "type": "JDBCOracleParams",
+                "attributes": {
+                  "FanEnabled": "false"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Documaker_Admin_Group",
+        "type": "Group",
+        "attributes": {
+          "name": "Documaker Administrators",
+          "description": "Documaker Administrators"
+        }
+      },
+      {
+        "name": "Documaker_Admin_User",
+        "type": "User",
+        "attributes": {
+          "name": "documaker",
+          "password": "{AES2}kk5/4CyiMEtKJwf8mjvoUw=={/IV}T8fCYoibrRENoLkedLMbylM25fWg02cfe4Ro1bFMDtlU=",
+          "description": "Documaker Admin",
+          "groupList": "Documaker Administrators"
+        }
+      },
+      {
+        "name": "Documaker_JMS_User",
+        "type": "User",
+        "attributes": {
+          "name": "jmsadmin",
+          "password": "{AES2}jNZsP+IPmB6BW8CB25fQMg=={/IV}TnabMLSC0zLyqoVXBRvB2edGoZgvU4WtPwljUnhHuyI8=",
+          "description": "Documaker Admin",
+          "groupList": "Documaker Administrators"
+        }
+      },
+      {
+        "name": "JmsJdbcStore-1",
+        "type": "JDBCStore",
+        "attributes": {
+          "PrefixName": "jms_server1"
+        }
+      },
+      {
+        "name": "DocumakerJMSServer1",
+        "type": "JMSServer",
+        "attributes": {
+          "StoreEnabled": "true",
+          "MessagesMaximum": "-1"
+        }
+      },
+      {
+        "name": "DocumakerJMSModule",
+        "type": "JMSSystemResource",
+        "attributes": {
+          "Notes": "Documaker JMS Module"
+        },
+        "params": [
+          {
+            "name": "AL1QCF",
+            "type": "JMSConnectionFactory",
+            "attributes": {
+              "DefaultTargetingEnabled": "true",
+              "Name": "AL1QCF",
+              "JNDIName": "jms.al1.qcf"
+            },
+            "params": [
+              {
+                "type": "LoadBalancingParams",
+                "attributes": {
+                  "ServerAffinityEnabled": "false",
+                  "LoadBalancingEnabled": "true"
+                }
+              },
+              {
+                "type": "SecurityParams",
+                "attributes": {
+                  "AttachJMSXUserId": "false"
+                }
+              },
+              {
+                "type": "ClientParams",
+                "attributes": {
+                  "ClientIdPolicy": "Restricted",
+                  "SubscriptionSharingPolicy": "Exclusive",
+                  "MessagesMaximum": "10"
+                }
+              },
+              {
+                "type": "TransactionParams",
+                "attributes": {
+                  "TransactionTimeout": "3600",
+                  "XAConnectionFactoryEnabled": "true"
+                }
+              }
+            ]
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "ArchiverReq",
+            "attributes": {
+              "JNDIName": "jms.al1.archiverreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "AssemblerReq",
+            "attributes": {
+              "JNDIName": "jms.al1.assemblerreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "DistributerReq",
+            "attributes": {
+              "JNDIName": "jms.al1.distributorreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "IdentifierReq",
+            "attributes": {
+              "JNDIName": "jms.al1.identifierreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "PresenterReq",
+            "attributes": {
+              "JNDIName": "jms.al1.presenterreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "PublisherReq",
+            "attributes": {
+              "JNDIName": "jms.al1.publisherreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "PubNotifierReq",
+            "attributes": {
+              "JNDIName": "jms.al1.pubnotifierreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "ReceiverReq",
+            "attributes": {
+              "JNDIName": "jms.al1.receiverreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "ReceiverRes",
+            "attributes": {
+              "JNDIName": "jms.al1.receiverres",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "IDSReq",
+            "attributes": {
+              "JNDIName": "jms.al1.idsreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "IDSRes",
+            "attributes": {
+              "JNDIName": "jms.al1.idsres",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "SchedulerReq",
+            "attributes": {
+              "JNDIName": "jms.al1.schedulerreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "BatcherReq",
+            "attributes": {
+              "JNDIName": "jms.al1.batcherreq",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          },
+          {
+            "type": "UniformDistributedQueue",
+            "name": "ReceiverRem",
+            "attributes": {
+              "JNDIName": "jms.al1.receiverrem",
+              "LoadBalancingPolicy": "Round-Robin",
+              "ForwardDelay": "1",
+              "SubDeploymentName": "DocumakerSubDeployment1"
+            }
+          }
+        ]
+      },
+      {
+        "attributes": {
+          "AdministrationPort": "19001",
+          "AdministrationPortEnabled": "false"
+        },
+        "type": "Domain",
+        "name": "DomainAdministrationPortConfiguration"
+      },
+      {
+        "name": "jms_cluster_settings",
+        "type": "Cluster",
+        "attributes": {
+          "MigrationBasis": "Consensus"
+        }
+      },
+      {
+        "name": "jms_server1 (migratable)",
+        "type": "MigratableTarget",
+        "attributes": {
+          "MigrationPolicy": "exactly-once"
+        }
+      },
+      {
+        "name": "soa_server1StartupParameter",
+        "type": "StartupParameter",
+        "attributes": {
+          "Auto1": "-Dtangosol.coherence.localhost=obpceng10doc01-prv.wpdev.mintpress.io -Dtangosol.coherence.localport=15002 -Dtangosol.coherence.wka1=obpceng10doc01-prv.wpdev.mintpress.io -Dtangosol.coherence.wka1.port=15002",
+          "Auto2": "-Dweblogic.security.SSL.enableJSSE=true",
+          "Auto3": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto4": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto5": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto6": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "soa_server1Server",
+        "type": "Server",
+        "params": [
+          {
+            "type": "SSL",
+            "attributes": {
+              "JSSEEnabled": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+              "ServerPrivateKeyAlias": "wpdev",
+              "ServerPrivateKeyPassPhrase": "FIXME",
+              "Enabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStoreType": "jks"
+        }
+      },
+      {
+        "name": "dmkr_server1StartupParameter",
+        "type": "StartupParameter",
+        "attributes": {
+          "Auto1": "-Dweblogic.security.SSL.enableJSSE=true",
+          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto4": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto5": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "dmkr_server1Server",
+        "type": "Server",
+        "params": [
+          {
+            "type": "SSL",
+            "attributes": {
+              "JSSEEnabled": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+              "ServerPrivateKeyAlias": "wpdev",
+              "ServerPrivateKeyPassPhrase": "FIXME",
+              "Enabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStoreType": "jks"
+        }
+      },
+      {
+        "name": "jms_server1StartupParameter",
+        "type": "StartupParameter",
+        "attributes": {
+          "Auto1": "-Dweblogic.security.SSL.enableJSSE=true",
+          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto4": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto5": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "jms_server1Server",
+        "type": "Server",
+        "params": [
+          {
+            "type": "SSL",
+            "attributes": {
+              "JSSEEnabled": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+              "ServerPrivateKeyAlias": "wpdev",
+              "ServerPrivateKeyPassPhrase": "FIXME",
+              "Enabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStoreType": "jks"
+        }
+      },
+      {
+        "name": "idm_server1StartupParameter",
+        "type": "StartupParameter",
+        "attributes": {
+          "Auto1": "-Dweblogic.security.SSL.enableJSSE=true",
+          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "Auto4": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto5": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "idm_server1Server",
+        "type": "Server",
+        "params": [
+          {
+            "type": "SSL",
+            "attributes": {
+              "JSSEEnabled": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+              "ServerPrivateKeyAlias": "wpdev",
+              "ServerPrivateKeyPassPhrase": "FIXME",
+              "Enabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpdoc/domains/certs/wpdev.jks",
+          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStoreType": "jks"
+        }
+      }
+    ]
+  }
+}
