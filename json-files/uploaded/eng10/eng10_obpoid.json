@@ -6,7 +6,7 @@
     "autoBaseline": "true",
     "projectUri": "ENG10OBPOID2020APR202138"
   },
-  "projectName": "eng10_obpoid2020Apr21_0151",
+  "projectName": "eng10_obpoid2020Apr21_0159",
   "uniquifier": "4f961e8ce4ea4184b57a8ab5b5b30854",
   "site": {
     "hostList": [
@@ -1348,7 +1348,7 @@
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng10/certs/obpceng10oid.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
           "CustomIdentityKeyStorePassPhrase": "{AES2}N7AIs8e0VLuOZohs4/aZKA=={/IV}TJl6bG2CET7ajmqG88XZ6GgclyyWKxJI82rb8nK5+B78=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}EasJdXhP70YO7v5dIbjXHA=={/IV}TFAYwjNAHAMoZDhRpRVaag21zGr37PXt4+r/Yl8wxl1g=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}6YTF0unoLltw0mNYCozH+w=={/IV}T+51YfLp26iYdFzSf9TMRGA==",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1383,7 +1383,7 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}EasJdXhP70YO7v5dIbjXHA=={/IV}TFAYwjNAHAMoZDhRpRVaag21zGr37PXt4+r/Yl8wxl1g=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}6YTF0unoLltw0mNYCozH+w=={/IV}T+51YfLp26iYdFzSf9TMRGA==",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
                   "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
