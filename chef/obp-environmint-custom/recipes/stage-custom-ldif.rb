@@ -24,6 +24,7 @@ end
 
 bash "Staging custom LDIF files" do
     code <<-EOF
+    mkdir -p #{custom_ldif_location}
     cp -ur #{custom_ldif_location}/* #{stage_location}
     EOF
 end
