@@ -120,12 +120,6 @@ directory '/oracle' do
   group 'oinstall'
 end
 
-# Add the sudoers for MintPress user
-template '/etc/sudoers.d/mintpress' do
-  source 'sudoers-mintpress'
-  owner 'root'
-  group 'root'
-end
 
 # Add the Authorized keys for mintpress user
 # This allows MintPress application to logon to all users
@@ -194,4 +188,18 @@ Userknownhostsfile /dev/null
 	group 'mintpress'
 	mode '0600'
 	end
+    
+    # Add the sudoers for MintPress product to interact with chef
+    template '/etc/sudoers.d/mintpress' do
+      source 'sudoers-mintpress-chef'
+      owner 'root'
+      group 'root'
+    end
+else
+    # Add the sudoers for MintPress user
+    template '/etc/sudoers.d/mintpress' do
+      source 'sudoers-mintpress'
+      owner 'root'
+      group 'root'
+    end
 end
