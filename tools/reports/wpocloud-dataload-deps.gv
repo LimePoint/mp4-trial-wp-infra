@@ -1,0 +1,17 @@
+digraph WestpacCloudOBPDataLoadDeps {
+
+	node [color=blue, shape=box];
+	node [fontname="Calibri", size="30,30"];
+	
+	
+	# host, ui, soa, bip, osb abd odi have a datasource that connect to the db.
+	OBPDATALOAD -> OBPOBU
+	OBPDATALOAD -> OBPOBH
+	OBPDATALOAD -> OBPSOA
+	OBPDATALOAD -> OBPBIP
+	OBPDATALOAD -> OBPOSB
+	OBPDATALOAD -> OBPODI
+	
+	
+
+}

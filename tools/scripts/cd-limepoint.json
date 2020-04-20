@@ -1,0 +1,54 @@
+{
+  "name" : "CD-Limepoint",
+  "params" : { },
+  "plans" : [ {
+    "name" : "Component Deployment Trigger",
+    "params" : { },
+    "stages" : [ {
+      "name" : "Stage 1",
+      "description" : "Check out Code for manifest",
+      "params" : { },
+      "manual" : false,
+      "jobs" : [ {
+        "name" : "Check-out,Verify and Deploy",
+        "description" : "Check out manifest repo",
+        "params" : { },
+        "tasks" : [ {
+          "description" : "Checkout Default Repository",
+          "params" : {
+            "cleanCheckout" : "",
+            "checkoutDir_0" : "",
+            "selectedRepository_0" : "defaultRepository"
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.vcs:task.vcs.checkout",
+          "finalising" : false,
+          "enabled" : true
+        }, {
+          "description" : "Verify and deploy environments",
+          "params" : {
+            "argument" : "",
+            "scriptLocation" : "INLINE",
+            "environmentVariables" : "",
+            "scriptBody" : "echo ${bamboo_SELECTED_AUTODEPLOY_ENVS} \necho ${bamboo_LP_CD_HOME}\necho ${bamboo_ORCH_KEY_HOME}\necho ${bamboo_CONSOLE_USER}\n\necho ${bamboo_CONSOLE_REST_URL}\necho ${bamboo_CONSOLE_STATUS_URL}\npwd\n${bamboo_LP_CD_HOME}/cd-component-auto-trigger.sh ${bamboo_LP_CD_HOME} ${bamboo_SELECTED_AUTODEPLOY_ENVS} ${bamboo_ORCH_KEY_HOME} ${bamboo_CONSOLE_USER} ${bamboo_CONSOLE_PASSWORD} ${bamboo_CONSOLE_REST_URL} ${bamboo_CONSOLE_STATUS_URL}",
+            "interpreter" : "LEGACY_SH_BAT",
+            "script" : "",
+            "workingSubDirectory" : ""
+          },
+          "pluginKey" : "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+          "finalising" : false,
+          "enabled" : true
+        } ]
+      } ]
+    } ],
+    "vars" : {
+      "CONSOLE_PASSWORD" : "ng29g489nrgnsd%Ddsf",
+      "CONSOLE_REST_URL" : "https://ocloud-mintpress.wpdev.mintpress.io/REST/ServiceCatalog/performAction",
+      "CONSOLE_STATUS_URL" : "https://ocloud-mintpress.wpdev.mintpress.io//REST/ServiceCatalog/get",
+      "CONSOLE_USER" : "runtime_app_admin",
+      "LP_CD_HOME" : "/environmint/cont-delivery",
+      "ORCH_KEY_HOME" : "/home/mintpress/environments",
+      "SELECTED_AUTODEPLOY_ENVS" : "rb2,bpd1",
+      "debug" : "false"
+    }
+  } ]
+}

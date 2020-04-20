@@ -1,0 +1,8 @@
+{
+    "environment_name": "bpd28",
+    "dns_domain": ".wpdev.mintpress.io",
+    "dns_domain_managed": ".wpdev.mintpress.io",
+    "site_name": "c",
+    "db_port": 1521,
+    "dataload_path": "/oracle/stage/db_dumps/gold_copy/bpd25/CSH-OBP-release_32-037-05/obpobh"
+}

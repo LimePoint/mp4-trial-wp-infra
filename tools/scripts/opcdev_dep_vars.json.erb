@@ -1,0 +1,55 @@
+<% environment_name = @environment['name'] %>
+<% dep_primary_node = @obpoim['hostnameList'][0] %>
+<% odi_encoded_obpobh_db_pwd = @odi_encoded_obpobh_db_pwd ; if odi_encoded_obpobh_db_pwd.nil? then odi_encoded_obpobh_db_pwd="NIL" %>
+<% odi_encoded_obpobh_wls_pwd = @odi_encoded_obpobh_wls_pwd ; if odi_encoded_obpobh_wls_pwd.nil? then odi_encoded_obpobh_wls_pwd="NIL" %>
+<%    puts environment_name
+        puts dep_primary_node
+        puts odi_encoded_obpobh_db_pwd
+        puts odi_encoded_obpobh_wls_pwd
+        %>
+
+{
+  "id": "<%= environment_name %>",
+  "dcms": {
+    "artifactory_url": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Verify/au/com/westpac/csh/R11/DCMS",
+    "build_version": "2018-07-04.0000",
+    "ipm_app_id": "2",
+    "component_deploy": "true",
+    "sql_deploy": "true",
+    "dep_primary_node": "<%= dep_primary_node %>",
+    "notify_recipients": "DL.CSH.Build.and.Deployment@westpac.com.au"
+  },
+  "deployment": {
+    "ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Release",
+    "DEPLOY_HOME": "/oracle/app/binaries/deployments",
+    "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+    "GRADLE_VERSION": "2.1.14",
+    "JAVA_VERSION": "1.7.85",
+    "PROJECT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpArtifactoryPull",
+    "MINT_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy",
+    "DBCLIENTLOC": "/oracle/app/binaries/obpobh/dbclient",
+    "BUSINESSCONFIGPATH": "/oracle/app/binaries/ConfigTool",
+    "BINARYPATH": "/oracle/app/binaries",
+    "CEMLI_ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+    "NETIQUSERNAME" : "SA_CONFIGUPLOADER_OBP_USER",
+    "ADMINUSER" : "dmkr_admin",
+    "ASLINEUSER" : "dmkr_asline",
+    "docAppWSDLUSer" : "SA_DOCUMAKER_OBP_MANAGE_USER",
+    "MANIFEST_REPO_URL": "https://developer.us2.oraclecloud.com/developer03533-a429413/s/developer03533-a429413_buildmanifest_25999/scm/buildmanifest.git",
+    "RUNTIME_APP_ADMIN_USER": "runtime_app_admin",
+    "RUNTIME_IMPORT_URL": "https://cicdmintpress1.wpdev.mintpress.io",
+    "ODI_OBPOBH_DB_ENCRYPTED_PWD": "<%= odi_encoded_obpobh_db_pwd %>",
+    "ODI_OBPOBH_WEBLOGIC_ENCRYPTED_PWD": "<%= odi_encoded_obpobh_wls_pwd %>",
+    "CSH_RELEASE_VERSION": "1.2",
+    "NOTIFY_RECIPIENTS": "cshwp@limepoint.com, DL.BPADCloudEnvAccenture@westpac.com.au",
+    "NOTIFY_SENDER": "wpocloud@limepoint.com",
+    "PCSM_RELEASE_PATH": "Verified",
+    "PCSM_ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/A7007BD_PowerCu",
+    "MANIFEST_GIT_STAGE": "/oracle/gitrepos/buildmanifest",
+    "ARTIFACTORY_USER": "admin",
+    "VALEXCLIENTID": "VXCL-12495",
+    "VALEXFUNDERID": "VXF-167",
+    "REPORT_ENABLED": "true",
+    "SECONDARY_SITE": "false"
+  }
+}

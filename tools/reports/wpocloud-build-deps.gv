@@ -1,0 +1,46 @@
+digraph WestpacCloudOBPBuildDep {
+
+	node [color=blue, shape=box];
+	node [fontname="Calibri", size="30,30"];
+	
+	# All depend on DB
+	OBPOBH -> OBPDB
+	OBPOBU -> OBPDB
+	OBPSOA -> OBPDB
+	OBPOSB -> OBPDB
+	OBPDOC -> OBPDB
+	OBPODI -> OBPDB
+	OBPIPM -> OBPDB
+	OBPBIP -> OBPDB
+	OBPOID -> OBPDB
+	OBPCID -> OBPDB
+	OBPOAM -> OBPDB
+	OBPOIM -> OBPDB
+	OBPCIM -> OBPDB
+	
+	# Except IDM which does not depends on anything
+	OBPIDM
+	
+	# Host depends on OID/CID
+	OBPOBH -> OBPOID
+	OBPOBH -> OBPCID
+	
+	# Few depend on OID
+	OBPOBU -> OBPOID
+	OBPSOA -> OBPOID
+	OBPOSB -> OBPOID
+	OBPDOC -> OBPOID
+	OBPIPM -> OBPOID
+	OBPBIP -> OBPOID
+	OBPOAM -> OBPOID
+	OBPOIM -> OBPOID
+	
+	# CIM Deps on CID
+	OBPCIM -> OBPCID
+	
+	# Ideally CID/OID depends on IDM for registration but the registration is non-fatal
+	OBPOID -> OBPIDM
+	OBPCID -> OBPIDM
+	
+
+}
