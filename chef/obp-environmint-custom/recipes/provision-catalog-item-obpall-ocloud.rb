@@ -84,26 +84,6 @@ case
 		else
 			Chef::Log.info("---------------- Value of SKIP_APPDEPLOY: #{my_topology_vars['obpall']['skip_appdeploy'].to_s} ----------------")
 		end
-
-		# Check what the user selected for dataload
-		# RB Skip this for now since this is now being handled in post rcu step in OBP. See service-catalog-custom.rb recipe
-
-		# if my_topology_vars['obpall']['skip_dataload'].nil? or my_topology_vars['obpall']['skip_dataload'].to_s == 'false'
-		# 	# Add dataload
-		# 	# asset_list << "#{environment_code}_OBPDATALOAD"
-		# 	Chef::Log.info("---------------- Value of SKIP_DBDEPLOY: #{my_topology_vars['obpall']['skip_dataload'].to_s} ----------------")
-		# else
-		# 	Chef::Log.info("---------------- Value of SKIP_DBDEPLOY: #{my_topology_vars['obpall']['skip_dataload'].to_s} ----------------")
-		# end
-		#
-		# The following rules have been defined
-		# 1. Everything depends on Host, OID, CID
-		# 2. If app deploy is required, it depends on dataload
-		# 3. if data load is required, it depends on everything
-		# As a result of this dependency, CID, OID will build first in parallel, then everything else in parallel.
-
-		# This is secondary, most of this is now decided by deps (look into deputils)
-		# dependency_list = Hash({"*_*" => "*_*OBPDB,*_*OID,*_*CID", "*_*OID,*_*CID" => "*_*OBPDB", "*_*APPDEPLOY" => "*_*DATALOAD", "*_*DATALOAD" => generic_asset_list.join(',')})
 		dependency_list = Hash({"*_*APPDEPLOY" => "*_*DATALOAD", "*_*DATALOAD" => generic_asset_list.join(',')})
 	when mp_action.match(Regexp.new('generatevars|handoverReport'))
 		dependency_list=Hash({})
@@ -115,33 +95,12 @@ end
 Chef::Log.info("---------------- I am running on OCloud and dependency list is #{dependency_list.inspect} ----------------")
 Chef::Log.info("---------------- I am running on OCloud and asset list is #{asset_list.inspect} ----------------")
 
-mychange={}
 if mp_action =='provision' or mp_action == 'generatevars'
 	# generate Deployment Vars
  	include_recipe "csh-deployments::load_dep_vars"
 	# generate the HTML Report
 	generateHTMLReport(environment_code, my_topology_vars)
 	generatePasswordVaultZips(environment_code, my_topology_vars)
-
-	my_topology_vars.each do |k, v|
-		if v.is_a?(Hash)
-			if v['hostnameList']
-				v['hostnameList'].each do |h|
-					if h.include?('01')
-						fname=h.gsub('01', '')
-						mychange["#{fname}.wpdev.mintpress.io"] = Hash({"CNAME" => "#{h}.wpdev.mintpress.io."})
-						mychange["#{h}-prv.wpdev.mintpress.io"] = Hash({"CNAME" => "#{h}-priv.wpdev.mintpress.io."})
-					end
-				end
-			end
-		end
-	end
-	Chef::Log.info("---------------- DNS CNAMEs #{mychange.inspect} ----------------")
-	dns_batch "friendlies" do
-		dns_zone "wpdev.mintpress.io"
-		change_batch mychange
-		action :publish
-	end
 end
 
 if !asset_list.empty?
@@ -226,10 +185,6 @@ if !asset_list.empty?
 			console_username node['environmint']['designtime']['username']
 			console_password PasswordVault.get_password('mintpress', 'designtime', node['environmint']['designtime']['username'])
 
-			# This to get around a bug in Console, when we remove an item, we go back to check if was removed.
-			# As of 3.1.6 this is a bug since the orchestration seems to be checking for an item that does not exists (it was removed) and fails with 400 bad request
-			# Ignoring the failure since the items are removed from the console.
-			# this will get fixed in 3.1.6.+
 			ignore_failure true
 		end
 
@@ -250,8 +205,8 @@ if !asset_list.empty?
 				sendEmail(environment_name, 'wpocloud@limepoint.com', 'romil@limepoint.com', "Following catalog instances failed to be destroyed: #{asset_list}")
 
 				# This is a hack until https://limepoint.atlassian.net/browse/MINTSD-292 is done
-				if ::Dir.exist?("/oracle/limepoint/runtime/runtime/Repository/baselines/#{environment_code}")
-					::FileUtils.remove_dir("/oracle/limepoint/runtime/runtime/Repository/baselines/#{environment_code}")
+				if ::Dir.exist?("/limepoint/runTime/Repository/baselines/#{environment_code}")
+					::FileUtils.remove_dir("/limepoint/runTime/Repository/baselines/#{environment_code}")
 				end
 			end
 			# update the vaults anyways
