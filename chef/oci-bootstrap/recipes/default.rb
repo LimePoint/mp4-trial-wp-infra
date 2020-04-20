@@ -100,6 +100,9 @@ service 'sssd' do
   action :restart
 end
 
+# This is required to create home directories for the LDAP users
+execute "authconfig --enablemkhomedir --update"
+
 # Ensure /oracle is owned by Oracle
 directory '/oracle' do
   owner 'oracle'
