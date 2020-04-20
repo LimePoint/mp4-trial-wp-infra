@@ -6,7 +6,7 @@
     "autoBaseline": "true",
     "projectUri": "ENG10OBPOID2020APR202138"
   },
-  "projectName": "eng10_obpoid2020Apr20_2254",
+  "projectName": "eng10_obpoid2020Apr20_2353",
   "uniquifier": "4f961e8ce4ea4184b57a8ab5b5b30854",
   "site": {
     "hostList": [
@@ -365,15 +365,15 @@
                     "target": "wls.nodemanager.truststorefile"
                   },
                   {
-                    "value": "FIXME",
+                    "value": "welcome1",
                     "target": "wls.nodemanager.identitystorekey"
                   },
                   {
-                    "value": "FIXME",
+                    "value": "welcome1",
                     "target": "wls.nodemanager.truststorekey"
                   },
                   {
-                    "value": "FIXME",
+                    "value": "welcome1",
                     "target": "wls.nodemanager.identitypassphrase"
                   }
                 ]
@@ -885,7 +885,7 @@
                   },
                   {
                     "name": "KeystorePassword",
-                    "value": "FIXME"
+                    "value": "welcome1"
                   }
                 ]
               },
@@ -903,7 +903,7 @@
                 "properties": [
                   {
                     "name": "TruststorePassword",
-                    "value": "FIXME"
+                    "value": "welcome1"
                   }
                 ]
               }
@@ -1247,7 +1247,7 @@
               "ServerPrivateKeyAlias": "wpdev",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "FIXME",
+              "ServerPrivateKeyPassPhrase": "welcome1",
               "JSSEEnabled": "true",
               "UseServerCerts": "true",
               "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier"
@@ -1265,8 +1265,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpoid/domains/certs/wpdev.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpoid/domains/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "FIXME",
-          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStorePassPhrase": "welcome1",
+          "CustomTrustKeyStorePassPhrase": "welcome1",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1330,7 +1330,7 @@
               "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "{AES2}GHVXnoJbBmeoRUw2fsSFAw=={/IV}TFnoitFs6L2ee5cmRNjlgAFIYpxN/YEHP1KlxhCyXOlM=",
+              "ServerPrivateKeyPassPhrase": "{AES2}LdAe2qoOb62N1Uw+WVh+UQ=={/IV}TuHtgvuwihjZwo2Wt9Wkel6Mkh2eKBpdAddgLMQWMpOk=",
               "JSSEEnabled": "true",
               "UseServerCerts": "true"
             }
@@ -1347,8 +1347,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng10/certs/obpceng10oid.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "{AES2}GHVXnoJbBmeoRUw2fsSFAw=={/IV}TFnoitFs6L2ee5cmRNjlgAFIYpxN/YEHP1KlxhCyXOlM=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}xvv9BBJH/zkOn+U0t821oQ=={/IV}TgNXYJ6QMFCRs+8auTjhvantiy1ILLh8/N881xJbROVk=",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}LdAe2qoOb62N1Uw+WVh+UQ=={/IV}TuHtgvuwihjZwo2Wt9Wkel6Mkh2eKBpdAddgLMQWMpOk=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}v2n49K7accb4R6+CWTQnaw=={/IV}TSnA+9/zXo4d0Oatmqszdsf99EQY4wvFFx6mSFV1J4fM=",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1383,7 +1383,7 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}xvv9BBJH/zkOn+U0t821oQ=={/IV}TgNXYJ6QMFCRs+8auTjhvantiy1ILLh8/N881xJbROVk=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}v2n49K7accb4R6+CWTQnaw=={/IV}TSnA+9/zXo4d0Oatmqszdsf99EQY4wvFFx6mSFV1J4fM=",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
                   "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev.jks",
