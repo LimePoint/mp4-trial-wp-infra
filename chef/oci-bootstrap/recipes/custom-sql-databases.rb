@@ -11,7 +11,6 @@ end
 
 node['oracle']['database']['databaseList'].each do |database|
 
-    dbSID = database['version'] == "12.2.0.1" ? database['name'].gsub('_','') : database['name'].gsub('_','')[0..7]
     oracle_sql 'profile-login-attempts '+database['name'] do
 		oracle_home database['oracle_home']
 		db_service_name database['name']
@@ -42,18 +41,17 @@ node['oracle']['database']['databaseList'].each do |database|
 		ignore_failure true
 	end
 
-    bash "Performing Tablespace Maxsize Check" do
-        code <<-EOH
-        export ORACLE_HOME="#{database['oracle_home']}"
-        export LD_LIBRARY_PATH="#{database['oracle_home']}/lib"
-        export PATH="$ORACLE_HOME/bin:$PATH"
-        export ORACLE_SID="#{dbSID}"
-        sqlplus /nolog <<EOSQL
-        connect / as sysdba
-        @/tmp/.ts-maxsize-check.sql
-        exit;
-        EOH
-    end
+    oracle_sql 'Performing Tablespace Maxsize Check' do
+		oracle_home database['oracle_home']
+		db_service_name database['name']
+		db_host 'localhost'
+		db_port 1521
+		db_username 'sys'
+		db_password database['sysdba_passwd']
+		as_sysdba true
+		user 'oracle'
+		group 'oinstall'
+		sql_file "/tmp/.ts-maxsize-check.sql"
+		action :run
+	end
 end
-
-#include_recipe "::configure-db-params"
