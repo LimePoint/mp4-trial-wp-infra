@@ -64,7 +64,7 @@ class MintOCIHost
     self.disk_size = opts[:disk_size].to_i || 50
     self.disk_name = opts[:disk_name] || 'oracle'
     self.mount_name = opts[:mount_name] || '/oracle'
-    self.run_list = opts[:run_list] || ['oci-common::default']
+    self.run_list = opts[:run_list] || ['oci-bootstrap::default']
     self.block_devices = opts[:block_devices] || nil
     self.disable_selinux = opts[:disable_selinux] || false
     self.node_attributes = opts[:node_attributes] || {}

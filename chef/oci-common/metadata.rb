@@ -4,8 +4,6 @@ maintainer_email 'support@limepoint.com'
 description      'CSH specific OCI VM configurations'
 version '1.0.0'
 
-depends 'sssd_ldap'
-depends 'chef-client'
 depends 'mintpress-controllers-infrastructure'
 depends 'mintpress-controllers-aws'
 depends 'mintpress-controllers-dns'

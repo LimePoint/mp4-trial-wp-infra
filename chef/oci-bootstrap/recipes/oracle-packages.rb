@@ -18,12 +18,8 @@ yum_package "nc"
 yum_package "tree"
 yum_package "psmisc"
 
-# Install Packages for net-ldap locally, why are we using locally? Coz Internet is not allowed!
-gem_package "net-ldap" do
-  source '/oracle/stage/ruby_gems/net-ldap-0.16.2.gem'
-end
-
-gem_package "cicphash" do
-  source '/oracle/stage/ruby_gems/cicphash-1.1.0.gem'
+# Install the rdbms package if it is a db node
+if node.name.split(".")[0][-2..-1] == 'db'
+  yum_package "oracle-rdbms-server-12cR1-preinstall"
 end
 

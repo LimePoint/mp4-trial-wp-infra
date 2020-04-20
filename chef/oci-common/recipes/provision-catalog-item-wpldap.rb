@@ -19,7 +19,7 @@ host_opts.transform_keys!(&:to_sym)
 Chef::Log.info("Input Received: #{host_opts}")
 
 # Force the inputs for LDAP  coz we know better.
-host_opts[:native_instance_type] = 'VM.Standard.E2.2'
+host_opts[:instance_type] = 'VM.Standard.E2.2'
 host_opts[:operating_system] = 'Oracle Linux'
 host_opts[:operating_system_version] = 7
 
@@ -27,7 +27,7 @@ host_opts[:operating_system_version] = 7
 bds = [{name: 'opt', mount_point: '/opt', size_mb: 50 * 1024}]
 host_opts[:block_devices] = bds
 host_opts[:disable_selinux] = true
-host_opts[:run_list] = ['oci-common::default', 'oci-common::ldap-server-configs']
+host_opts[:run_list] = ['oci-bootstrap::default', 'oci-bootstrap::ldap-server-configs']
 oci_host = MintOCIHost.new(host_opts)
 
 case 

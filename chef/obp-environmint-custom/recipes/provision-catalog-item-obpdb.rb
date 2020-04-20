@@ -32,12 +32,11 @@ else
 	mp_action = ''
 end
 
-standard_run_list=['recipe[oci-cloud::default]']
-providerCode = lookup_catalogitem_providerCode(item_code)
+providerCode = lookup_catalogitem_providerCode(_item_code)
 host_opts = {}
 host_opts[:hostname] = "obpc#{environment_name}db.wpdev.mintpress.io"
 host_opts[:environment_name] = environment_name
-host_opts[:native_instance_type] = 'VM.Standard.E2.8'
+host_opts[:instance_type] = 'VM.Standard.E2.8'
 host_opts[:operating_system] = 'Oracle Linux'
 host_opts[:operating_system_version] = 7
 host_opts[:disk_size] = 500
@@ -48,6 +47,7 @@ attrs = {
   "provider_id": providerCode
 }
 host_opts[:node_attributes] = attrs
+host_opts[:run_list] = ['oci-bootstrap::default', 'oci-bootstrap::create-databases'] 
 # Transform hash keys to symbols; no specific reason just personal preference
 host_opts.transform_keys!(&:to_sym)
 oci_host = MintOCIHost.new(host_opts)
@@ -67,4 +67,3 @@ case
     Chef::Log.info("No action specified. Nothing to do")
     return
 end 
-

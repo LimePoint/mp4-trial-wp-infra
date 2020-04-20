@@ -1,4 +1,1 @@
-# environmint-custom
-
-TODO: Enter the cookbook description here.
-
+This cookbook contains the libraries to create and manage OCI VMs
