@@ -1,8 +1,17 @@
 if is_running_on_cloud and node.chef_environment != 'wptest'
 
 	Chef::Log.info("------------ I am service catalog custom in the cloud ----------")
-  environment_name = node.run_state['orchestration_metadata']['launchDetails']['environment']['name'].downcase
-  global_properties = JSON.parse(::File.read("#{__dir__}/../files/data_bags/#{environment_name}_vars.json"))
+
+    _item_code = node.run_state['current_code']
+    environment_name = node.run_state['orchestration_metadata']['launchDetails']['environment']['name'].downcase
+    environment_code = environment_name.strip.tr('.', '').tr('_', '').tr('-', '').tr(' ', '')
+
+    global_properties = JSON.parse(::File.read("#{__dir__}/../files/data_bags/#{environment_name}_vars.json"))
+    node.run_state[_item_code.upcase]['properties']=global_properties.to_h.deep_merge!(node.run_state[_item_code.upcase]['properties']).insensitive
+
+    my_topology_vars = topology_vars(_item_code)
+    asset_vars = my_topology_vars[_item_code.downcase]
+    password_vault_name = my_topology_vars['common']['password_vault_name']
 
 	mintpress_property "fixup-ms-listen" do
 		asset "global"
@@ -64,13 +73,6 @@ if is_running_on_cloud and node.chef_environment != 'wptest'
 		value "8"
 	end
 
-	mintpress_executeitem "ensure-java-trust" do
-		asset "global"
-		server "*"
-		perform_when "pre-online"
-		value "${/installations[jdk].installPath}/bin/keytool -importkeystore -srckeystore /oracle/stage/certs/wc/${/environment.name}/wpdev.jks -srcstorepass $(Mint::AesEncryption.decrypt(PasswordVault.get_password('#{node.chef_environment}', 'all', 'truststorepass' ))) -destkeystore ${/installations[jdk].installPath}/jre/lib/security/cacerts -deststorepass changeit -noprompt"
-	end
-
 	mintpress_executeitem "wait-rcu-ui" do
 		asset "obpobu"
 		server '*'
@@ -109,7 +111,7 @@ if is_running_on_cloud and node.chef_environment != 'wptest'
 			keystorename "wpdev.jks"
 			keyid "wpdev"
 			truststorename "wpdev.jks"
-			certpw "literal:/welcome1"
+			certpw PasswordVault.get_password(password_vault_name, _item_code.downcase, 'keystorepass')
 			certpath "${/domains.locationPath}/certs"
 			certsource "/oracle/stage/certs/wc"
 			wildcard true
