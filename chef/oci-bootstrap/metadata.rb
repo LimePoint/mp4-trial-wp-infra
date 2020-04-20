@@ -6,3 +6,5 @@ version '1.0.0'
 
 depends 'sssd_ldap'
 depends 'chef-client'
+depends 'oracle-database'
+depends 'environmint-database'

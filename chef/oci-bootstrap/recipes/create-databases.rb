@@ -27,7 +27,7 @@ list_of_dbs.each do | db |
   'oracle_home' => "/oracle/app/product/db12/12.1.0",
   'java_home' => '/oracle/app/product/java12',
   'sysdba_user' => "SYS",
-  'sysdba_passwd' => PasswordVault.get_password(password_vault_name, 'database', 'dbsyspassword' ),
+  'sysdba_passwd' => Mint::AesEncryption.decrypt(PasswordVault.secret("databag://#{password_vault_name}/database/dbsyspassword").value),
   'is_container_db' => false,
   'extra_servicenames' => db_to_service_mappings[db],
   'patchList' => [
@@ -57,5 +57,5 @@ include_recipe 'environmint-database::default'
 log "Databases created successfully."
 
 log "Updating Profiles & Tablespaces for the databases."
-include_recipe 'obp-environmint-custom::custom-sql-databases'
+include_recipe 'oci-bootstrap::custom-sql-databases'
 log "Profiles & Tablespaces updated successfully."

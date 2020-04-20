@@ -7,6 +7,5 @@ long_description 'CSH specific Service Catalogue cookbooks'
 version '8.3.14'
 
 depends 'oracle-database'
-depends 'environmint-database'
 depends 'csh-deployments'
 depends 'oci-common'
