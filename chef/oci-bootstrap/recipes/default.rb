@@ -180,3 +180,18 @@ if node.name.include?('doc')
 	include_recipe "::batch-folders"
 end
 
+# Make mint not complain about the host keys
+# This is required since we regularly re-build VMs
+if ['mintpress-alpha.wpdev.mintpress.io','mintpress-omega.wpdev.mintpress.io', 'mintpress-beta.wpdev.mintpress.io'].include?(node.name)
+	file "/home/mintpress/.ssh/config" do
+		content <<-EOH
+Host obpc*
+Stricthostkeychecking no
+Userknownhostsfile /dev/null
+		EOH
+
+	owner 'mintpress'
+	group 'mintpress'
+	mode '0600'
+	end
+end
