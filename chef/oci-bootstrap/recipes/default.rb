@@ -93,6 +93,14 @@ execute '/usr/sbin/sss_cache -E' do
   ignore_failure true
 end
 
+# Set the sshd_config
+template '/etc/ssh/sshd_config' do
+  source 'sshd_config'
+  owner 'root'
+  group 'root'
+  mode '0600'
+end
+
 # RB: Do this to for a workaround on sudoers not working;
 # RB: there is no guarantee that this fixes it but this has worked all the time
 service 'sssd' do
