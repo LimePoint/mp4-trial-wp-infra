@@ -5,9 +5,9 @@
     "stageRootDir": "/oracle/stage",
     "ucmVaultDirectory": "/oracle/app/runtime/obpipm/eng10",
     "autoBaseline": "true",
-    "projectUri": "ENG10OBPIPM2020APR202156"
+    "projectUri": "ENG10OBPIPM2020APR211543"
   },
-  "projectName": "eng10_obpipm2020Apr20_2156",
+  "projectName": "eng10_obpipm2020Apr21_1543",
   "uniquifier": "c08210727f4849769d22dd32793313f6",
   "site": {
     "hostList": [
@@ -370,7 +370,7 @@
                     "target": "wls.nodemanager.identityname"
                   },
                   {
-                    "value": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
+                    "value": "/oracle/app/runtime/obpipm/domains/certs/obpceng10ipm.jks",
                     "target": "wls.nodemanager.identitystorefile"
                   },
                   {
@@ -420,19 +420,19 @@
                     "value": "022"
                   },
                   {
-                    "value": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
+                    "value": "/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
                     "target": "wls.nodemanager.truststorefile"
                   },
                   {
-                    "value": "FIXME",
+                    "value": "EodVD6DRv_SZ7SfNjc31",
                     "target": "wls.nodemanager.identitystorekey"
                   },
                   {
-                    "value": "FIXME",
+                    "value": "EodVD6DRv_SZ7SfNjc31",
                     "target": "wls.nodemanager.truststorekey"
                   },
                   {
-                    "value": "FIXME",
+                    "value": "EodVD6DRv_SZ7SfNjc31",
                     "target": "wls.nodemanager.identitypassphrase"
                   }
                 ]
@@ -980,7 +980,7 @@
                 "hostIdentifierList": [
                   "obpceng10ipm01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/obpceng10ipm.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/obpceng10ipm.jks",
                 "destinationFile": "/oracle/app/runtime/eng10/certs/obpceng10ipm.jks",
                 "permissions": "600",
                 "transferWhenList": [
@@ -998,8 +998,8 @@
                 "hostIdentifierList": [
                   "obpceng10ipm01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/wpdev.jks",
-                "destinationFile": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/wpdev_trust.jks",
+                "destinationFile": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
                 "permissions": "600",
                 "transferWhenList": [
                   "pre-online"
@@ -1016,7 +1016,7 @@
                 "hostIdentifierList": [
                   "obpceng10ipm01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/cacerts.pem",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/cacerts.pem",
                 "destinationFile": "/oracle/app/runtime/eng10/certs/cacerts.pem",
                 "permissions": "600",
                 "transferWhenList": [
@@ -1070,7 +1070,7 @@
                 "hostIdentifierList": [
                   "obpceng10ipm01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/adapters.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/adapters.jks",
                 "destinationFile": "/oracle/app/runtime/obpipm/domains/obpipm_domain/config/fmwconfig/ovd/default/keystores/adapters.jks",
                 "permissions": "600",
                 "transferWhenList": [
@@ -1122,7 +1122,7 @@
               },
               {
                 "name": "wpdevKeystore",
-                "destinationFile": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
+                "destinationFile": "/oracle/app/runtime/obpipm/domains/certs/obpceng10ipm.jks",
                 "permissions": "600",
                 "hostIdentifierList": [
                   "obpceng10ipm01"
@@ -1130,7 +1130,7 @@
                 "transferWhenList": [
                   "pre-online"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/wpdev.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/obpceng10ipm.jks",
                 "properties": [
                   {
                     "name": "KeyAlias",
@@ -1138,13 +1138,13 @@
                   },
                   {
                     "name": "KeystorePassword",
-                    "value": "FIXME"
+                    "value": "EodVD6DRv_SZ7SfNjc31"
                   }
                 ]
               },
               {
                 "name": "wpdevTruststore",
-                "destinationFile": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
+                "destinationFile": "/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
                 "permissions": "600",
                 "hostIdentifierList": [
                   "obpceng10ipm01"
@@ -1152,11 +1152,11 @@
                 "transferWhenList": [
                   "pre-online"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/wpdev.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/wpdev_trust.jks",
                 "properties": [
                   {
                     "name": "TruststorePassword",
-                    "value": "FIXME"
+                    "value": "EodVD6DRv_SZ7SfNjc31"
                   }
                 ]
               }
@@ -1449,6 +1449,24 @@
                 "sourceFile": "/bin/true",
                 "executeWhenList": [
                   "post-online"
+                ],
+                "properties": [
+                  {
+                    "name": "stopManagedBefore",
+                    "value": "true"
+                  },
+                  {
+                    "name": "stopAdminBefore",
+                    "value": "true"
+                  },
+                  {
+                    "name": "startAdminAfter",
+                    "value": "true"
+                  },
+                  {
+                    "name": "startManagedAfter",
+                    "value": "true"
+                  }
                 ]
               },
               {
@@ -1731,7 +1749,7 @@
               "ServerPrivateKeyAlias": "wpdev",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "FIXME",
+              "ServerPrivateKeyPassPhrase": "EodVD6DRv_SZ7SfNjc31",
               "JSSEEnabled": "true",
               "UseServerCerts": "true",
               "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier"
@@ -1747,10 +1765,10 @@
         "attributes": {
           "Notes": "Server settings",
           "KeyStores": "CustomIdentityAndCustomTrust",
-          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "FIXME",
-          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/obpceng10ipm.jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
+          "CustomIdentityKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
+          "CustomTrustKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1814,7 +1832,7 @@
               "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "{AES2}9mL4H2rysVitk2zHbFawrA=={/IV}TCMxinmKZE3YZe0X2EFC1K5I76zl49XTFEwEl1TI2is0=",
+              "ServerPrivateKeyPassPhrase": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
               "JSSEEnabled": "true",
               "UseServerCerts": "true"
             }
@@ -1830,9 +1848,9 @@
           "Notes": "Server settings",
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng10/certs/obpceng10ipm.jks",
-          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "{AES2}9mL4H2rysVitk2zHbFawrA=={/IV}TCMxinmKZE3YZe0X2EFC1K5I76zl49XTFEwEl1TI2is0=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}8NWrsjd9ArIzJlDzaWSDxw=={/IV}TzGkfbHSer28GOfIyO3cPgTNtmdA2fU36nKpgLq5q2Jg=",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1867,10 +1885,10 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}8NWrsjd9ArIzJlDzaWSDxw=={/IV}TzGkfbHSer28GOfIyO3cPgTNtmdA2fU36nKpgLq5q2Jg=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
-                  "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev.jks",
+                  "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
                   "oracle.jdbc.ReadTimeout": "300000"
                 }
               }
@@ -1943,8 +1961,8 @@
           "s4": "-Dweblogic.security.SSL.enableJSSE=true",
           "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
           "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
-          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
           "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
           "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpipm/obpipm_domain",
           "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false",
@@ -1971,8 +1989,8 @@
           "s4": "-Dweblogic.security.SSL.enableJSSE=true",
           "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
           "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
-          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
-          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
           "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
           "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpipm/obpipm_domain",
           "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
@@ -1997,8 +2015,8 @@
           "s4": "-Dweblogic.security.SSL.enableJSSE=true",
           "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
           "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
-          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
-          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev.jks",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
           "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng10/certs/cacerts.pem",
           "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpipm/obpipm_domain",
           "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
@@ -2062,8 +2080,8 @@
         "type": "StartupParameter",
         "attributes": {
           "Auto1": "-Dweblogic.security.SSL.enableJSSE=true",
-          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
+          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
+          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
           "Auto4": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
           "Auto5": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
         }
@@ -2078,18 +2096,18 @@
               "JSSEEnabled": "true",
               "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
               "ServerPrivateKeyAlias": "wpdev",
-              "ServerPrivateKeyPassPhrase": "FIXME",
+              "ServerPrivateKeyPassPhrase": "EodVD6DRv_SZ7SfNjc31",
               "Enabled": "true"
             }
           }
         ],
         "attributes": {
           "KeyStores": "CustomIdentityAndCustomTrust",
-          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/obpceng10ipm.jks",
+          "CustomIdentityKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
           "CustomIdentityKeyStoreType": "jks",
-          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
+          "CustomTrustKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
           "CustomTrustKeyStoreType": "jks"
         }
       },
@@ -2098,8 +2116,8 @@
         "type": "StartupParameter",
         "attributes": {
           "Auto1": "-Dweblogic.security.SSL.enableJSSE=true",
-          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
+          "Auto2": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
+          "Auto3": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
           "Auto4": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
           "Auto5": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
         }
@@ -2114,18 +2132,18 @@
               "JSSEEnabled": "true",
               "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
               "ServerPrivateKeyAlias": "wpdev",
-              "ServerPrivateKeyPassPhrase": "FIXME",
+              "ServerPrivateKeyPassPhrase": "EodVD6DRv_SZ7SfNjc31",
               "Enabled": "true"
             }
           }
         ],
         "attributes": {
           "KeyStores": "CustomIdentityAndCustomTrust",
-          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "CustomIdentityKeyStorePassPhrase": "FIXME",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/obpceng10ipm.jks",
+          "CustomIdentityKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
           "CustomIdentityKeyStoreType": "jks",
-          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev.jks",
-          "CustomTrustKeyStorePassPhrase": "FIXME",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpipm/domains/certs/wpdev_trust.jks",
+          "CustomTrustKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
           "CustomTrustKeyStoreType": "jks"
         }
       }
