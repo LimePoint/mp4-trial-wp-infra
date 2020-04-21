@@ -1,7 +1,7 @@
 {
   "id": "eng10",
   "common": {
-    "dataload_path": "/oracle/stage/db_dumps/gold_copy/eng10/CSH-OBP-release_31-012-04/obpobh",
+    "dataload_path": "/oracle/stage/db_dumps/gold_copy/bpd22/CSH-OBP-release_33-010-00/obpobh",
     "remap_schema": "",
     "remap_tablespace": "",
     "database_version": "12.2.0.1",
