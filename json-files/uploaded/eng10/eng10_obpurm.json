@@ -4,8 +4,7 @@
     "assetCode": "obpurm",
     "stageRootDir": "/oracle/stage",
     "urmVaultDirectory": "/oracle/app/runtime/obpurm/eng10",
-    "autoBaseline": "true",
-    "projectUri": "ENG10OBPURM2020APR202156"
+    "autoBaseline": "true"
   },
   "projectName": "eng10_obpurm2020Apr21_1543",
   "uniquifier": "a5ac1a4c83004e128c1e5777fb4e595d",
