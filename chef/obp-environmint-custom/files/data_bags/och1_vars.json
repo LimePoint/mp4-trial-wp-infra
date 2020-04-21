@@ -1,0 +1,23 @@
+{
+  "id": "och",
+  "common": {
+    "dataload_path": "/oracle/stage/db_dumps/bpd10/2019-03-19",
+    "password_vault_name": "och1",
+    "trustStore": "wpdev_trust.jks",
+    "certs_source": "${stageRootDir}/certs/gen2_certs",
+    "custom_source": "${stageRootDir}/custom/csh",
+    "git_repo_path": "/backup/gitrepos/csh-cloud-config-repo",
+    "rt_configs_path": "/limepoint/runTime/data/Repository/configs",
+    "git_commit_on_upload": "true",
+    "ons_node_list": "notrequired:6200,notrequired:6200"
+  },
+  "obpoch": {
+    "database": {
+      "scan_address": "obpcssoch1db.wpdev.mintpress.io",
+      "listen_port": "1521",
+      "service_name": "CBCD3_OCH_PRIM",
+      "sysdba_username": "sys",
+      "ons_node_list": "notrequired:6200,notrequired:6200"
+    }
+  }
+}
