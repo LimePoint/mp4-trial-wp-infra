@@ -20,7 +20,7 @@
     "OAMLogoutURL": "https://obp-sso-eng10.wpdev.mintpress.io/oam/pages/logout.jsp",
     "ons_node_list": "notrequired:6200,notrequired:6200",
     "stubbed": "true",
-    "lisa_socket": "obpclisa2.wpdev.mintpress.io:9458",
+    "lisa_socket": "obpcsslisa2.wpdev.mintpress.io:9458",
     "enable_virus_scan": "false",
     "val_funder_id_pbwp": "VXF-167",
     "val_funder_id_pbsg": "VXF-187",
