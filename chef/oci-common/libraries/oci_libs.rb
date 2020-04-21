@@ -234,10 +234,34 @@ class MintOCIHost
     Chef::Log.info 'Unpublishing DNS Record from Internal DNS Alpha'
     d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'A', name: self.host_obj.name, values: self.host_obj.primary_ip, ttl: 300)
     d_record.remove
-    # Create the entry in secondory instance
+    # Delete the entry in secondory instance
     Chef::Log.info 'Unpublishing DNS Record from Internal DNS Omega'
     d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'A', name: self.host_obj.name, values: self.host_obj.primary_ip, ttl: 300)
     d_record.remove
+
+    # Destroy CNAMES if required
+    if self.create_cnames
+      Chef::Log.info 'UnPublishing DNS CNAME Record to Internal DNS Alpha'
+      cname_priv = self.host_obj.name.split(".")[0].concat('-prv.wpdev.mintpress.io')
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_priv, values: self.host_obj.name, ttl: 300)
+      d_record.remove
+      
+      # Delete the entry in secondory instance
+      Chef::Log.info 'Publishing DNS CNAME Record to Internal DNS Omega'
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_priv, values: self.host_obj.name, ttl: 300)
+      d_record.remove
+    end
+
+    if self.create_friendly_names
+      Chef::Log.info 'UnPublishing DNS Friendly CNAME Record to Internal DNS Alpha'
+      cname_friendly = self.host_obj.name.split(".")[0].chomp('01').concat('.wpdev.mintpress.io')
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
+      d_record.remove
+
+      Chef::Log.info 'Publishing DNS Friendly CNAME Record to Internal DNS Omega'
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
+      d_record.remove
+    end
   end
 
   # Create the external DNS entry 

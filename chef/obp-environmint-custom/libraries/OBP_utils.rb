@@ -151,8 +151,15 @@ module OBPOrchestration
                       # Transform hash keys to symbols; no specific reason just personal preference
                       host_opts.transform_keys!(&:to_sym)
                       oci_host = MintOCIHost.new(host_opts)
-                      Chef::Log.info("Provision action detected. Creating the VM")
-                      oci_host.create
+                      if node.run_state['mintpress_action']=='provision'
+                        Chef::Log.info("Provision action detected. Creating the VM")
+                        oci_host.create
+                      elsif node.run_state['mintpress_action']=='destroy'
+                        Chef::Log.info("Destroy action detected. Deleting the VM")
+                        oci_host.destroy
+                      else
+                        # Do nothing
+                      end
                     end
 				end
 
