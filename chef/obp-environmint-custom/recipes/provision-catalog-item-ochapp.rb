@@ -6,7 +6,7 @@ Chef::Recipe.send(:include, OBPOrchestration::Utils)
 Chef::Resource::RubyBlock.send(:include, OBPOrchestration::Utils)
 Chef::Resource::Template.send(:include, OBPOrchestration::Utils)
 
-_item_code='OCHDB'
+_item_code='OCHAPP'
 return unless node.run_state[_item_code]
 
 environment_name = node.run_state['orchestration_metadata']['launchDetails']['environment']['name'].downcase
@@ -34,23 +34,22 @@ end
 
 providerCode = lookup_catalogitem_providerCode(_item_code)
 host_opts = {}
-host_opts[:hostname] = "obpcss#{environment_name}db.wpdev.mintpress.io"
+host_opts[:hostname] = "obpcss#{environment_name}ap.wpdev.mintpress.io"
 host_opts[:environment_name] = environment_name
 host_opts[:instance_type] = 'VM.Standard.E2.4'
 host_opts[:operating_system] = 'Oracle Linux'
-host_opts[:operating_system_version] = 7
-host_opts[:disk_size] = 500
-host_opts[:disable_selinux] = true
+host_opts[:operating_system_version] = 6
+host_opts[:disk_size] = 50
 attrs = {
   "environmint": { "orchestration_key": "#{node.run_state['orchestration_metadata']['uuid']}" },
   "provisioning_env": "environmint-provisioning",
   "provider_id": providerCode
 }
 host_opts[:node_attributes] = attrs
-host_opts[:run_list] = ['oci-bootstrap::default', 'oci-bootstrap::create-databases-och'] 
+host_opts[:run_list] = ['oci-bootstrap::default']
 host_opts[:create_cnames] = true
 
-# The Db node has no friendly names
+# The app node has no friendly names
 host_opts[:create_friendly_names] = false
 # Transform hash keys to symbols; no specific reason just personal preference
 host_opts.transform_keys!(&:to_sym)

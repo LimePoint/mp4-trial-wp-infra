@@ -11,23 +11,23 @@ env2_9458 = [3,7,8,26,29].map{|s| "bpd"+s.to_s}
 
 case
   when env1_9455.include?(env_name)
-    lisa_socket = 'obpclisa1.wpdev.mintpress.io:9455'
+    lisa_socket = 'obpcsslisa1.wpdev.mintpress.io:9455'
   when env1_9456.include?(env_name)
-    lisa_socket = 'obpclisa1.wpdev.mintpress.io:9456'
+    lisa_socket = 'obpcsslisa1.wpdev.mintpress.io:9456'
   when env1_9457.include?(env_name)
-    lisa_socket = 'obpclisa1.wpdev.mintpress.io:9457'
+    lisa_socket = 'obpcsslisa1.wpdev.mintpress.io:9457'
   when env1_9458.include?(env_name)
-    lisa_socket = 'obpclisa1.wpdev.mintpress.io:9458'
+    lisa_socket = 'obpcsslisa1.wpdev.mintpress.io:9458'
   when env2_9455.include?(env_name)
-    lisa_socket = 'obpclisa2.wpdev.mintpress.io:9455'
+    lisa_socket = 'obpcsslisa2.wpdev.mintpress.io:9455'
   when env2_9456.include?(env_name)
-    lisa_socket = 'obpclisa2.wpdev.mintpress.io:9456'
+    lisa_socket = 'obpcsslisa2.wpdev.mintpress.io:9456'
   when env2_9457.include?(env_name)
-    lisa_socket = 'obpclisa2.wpdev.mintpress.io:9457'
+    lisa_socket = 'obpcsslisa2.wpdev.mintpress.io:9457'
   when env2_9458.include?(env_name)
-    lisa_socket = 'obpclisa2.wpdev.mintpress.io:9458'
+    lisa_socket = 'obpcsslisa2.wpdev.mintpress.io:9458'
   else
-    lisa_socket = 'obpclisa2.wpdev.mintpress.io:9458'
+    lisa_socket = 'obpcsslisa2.wpdev.mintpress.io:9458'
 end
 %>
 {
@@ -39,7 +39,7 @@ end
     "database_version": "12.2.0.1",
     "password_vault_name": "<%= @environment_name %>",
     "trustStore": "wpdev.jks",
-    "certs_source": "${stageRootDir}/certs/wc",
+    "certs_source": "${stageRootDir}/certs/gen2_certs",
     "custom_source": "${stageRootDir}/custom/csh",
     "git_repo_path": "/oracle/gitrepos/csh-cloud-config-repo",
     "rt_configs_path": "/oracle/limepoint/runtime/runtime/data/Repository/configs",
