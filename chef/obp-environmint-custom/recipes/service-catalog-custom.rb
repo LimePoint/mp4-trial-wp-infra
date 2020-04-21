@@ -1,10 +1,6 @@
 if is_running_on_cloud 
 
 	Chef::Log.info("------------ I am service catalog custom in the cloud ----------")
-    if node.run_state['mintpress_action'] == 'destroy'
-	  Chef::Log.info("------------ Nothing to do as this a destroy action ----------")
-      return
-    end
 
     _item_code = node.run_state['current_code']
     environment_name = node.run_state['orchestration_metadata']['launchDetails']['environment']['name'].downcase
@@ -13,16 +9,23 @@ if is_running_on_cloud
     global_properties = JSON.parse(::File.read("#{__dir__}/../files/data_bags/#{environment_name}_vars.json"))
     node.run_state[_item_code.upcase]['properties']=global_properties.to_h.deep_merge!(node.run_state[_item_code.upcase]['properties']).insensitive
 
-    my_topology_vars = topology_vars(_item_code)
-    asset_vars = my_topology_vars[_item_code.downcase]
-    password_vault_name = my_topology_vars['common']['password_vault_name']
+    # The code in begin is only valid for FMW products but since this recipe gets called for
+    # everything we want it to not fail for other assets
+    begin
+      my_topology_vars = topology_vars(_item_code)
+      asset_vars = my_topology_vars[_item_code.downcase]
+      password_vault_name = my_topology_vars['common']['password_vault_name']
 
-    #keystore_name = "#{node.chef_environment}/#{asset_vars['hostnameList'][0][0...-2]}.jks"
-    keystore_name = "#{asset_vars['hostnameList'][0][0...-2]}.jks"
-    truststore_name = my_topology_vars['common']['trustStore']
+      keystore_name = "#{asset_vars['hostnameList'][0][0...-2]}.jks"
+      truststore_name = my_topology_vars['common']['trustStore']
 
-    # Keystore and Truststore are the same
-	keystore_pass =  Mint::AesEncryption.decrypt(PasswordVault.get_password(password_vault_name, _item_code.downcase, 'keystorepass'))
+      # Keystore and Truststore are the same
+      keystore_pass =  Mint::AesEncryption.decrypt(PasswordVault.get_password(password_vault_name, _item_code.downcase, 'keystorepass'))
+    rescue
+	  Chef::Log.info("------------ This does not looks like a FMW asset. Nothing to in here. ----------")
+      # If you have reached here, most likely you are not a FMW product so we will send you back
+      return
+    end
 
 	mintpress_property "fixup-ms-listen" do
 		asset "global"
