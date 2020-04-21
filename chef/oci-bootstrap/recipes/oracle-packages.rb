@@ -5,7 +5,13 @@ oracle_packages = ['binutils','compat-libcap1','compat-libstdc++-33', 'compat-li
 
 oracle_packages.each do | pkg |
   yum_package pkg do
-    arch ['x86_64', 'i686'] 
+    arch 'x86_64'
+  end
+  # Run 64 and 32 bits separate coz chef just checks one, if it finds one, it will not install the other arch
+  # Marking ignore failure true on 32b coz not all of them have one
+  yum_package pkg do
+    arch 'i686' 
+    ignore_failure true
   end
 end
 
