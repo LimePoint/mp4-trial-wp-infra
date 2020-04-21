@@ -434,10 +434,6 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
       mode '0644'
     end
 
-    #update_console_urls_for_catalogitem2(my_topology_vars['uuid'], my_topology_vars['code'], [{ "itemCode" => _item_code, 'name' => "deployment_plan", 'description' => 'deployment url', 'url' => "http://cicdmintpress1.wpdev.mintpress.io/browse/#{baseplan}"}])
-    #https://mintpress-rtd-csh.srv.westpac.com.au/cshtest/rest/envmint/1.0/importProject
-    #url: "#{my_topology_vars['deployment']['RUNTIME_IMPORT_URL']}/browse/envmint/1.0/importProject"
-    #
     ruby_block "Remove Unwanted Plans" do
       block do
         payload_data=::File.open("/environmint/tmp/gen-app-deployment_#{environment_name}.json").read()
