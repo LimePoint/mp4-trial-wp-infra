@@ -6,7 +6,7 @@
     "autoBaseline": "true",
     "projectUri": "ENG10OBPOID2020APR202138"
   },
-  "projectName": "eng10_obpoid2020Apr21_0312",
+  "projectName": "eng10_obpoid2020Apr21_1217",
   "uniquifier": "4f961e8ce4ea4184b57a8ab5b5b30854",
   "site": {
     "hostList": [
@@ -315,7 +315,7 @@
                     "target": "wls.nodemanager.identityname"
                   },
                   {
-                    "value": "/oracle/app/runtime/obpoid/domains/certs/obpceng10oid.jks",
+                    "value": "/oracle/app/runtime/obpoid/domains/certs/eng10/obpceng10oid.jks",
                     "target": "wls.nodemanager.identitystorefile"
                   },
                   {
@@ -365,15 +365,15 @@
                     "target": "wls.nodemanager.truststorefile"
                   },
                   {
-                    "value": "IocxhYDzbTFh0JIC_7XE",
+                    "value": "EodVD6DRv_SZ7SfNjc31",
                     "target": "wls.nodemanager.identitystorekey"
                   },
                   {
-                    "value": "IocxhYDzbTFh0JIC_7XE",
+                    "value": "EodVD6DRv_SZ7SfNjc31",
                     "target": "wls.nodemanager.truststorekey"
                   },
                   {
-                    "value": "IocxhYDzbTFh0JIC_7XE",
+                    "value": "EodVD6DRv_SZ7SfNjc31",
                     "target": "wls.nodemanager.identitypassphrase"
                   }
                 ]
@@ -727,7 +727,7 @@
                 "hostIdentifierList": [
                   "obpceng10oid01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/obpceng10oid.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/obpceng10oid.jks",
                 "destinationFile": "/oracle/app/runtime/eng10/certs/obpceng10oid.jks",
                 "permissions": "600",
                 "transferWhenList": [
@@ -745,7 +745,7 @@
                 "hostIdentifierList": [
                   "obpceng10oid01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/wpdev_trust.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/wpdev_trust.jks",
                 "destinationFile": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
                 "permissions": "600",
                 "transferWhenList": [
@@ -763,7 +763,7 @@
                 "hostIdentifierList": [
                   "obpceng10oid01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/cacerts.pem",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/cacerts.pem",
                 "destinationFile": "/oracle/app/runtime/eng10/certs/cacerts.pem",
                 "permissions": "600",
                 "transferWhenList": [
@@ -781,7 +781,7 @@
                 "hostIdentifierList": [
                   "obpceng10oid01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/obpceng10oid01_wallet",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/obpceng10oid01_wallet",
                 "destinationFile": "/oracle/app/runtime/eng10/certs/oid1/obpoid_wallet/cwallet.sso",
                 "permissions": "600",
                 "transferWhenList": [
@@ -835,7 +835,7 @@
                 "hostIdentifierList": [
                   "obpceng10oid01"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/adapters.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/adapters.jks",
                 "destinationFile": "/oracle/app/runtime/obpoid/domains/obpoid_domain/config/fmwconfig/ovd/default/keystores/adapters.jks",
                 "permissions": "600",
                 "transferWhenList": [
@@ -869,7 +869,7 @@
               },
               {
                 "name": "wpdevKeystore",
-                "destinationFile": "/oracle/app/runtime/obpoid/domains/certs/obpceng10oid.jks",
+                "destinationFile": "/oracle/app/runtime/obpoid/domains/certs/eng10/obpceng10oid.jks",
                 "permissions": "600",
                 "hostIdentifierList": [
                   "obpceng10oid01"
@@ -877,7 +877,7 @@
                 "transferWhenList": [
                   "pre-online"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/obpceng10oid.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng10/obpceng10oid.jks",
                 "properties": [
                   {
                     "name": "KeyAlias",
@@ -885,7 +885,7 @@
                   },
                   {
                     "name": "KeystorePassword",
-                    "value": "IocxhYDzbTFh0JIC_7XE"
+                    "value": "EodVD6DRv_SZ7SfNjc31"
                   }
                 ]
               },
@@ -899,11 +899,11 @@
                 "transferWhenList": [
                   "pre-online"
                 ],
-                "sourceFile": "/oracle/stage/certs/wc/eng10/wpdev_trust.jks",
+                "sourceFile": "/oracle/stage/certs/gen2_certs/wpdev_trust.jks",
                 "properties": [
                   {
                     "name": "TruststorePassword",
-                    "value": "IocxhYDzbTFh0JIC_7XE"
+                    "value": "EodVD6DRv_SZ7SfNjc31"
                   }
                 ]
               }
@@ -1247,7 +1247,7 @@
               "ServerPrivateKeyAlias": "wpdev",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "IocxhYDzbTFh0JIC_7XE",
+              "ServerPrivateKeyPassPhrase": "EodVD6DRv_SZ7SfNjc31",
               "JSSEEnabled": "true",
               "UseServerCerts": "true",
               "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier"
@@ -1263,10 +1263,10 @@
         "attributes": {
           "Notes": "Server settings",
           "KeyStores": "CustomIdentityAndCustomTrust",
-          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpoid/domains/certs/obpceng10oid.jks",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpoid/domains/certs/eng10/obpceng10oid.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpoid/domains/certs/wpdev_trust.jks",
-          "CustomIdentityKeyStorePassPhrase": "IocxhYDzbTFh0JIC_7XE",
-          "CustomTrustKeyStorePassPhrase": "IocxhYDzbTFh0JIC_7XE",
+          "CustomIdentityKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
+          "CustomTrustKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1330,7 +1330,7 @@
               "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "{AES2}hVZsonN3QreM+t4Zfv3jXg=={/IV}TKMenFfi5x6zN2L47bN3ARQq1RfAnIFrtpubNrjzEwA8=",
+              "ServerPrivateKeyPassPhrase": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
               "JSSEEnabled": "true",
               "UseServerCerts": "true"
             }
@@ -1347,8 +1347,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng10/certs/obpceng10oid.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
-          "CustomIdentityKeyStorePassPhrase": "{AES2}hVZsonN3QreM+t4Zfv3jXg=={/IV}TKMenFfi5x6zN2L47bN3ARQq1RfAnIFrtpubNrjzEwA8=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}Sk3Hqd0lG2ZSW4v/nnNqFw=={/IV}TuRNC7eEEqJJEgYMtaOpgTouCAUXlQKkbZsUXyDJeipE=",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1383,7 +1383,7 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}Sk3Hqd0lG2ZSW4v/nnNqFw=={/IV}TuRNC7eEEqJJEgYMtaOpgTouCAUXlQKkbZsUXyDJeipE=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}fxToyVfehaaaaoNz1iFQFw=={/IV}T2XIy+N0Qf/9EMIGP4R4HM8oRsd1+5LSo/3wNRhbGxVQ=",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
                   "javax.net.ssl.trustStore": "/oracle/app/runtime/eng10/certs/wpdev_trust.jks",
