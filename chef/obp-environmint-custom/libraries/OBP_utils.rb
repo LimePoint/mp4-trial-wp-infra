@@ -159,24 +159,33 @@ module OBPOrchestration
 				# We use wildcard certificates on ocloud issues by LimePoint
 				if generate_certs
 					# since all of the templates use 0..-2 notation, here too  we shall.  except that wallets do not....
-                    # Randomize the keystore and truststore password
-                    require 'securerandom'
 					basehost=asset_vars['hostnameList'][0][0...-2]
-                    keystore_pass = SecureRandom.alphanumeric
+
+                    # The keystore/truststore pass is hardcoded because it is a big change right now
+                    # no easy way to do this right now. It needs a bit of refactoring
+                    # CHANGEME - This needs to be changed everytime the password is changed
+                    keystore_pass = 'EodVD6DRv_SZ7SfNjc31'
 					PasswordVault.put_password(password_vault_name, item_code.downcase, 'keystorepass', keystore_pass)
-					PasswordVault.put_password(password_vault_name, item_code.downcase, 'truststorepass', keystore_pass)
+
+                    truststore_pass = 'EodVD6DRv_SZ7SfNjc31'
+					PasswordVault.put_password(password_vault_name, item_code.downcase, 'truststorepass', truststore_pass)
+
+                    # The base of all certs, common certs like trust and cacerts, adapters etc are picked from this location
+                    # This also serves as a base for creating env specific certs.
+                    base_cert_path = "/oracle/stage/certs/gen2_certs"
+                    env_cert_path = "#{base_cert_path}/#{env_name}"
+
+                    Chef::Log.info "Setting base_cert_path to [#{base_cert_path}]"
+                    Chef::Log.info "Setting env_cert_path to [#{env_cert_path}]"
 
                     # Make appropriate environments
-                    raise "Could not create environment directory [/oracle/stage/certs/wc/#{env_name}] for certificate" unless system("mkdir -p /oracle/stage/certs/wc/#{env_name}")
-                    raise "Could not copy cwallet.sso" unless system("cd /oracle/stage/certs/wc && cp -f wpdev_wallet/cwallet.sso #{env_name}/#{basehost}01_wallet")
-                    raise "Could not copy wpdev.jks as #{env_name}/#{basehost}.jks" unless system("cd /oracle/stage/certs/wc && cp -f wpdev.jks #{env_name}/#{basehost}.jks")
-                    # Change the password of the copied jks, but do not change for adapters.jks as it is hardcoded in weblogic
-                    raise "Could not update keystore password" unless system("cd /oracle/stage/certs/wc && /limepoint/console/java/bin/keytool -storepasswd -keystore #{env_name}/#{basehost}.jks -storepass welcome1 -new #{keystore_pass}")
-                    raise "Could not copy wpdev.jks as #{env_name}/wpdev.jks" unless system("cd /oracle/stage/certs/wc && cp -f #{env_name}/#{basehost}.jks #{env_name}/wpdev.jks")
-                    raise "Could not copy root.crt" unless system("cd /oracle/stage/certs/wc && cp -f root.crt #{env_name}/cacerts.pem")
-                    raise "Could not copy adapters.jks" unless system("cd /oracle/stage/certs/wc && cp -f adapters.jks #{env_name}/adapters.jks")
-                    raise "Could not copy cacerts" unless system("cd /oracle/stage/certs/wc && cp -f cacerts #{env_name}/cacerts")
-
+                    raise "Could not create environment directory [#{env_cert_path}] for certificate" unless system("mkdir -p #{env_cert_path}")
+                    raise "Could not copy cwallet.sso" unless system("cp -u #{base_cert_path}/wpdev_wallet/cwallet.sso #{env_cert_path}/#{basehost}01_wallet")
+                    raise "Could not copy wpdev_keystore.jks as #{env_cert_path}/#{basehost}.jks" unless system("cp -u #{base_cert_path}/wpdev_keystore.jks #{env_cert_path}/#{basehost}.jks")
+                    raise "Could not copy wpdev_keystore.jks as #{env_cert_path}/wpdev_trust.jks" unless system("cp -u #{base_cert_path}/wpdev_keystore.jks #{env_cert_path}/wpdev_trust.jks")
+                    raise "Could not copy root.crt" unless system("cp -u #{base_cert_path}/root.crt #{env_cert_path}/cacerts.pem")
+                    raise "Could not copy adapters.jks" unless system("cp -u #{base_cert_path}/adapters.jks #{env_cert_path}/adapters.jks")
+                    raise "Could not copy cacerts" unless system("cp -u #{base_cert_path}/cacerts #{env_cert_path}/cacerts")
 				end
 			end
 

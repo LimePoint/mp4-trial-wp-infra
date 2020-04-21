@@ -13,6 +13,11 @@ if is_running_on_cloud and node.chef_environment != 'wptest'
     asset_vars = my_topology_vars[_item_code.downcase]
     password_vault_name = my_topology_vars['common']['password_vault_name']
 
+    #keystore_name = "#{node.chef_environment}/#{asset_vars['hostnameList'][0][0...-2]}.jks"
+    keystore_name = "#{asset_vars['hostnameList'][0][0...-2]}.jks"
+    truststore_name = my_topology_vars['common']['trustStore']
+
+    # Keystore and Truststore are the same
 	keystore_pass =  Mint::AesEncryption.decrypt(PasswordVault.get_password(password_vault_name, _item_code.downcase, 'keystorepass'))
 
 	mintpress_property "fixup-ms-listen" do
@@ -108,15 +113,15 @@ if is_running_on_cloud and node.chef_environment != 'wptest'
 	# FIXME: product defect
 	# Do not do for OID/CID 11g but is requirted for OID/CID 21c
 	if !(node.run_state['OBPOID'] && global_properties['obpoid']['release_version'] != '1.7.0') and !(node.run_state['OBPCID'] && global_properties['obpcid']['release_version'] != '1.7.0')
-		mintpress_ssl_config 'mintpress.io ssl setup' do
+        # The truststore and keystore passwords need to be same
+		mintpress_ssl_config 'mintpress.io ssl setup for keystore' do
 			asset "global"
-			keystorename "wpdev.jks"
+			keystorename keystore_name
+			truststorename truststore_name
 			keyid "wpdev"
-			truststorename "wpdev.jks"
-            #certpw "literal:/welcome1"
 			certpw "literal:/#{keystore_pass}"
 			certpath "${/domains.locationPath}/certs"
-			certsource "/oracle/stage/certs/wc"
+			certsource "/oracle/stage/certs/gen2_certs/#{node.chef_environment}"
 			wildcard true
 			force_jsse true
 		end

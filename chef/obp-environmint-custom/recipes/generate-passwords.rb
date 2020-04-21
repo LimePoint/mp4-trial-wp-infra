@@ -12,7 +12,7 @@ vault_name = node.chef_environment
 usr.each do |asset_code,uid|
   case
   when asset_code.match('all')
-    PasswordVault.put_password(vault_name, 'all', 'truststorepass', 'welcome1')
+    PasswordVault.put_password(vault_name, 'all', 'truststorepass', 'EodVD6DRv_SZ7SfNjc31')
   else
     if uid.is_a?(Array)
       uid.each do |u|

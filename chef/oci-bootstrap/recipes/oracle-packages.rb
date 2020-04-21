@@ -17,6 +17,7 @@ yum_package "git"
 yum_package "nc"
 yum_package "tree"
 yum_package "psmisc"
+yum_package "htop"
 
 # Install the rdbms package if it is a db node
 if node.name.split(".")[0][-2..-1] == 'db'
