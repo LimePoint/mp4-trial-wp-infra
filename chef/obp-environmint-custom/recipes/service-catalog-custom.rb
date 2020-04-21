@@ -1,6 +1,10 @@
-if is_running_on_cloud and node.chef_environment != 'wptest'
+if is_running_on_cloud 
 
 	Chef::Log.info("------------ I am service catalog custom in the cloud ----------")
+    if node.run_state['mintpress_action'] == 'destroy'
+	  Chef::Log.info("------------ Nothing to do as this a destroy action ----------")
+      return
+    end
 
     _item_code = node.run_state['current_code']
     environment_name = node.run_state['orchestration_metadata']['launchDetails']['environment']['name'].downcase
