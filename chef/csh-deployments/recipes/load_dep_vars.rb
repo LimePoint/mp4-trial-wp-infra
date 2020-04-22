@@ -54,12 +54,12 @@ def createDeploymenProps(env_name, template_src, topology_vars)
 # get the odi encoded string only if the ODI host is rechable and has the odi encoder available
 
         if Net::Ping::TCP.new(odi_host,'22').ping?
-            Net::SSH.start(odi_host, "oracle", :keys => [ssh_keyfile], :verify_host_key => Net::SSH::Verifiers::Null.new) do |ssh|
-              result=ssh.exec!("if [ -e #{odi_encoder} ]; then echo -n 0; fi")
+            Net::SSH.start(odi_host, "mintpress", :keys => [ssh_keyfile], :verify_host_key => Net::SSH::Verifiers::Null.new) do |ssh|
+              result=ssh.exec!("sudo -u oracle 'if [ -e #{odi_encoder} ]; then echo -n 0; fi'")
               if result=='0'
                 puts "Encoding the passwords with ODI encoder"
-                odi_encoded_dbpwd = ssh.exec!("#{odi_encoder} -INSTANCE=OracleDISAgent1 #{obpobh_dbpwd} 2> /dev/null|tail -1").rstrip
-                odi_encoded_wlspwd = ssh.exec!("#{odi_encoder} -INSTANCE=OracleDISAgent1 #{obpobh_wlspwd} 2> /dev/null|tail -1").rstrip
+                odi_encoded_dbpwd = ssh.exec!("sudo -u oracle '#{odi_encoder} -INSTANCE=OracleDISAgent1 #{obpobh_dbpwd} 2> /dev/null|tail -1'").rstrip
+                odi_encoded_wlspwd = ssh.exec!("sudo -u oracle '#{odi_encoder} -INSTANCE=OracleDISAgent1 #{obpobh_wlspwd} 2> /dev/null|tail -1'").rstrip
               end
             end
         end
