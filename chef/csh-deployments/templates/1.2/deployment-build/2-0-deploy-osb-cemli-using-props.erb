@@ -33,7 +33,7 @@
           "argument" : "",
           "scriptLocation" : "INLINE",
           "environmentVariables" : "",
-          "scriptBody" : "<%= @script_init_string %>\n sh /environmint/cont-delivery/osbproperties.sh ${bamboo.ENVNAME} ${bamboo.OBP_NODE_1}\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b osbDeployScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true  -PenvName=LOCAL -PmintDeployHome=../../../mintdeploy/ deploy clean -i -s'\"",
+          "scriptBody" : "<%= @script_init_string %>\n sh /backup/cont-delivery/osbproperties.sh ${bamboo.ENVNAME} ${bamboo.OBP_NODE_1}\nssh <%= @ssh_key_string %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c '<%= @shell_init_string %>cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b osbDeployScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true  -PenvName=LOCAL -PmintDeployHome=../../../mintdeploy/ deploy clean -i -s'\"",
           "interpreter" : "RUN_AS_EXECUTABLE",
           "script" : "",
           "workingSubDirectory" : ""

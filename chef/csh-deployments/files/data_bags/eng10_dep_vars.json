@@ -35,7 +35,7 @@
     "NOTIFY_SENDER": "wpocloud@limepoint.com",
     "PCSM_RELEASE_PATH": "Verified",
     "PCSM_ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/A007BD_Powercurve",
-    "MANIFEST_GIT_STAGE": "/oracle/gitrepos/buildmanifest",
+    "MANIFEST_GIT_STAGE": "/backup/gitrepos/buildmanifest",
     "ARTIFACTORY_USER": "admin",
     "VALEXCLIENTID": "VXCL-12495",
     "VALEXFUNDERID": "VXF-167",

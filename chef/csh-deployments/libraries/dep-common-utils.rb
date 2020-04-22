@@ -12,7 +12,7 @@ def pinCookbook(mfrepopath,env_name,kniferbpath)
    manifestParse=JSON.parse(File.read("#{mfrepopath}/#{environment_name.upcase}/manifest.json"))
    mfCookbookVersion=manifestParse["csh-deployments"]
    puts "#{mfCookbookVersion}"
-   repoPath= is_running_on_cloudFn ? "/oracle/gitrepos/ocloud-environment-objects" : "/environmint/gitrepos/mp-001_environment_objects"
+   repoPath= is_running_on_cloudFn ? "/backup/gitrepos/ocloud-environment-objects" : "/environmint/gitrepos/mp-001_environment_objects"
    puts "Repo Path #{repoPath}"
    status=%x[cd #{repoPath};git pull]
    puts "Status of pull of #{repoPath} is #{status}"
@@ -131,7 +131,7 @@ def createDeploymenPropsFn(env, template_source, vars, artifactory_version)
     Chef::Log.info("Get source template from #{template_source}")
     begin
 
-        final_folder="/environmint/tmp/deployment-prop/#{env}"
+        final_folder="/limepoint/runTime/tmp/deployment/deployment-prop/#{env}"
         unless File.directory?(final_folder)
           FileUtils.mkdir_p(final_folder)
         end
@@ -159,7 +159,7 @@ def uploadDeployProp2GitFn(environment_name, tmp_folder, my_topology_vars)
 
                 %x[ mkdir -p "#{my_topology_vars['common']['git_repo_path']}/json-files/uploaded/#{environment_name.downcase}/deploy-props" ]
                 ::FileUtils.cp_r "#{tmp_folder}/.", "#{my_topology_vars['common']['git_repo_path']}/json-files/uploaded/#{environment_name.downcase}/deploy-props", :verbose => true
-                # remove the file in /environmint/tmp
+                # remove the file in /limepoint/runTime/tmp/deployment 
                 #::FileUtils.rm_f "tmp_folder"
                 ## Add files to Git
                 puts 'Adding deployment prop files to Git'
@@ -183,7 +183,7 @@ def uploadResponseFile2GitFn(environment_name, response_file, my_topology_vars)
     #If someone update this file manually , we will get a conflict, so pull  before
     %x[ cd #{manifest_git_repo_path} && git pull --quiet]
     ::FileUtils.cp "#{response_file}", "#{manifest_git_repo_path}/RESPONSE_FILES", :verbose => true
-    # remove the file in /environmint/tmp
+    # remove the file in /limepoint/runTime/tmp/deployment 
     ::FileUtils.rm_f "#{response_file}"
     ## Add files to Git
     puts 'Adding Response  files to Git'
@@ -256,7 +256,7 @@ def handleResponseFileFn(environment_name,deploy_status, my_topology_vars , stat
     response_vars['e2e_deployment_duration'] =  elapsed_time.round
     response_vars['mint_project_url'] =  plan_url
 
-    response_file = "/environmint/tmp/response_files/#{environment_name}_mintpress_response.json"
+    response_file = "/limepoint/runTime/tmp/deployment/response_files/#{environment_name}_mintpress_response.json"
     File.open("#{response_file}","w") do | f |
       f.write(JSON.pretty_generate(response_vars))
     end

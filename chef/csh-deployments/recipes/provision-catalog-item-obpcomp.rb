@@ -33,7 +33,7 @@ my_dep_vars = JSON.parse(::File.read("#{__dir__}/../files/data_bags/#{environmen
 
 my_topology_vars = my_topology_vars.merge(my_dep_vars)
 puts "The Topology Vars  after dep  merge =====> #{my_topology_vars} "
-lp_cd_home="/environmint/cont-delivery"
+lp_cd_home="/backup/cont-delivery"
 #Start of Auto Pinning of Cookbook to environment from manifest json
 knifeRBPath= is_running_on_cloudFn ? "/home/mintpress/.chef/knife.rb"  :  "/home/mintpress/mintpress/.chef/knife-csh.rb"
 manifest_git_repo_path = my_topology_vars['deployment']['MANIFEST_GIT_STAGE']
@@ -212,7 +212,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
     end
 
     Chef::Log.info("The artifactory version for this Env is : #{artifactory_version}" )
-    tmp_folder="/environmint/tmp/deployment-prop"
+    tmp_folder="/limepoint/runTime/tmp/deployment/deployment-prop"
     createDeploymenPropsFn(environment_name, deployment_prop_template_source, my_topology_vars, artifactory_version)
     #zipAndPackageArtifactoryFn(environment_name, tmp_folder, my_topology_vars, artifactory_version, "CSH.1.2")
     Chef::Log.info("Deployment  template from this folder : #{deployment_prop_template_source}" )
@@ -232,7 +232,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
           puts "Merge under with   default  attributes"
           node.default.merge! cloud_manifest_hash
           puts "Successfully merged to node default"
-          File.open("/environmint/tmp/manifest-fetched-#{environment_name.downcase}.json","w") {|f| f.write(cloud_manifest_hash)}
+          File.open("/limepoint/runTime/tmp/deployment/manifest-fetched-#{environment_name.downcase}.json","w") {|f| f.write(cloud_manifest_hash)}
           puts "Here is node defaults [  resource print ] #{node.default} "
           result=%x[knife environment show #{environment_name.downcase} -F json -c ~/.chef/knife.rb] #get the cookbook pinned to the environment
           iparse=JSON.parse(result)
@@ -264,7 +264,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
                 puts "Merge under with   default  attributes"
                 node.default.merge! manifest_vars
                 puts "Successfully merged to node default"
-                File.open("/environmint/tmp/manifest-fetched-#{environment_name.downcase}.json","w") {|f| f.write(manifest_vars)}
+                File.open("/limepoint/runTime/tmp/deployment/manifest-fetched-#{environment_name.downcase}.json","w") {|f| f.write(manifest_vars)}
                 puts "Here is node defaults [  resource print ] #{node.default} "
                 node.run_state['manifest']=manifest_vars
             else
@@ -289,7 +289,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
           cloud_response_file= File.read(cloud_response_file_path)
           cloud_response_vars = JSON.parse(cloud_response_file)
           puts cloud_response_vars
-          File.open("/environmint/tmp/response-fetched-#{environment_name.downcase}.json","w") {|f| f.write(cloud_response_vars)}
+          File.open("/limepoint/runTime/tmp/deployment/response-fetched-#{environment_name.downcase}.json","w") {|f| f.write(cloud_response_vars)}
           puts "Here is response file for cloud [  resource print ] #{cloud_response_vars} "
           node.run_state['response_file']=cloud_response_vars
         else
@@ -317,7 +317,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
                 puts response.body
                 response_vars = JSON.parse(response.body)
                 puts "Copy File to tmp"
-                File.open("/environmint/tmp/#{environment_name.downcase}_mintpress_response.json","w") {|f| f.write(response_vars)}
+                File.open("/limepoint/runTime/tmp/deployment/#{environment_name.downcase}_mintpress_response.json","w") {|f| f.write(response_vars)}
                 puts "Here is response file [  resource print ] #{response_vars} "
                 node.run_state['response_file']=response_vars
             else
@@ -421,7 +421,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
 
     template 'app deploy template' do
       source "#{deployment_build_template_source}"
-      path "/environmint/tmp/gen-app-deployment_#{environment_name}.json"
+      path "/limepoint/runTime/tmp/deployment/gen-app-deployment_#{environment_name}.json"
       variables(
             variables(
                 :dataBag => my_topology_vars,
@@ -436,7 +436,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
 
     ruby_block "Remove Unwanted Plans" do
       block do
-        payload_data=::File.open("/environmint/tmp/gen-app-deployment_#{environment_name}.json").read()
+        payload_data=::File.open("/limepoint/runTime/tmp/deployment/gen-app-deployment_#{environment_name}.json").read()
         result_parsed=JSON.parse(payload_data)
         baseplan=result_parsed['name'].gsub('_','').gsub(' ','').upcase
         puts "The base plan name ::  #{baseplan}"
@@ -458,7 +458,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
           end
         end
         puts "Array After :: #{result_parsed["plans"]}"
-        File.open("/environmint/tmp/gen-app-deployment_#{environment_name}.json","w") do |f|
+        File.open("/limepoint/runTime/tmp/deployment/gen-app-deployment_#{environment_name}.json","w") do |f|
           f.write(JSON.pretty_generate(result_parsed))
         end
       end
@@ -466,7 +466,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
 
     ruby_block "Upload to Runtime" do
         block do
-          payload_data=::File.open("/environmint/tmp/gen-app-deployment_#{environment_name}.json").read()
+          payload_data=::File.open("/limepoint/runTime/tmp/deployment/gen-app-deployment_#{environment_name}.json").read()
           json_data=JSON.parse(payload_data)
           baseplan=json_data['name'].gsub('_','').gsub(' ','').upcase
           baseurl= "#{my_topology_vars['deployment']['RUNTIME_IMPORT_URL']}/browse/#{baseplan}"
@@ -492,7 +492,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
 
     ruby_block "Disable Other Plans" do
         block do
-          payload_data=::File.open("/environmint/tmp/gen-app-deployment_#{environment_name}.json").read()
+          payload_data=::File.open("/limepoint/runTime/tmp/deployment/gen-app-deployment_#{environment_name}.json").read()
           json_data=JSON.parse(payload_data)
           baseplan=json_data['name'].gsub('_','').gsub(' ','').upcase
           puts baseplan
@@ -531,9 +531,9 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
         block do
             if  my_topology_vars['common']['git_commit_on_upload'].downcase == 'true'
                 %x[ mkdir -p "#{my_topology_vars['common']['git_repo_path']}/json-files/uploaded/#{environment_name.downcase}" ]
-                ::FileUtils.cp "/environmint/tmp/gen-app-deployment_#{environment_name}.json", "#{my_topology_vars['common']['git_repo_path']}/json-files/uploaded/#{environment_name.downcase}/#{environment_name}_app_deployments.json", :verbose => true
-                # remove the file in /environmint/tmp
-                ::FileUtils.rm_f "/environmint/tmp/gen-app-deployment_#{environment_name}.json"
+                ::FileUtils.cp "/limepoint/runTime/tmp/deployment/gen-app-deployment_#{environment_name}.json", "#{my_topology_vars['common']['git_repo_path']}/json-files/uploaded/#{environment_name.downcase}/#{environment_name}_app_deployments.json", :verbose => true
+                # remove the file in /limepoint/runTime/tmp/deployment
+                ::FileUtils.rm_f "/limepoint/runTime/tmp/deployment/gen-app-deployment_#{environment_name}.json"
                 ## Add files to Git
                 puts 'Adding deployment JSON files to Git'
                 %x[ cd #{my_topology_vars['common']['git_repo_path']} && git add "json-files/uploaded/#{environment_name.downcase}" && git commit json-files -m "Updated generated JSON files for #{environment_name.upcase} #{_item_code.upcase}" && git log -1 --stat && git pull --quiet && git push --quiet]
