@@ -56,4 +56,4 @@ log "Profiles & Tablespaces updated successfully."
 log "Creating Additional Directories for all databases"
 dirs_to_create = '/oracle/app/oradata/CBCD3OCHPRIM'
 execute "mkdir -p #{dirs_to_create}"
-
+execute "chown -R oracle:oinstall #{dirs_to_create}"
