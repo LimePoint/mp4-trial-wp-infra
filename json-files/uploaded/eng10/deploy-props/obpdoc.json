@@ -1,0 +1,101 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "db_targetSchema",
+      "type": "db",
+      "properties": [
+        {
+          "name": "logon",
+          "value": "dmkr_asline/WHD2KECPyHdSC_Sv_5QR@DMKRDB"
+        }
+      ]
+    },
+    {
+      "name": "db_adminSchema",
+      "type": "db",
+      "properties": [
+        {
+          "name": "logon",
+          "value": "dmkr_admin/WHD2KECPyHdSC_Sv_5QR@DMKRDB"
+        }
+      ]
+    },
+    {
+      "name": "dmkr_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        }]
+    },
+    {  
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+     }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+     {
+          "name": "user",
+          "value": "weblogic"
+        },
+        {
+          "name": "password",
+          "value": "{AES2}QKB13LlgKhzwwQyQgo7LDg=={/IV}TV5Bsi8Ip2NmlCzrOYd4dbXtZwQBfFZ6C7FUb4K0fggI="
+        },
+        {
+          "name": "hostname",
+          "value": "obpceng10doc01-prv.wpdev.mintpress.io"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpdoc/fmw/wlserver"
+        },
+        {
+          "name": "jms.provider.URL",
+          "value": "t3://obpceng10doc.wpdev.mintpress.io:17202"
+        },
+        {
+          "name": "https.ipmServerName",
+          "value": "https://obpceng10ipm.wpdev.mintpress.io"
+        },
+        {
+          "name": "DMKR_SMTP_HOST",
+          "value": ""
+        },
+        {
+          "name": "DMKR_SMTP_PORT",
+          "value": ""
+        },
+        {
+          "name": "DMKR_SMTP_SENDER",
+          "value": ""
+        },
+        {
+          "name": "ipmPassword",
+          "value": "{AES2}UEtZa32qGpAM73MIFvNGXA=={/IV}TGHPzFtF8Ts/YqbeDYFytB35NJpcaMuIZo5/nckblyiY="
+        },
+        {
+          "name": "docAppWSDLPass",
+          "value": "{AES2}gv9JQ0UgM6vmnfbywYuN+A=={/IV}TFOfFcQQnjDWGHF9760fSLPiFlZhcAt6HU12ouqP+wBk="
+        }
+  ]
+}
+

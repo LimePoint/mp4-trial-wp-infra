@@ -1,0 +1,47 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+    {
+      "name": "user",
+      "value": "weblogic"
+    },
+    {
+      "name": "password",
+      "value": "{AES2}KVNc4qtnCt4/lsfxZcHd+A=={/IV}T+YKZWjrH5BozJ2WOpp5Xi9tQt3DKUTzQ9F4TRAIW64o="
+    },
+    {
+      "name": "hostname",
+      "value": "obpceng10urm01-prv.wpdev.mintpress.io"
+    },
+    {
+      "name": "weblogicHome",
+      "value": "/oracle/app/binaries/obpurm/fmw/wlserver_10.3"
+    },
+    {
+      "name": "frontendurl",
+      "value": "https://obpceng10urm.wpdev.mintpress.io:18002/urm/idcplg"
+    }
+
+  ]
+}

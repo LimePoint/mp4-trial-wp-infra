@@ -1,0 +1,76 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-oam",
+      "type": "oam",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17002"
+        },
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "OAM Server"
+        }]
+    },
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+    "/getDeploymentProperties.json?environment=LOCAL": [
+        {
+          "name": "user",
+          "value": "weblogic"
+        },
+        {
+          "name": "password",
+          "value": "{AES2}7vIccXnV4zRLwp+JvRZewA=={/IV}TbuCdFC3pgMymQ91nid7d2IO2WpF2hjsxtbDGAlnFF+Y="
+        },
+        {
+          "name": "hostname",
+          "value": "obpceng10oam01-prv.wpdev.mintpress.io"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpoam/fmw/wlserver"
+        },
+        {
+          "name": "oamHome",
+          "value": "/oracle/app/binaries/obpoam/fmw/oracle_common"
+        },
+        {
+          "name": "ohshostname",
+          "value": "obpceng10oam.wpdev.mintpress.io"
+        },
+        {
+          "name": "ohsipaddress",
+          "value": "10.32.116.111"
+        }
+        
+    ]
+}

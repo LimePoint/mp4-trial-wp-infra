@@ -1,0 +1,110 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "bi_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "obp.bip.instance.path",
+          "value": "/oracle/app/runtime/obpbip/domains/obpbip_domain/config/bipublisher"
+        },
+        {
+          "name": "obp.bip.datasource.name",
+          "value": "obpReportsDataSource"
+        }
+]
+    },
+    {
+    "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+     }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+       {
+          "name": "user",
+          "value": "weblogic"
+        },
+        {
+          "name": "password",
+          "value": "{AES2}LgR9Zp2boPrUJDiOssuUXw=={/IV}TMDu9UHB9mfBu/lU8wvC2pALl48OlTzf6NsqHjs6l5qY="
+        },
+        {
+          "name": "hostname",
+          "value": "obpceng10bip01-prv.wpdev.mintpress.io"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpbip/fmw/wlserver"
+        },
+        {
+          "name": "obp.bip.report.base.path",
+          "value": "/FC Modules/reports"
+        },
+        { 
+          "name": "obp.bip.instance.path",
+          "value": "/oracle/app/runtime/obpbip/domains/obpbip_domain/config/bipublisher"
+        },
+        {
+          "name": "obp.bip.datasource.name",
+          "value": "obpReportsDataSource"
+        },
+        {
+          "name": "bip.server.url",
+          "value": "http://obpceng10bip01-prv.wpdev.mintpress.io:17002/xmlpserver"
+        },
+        {
+          "name": "obp.bip.install.home",
+          "value": "/oracle/app/binaries/obpbip/fmw/bi"
+        },
+        {
+          "name": "obp.bip.java.home",
+          "value": "/oracle/app/binaries/obpbip/java"
+        },
+        {
+      	  "name": "obp.bip.obpadminUserName",
+      	  "value": "obpbip_admin"
+      	},
+        {
+       	  "name": "obp.bip.obpadminPassword",
+      	  "value": "{AES2}WwsDVIU57xTHDed7yngQKw=={/IV}THlhIefMquyxc3J/2OqB34/ths+BIyeba52jevdqf9to="
+      	},
+        {
+          "name": "DB.PASSWORD",
+          "value": "{AES2}skTexgOUMC7EpXqS1y3TXw=={/IV}Toh06ia+dOoit8327oSdFeRw/2kirasaiOMX+7/TjYlk="
+        },
+        {
+          "name": "CONFIGTOOL_PASSWORD",
+          "value": "{AES2}uaV2edfI0x0AKotiEOCGlQ=={/IV}T+x5So0opO07oTraOEYJ7mjQp90Q06gp86DMz0Y6vxm4="
+        },
+        {
+          "name": "DB.USERNAME",
+          "value": "OBP_ANALYTICS"
+        },
+        {
+          "name": "CONFIGTOOL_USERNAME",
+          "value": "SA_CONFIGUPLOADER_OBP_USER"
+        }        
+  ]
+}
+

@@ -1,0 +1,38 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "db_targetSchema",
+      "type": "db",
+      "properties": [
+        {
+        "name": "logon",
+        "value": "OBPHOST_OBP/AFOetYrLaX3g_N8sQuL1@HOSTDB"
+        }
+      ]
+    },
+    {
+      "name": "host_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        }]
+    }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+  {
+      "name": "DB.PASSWORD",
+      "value": "{AES2}Aps9aS6PpYswAwyzsYIFfg=={/IV}TJaeUeHCgXsf4egT1cgT2Jsunfrdt0Jrp3Mx2E6R4POM="
+  },
+  {
+      "name": "CONFIGTOOL_PASSWORD",
+      "value": "{AES2}uaV2edfI0x0AKotiEOCGlQ=={/IV}T+x5So0opO07oTraOEYJ7mjQp90Q06gp86DMz0Y6vxm4="
+  },
+        {
+          "name": "cwalletpassword",
+          "value": "{AES2}bEvlyZhC9yucj9L11eb3Wg=={/IV}TDPgQlbkHaBYM2xedhDNzpnlSWKq+bKGuwh8LwpN/dp8="
+        }
+  ]
+}
+

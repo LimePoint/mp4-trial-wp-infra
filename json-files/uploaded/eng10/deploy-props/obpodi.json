@@ -1,0 +1,300 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "odi_server1",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "protocol",
+          "value": "http"
+        }]
+    },
+    {
+    "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+     }
+  ],
+  "/getDeploymentProperties.json?environment=LOCAL": [
+       {
+          "name": "user",
+          "value": "weblogic"
+        },
+        {
+          "name": "password",
+          "value": "{AES2}nGN4mHJq15qQjYavtWBNgQ=={/IV}Tge0uMjlkbhshqgB+6bics1i3nEdZpoRbK9T+tEDmZsE="
+        },
+        {
+          "name": "hostname",
+          "value": "obpceng10odi01-prv.wpdev.mintpress.io"
+        },
+        {
+          "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpodi/fmw/wlserver"
+        },
+        {
+          "name": "westpac.obphost.username",
+          "value": "OBPHOST_OBP"
+        },
+        {
+          "name": "westpac.obphost.password",
+          "value": "{AES2}rFbPWIvnLJSOjr24/bmsUQ=={/IV}T1Y7kCvOZIKcttyvIJVYIdbBjGbN86RxoEiGUOAkqLcA="
+        },
+        {
+          "name": "westpac.obphost.passwordEncrypt",
+          "value": "TBD"
+        },
+        {
+          "name": "westpac.obpbip.analytics.passwordEncrypt",
+          "value": ""
+        },
+        {
+          "name": "westpac.obphost.url",
+          "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))"
+        },
+        {
+          "name": "westpac.obpodi.url",
+          "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_INT_PRIM)))"
+        },
+        {
+          "name": "westpac.pcsm.url",
+          "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))"
+        },
+        {
+          "name": "westpac.analytics.url",
+          "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBA_PRIM)))"
+        },
+        {
+          "name": "westpac.oraclehost.extname",
+          "value": "ORACLE_HOST.OBPHOST_OBP"
+        },
+        {
+          "name": "westpac.oracleinterfacestaging.extname",
+          "value": "ORACLE_INTERFACE_STAGING.OBPHOST_OBP"
+        },
+        {
+          "name": "westpac.oraclehostdb.extname",
+          "value": "ORACLE_HOST_DB.OBPHOST_OBP"
+        },
+        {
+          "name": "westpac.oraclefth.extname",
+          "value": "ORACLE_FTH_HOST.OBPHOST_OBP"
+        },
+        {
+          "name": "westpac.oraclefthstaging.extname",
+          "value": "ORACLE_FTH_STAGING.OBPHOST_OBP"
+        },
+        {
+          "name": "obphost.weblogic.passwordEncrypt",
+          "value": "TBD"
+        },
+        {
+          "name": "jndi.authentication.type",
+          "value": ""
+        },
+        {
+          "name": "jmsQueueOracle.jndi.url",
+          "value": "t3s://obpceng10obh01-prv:18002"
+        },
+        {
+          "name": "extractOutXmlOracle.jndi.url",
+          "value": "t3s://obpceng10obh01-prv:18002?d=#ODI_EXTRACT_JMS.CZ_VN_EXTRACT_XML_TO_DB_SCHEMA_FILE&s=EXTRACT_OUT_XML_ORACLE&JMS_DESTINATION=jms/ExtractMessageSenderQueue-ODI"
+        },
+        {
+          "name": "extractJmsXmlMessage.jndi.url",
+          "value": "t3s://obpceng10obh01-prv:18002?d=#GLOBAL.CZ_EXTRACT_JMS_MESSAGE_SCHEMA_FILE&s=EXTRACT_JMS_XML_MESSAGE&JMS_DESTINATION=jms/ExtractMessageReceiverQueue-ODI"
+        },
+        {
+          "name": "jmsOutboundUpload.jndi.url",
+          "value": "t3s://obpceng10obh01-prv:18002?d=#JMS_PROJECT.CZ_VN_UPLOAD_XML_TO_DB_SCHEMA_FILE&s=UPLOAD_XML_DB&JMS_DESTINATION=jms/MessageSenderQueue-ODI"
+        },
+        {
+          "name": "jmsXmlQueueOracle.jndi.url",
+          "value": "t3s://obpceng10obh01-prv:18002?d=#GLOBAL.CZ_UPLOAD_JMS_MESSAGE_SCHEMA_FILE&s=INBOUND_XML&JMS_DESTINATION=jms/MessageReceiverQueue-ODI"
+        },
+        {
+          "name": "jmsExtractQueueXml.jndi.url",
+          "value": "t3s://obpceng10obh01-prv:18002?d=#ODI_EXTRACT_JMS.CZ_VN_EXTRACT_DB_TO_XML_SCHEMA_FILE&s=ODI_XML&JMS_DESTINATION=jms/ExtractMessageReceiverQueue-ODI"
+        },
+        {
+          "name": "uploadBatchJmsMessage.jndi.url",
+          "value": "t3s://obpceng10obh01-prv.wpdev.mintpress.io:18002?d=#JMS_BATCH_PROJECT.CZ_VN_UPLOAD_DB_TO_XML_SCHEMA_FILE&s=INBOUND_XML&JMS_DESTINATION=jms/MessageReceiverQueue-ODI"
+        },
+        {
+          "name": "obphost.jndi.resource",
+          "value": "jms/ConnectionFactory-ODI"
+        },
+	    {
+          "name": "odi.user.name",
+          "value": "SUPERVISOR"
+        },
+        {
+          "name": "odi.user.password",
+          "value": "{AES2}bQVOsbOkZb/9/VNnxAUfwQ=={/IV}TJf4J1syC0SxSTbGrhkU5kQ=="
+        },
+        {
+          "name": "work.repo.name",
+          "value": "workrep1"
+        },
+        {
+          "name": "odi.agent",
+          "value": "OBP_J2EE_AGENT"
+        },
+        {
+          "name": "java.home.path",
+          "value": "/oracle/app/binaries/obpodi/java"
+        },
+        {
+          "name": "host.managedserver.1.port",
+          "value": "18002"
+        },
+        {
+          "name": "host.ip",
+          "value": "obpceng10obh.wpdev.mintpress.io"
+        },
+        {
+          "name": "odi.managedserver.1.port",
+          "value": "18002"
+        },
+        {
+          "name": "odi.ip",
+          "value": "obpceng10odi.wpdev.mintpress.io"
+        },
+        {
+          "name": "odi.oracle.home",
+          "value": "/oracle/app/binaries/obpodi/fmw/odi"
+        },
+        {
+          "name": "odi.landingZone.location",
+          "value": "/oracle/app/batch/odi"
+        },
+        {
+          "name": "obp.batch.location",
+          "value": "/oracle/app/batch/odi/scripts"
+        },
+        {
+          "name": "FCServerWithPort",
+          "value": "https://obpceng10obh.wpdev.mintpress.io:18002"
+        },
+        {
+          "name": "fc.log.dir",
+          "value": "/oracle/app/logs/batch_logs"
+        },
+
+        {
+          "name": "java.cert.path",
+          "value": "/oracle/app/runtime/eng10/certs/WBCTrust.jks"
+        },
+	    {
+          "name": "https.host.ip",
+          "value": "https://obpceng10obh.wpdev.mintpress.io"
+        },
+        {
+          "name": "https.odi.ip",
+          "value": "https://obpceng10odi.wpdev.mintpress.io"
+        },
+        {
+          "name": "odi.integration.user.name",
+          "value": "SA_BATCH_OBP_USER"
+        },
+        {
+          "name": "odi.integration.user.password",
+          "value": "{AES2}p1IeFa67UjxpjTIBDJ7Azg=={/IV}TH1TB5I5cCUd2KOzs4oziY66CLCfiCppsXdRsphnVj4U="
+        },
+        {
+          "name": "valex.client.id",
+          "value": "VXCL-12495"
+        },
+        {
+          "name": "odi.agent.home",
+          "value": "/oracle/app/binaries/obpodi/fmw/odi/agent"
+        },
+        {
+          "name": "odi.basePath",
+          "value": "/oracle/app/binaries/obpodi"
+        },
+        {
+          "name": "party.funder.id",
+          "value": "VXF-167"
+        },
+        {
+          "name": "odi.agent.home",
+          "value": "/oracle/app/binaries/obpodi/fmw/odi/agent"
+        },
+        {
+          "name": "westpac.obphost.password",
+          "value": "{AES2}Aps9aS6PpYswAwyzsYIFfg=={/IV}TJaeUeHCgXsf4egT1cgT2Jsunfrdt0Jrp3Mx2E6R4POM="
+        },
+        {
+          "name": "obpui.url",
+          "value": "https://obpceng10obu.wpdev.mintpress.io:18002"
+        },
+        {
+          "name": "host.jms.ip",
+          "value": "obpceng10obh01-prv.wpdev.mintpress.io"
+
+        },
+        {
+
+          "name": "odi.jms.ip",
+          "value": "obpceng10odi01-prv.wpdev.mintpress.io"
+
+        },
+        {
+          "name": "host.jms.endpointurl",
+          "value": "t3s://obpceng10obh.wpdev.mintpress.io:18002"
+        },
+        {
+          "name": "odi.jms.endpointurl",
+          "value": "t3s://obpceng10odi01-prv.wpdev.mintpress.io:18002"
+        },
+        {
+          "name": "OSBServerWithPort",
+          "value": "https://obpceng10osb.wpdev.mintpress.io:18002"
+        },
+        {
+          "name": "IPMFRIENDLYURL",
+          "value": "https://obpceng10doc.wpdev.mintpress.io:18302"
+        },
+        {
+          "name": "OAMISSSO",
+          "value": "false"
+        },
+        {
+          "name": "westpac.erddb.passwordencrypt",
+          "value": ""
+        },
+        {
+          "name": "westpac.erd.dburl",
+          "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ohcr1301-scan.ohp.westpac.com.au)(PORT=1401))(CONNECT_DATA=(SERVICE_NAME=EPSDEV1_SUPPORT)))"
+        },
+        {
+          "name": "odi.ipm.integration.user.name",
+          "value": "SA_OBP_IPM_MANAGE_USER"
+        },
+        {
+          "name": "odi.ipm.integration.user.password",
+          "value": "{AES2}LfjGFLqygQwZD8CZ1XhaDQ=={/IV}TCKjNDjqMPuEgrvPRoAyQ8yeWEi8iuh6+UjCCkjHfRCE="
+        },
+        {
+          "name": "cwalletpassword",
+          "value": "{AES2}bEvlyZhC9yucj9L11eb3Wg=={/IV}TDPgQlbkHaBYM2xedhDNzpnlSWKq+bKGuwh8LwpN/dp8="
+        }
+  ]
+}

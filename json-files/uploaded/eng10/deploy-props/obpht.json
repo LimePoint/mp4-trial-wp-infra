@@ -1,0 +1,100 @@
+{
+  "/getDeploymentTargets.json?environment=LOCAL": [
+    {
+      "name": "DefaultServer-soa",
+      "type": "soa",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17002"
+        },
+        {
+          "name": "protocol",
+          "value": "http"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "SOA Server"
+        }]
+    },
+ {
+      "name": "DefaultServer-osb",
+      "type": "osb",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "7001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "OSB Server"
+        }]
+    },
+    {
+      "name": "DefaultServer-admin",
+      "type": "weblogic",
+      "properties": [
+        {
+          "name": "targets",
+          "value": "DefaultServer"
+        },
+        {
+          "name": "port",
+          "value": "17001"
+        },
+        {
+          "name": "protocol",
+          "value": "t3"
+        },
+        {
+          "name": "descriptiveName",
+          "value": "Admin Server"
+        }]
+    }],
+    "/getDeploymentProperties.json?environment=LOCAL": [
+        {
+          "name": "user",
+          "value": "weblogic"
+        },
+        {
+          "name": "password",
+          "value": "{AES2}PDnXCwEEYRfne0hDENiCsQ=={/IV}TvpLzU3stoGmR8rvnms5yParbK8hC6hEPcYd8wGaHMTU="
+        },
+        {
+          "name": "hostname",
+          "value": "obpceng10soa01-prv.wpdev.mintpress.io"
+        },
+        {
+    "name": "weblogicHome",
+          "value": "/oracle/app/binaries/obpsoa/fmw/wlserver"
+         },
+        {
+          "name": "soaHome",
+          "value": "/oracle/app/binaries/obpsoa/fmw/soa"
+        },
+        {
+          "name": "SOA.DB.URL",
+          "value": "obpceng10db-prv.wpdev.mintpress.io:1521/CBCD3_SOA_PRIM"
+        }, 
+        {
+          "name": "SOA.DB.USERNAME",
+          "value": "obpsoa_opss"
+        },
+        {
+          "name": "SOA.DB.PASSWORD",
+          "value": "{AES2}mqkrsZX9vqktazLO+3DyMQ=={/IV}TSNqc39Uq/9lMhAtelI6/TjnwzHYvWR1oiDXr2MKPQbI="
+        }
+    ]
+}
