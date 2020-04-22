@@ -1,0 +1,2101 @@
+{
+  "name": "ENG10_CSH_OBP_RELEASE_33_029_00_V_1",
+  "description": null,
+  "params": {
+  },
+  "plans": [
+    {
+      "name": "Step 0 -- Disable All Plans",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Disable All Plans",
+                  "params": {
+                    "argument": "/home/mintpress/mintpress/bin/disablePlans.rb ENG10CSHOBPRELEASE3302900V1",
+                    "environmentVariables": "",
+                    "label": "ruby",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.command",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 1 -- Setup MintDeploy",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Mint Deploy - obpceng10oam01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10oam01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10oam01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10oam01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10oam01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10oam01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Mint Deploy - obpceng10obh01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10obh01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Mint Deploy - obpceng10obu01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10obu01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obu01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obu01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obu01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obu01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Mint Deploy - obpceng10soa01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10soa01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Mint Deploy - obpceng10bip01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10bip01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10bip01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10bip01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10bip01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10bip01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Mint Deploy - obpceng10doc01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10doc01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10doc01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10doc01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10doc01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10doc01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Mint Deploy - obpceng10odi01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10odi01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Mint Deploy - obpceng10osb01.wpdev.mintpress.io",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Install and Configure MintDeploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n    echo \"--- Configuring on host obpceng10osb01.wpdev.mintpress.io ---\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10osb01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; wget -q --no-check-certificate ${bamboo.ARTIFACTORY_URL}/au/com/westpac/csh/R12/mintpress/mint-deploy/1.0.0/mint-deploy-1.0.0.sh -O mint-deploy.sh'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10osb01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries; bash mint-deploy.sh ${bamboo.DEPLOY_HOME} ${bamboo.ARTIFACTORY_URL} ${bamboo.JAVA_VERSION} ${bamboo.GRADLE_VERSION} ${bamboo.MINTDEPLOY_VERSION}'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10osb01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -f /oracle/app/binaries/mint-deploy.sh;cd /oracle/app/binaries; if [ ! -e java8 ]; then tar -xvf /oracle/stage/jdk/jdk-8u102-linux-x64.tar.gz;mv jdk1.8.0_102 java8;fi;'\";\n    ssh   -o  UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10osb01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'cd /oracle/app/binaries; chef-client -c /home/oracle/chef/client.rb -o recipe[csh-deployments::obp-deploy-prop] -l info'\";\n echo \"------------------------------\";",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "DEPLOY_HOME": "/oracle/app/binaries/deployments",
+        "GRADLE_VERSION": "2.1.14",
+        "JAVA_VERSION": "1.7.85",
+        "MINTDEPLOY_VERSION": "9.0.3",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- DB Incremental",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Run Day Zero SQL",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/obh_exports.sh;. /oracle/app/binaries/deployments/mintdeploy/envScripts/obh_exports.sh; ${bamboo.GRADLE_HOME}/bin/gradle -b dbBCDayZero.gradle -PmintDeployHome=../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH1} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": false
+                },
+                {
+                  "name": null,
+                  "description": "Download Config Tool",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b hostdbDwnld.gradle -PhostdbVersion=${bamboo.CTVERSION} -Pobphost.hostname=${bamboo.OBPHOSTNAME} -Pobphost.port=${bamboo.OBPHOSTPORT} -Pfmwhome=${bamboo.OBPHOSTPATH} -PCONFIGTOOL_USERNAME=${bamboo.NETIQUSERNAME} -PDB.URL=${bamboo.HOSTDBURL} -PDB.USERNAME=${bamboo.HOSTDBUSERNAME} -PfetchTargets=true -PenvName=LOCAL -PENVNAME=${bamboo.ENVNAME} -Pdbclient.home=${bamboo.DBCLIENTPATH} -PDB.JAVA_HOME=${bamboo.JAVA_HOME} -PDB.DEPLOYDIR=${bamboo.HOSTDBPATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PhostDBPath=${bamboo.HOSTDBPATH} -g ../../../cache --refresh-dependencies deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Download DB Incr Artefact",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b dbConfigDwnld.gradle -PdbConfigVersion=${bamboo.DBCONFIGVERSION} -PconfigProviderPath= -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -g ../../../cache deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Execute the DB Incremental",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; echo \\\"HOSTDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/obh_exports.sh;. /oracle/app/binaries/deployments/mintdeploy/envScripts/obh_exports.sh; ${bamboo.GRADLE_HOME}/bin/gradle -b dbConfigExec.gradle -PmintDeployHome=../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=${bamboo.SCRIPT} -PENVNAME=${bamboo.ENVNAME} -PBUILDDATE=${bamboo.BUILDDATE} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PEXECTYPE=deploy-db deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Adding Customisation to SQL",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_ODI_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b odiSQLCustom.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=../../deploymentProperties/eng10/obpodi.json deploy clean -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "DB SQL to Update Paths",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; echo \\\"HOSTDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;. /oracle/app/binaries/deployments/mintdeploy/envScripts/obh_exports.sh; cd ${bamboo.OBP_ODI_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b odiDBTask.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=../../deploymentProperties/eng10/obpdb.json deploy clean -s;chef-client -c /home/oracle/chef/client.rb -o 'recipe[obp-environmint-custom::obp-override-environment-variables]' -l info'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "BUILDDATE": "CSH-OBP-release_33-029-00",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../deploymentProperties/eng10/obpbc.json",
+        "CONFIGPROVIDERPATH1": "../deploymentProperties/eng10/obpdb.json",
+        "CTVERSION": "CSH-OBP-release_33-029-00",
+        "DBCLIENTPATH": "/oracle/app/binaries/obpobh/dbclient",
+        "DBCONFIGVERSION": "CSH-OBP-release_33-029-00",
+        "DBSTRING": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
+        "ENVNAME": "ENG10",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "HOSTDBPATH": "/oracle/app/binaries/deployments/hostdb/host_db",
+        "HOSTDBURL": "obpceng10db-prv.wpdev.mintpress.io:1521/CBCD3_OBP_PRIM",
+        "HOSTDBUSERNAME": "OBPHOST_OBP",
+        "JAVA_HOME": "/oracle/app/binaries/java8",
+        "NETIQUSERNAME": "SA_CONFIGUPLOADER_OBP_USER",
+        "OBPHOSTNAME": "obpceng10obh01-prv.wpdev.mintpress.io",
+        "OBPHOSTPATH": "/oracle/app/binaries/obpobh/fmw",
+        "OBPHOSTPORT": "17002",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpBusinessConfig",
+        "OBP_ODI_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpOdiDeploy",
+        "OBP_NODE_1": "obpceng10obh01.wpdev.mintpress.io",
+        "SCRIPT": "./scripts/dbIncremental.sh",
+        "debug": "false",
+        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 1-2 -- Shutdown Services",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Shutting down Managed Server",
+          "description": "Shutting down Managed Server",
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Shutting down UI Managed Server",
+              "description": "Shutting down UI Managed Server",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Shutdown UI",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obu01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME};${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpui.json -PscriptToRun=shutdown-obpui.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            },
+            {
+              "name": "Shutting down HT Managed Server",
+              "description": "Shutting down HT Managed Server",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Shutdown HT",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpht.json -PscriptToRun=shutdown-obpht.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            },
+            {
+              "name": "Shutting down Host Managed Servers",
+              "description": "Shutting down Host Managed Servers",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Shutdown Host",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obphost.json -PscriptToRun=shutdown-obphost.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            },
+            {
+              "name": "Shutting down ODI Managed Servers",
+              "description": "Shutting down ODI Managed Servers",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Shutdown ODI",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpodi.json -PscriptToRun=shutdown-obpodi.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
+        "SHUTDOWN_COMPONENTS": "humanTask,documaker,odi,host,ui",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy Documaker",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Deploy Node 1",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Download Documaker DayZero Setup and Copy to the destinations",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroDep.gradle -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PdocVersion=${bamboo.DOCVERSION} -g ../../cache --refresh-dependencies -Padminuser=${bamboo.ADMINUSER} -Paslineuser=${bamboo.ASLINEUSER} -Podee_home=${bamboo.ODEE_HOME} -PipmServerName=${bamboo.IPMServName} -PipmPort=${bamboo.IPMPort} -PipmApplicationName=${bamboo.IPMAppName} -PipmUsername=${bamboo.IPMUsername} -PdocAppWSDLURL=${bamboo.docAppWSDLURL} -PdocAppWSDLUser=${bamboo.docAppWSDLUSer} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Run Day Zero DMKR_Admin SQL",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; echo \\\"DMKRDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/doc_exports.sh; . /oracle/app/binaries/deployments/mintdeploy/envScripts/doc_exports.sh; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroDb.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                },
+                {
+                  "name": null,
+                  "description": "Run Day Zero DMKR Asline SQL",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; echo \\\"DMKRDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/doc_exports.sh; . /oracle/app/binaries/deployments/mintdeploy/envScripts/doc_exports.sh; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroDbAsline.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                },
+                {
+                  "name": null,
+                  "description": "Execute JPS Query ",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docDayZeroJPSQuery.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy  clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                },
+                {
+                  "name": null,
+                  "description": "Copy Updated Docclient and DocServere XML Files",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b docXMLTask.gradle -PfetchTargets=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PenvName=LOCAL -PmintDeployHome=../../../mintdeploy deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Deploy Doc Master files",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b docExtDep.gradle -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PdocVersion=${bamboo.DOCVERSION} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -g ../../cache deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Run DMKR_ASLINE Sql Scripts",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; echo \\\"DMKRDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/doc_exports.sh; . /oracle/app/binaries/deployments/mintdeploy/envScripts/doc_exports.sh; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b docDBTask.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                },
+                {
+                  "name": null,
+                  "description": "Run Deploy MRL Script",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b docScript.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=${bamboo.SCRIPT} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "ADMINUSER": "dmkr_admin",
+        "ASLINEUSER": "dmkr_asline",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpdoc.json",
+        "DBSTRING": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
+        "DOCVERSION": "CSH-OBP-release_33-029-00",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "IPMAppName": "MAIN",
+        "IPMPort": "18102",
+        "IPMServName": "obpceng10ipm.wpdev.mintpress.io",
+        "IPMUsername": "obpipm_admin",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpDocMDep",
+        "OBP_NODE_1": "obpceng10doc01.wpdev.mintpress.io",
+        "ODEE_HOME": "/oracle/app/binaries/obpdoc/fmw/odee_12",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false",
+        "SCRIPT": "./scripts/docuScript.sh",
+        "docAppWSDLURL": "https://obpceng10obh.wpdev.mintpress.io:18002/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi?WSDL",
+        "docAppWSDLUSer": "SA_DOCUMAKER_OBP_MANAGE_USER"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy OSB Cemli using Properties",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Download OSB Ear",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b downloadOSBArtifact.gradle -g ../../../cache -PuseDeployConfig=true -PartifactoryUrl=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PenvName=LOCAL -PosbVersion=${bamboo.OSBVERSION} --refresh-dependencies deploy clean -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Run Deployment",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n sh /backup/cont-delivery/osbproperties.sh ${bamboo.ENVNAME} ${bamboo.OBP_NODE_1}\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b osbDeployScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true  -PenvName=LOCAL -PmintDeployHome=../../../mintdeploy/ deploy clean -i -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obposb.json",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpOSBDeploy",
+        "OBP_NODE_1": "obpceng10osb01.wpdev.mintpress.io",
+        "OSBVERSION": "CSH-OBP-release_33-029-00",
+        "ENVNAME": "ENG10",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy OAM Policy",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Download OAM Artifact",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b oamArtifactDwld.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PsecurityVersion=${bamboo.CEMLIVERSION} -PfetchTargets=true -PenvName=LOCAL deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Deploy OAM Policy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b oamScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PenvName=LOCAL -PmintDeployHome=../../ deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpoam.json",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpOAMDeploy",
+        "OBP_NODE_1": "obpceng10oam01.wpdev.mintpress.io",
+        "debug": "false",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "CEMLIVERSION": "CSH-OBP-release_33-029-00",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy OBP Access Policies",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Deploy OES Policies",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\necho '--- Downloading PolicyStore from Artifactory on ${bamboo.OES_HOSTNAME} ---';\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; rm -rf /oracle/app/binaries/pit; mkdir -p /oracle/app/binaries/pit/PolicyStoreSetup; cd /oracle/app/binaries/pit/PolicyStoreSetup; wget --no-check-certificate ${bamboo.ARTIFACTORY_URL}/${bamboo.CEMLI_RELEASE_PATH}/extensionspolicystoresetup/${bamboo.POLICY_VERSION}/extensionspolicystoresetup-${bamboo.POLICY_VERSION}.tar.gz -O PolicyStoreSetup.tar.gz'\";\necho '--- Setting up PolicyStore on ${bamboo.OES_HOSTNAME} ---';\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries/pit/PolicyStoreSetup; tar -zxvf PolicyStoreSetup.tar.gz'\";\necho '--- Starting Policy Import on ${bamboo.OES_HOSTNAME} ---';\nssh    -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries/pit/PolicyStoreSetup/UtilityConfig; unzip -o UIComponents_new.zip'\";\necho '---Executing gradle for customisation and execution of PolicyStore---';\nssh    -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ;   cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/* ; ${bamboo.GRADLE_HOME}/bin/gradle -b obpAccessPolicyDeploy.gradle -PmintDeployHome=/oracle/app/binaries/deployments/mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpht.json deploy clean -s'\";\nssh    -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OES_HOSTNAME} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd /oracle/app/binaries/pit/PolicyStoreSetup; chmod 755 seedFreshPolicyStore.sh; ./seedFreshPolicyStore.sh'\";\necho '--- Finished Policy Import on ${bamboo.OES_HOSTNAME} ---';",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "CEMLI_RELEASE_PATH": "au/com/westpac/csh/R19/release_33",
+        "GRADLE_VERSION": "2.1.14",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpht.json",
+        "JAVA_VERSION": "1.7.85",
+        "OES_HOSTNAME": "obpceng10soa01.wpdev.mintpress.io",
+        "POLICY_VERSION": "CSH-OBP-release_33-029-00",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpAccessPoliciesDeploy",
+        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "ENVNAME": "ENG10",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy OBP BIP Reports",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Download Reports",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache;${bamboo.GRADLE_HOME}/bin/gradle -b bipDown.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.PRODUCT_RELEASE_PATH} -PbiHome=${bamboo.BIHOME} -PbipVersion=${bamboo.BIVERSION} -g ../../cache deploy clean -i -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Execute the Reports upload",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b bipScript.gradle -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PbipPubHome=${bamboo.BIHOME} -PenvName=LOCAL -PmintDeployHome=../../ deploy clean -i -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "BIHOME": "/oracle/app/binaries/obpbip/fmw/bi",
+        "BIVERSION": "CSH-OBP-release_33-029-00",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpbip.json",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpBIPDeploy",
+        "OBP_NODE_1": "obpceng10bip01.wpdev.mintpress.io",
+        "PRODUCT_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "debug": "false",
+        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy OBP Host",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Deploy Node 1",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Deploy OBP Cemli Node 1",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;/oracle/app/binaries/deployments/mintdeploy/envScripts/applyHostJarSed.sh ;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b obpHostCemliDeploy.gradle -g ../../cache -PhostVersion=${bamboo.CEMLI_HOST_VERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=${bamboo.SERVERNAME} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Execute Cemli WLST",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_EXTENSION_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -g ../../cache deploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../../../mintdeploy/ -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "description": "PCSM Deployment Node1",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_PCSMDEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -b pcsmScript.gradle -g ../../cache -PuseDeployConfig=true -PproductHome=${bamboo.PRODUCT_HOME} -PartifactID=${bamboo.PCSM_VERSION} -PpcsmArtifactoryURL=${bamboo.pcsmArtifactoryURL} -PreleasePath=${bamboo.PCSM_RELEASE_PATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../.. -PfetchTargets=true -PenvName=LOCAL -PserverName=${bamboo.SERVERNAME}  deploy clean -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CEMLI_HOST_VERSION": "CSH-OBP-release_33-029-00",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obphost.json",
+        "DOMAIN_HOME": "/oracle/app/runtime/obpobh/domains/obphost_domain",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpHostDeploy",
+        "OBP_EXTENSION_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpHostWlstDeploy",
+        "OBP_NODE_1": "obpceng10obh01.wpdev.mintpress.io",
+        "OBP_PCSMDEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpPCSMDeploy",
+        "PCSM_VERSION": "R1.9_545",
+        "PRODUCT_HOME": "/oracle/app/binaries/obpobh/fmw",
+        "PCSM_RELEASE_PATH": "Verified",
+        "SERVERNAME": "obphost_server1",
+        "SERVERNAME2": "obphost_server2",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false",
+        "pcsmArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/A007BD_Powercurve"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy OBP HT",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Deploy Node 1",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "OBP HT Cemli Node 1",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;/oracle/app/binaries/deployments/mintdeploy/envScripts/applyHtJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf /tmp/cache ;${bamboo.GRADLE_HOME}/bin/gradle -b obpHTCemliDeploy.gradle -g /tmp/cache -PcemliHTVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PdeployProperty.serverName=${bamboo.SERVERNAME} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Execute WLST for CZ Apps",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_EXTENSION_HOME};${bamboo.GRADLE_HOME}/bin/gradle -g /tmp/cache --refresh-dependencies deploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../../../mintdeploy/ -i -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CEMLIVERSION": "CSH-OBP-release_33-029-00",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpht.json",
+        "DOMAIN_HOME": "/oracle/app/runtime/obpsoa/domains/obpsoa_domain",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpHTDeploy",
+        "OBP_EXTENSION_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpHTWlstDeploy",
+        "OBP_NODE_1": "obpceng10soa01.wpdev.mintpress.io",
+        "PRODUCT_HOME": "/oracle/app/binaries/obpsoa/fmw",
+        "SERVERNAME": "obphumantask_server1",
+        "SERVERNAME2": "obphumantask_server2",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy OBP UI",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Deploy UI Node 1",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "OBP Cemli Deploy Node 1",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;/oracle/app/binaries/deployments/mintdeploy/envScripts/applyUIJarSed.sh;cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b obpUICemliDeploy.gradle -g ../../cache -PuiVersion=${bamboo.CEMLIVERSION} -PuseDeployConfig=true -PdeployProperty.productHome=${bamboo.PRODUCT_HOME} -PdeployProperty.domainHome=${bamboo.DOMAIN_HOME} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -Plocalpath=${bamboo.LOCALPATH} -PbaseDir=${bamboo.BASEDIR} -PbaseURL=${bamboo.BASEURL} -PdeployProperty.serverName=${bamboo.SERVERNAME} deploy clean -s'\"\n",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Execute WLST Script to Deploy cz apps",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_EXTENSION_HOME};${bamboo.GRADLE_HOME}/bin/gradle -g ../../../cache --refresh-dependencies deploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../../../mintdeploy/ -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "BASEDIR": "/oracle/app/binaries/obpobu/fmw/obpinstall/obp/obp.ui.domain/userfiles",
+        "BASEURL": "https://obpceng10obu.wpdev.mintpress.io:18002/com.ofss.fc.ui.view/userfiles/",
+        "CEMLIVERSION": "CSH-OBP-release_33-029-00",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpui.json",
+        "DOMAIN_HOME": "/oracle/app/runtime/obpobu/domains/obpui_domain",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "LOCALPATH": "/oracle/app/binaries/obpobu/fmw/obpinstall/obp/",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpUIDeploy",
+        "OBP_EXTENSION_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpUIWlstDeploy",
+        "OBP_NODE_1": "obpceng10obu01.wpdev.mintpress.io",
+        "PRODUCT_HOME": "/oracle/app/binaries/obpobu/fmw",
+        "SERVERNAME": "obpui_server1",
+        "SERVERNAME2": "obpui_server2",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy SOA Dynamic Group Approval",
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Deploy Node 1",
+              "description": "",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "description": "Deploy SOA Dynamic Approval Jar and update Manifest",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b obpSoaDynamicApproval.gradle -g ../../cache -PsoaVersion=${bamboo.CEMLI_SOA_DYNMC_APPG_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CEMLI_SOA_DYNMC_APPG_VERSION": "CSH-OBP-release_33-029-00",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpSoaDeploy",
+        "OBP_NODE_1": "obpceng10soa01.wpdev.mintpress.io",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false"
+      }
+    },
+    {
+      "name": "Step 2 -- Deploy SOA Incremental Deploy",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Deploy SOA Metadata",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nfor i in ${bamboo.METADATA_VERSION}; do\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME};rm -rf ../../../cache;  ${bamboo.GRADLE_HOME}/bin/gradle -b deployMetadata.gradle -g ../../../cache -PuseDeployConfig=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PfetchTargets=true -PenvName=LOCAL -PmetadataVersion=${bamboo.METADATA_VERSION} -PbankCode=${bamboo.BANK_CODE} -PbankTransactionCode=${bamboo.BANK_TRANSACTION_CODE} -PbankTargetUnit=${bamboo.BANK_TARGET_UNIT} -PfcServer=${bamboo.FCSERVER} -PsoaServer=${bamboo.SOASERVERWITHPORT} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} --refresh-dependencies deploy clean'\"\ndone;",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Download Extension Artefact",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\necho \"Downloading the soa extensions version ${prodVersion} from artifactory\"\n\tssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME1}; rm -rf ../../../cache; ${bamboo.GRADLE_HOME}/bin/gradle -b soaExtenComp.gradle -g ../../../cache -PuseDeployConfig=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH1} -PfetchTargets=true -PenvName=LOCAL --refresh-dependencies -PsoaExtensionsVersion=${bamboo.SOA_COMPOSITE_VERSION} -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} deploy clean -s'\"\n\t",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Run SOA Incremental",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\n\techo \"Execting the soa incremental Script\"\n\tssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME1}; chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b soaIncrScript.gradle -g ../../../cache -PuseDeployConfig=true -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH1} -PfetchTargets=true -PenvName=LOCAL --refresh-dependencies -PmintDeployHome=../../../mintdeploy deploy clean -s'\"\n",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "BANK_CODE": "03",
+        "BANK_TARGET_UNIT": "PBWP",
+        "BANK_TRANSACTION_CODE": "2006",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../../deploymentProperties/eng10/obpht.json",
+        "CONFIGPROVIDERPATH1": "../../deploymentProperties/eng10/obpht.json",
+        "FCSERVER": "https://obpceng10obh.wpdev.mintpress.io:18002",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "METADATA_VERSION": "CSH-OBP-release_33-029-00",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpSoaDeploy/obpSoaCompTask",
+        "OBP_DEPLOY_HOME1": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpSoaDeploy",
+        "OBP_NODE_1": "obpceng10soa01.wpdev.mintpress.io",
+        "PRODUCT_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "SOASERVERWITHPORT": "https://obpceng10soa.wpdev.mintpress.io:18002",
+        "SOA_COMPOSITE_VERSION": "CSH-OBP-release_33-029-00",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false",
+        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Deploy BAM",
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Deploy Node 1",
+              "description": "",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "description": "Start BAM",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=start-obpbam.py deploy clean -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "description": "Download BAM artifact and Deploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/*; rm -rf ../../bam_cache; ${bamboo.GRADLE_HOME}/bin/gradle -b obpBAMDownload.gradle -g ../../bam_cache -PbamVersion=${bamboo.CEMLI_BAM_VERSION} -PuseDeployConfig=true -PartifactoryURL=${bamboo.cemliArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH}  deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CEMLI_BAM_VERSION": "CSH-OBP-release_33-029-00",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpBAMDeploy",
+        "OBP_NODE_1": "obpceng10soa01.wpdev.mintpress.io",
+        "OBP_STARTSCRIPT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpbam.json",
+        "debug": "false"
+      }
+    },
+    {
+      "name": "Step 2 -- Deploy ODI Batch",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "description": "ODI Batch Scripts Download",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "url=${bamboo.cemliArtifactoryURL}/`echo ${bamboo.CEMLI_RELEASE_PATH}|sed -r \"s|\\.|/|g\"`/extensionsobpscripts/${bamboo.OBPSCRIPTSVERSION}/extensionsobpscripts-${bamboo.OBPSCRIPTSVERSION}.zip\nif curl -k --output /dev/null --silent --head --fail \"$url\"; then\n  echo \"Artefact exists: $url\"\nelse\n  echo \"Artefact does not exist: $url\"\n  exit 1\nfi\nset -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; set -e ; source /home/oracle/.bash_profile ;  mkdir -p /oracle/app/batch/odi/scripts;cd /oracle/app/batch/odi;rm -rf /oracle/app/batch/odi/scripts_bkp;mkdir -p /oracle/app/batch/odi/scripts_bkp; cp -r /oracle/app/batch/odi/scripts /oracle/app/batch/odi/scripts_bkp/;curl -k ${url} -o /tmp/extensionsobpscripts.zip;cd /oracle/app/batch/odi/scripts; rm -rf * ;unzip -o /tmp/extensionsobpscripts.zip -d /oracle/app/batch/odi/scripts; cd /oracle/app/batch/odi/scripts; ls -ltrc; chmod -R 755 *; ls -ltrc'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "description": "Apply Customisation to Downloaded files",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; set -e ; source /home/oracle/.bash_profile ;  cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/* ; ${bamboo.GRADLE_HOME}/bin/gradle -b odiExpressDep.gradle -PmintDeployHome=/oracle/app/binaries/deployments/mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s;/tmp/odiExpress/replaceBatchTokens.sh;/tmp/odiExpress/replaceOdiTopologyTokens.sh; rm -rf /tmp/odiExpress/*'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "ODI Batch CWallet Creation",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME};chmod 755 scripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b odiCWallet.gradle -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PuseDeployConfig=true -PmintDeployHome=../../../mintdeploy deploy clean -s; [ -f /oracle/app/batch/cwalletGenerator/config/Wallet.properties ] && > /oracle/app/batch/cwalletGenerator/config/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Remove wallet properties after deploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ;  [ -f /oracle/app/batch/cwalletGenerator/config/Wallet.properties ] && > /oracle/app/batch/cwalletGenerator/config/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet/Wallet.properties;[ -f /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties ] && > /oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config/cwallet_bkp/Wallet.properties'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpodi.json",
+        "DBSTRING": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "JAVA_HOME": "/oracle/app/binaries/obpodi/java",
+        "OBPSCRIPTSVERSION": "CSH-OBP-release_33-029-00",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/odiExpress",
+        "OBP_HOST_NODE": "obpceng10obh01.wpdev.mintpress.io",
+        "OBP_NODE_1": "obpceng10odi01.wpdev.mintpress.io",
+        "OBP_STARTSCRIPT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 2 -- Odi Express Deployment",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Shutdown ODI",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpodi.json -PscriptToRun=shutdown-obpodi.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                },
+                {
+                  "description": "Download Topology files",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "url=${bamboo.cemliArtifactoryURL}/`echo ${bamboo.CEMLI_RELEASE_PATH}|sed -r \"s|\\.|/|g\"`/extensionsodi/${bamboo.ODIVERSION}/extensionsodi-${bamboo.ODIVERSION}.zip\nif curl -k --output /dev/null --silent --head --fail \"$url\"; then\n  echo \"Artefact exists: $url\"\n  echo \"Downloading Artefact ...\"\n  curl -k \"$url\" -o /tmp/extensionsodi.zip\nelse\n  echo \"Artefact does not exist: $url\"\n  exit 1\nfi\nset -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; set -e ; source /home/oracle/.bash_profile ;  cd ${bamboo.OBP_DEPLOY_HOME};rm -rf topologyFolder;mkdir topologyFolder;curl -k ${url} -o /tmp/extensionsodi.zip;cd topologyFolder;unzip /tmp/extensionsodi.zip'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "description": "Apply Customisation to Downloaded files",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; set -e ; source /home/oracle/.bash_profile ;  cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts/* ; ${bamboo.GRADLE_HOME}/bin/gradle -b odiExpressDep.gradle -PmintDeployHome=/oracle/app/binaries/deployments/mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} deploy clean -s;/tmp/odiExpress/replaceBatchTokens.sh;/tmp/odiExpress/replaceOdiTopologyTokens.sh; rm -rf /tmp/odiExpress/*'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "description": "Importing Topologies and Non CSA Scenarios",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; set -e ; source /home/oracle/.bash_profile ;  cd ${bamboo.OBP_DEPLOY_HOME}; sed -i \"s/WORKREP_CSA/workrep1/g\" config.properties; java -cp /oracle/app/binaries/obpodi/fmw/wlserver/server/lib/weblogic.jar:/oracle/app/binaries/obpodi/fmw/odi/sdk/lib/oracle.odi-sdk-jse.jar:.:odiExpress.jar ImportODITopologies ./topologyFolder/topology/servers ./topologyFolder/topology/contexts ./topologyFolder/ODI_TXN/scenarios;'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "description": "Importing CSA Scenarios",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; set -e ; source /home/oracle/.bash_profile ;  cd ${bamboo.OBP_DEPLOY_HOME}; sed -i \"s/workrep1/WORKREP_CSA/g\" config.properties; java -cp /oracle/app/binaries/obpodi/fmw/wlserver/server/lib/weblogic.jar:/oracle/app/binaries/obpodi/fmw/odi/sdk/lib/oracle.odi-sdk-jse.jar:.:odiExpress.jar ImportODITopologies ./topologyFolder/ODI_CSA/scenarios;'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "TNS ORA Copy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; echo \\\"HOSTDB=${bamboo.DBSTRING}\\\" > /home/oracle/tnsnames.ora;chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*;. /oracle/app/binaries/deployments/mintdeploy/envScripts/copyTNSOra.sh;'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Odi Agent Ear Deploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME};${bamboo.GRADLE_HOME}/bin/gradle -b odiDepApps.gradle -g ../../../cache --refresh-dependencies deploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PmintDeployHome=../../../mintdeploy/ -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Start up ODI",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpodi.json -PscriptToRun=start-obpodi.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpodi.json",
+        "DBSTRING": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "JAVA_HOME": "/oracle/app/binaries/obpodi/java",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/odiExpress",
+        "OBP_HOST_NODE": "obpceng10obh01.wpdev.mintpress.io",
+        "OBP_NODE_1": "obpceng10odi01.wpdev.mintpress.io",
+        "ODIVERSION": "CSH-OBP-release_33-029-00",
+        "OBP_STARTSCRIPT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
+        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 3 -- Business Config",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Default Stage",
+          "description": null,
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Default Job",
+              "description": null,
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Download Config Tool",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../../cache ;${bamboo.GRADLE_HOME}/bin/gradle -b hostdbDwnld.gradle -PhostdbVersion=${bamboo.CTVERSION} -Pobphost.hostname=${bamboo.OBPHOSTNAME} -Pobphost.port=${bamboo.OBPHOSTPORT} -Pfmwhome=${bamboo.OBPHOSTPATH} -PCONFIGTOOL_USERNAME=${bamboo.NETIQUSERNAME} -PDB.URL=${bamboo.HOSTDBURL} -PDB.USERNAME=${bamboo.HOSTDBUSERNAME} -PfetchTargets=true -PenvName=LOCAL -PENVNAME=${bamboo.ENVNAME} -Pdbclient.home=${bamboo.DBCLIENTPATH} -PDB.JAVA_HOME=${bamboo.JAVA_HOME} -PDB.DEPLOYDIR=${bamboo.HOSTDBPATH} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PhostDBPath=${bamboo.HOSTDBPATH} -g ../../../cache --refresh-dependencies deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Startup OBP Host",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obphost.json -PscriptToRun=start-obphost.py deploy clean -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Download Business Config Artefact",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; rm -rf ../../cache ; ${bamboo.GRADLE_HOME}/bin/gradle -b businessCfgDwnld.gradle -PbusinessConfigVersion=${bamboo.BCVERSION} -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PartifactoryUrl=${bamboo.productArtifactoryURL} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -g ../../cache deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Execute Business Config",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 scripts; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/obh_exports.sh;. /oracle/app/binaries/deployments/mintdeploy/envScripts/obh_exports.sh; ${bamboo.GRADLE_HOME}/bin/gradle -b dbConfigExec.gradle -PmintDeployHome=../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=${bamboo.SCRIPT} -PENVNAME=${bamboo.ENVNAME} -PBUILDDATE=${bamboo.BUILDDATE} -PreleasePath=${bamboo.CEMLI_RELEASE_PATH} -PEXECTYPE=deploy-businessConfig deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                },
+                {
+                  "name": null,
+                  "description": "Shutdown OBP Host",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obphost.json -PscriptToRun=shutdown-obphost.py deploy clean -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": false
+                },
+                {
+                  "name": null,
+                  "description": "Startup OBP Host",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_STARTSCRIPT_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obphost.json -PscriptToRun=start-obphost.py deploy clean -s'\"",
+                    "interpreter": "RUN_AS_EXECUTABLE",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": false
+                },
+                {
+                  "name": null,
+                  "description": "Remove wallet properties after deploy",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ;  [ -f /oracle/app/binaries/deployments/hostdb/host_db/deploy/host_db/config/deploy.properties ] && > /oracle/app/binaries/deployments/hostdb/host_db/deploy/host_db/config/deploy.properties; [ -f /oracle/app/binaries/deployments/hostdb/host_db/obpinstall/obp/BusinessConfig/config/cwallet/Wallet.properties ] && > /oracle/app/binaries/deployments/hostdb/host_db/obpinstall/obp/BusinessConfig/config/cwallet/Wallet.properties; [ -f /oracle/app/binaries/deployments/hostdb/host_db/obpinstall/obp_NA/BusinessConfig/config/cwallet/Wallet.properties ] && > /oracle/app/binaries/deployments/hostdb/host_db/obpinstall/obp_NA/BusinessConfig/config/cwallet/Wallet.properties;echo \\\"done\\\" '\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "BCVERSION": "CSH-OBP-release_33-029-00",
+        "BUILDDATE": "CSH-OBP-release_33-029-00",
+        "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
+        "CONFIGPROVIDERPATH": "../deploymentProperties/eng10/obpbc.json",
+        "ENVNAME": "ENG10",
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpBusinessConfig",
+        "OBP_NODE_1": "obpceng10obh01.wpdev.mintpress.io",
+        "OBP_NODE_UI": "obpceng10obu01.wpdev.mintpress.io",
+        "OBP_STARTSCRIPT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
+        "SCRIPT": "./scripts/dbIncremental.sh",
+        "dbArtifactsDownloadDir": "/oracle/app/binaries/deployments/hostdb/obp",
+        "debug": "false",
+        "CTVERSION": "CSH-OBP-release_33-029-00",
+        "OBPHOSTNAME": "obpceng10obh01-prv.wpdev.mintpress.io",
+        "OBPHOSTPORT": "17002",
+        "OBPHOSTPATH": "/oracle/app/binaries/obpobh/fmw",
+        "NETIQUSERNAME": "SA_CONFIGUPLOADER_OBP_USER",
+        "HOSTDBURL": "obpceng10db-prv.wpdev.mintpress.io:1521/CBCD3_OBP_PRIM",
+        "HOSTDBUSERNAME": "OBPHOST_OBP",
+        "DBCLIENTPATH": "/oracle/app/binaries/obpobh/dbclient",
+        "JAVA_HOME": "/oracle/app/binaries/java8",
+        "HOSTDBPATH": "/oracle/app/binaries/deployments/hostdb/host_db",
+        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 3 -- Restart Services",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Restart Managed Server",
+          "description": "Restart Managed Server",
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Restart SOA Managed Servers",
+              "description": "Restart SOA Managed Servers",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Stop SOA Managed Servers",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpht.json -PscriptToRun=shutdown-obpsoa.py deploy clean -i -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                },
+                {
+                  "name": null,
+                  "description": "Start SOA Managed Servers",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpht.json -PscriptToRun=start-obpsoa.py deploy clean -i -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
+        "STARTUP_COMPONENTS": "humanTask,documaker,odi,host,ui",
+        "RESTART_COMPONENTS": "soa,documaker,bip,host,ui,humanTask",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 3 -- Start up Services",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Start up Managed Server",
+          "description": "Start up Managed Server",
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Start up UI Managed Servers",
+              "description": "Start up UI Managed Servers",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Start up UI",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obu01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpui.json -PscriptToRun=start-obpui.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Start up HT Managed Server",
+              "description": "Start up HT Managed Server",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Start up HT",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10soa01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpht.json -PscriptToRun=start-obpht.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            },
+            {
+              "name": "Start up Host Managed Server",
+              "description": "Start up Host Managed Server",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Start up Host",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10obh01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obphost.json -PscriptToRun=start-obphost.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": true
+                }
+              ]
+            },
+            {
+              "name": "Start up ODI Managed Server",
+              "description": "Start up ODI Managed Server",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Start up ODI",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no obpceng10odi01.wpdev.mintpress.io \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; ${bamboo.GRADLE_HOME}/bin/gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -PconfigProviderPath=../../deploymentProperties/eng10/obpodi.json -PscriptToRun=start-obpodi.py deploy clean -s'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
+        "STARTUP_COMPONENTS": "humanTask,documaker,odi,host,ui",
+        "RESTART_COMPONENTS": "soa,documaker,bip,host,ui,humanTask",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    },
+    {
+      "name": "Step 4 -- Start Documaker Services",
+      "description": null,
+      "params": {
+      },
+      "stages": [
+        {
+          "name": "Start Documaker Services",
+          "description": "Start Documaker Services",
+          "params": {
+          },
+          "manual": false,
+          "jobs": [
+            {
+              "name": "Start Documaker Services in Node 1",
+              "description": "Start Documaker Services in Node 1",
+              "params": {
+              },
+              "tasks": [
+                {
+                  "name": null,
+                  "description": "Start Documaker Services",
+                  "params": {
+                    "argument": "",
+                    "scriptLocation": "INLINE",
+                    "environmentVariables": "",
+                    "scriptBody": "set -e\nssh   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${bamboo.OBP_NODE_1} \"sudo -u oracle -- sh -c 'set -e ; source /home/oracle/.bash_profile ; cd ${bamboo.OBP_DEPLOY_HOME}; chmod 755 /oracle/app/binaries/deployments/mintdeploy/envScripts/*; ${bamboo.GRADLE_HOME}/bin/gradle -b docScript.gradle -PmintDeployHome=../../../mintdeploy -PfetchTargets=true -PenvName=LOCAL -i -PconfigProviderPath=${bamboo.CONFIGPROVIDERPATH} -PscriptToRun=/oracle/app/binaries/deployments/mintdeploy/envScripts/docmstartup.sh deploy clean -s -i'\"",
+                    "interpreter": "LEGACY_SH_BAT",
+                    "script": "",
+                    "workingSubDirectory": ""
+                  },
+                  "pluginKey": "com.atlassian.bamboo.plugins.scripttask:task.builder.script",
+                  "finalising": false,
+                  "enabled": "true"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vars": {
+        "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
+        "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpDocMDep",
+        "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpdoc.json",
+        "OBP_NODE_1": "obpceng10doc01.wpdev.mintpress.io",
+        "debug": "false"
+      },
+      "labels": null,
+      "permissions": null
+    }
+  ]
+}
