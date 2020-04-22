@@ -163,8 +163,12 @@ gem_package "cicphash"
 # Include recipe for adding VM into the LDAP
 include_recipe '::ldap-client-configs'
 
-# Make the chef-client a system service
-include_recipe 'chef-client::systemd_service'
+# Make the chef-client a system service unless you are running oel6 (for och)
+if node['platform_version'].to_i <= 7
+  include_recipe 'chef-client::init_service'
+else
+  include_recipe 'chef-client::systemd_service'
+end 
 
 # Asset specific recipes
 if node.name.include?('doc')
