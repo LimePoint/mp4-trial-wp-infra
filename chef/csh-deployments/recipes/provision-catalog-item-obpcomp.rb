@@ -226,7 +226,7 @@ if action.downcase == 'deploy' or action.downcase == 'uploadonly'
           %x[ cd #{manifest_git_repo_path} && git log -1 --stat && git pull --quiet ]
           #https://developer.us2.oraclecloud.com/developer03533-a429413/scm/raw/developer03533-a429413_buildmanifest_25999/buildmanifest.git/RB1/manifest.json?revision=master
           Chef::Log.info("TBD provide RO access to every one - read manifest directly now")
-          cloud_manifest_file = File.read("/oracle/gitrepos/buildmanifest/#{environment_name.upcase}/manifest.json")
+          cloud_manifest_file = File.read("/backup/gitrepos/buildmanifest/#{environment_name.upcase}/manifest.json")
           cloud_manifest_hash = JSON.parse(cloud_manifest_file)
           puts cloud_manifest_hash
           puts "Merge under with   default  attributes"
