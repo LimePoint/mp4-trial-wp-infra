@@ -2,16 +2,16 @@ if is_running_on_cloud
 
 	Chef::Log.info("------------ I am service catalog custom in the cloud ----------")
 
-    _item_code = node.run_state['current_code']
-    environment_name = node.run_state['orchestration_metadata']['launchDetails']['environment']['name'].downcase
-    environment_code = environment_name.strip.tr('.', '').tr('_', '').tr('-', '').tr(' ', '')
+    begin
+      _item_code = node.run_state['current_code']
+      environment_name = node.run_state['orchestration_metadata']['launchDetails']['environment']['name'].downcase
+      environment_code = environment_name.strip.tr('.', '').tr('_', '').tr('-', '').tr(' ', '')
 
-    global_properties = JSON.parse(::File.read("#{__dir__}/../files/data_bags/#{environment_name}_vars.json"))
-    node.run_state[_item_code.upcase]['properties']=global_properties.to_h.deep_merge!(node.run_state[_item_code.upcase]['properties']).insensitive
+      global_properties = JSON.parse(::File.read("#{__dir__}/../files/data_bags/#{environment_name}_vars.json"))
+      node.run_state[_item_code.upcase]['properties']=global_properties.to_h.deep_merge!(node.run_state[_item_code.upcase]['properties']).insensitive
 
     # The code in begin is only valid for FMW products but since this recipe gets called for
     # everything we want it to not fail for other assets
-    begin
       my_topology_vars = topology_vars(_item_code)
       asset_vars = my_topology_vars[_item_code.downcase]
       password_vault_name = my_topology_vars['common']['password_vault_name']
