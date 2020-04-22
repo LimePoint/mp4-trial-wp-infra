@@ -3,10 +3,11 @@
     "environmentName": "eng10",
     "assetCode": "obpsoa",
     "stageRootDir": "/oracle/stage",
-    "autoBaseline": "true"
+    "autoBaseline": "true",
+    "projectUri": "ENG10OBPSOA2020APR202156"
   },
-  "projectName": "eng10_obpsoa2020Apr21_1543",
-  "uniquifier": "6236698bdefb49189332ab80a757f09c",
+  "projectName": "eng10_obpsoa2020Apr22_1053",
+  "uniquifier": "9fadbe2b641349349f48ae154371b432",
   "site": {
     "hostList": [
       {
@@ -1632,24 +1633,6 @@
                 "sourceFile": "/bin/true",
                 "executeWhenList": [
                   "post-online"
-                ],
-                "properties": [
-                  {
-                    "name": "stopManagedBefore",
-                    "value": "true"
-                  },
-                  {
-                    "name": "stopAdminBefore",
-                    "value": "true"
-                  },
-                  {
-                    "name": "startAdminAfter",
-                    "value": "true"
-                  },
-                  {
-                    "name": "startManagedAfter",
-                    "value": "true"
-                  }
                 ]
               },
               {
