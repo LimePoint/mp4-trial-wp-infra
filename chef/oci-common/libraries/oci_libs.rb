@@ -18,6 +18,7 @@ class MintOCIHost
   attr_accessor :node_attributes
   attr_accessor :create_cnames
   attr_accessor :create_friendly_names
+  attr_accessor :security_rules
 
   # init
   def initialize(opts={})
@@ -55,6 +56,9 @@ class MintOCIHost
     MintPress::Infrastructure::UsingPowerDnsEntry.new(name: 'internal_dns_alpha', webserver_host: self.configs['powerdns_platform']['primary_dns'], webserver_port: 80, api_key: self.configs['powerdns_platform']['dns_api_key'])
     
     MintPress::Infrastructure::UsingPowerDnsEntry.new(name: 'internal_dns_omega', webserver_host: self.configs['powerdns_platform']['secondary_dns'], webserver_port: 80, api_key: self.configs['powerdns_platform']['dns_api_key'])
+
+    # Read the security rules that must be applied
+    self.security_rules = YAML.load_file("#{__dir__}/../files/security_rules.yaml")
 
     # Set the default
     self.hostname = opts[:hostname] 
@@ -95,7 +99,8 @@ class MintOCIHost
       operating_system_version: self.operating_system_version,
       connect_user: self.configs['oci_platform']['connect_user'],
       final_user: self.configs['oci_platform']['final_user'],
-      bootstrap_with_dns: false
+      bootstrap_with_dns: false,
+      network_security_groups: 'targets-to-core-services'
     )
 
     if self.block_devices.nil?
@@ -147,7 +152,8 @@ class MintOCIHost
     create_internal_dns
 
     # Bootstrap the host now
-    self.host_obj.bootstrapper = MintPress::Infrastructure::UsingChefBootstrapper.new(chef_environment: self.environment_name, omnibus_url: 'https://mintpress-alpha.wpdev.mintpress.io/staticfiles/install-chef.sh', run_list: run_list, node_attributes: self.node_attributes)
+    #self.host_obj.bootstrapper = MintPress::Infrastructure::UsingChefBootstrapper.new(chef_environment: self.environment_name, omnibus_url: 'https://mintpress-alpha.wpdev.mintpress.io/staticfiles/install-chef.sh', run_list: run_list, node_attributes: self.node_attributes)
+    self.host_obj.bootstrapper = MintPress::Infrastructure::UsingChefBootstrapper.new(chef_environment: self.environment_name, omnibus_url: 'https://10.91.192.69/staticfiles/install-chef.sh', run_list: run_list, node_attributes: self.node_attributes)
     self.host_obj.bootstrap
     
   end
@@ -158,12 +164,44 @@ class MintOCIHost
     raise 'Hostname provided is null. Please provide a valid hostname' if self.hostname.nil?
     raise 'Host Object is null. Please provide a valid host object' if self.host_obj.nil?
 
-    host_obj.add_network_security_group_by_display_name('targets-to-mintpress')
-    host_obj.add_network_security_group_by_display_name('targets-to-core-services')
-    host_obj.add_network_security_group_by_display_name('all-to-oracle-services')
-    host_obj.update
-  end
+    if !security_rules['security_rules'].nil?
+      rules = security_rules['security_rules']
+      # First all the default security rules
+      rules['default'].each do |secrule|
+        Chef::Log.info "Adding Security rule: [#{secrule['name']}]"
+        host_obj.add_network_security_group_by_display_name(secrule['name'])
+      end
+      
+      # If env is typical workload add typical work load rules
+      # TODO - Make this efficient, this is shite
+      if self.environment_name.match(/^bpd/) or environment_name.match(/^eng/) or environment_name.match(/^shared-services/)
+        rules['bpd_workload'].each do |secrule|
+          Chef::Log.info "Adding Security rule: [#{secrule['name']}]"
+          host_obj.add_network_security_group_by_display_name(secrule['name'])
+        end
+      end
+    
+      # If env is a core service
+      if self.environment_name.match(/^core-services/) 
+        rules['tools_workload'].each do |secrule|
+          Chef::Log.info "Adding Security rule: [#{secrule['name']}]"
+          host_obj.add_network_security_group_by_display_name(secrule['name'])
+        end
+      end
 
+      # Special case for stage and MintPress servers (although mintpress is put in manually
+      if host_obj.hostname == 'stage.wpdev.mintpress.io'
+        rules['privileged_workload'].each do |secrule|
+          Chef::Log.info "Adding Security rule: [#{secrule['name']}]"
+          host_obj.add_network_security_group_by_display_name(secrule['name'])
+        end
+      end
+      host_obj.update
+    else
+      Chef::Log.info ("Security rules is empty, I can make the VM but it's gonna be useless so I refuse to build it. Fix the security list file and retry. ")
+      raise
+    end
+  end
 
   # Method to delete the host
   def destroy
@@ -218,7 +256,7 @@ class MintOCIHost
 
     if self.create_friendly_names
       Chef::Log.info 'Publishing DNS Friendly CNAME Record to Internal DNS Alpha'
-      cname_friendly = self.host_obj.name.split(".")[0].chomp('01').concat('.wpdev.mintpress.io')
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
       d_record.create
 
@@ -254,7 +292,7 @@ class MintOCIHost
 
     if self.create_friendly_names
       Chef::Log.info 'UnPublishing DNS Friendly CNAME Record to Internal DNS Alpha'
-      cname_friendly = self.host_obj.name.split(".")[0].chomp('01').concat('.wpdev.mintpress.io')
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
       d_record.remove
 
@@ -270,6 +308,13 @@ class MintOCIHost
     Chef::Log.info 'Publishing DNS Record to External DNS'
     d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'A', name: self.host_obj.name, values: self.host_obj.primary_public_ip, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
     d_record.create
+    
+    if self.create_friendly_names
+      Chef::Log.info 'Publishing DNS Friendly CNAME Record to External DNS'
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
+      d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
+      d_record.create
+    end
   end
 
   # Destroy the external DNS entry
@@ -278,5 +323,12 @@ class MintOCIHost
     Chef::Log.info 'Unpublishing DNS Record from External DNS'
     d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'A', name: self.host_obj.name, values: self.host_obj.primary_public_ip, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
     d_record.remove
+
+    if self.create_friendly_names
+      Chef::Log.info 'Unpublishing DNS Friendly CNAME Record from External DNS'
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
+      d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
+      d_record.remove
+    end
   end
 end

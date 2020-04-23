@@ -1,0 +1,20 @@
+# This file contains the default security rules that should be added to hosts in OCI
+---
+  security_rules:
+    default:
+    -
+      name: 'targets-to-core-services'
+# These rules must be applied to all bpad environments and shared services (e.g. och, lisa)
+    bpd_workload:
+    -
+      name: 'from-vendors-to-bpd'
+    
+# These rules must be only applied to mintpress and stage servers because this allows access to the internet.
+    privileged_workload:
+    -
+      name: 'from-inside-to-internet'
+
+# These rules must be only applied to core-services and mintpress services because these will allow access to port 22
+    tools_workload:
+    -
+      name: 'from-vendors-to-tools'
