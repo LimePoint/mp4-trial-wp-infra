@@ -256,7 +256,7 @@ class MintOCIHost
 
     if self.create_friendly_names
       Chef::Log.info 'Publishing DNS Friendly CNAME Record to Internal DNS Alpha'
-      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/)[0].concat('.wpdev.mintpress.io')
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
       d_record.create
 
@@ -291,12 +291,12 @@ class MintOCIHost
     end
 
     if self.create_friendly_names
-      Chef::Log.info 'UnPublishing DNS Friendly CNAME Record to Internal DNS Alpha'
-      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
+      Chef::Log.info 'Unpublishing DNS Friendly CNAME Record to Internal DNS Alpha'
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/)[0].concat('.wpdev.mintpress.io')
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
       d_record.remove
 
-      Chef::Log.info 'Publishing DNS Friendly CNAME Record to Internal DNS Omega'
+      Chef::Log.info 'Unpublishing DNS Friendly CNAME Record to Internal DNS Omega'
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_friendly, values: self.host_obj.name, ttl: 300)
       d_record.remove
     end
@@ -311,7 +311,7 @@ class MintOCIHost
     
     if self.create_friendly_names
       Chef::Log.info 'Publishing DNS Friendly CNAME Record to External DNS'
-      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/)[0].concat('.wpdev.mintpress.io')
       d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
       d_record.create
     end
@@ -326,7 +326,7 @@ class MintOCIHost
 
     if self.create_friendly_names
       Chef::Log.info 'Unpublishing DNS Friendly CNAME Record from External DNS'
-      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/).concat('.wpdev.mintpress.io')
+      cname_friendly = self.host_obj.name.split(".")[0].match(/[a-zA-Z]*/)[0].concat('.wpdev.mintpress.io')
       d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
       d_record.remove
     end
