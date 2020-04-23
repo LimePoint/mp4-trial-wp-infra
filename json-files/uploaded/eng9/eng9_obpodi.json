@@ -1,0 +1,1918 @@
+{
+  "internalVariables": {
+    "environmentName": "eng9",
+    "assetCode": "obpodi",
+    "stageRootDir": "/oracle/stage",
+    "autoBaseline": "true"
+  },
+  "projectName": "eng9_obpodi2020Apr23_2341",
+  "uniquifier": "0aeb39718e7e4ac2a4ecf13b774e0b6f",
+  "site": {
+    "hostList": [
+      {
+        "id": "obpceng9odi01",
+        "address": "obpceng9odi01.wpdev.mintpress.io",
+        "properties": [
+          {
+            "name": "basename",
+            "value": "obpceng9odi01"
+          },
+          {
+            "name": "user",
+            "value": "oracle"
+          },
+          {
+            "target": "oracle.install.username",
+            "value": "oinstall"
+          },
+          {
+            "name": "password",
+            "value": "unused-key-auth"
+          },
+          {
+            "name": "targetTempDir",
+            "value": "/oracle/app/binaries/obpodi/tmp",
+            "target": "target.tmp.dir"
+          }
+        ]
+      },
+      {
+        "id": "db_server",
+        "address": "obpceng9db-prv.wpdev.mintpress.io",
+        "properties": [
+          {
+            "name": "scaleout",
+            "value": "false"
+          },
+          {
+            "name": "user",
+            "value": "oracle"
+          },
+          {
+            "target": "oracle.install.username",
+            "value": "oinstall"
+          },
+          {
+            "name": "password",
+            "value": "unused-key-auth"
+          },
+          {
+            "name": "targetTempDir",
+            "value": "/oracle/app/binaries/obpodi/tmp",
+            "target": "target.tmp.dir"
+          }
+        ]
+      }
+    ],
+    "installationList": [
+      {
+        "name": "jdk",
+        "product": "jdk",
+        "version": "1.8.0_221",
+        "installPath": "/oracle/app/binaries/obpodi/java",
+        "softwareStage": "/oracle/stage/jdk/jdk-8u221-linux-x64.tar.gz",
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpodi/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpodi/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "fmwinfra",
+        "product": "fmwinfra",
+        "version": "12.2.1.3",
+        "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/fmw_12.2.1.3.0_infrastructure.jar",
+        "installPath": "/oracle/app/binaries/obpodi/fmw",
+        "dependsonList": [
+          "jdk"
+        ],
+        "patchset": [
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpodi/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "29814665",
+            "aru": "29814665",
+            "properties": [
+              {
+                "name": "action",
+                "value": "rollback"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpodi/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "30386660",
+            "aru": "30386660",
+            "properties": [
+              {
+                "name": "patchWhen",
+                "value": "post-binaries"
+              },
+              {
+                "target": "opatch.minimum.version",
+                "value": "13.9.4.2"
+              },
+              {
+                "target": "opatch.binary.location",
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+              },
+              {
+                "target": "opatch.update.usegeneric",
+                "value": "true"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpodi/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "30576401",
+            "aru": "30576401",
+            "properties": [
+              {
+                "name": "patchWhen",
+                "value": "post-binaries"
+              },
+              {
+                "target": "opatch.minimum.version",
+                "value": "13.9.4.2"
+              },
+              {
+                "target": "opatch.binary.location",
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+              },
+              {
+                "target": "opatch.update.usegeneric",
+                "value": "true"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpodi/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "29909359",
+            "aru": "29909359",
+            "properties": [
+              {
+                "target": "opatch.minimum.version",
+                "value": "13.9.4.2"
+              },
+              {
+                "target": "opatch.binary.location",
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+              },
+              {
+                "target": "opatch.update.usegeneric",
+                "value": "true"
+              },
+              {
+                "name": "patchWhen",
+                "value": "post-binaries"
+              }
+            ]
+          }
+        ],
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpodi/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpodi/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "oracleclient",
+        "product": "oracleclient",
+        "version": "12.2.0.1",
+        "installPath": "/oracle/app/binaries/obpodi/dbclient",
+        "softwareStage": "/oracle/stage/rdbms/12.2.0.1/client",
+        "dependsonList": [
+          "jdk"
+        ],
+        "properties": [
+          {
+            "target": "oracle.home",
+            "value": "/oracle/app/binaries/obpodi/dbclient"
+          },
+          {
+            "target": "oracle.base",
+            "value": "/oracle/app/binaries/obpodi"
+          },
+          {
+            "target": "oracle.hostname",
+            "value": "obpceng9doc01.wpdev.mintpress.io"
+          },
+          {
+            "target": "oracle.install.type",
+            "value": "Administrator"
+          },
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpodi/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpodi/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      },
+      {
+        "name": "odi",
+        "product": "odi",
+        "version": "12.2.1.3",
+        "installPath": "/oracle/app/binaries/obpodi/fmw/odi",
+        "softwareStage": "/oracle/stage/odi/12.2.1.3/fmw_12.2.1.3.0_odi.jar",
+        "dependsonList": [
+          "fmwinfra",
+          "oracleclient"
+        ],
+        "patchset": [
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpodi/fmw/odi",
+            "softwareStage": "/oracle/stage/odi/12.2.1.3/patches",
+            "name": "29205229",
+            "aru": "29205229",
+            "properties": [
+              {
+                "name": "patchWhen",
+                "value": "post-binaries"
+              }
+            ]
+          }
+        ],
+        "properties": [
+          {
+            "name": "oracleInventoryLoc",
+            "value": "/oracle/app/binaries/obpodi/oraInventory"
+          },
+          {
+            "name": "middlewareHome",
+            "value": "/oracle/app/binaries/obpodi/fmw"
+          },
+          {
+            "name": "oracleInstallGroup",
+            "value": "oinstall"
+          },
+          {
+            "target": "patch.java.params",
+            "value": "-Xms3g -Xmx3g"
+          }
+        ]
+      }
+    ],
+    "environmentList": [
+      {
+        "name": "eng9",
+        "mwTopologyList": [
+          {
+            "name": "obpodi",
+            "description": "eng9 obpodi Environment",
+            "nodeManagerList": [
+              {
+                "name": "nm-obpceng9odi01",
+                "listenAddress": "obpceng9odi01-prv.wpdev.mintpress.io",
+                "listenPort": "16001",
+                "hostIdentifier": "obpceng9odi01",
+                "properties": [
+                  {
+                    "target": "wls.nodemanager.log.path",
+                    "value": "/oracle/app/logs/obpodi/obpceng9odi01"
+                  },
+                  {
+                    "value": "wpdev",
+                    "target": "wls.nodemanager.identityname"
+                  },
+                  {
+                    "value": "/oracle/app/runtime/obpodi/domains/certs/obpceng9odi.jks",
+                    "target": "wls.nodemanager.identitystorefile"
+                  },
+                  {
+                    "name": "nmwc",
+                    "target": "wls.nodemanager.wildcardcertificate",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.domainbased",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.shared.domain.dir",
+                    "value": "true"
+                  },
+                  {
+                    "name": "wlInstallationName",
+                    "value": "fmwinfra"
+                  },
+                  {
+                    "name": "nodemanagerTop",
+                    "value": "/oracle/app/binaries/runtime/obpodi/domains/obpodi_domain/nodemanager",
+                    "target": "wls.nodemanager.top"
+                  },
+                  {
+                    "name": "type",
+                    "value": "SSL"
+                  },
+                  {
+                    "target": "wls.nodemanager.secure.listener",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.setidentity",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.usejsse",
+                    "value": "true"
+                  },
+                  {
+                    "target": "wls.nodemanager.crashrecovery",
+                    "value": "false"
+                  },
+                  {
+                    "target": "wls.nodemanager.umask",
+                    "value": "022"
+                  },
+                  {
+                    "value": "/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+                    "target": "wls.nodemanager.truststorefile"
+                  },
+                  {
+                    "value": "EodVD6DRv_SZ7SfNjc31",
+                    "target": "wls.nodemanager.identitystorekey"
+                  },
+                  {
+                    "value": "EodVD6DRv_SZ7SfNjc31",
+                    "target": "wls.nodemanager.truststorekey"
+                  },
+                  {
+                    "value": "EodVD6DRv_SZ7SfNjc31",
+                    "target": "wls.nodemanager.identitypassphrase"
+                  }
+                ]
+              }
+            ],
+            "domainList": [
+              {
+                "name": "obpodi_domain",
+                "locationPath": "/oracle/app/runtime/obpodi/domains",
+                "adminUser": "weblogic",
+                "adminPassword": "{AES2}ugMtpWtOnwbPOYL89mq7SQ=={/IV}Ta/hv4brHoPiKxQyGKSUH4fDU0Gx6dCtInohXTEH9IJk=",
+                "adminServer": {
+                  "name": "AdminServer",
+                  "machineName": "obpceng9odi01-prv.wpdev.mintpress.io",
+                  "listenAddress": "obpceng9odi01.wpdev.mintpress.io",
+                  "listenAddressPort": "17001",
+                  "listenAddressPortSSL": "18001",
+                  "targetName": "odiAdminServer"
+                },
+                "machineList": [
+                  {
+                    "name": "obpceng9odi01-prv.wpdev.mintpress.io",
+                    "nodeManagerName": "nm-obpceng9odi01"
+                  }
+                ],
+                "clusterList": [
+                  {
+                    "name": "obpodi_cluster",
+                    "messageMode": "Unicast"
+                  }
+                ],
+                "managedServerList": [
+                  {
+                    "name": "ODI_server1",
+                    "machineName": "obpceng9odi01-prv.wpdev.mintpress.io",
+                    "clusterName": "obpodi_cluster",
+                    "listenAddress": "obpceng9odi01.wpdev.mintpress.io",
+                    "listenAddressPort": "17002",
+                    "listenAddressPortSSL": "18002",
+                    "targetName": "ODI_server1",
+                    "properties": [
+                      {
+                        "name": "nodeid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "serverid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "nodeonserver",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ],
+                "systemComponentList": [
+                  {
+                    "name": "OracleDISAgent1",
+                    "machineName": "obpceng9odi01-prv.wpdev.mintpress.io",
+                    "componentType": "ODI",
+                    "properties": [
+                      {
+                        "target": "odi.agent.protocol",
+                        "value": "https"
+                      },
+                      {
+                        "target": "odi.agent.address",
+                        "value": "obpceng9odi01-prv.wpdev.mintpress.io"
+                      },
+                      {
+                        "target": "odi.agent.port",
+                        "value": "2091"
+                      },
+                      {
+                        "value": "obpceng9odi01",
+                        "target": "component.identityname"
+                      },
+                      {
+                        "value": "/oracle/app/runtime/eng9/certs/obpceng9odi01.jks",
+                        "target": "component.identitystorefile"
+                      },
+                      {
+                        "value": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
+                        "target": "component.truststorefile"
+                      },
+                      {
+                        "value": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ=",
+                        "target": "component.identitystorekey"
+                      },
+                      {
+                        "value": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ=",
+                        "target": "component.truststorekey"
+                      },
+                      {
+                        "value": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ=",
+                        "target": "component.identitypassphrase"
+                      },
+                      {
+                        "name": "nodeid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "serverid",
+                        "value": "1"
+                      },
+                      {
+                        "name": "nodeonserver",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ],
+                "middlewareList": [
+                  {
+                    "installationName": "odi",
+                    "targetList": [
+                      {
+                        "type": "Cluster",
+                        "names": [
+                          "obpodi_cluster"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "configurationList": [
+                  {
+                    "resourceName": "AdminStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "AdminServer"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "WeblogicUser_wlsmonitor",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "WeblogicUser_odemmon",
+                    "type": "User",
+                    "properties": [
+                      {
+                        "name": "authenticatorName",
+                        "value": "DefaultAuthenticator"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "AdminServerExtChannel",
+                    "type": "NetworkAccessPoint",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "AdminServer"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "AdminServerSettings",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "AdminServer"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DomainWebappConfig",
+                    "type": "WebAppContainer"
+                  },
+                  {
+                    "resourceName": "DomainAdministrationPortConfiguration",
+                    "type": "Domain"
+                  },
+                  {
+                    "resourceName": "DomainLogConfiguration",
+                    "type": "DomainLog"
+                  },
+                  {
+                    "resourceName": "DomainSecurityConfiguration",
+                    "type": "SecurityConfiguration"
+                  },
+                  {
+                    "resourceName": "defaultCoherenceCluster",
+                    "type": "CoherenceClusterSystemResource"
+                  },
+                  {
+                    "resourceName": "JdbcCommonSettings",
+                    "type": "JDBCSystemResource",
+                    "properties": [
+                      {
+                        "name": "dataSourceName",
+                        "value": "*"
+                      },
+                      {
+                        "name": "noTarget",
+                        "value": "true"
+                      }
+                    ],
+                    "targets": [
+
+                    ]
+                  },
+                  {
+                    "resourceName": "GenericServerSettings_auto_1",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "ODI_server1"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "obpDataSource",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obpodi_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "csaodiWorkRepository",
+                    "type": "JDBCSystemResource",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obpodi_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "ClusterStartupParameters",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obpodi_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "DefaultAuthenticator",
+                    "type": "AuthenticationProvider",
+                    "properties": [
+                      {
+                        "name": "realmName",
+                        "value": "myrealm"
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "ipm-service-key",
+                    "type": "FmwCredentials"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_1",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_2",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_3",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_4",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_5",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "WeblogicPolicyPermission_6",
+                    "type": "WeblogicPolicyPermission"
+                  },
+                  {
+                    "resourceName": "ClusterClassPathParameters",
+                    "type": "ClassPath",
+                    "targets": [
+                      {
+                        "type": "CLUSTER",
+                        "names": [
+                          "obpodi_cluster"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "ODI_server1StartupParameter",
+                    "type": "StartupParameter",
+                    "targets": [
+                      {
+                        "type": "SERVER",
+                        "names": [
+                          "ODI_server1"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "resourceName": "ODI_server1Server",
+                    "type": "Server",
+                    "properties": [
+                      {
+                        "name": "serverName",
+                        "value": "ODI_server1"
+                      }
+                    ]
+                  }
+                ],
+                "properties": [
+                  {
+                    "name": "serverStartMode",
+                    "value": "prod",
+                    "target": "wls.production.mode"
+                  },
+                  {
+                    "name": "backupEnvironmentName",
+                    "value": "eng9",
+                    "target": "environment.name"
+                  },
+                  {
+                    "name": "tlogsLocationPath",
+                    "value": "/oracle/app/runtime/obpodi/domains/obpodi_domain",
+                    "target": "wls.tlogs.location.path"
+                  },
+                  {
+                    "name": "odlLogLocation",
+                    "value": "/oracle/app/logs/obpodi/obpodi_domain",
+                    "target": "wls.odl.log.location"
+                  },
+                  {
+                    "value": "5d",
+                    "target": "wls.odl.log.retentionPeriod"
+                  },
+                  {
+                    "name": "defaultJMSLogLocation",
+                    "value": "/oracle/app/logs/obpodi/obpodi_domain"
+                  },
+                  {
+                    "target": "wls.admin.listen.port.admin",
+                    "value": "19001"
+                  },
+                  {
+                    "name": "managedTopLocation",
+                    "value": "/oracle/app/binaries/runtime/obpodi/domains",
+                    "target": "wls.domain.managed.top"
+                  },
+                  {
+                    "value": "OracleDISAgent*",
+                    "target": "mintpress.startup.server_exclude"
+                  },
+                  {
+                    "name": "mintpress.startup_parallel",
+                    "target": "mintpress.startup_parallel",
+                    "value": "10"
+                  },
+                  {
+                    "name": "nodeid",
+                    "value": "1"
+                  },
+                  {
+                    "name": "nodeonserver",
+                    "value": "1"
+                  },
+                  {
+                    "name": "serverid",
+                    "value": "1"
+                  },
+                  {
+                    "target": "odi.agent.protocol",
+                    "value": "https"
+                  },
+                  {
+                    "target": "odi.agent.address",
+                    "value": "obpceng9odi.wpdev.mintpress.io"
+                  },
+                  {
+                    "target": "odi.agent.port",
+                    "value": "18002"
+                  },
+                  {
+                    "name": "odiSupervisorPassword",
+                    "value": "{AES2}kurI+t/CkwYCil4QCRphoA=={/IV}T6FiPiCIyysIUlKf20Sxy8g=="
+                  },
+                  {
+                    "name": "odiWorkRepositoryType",
+                    "value": "E"
+                  },
+                  {
+                    "name": "odiWorkRepositoryName",
+                    "value": "workrep1"
+                  },
+                  {
+                    "name": "odiWorkRepositoryPassword",
+                    "value": "{AES2}kurI+t/CkwYCil4QCRphoA=={/IV}T6FiPiCIyysIUlKf20Sxy8g=="
+                  }
+                ],
+                "templateList": [
+                  {
+                    "name": "odi"
+                  }
+                ],
+                "repositoryList": [
+                  {
+                    "componentList": [
+                      "ODI"
+                    ],
+                    "id": "rcu01",
+                    "dbName": "eng9obpodidb",
+                    "prefix": "OBPODI",
+                    "dbUser": "SYS",
+                    "schemaPassword": "{AES2}kurI+t/CkwYCil4QCRphoA=={/IV}T6FiPiCIyysIUlKf20Sxy8g==",
+                    "defaultRepository": "true"
+                  }
+                ]
+              }
+            ],
+            "properties": [
+              {
+                "name": "targetPlatform",
+                "value": "x86-64"
+              }
+            ],
+            "hostInstallationList": [
+              {
+                "installationName": "odi",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              }
+            ],
+            "transferList": [
+              {
+                "name": "eng9_obpodi_keystore",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng9/obpceng9odi.jks",
+                "destinationFile": "/oracle/app/runtime/eng9/certs/obpceng9odi.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng9_obpodi_truststore",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng9/wpdev_trust.jks",
+                "destinationFile": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng9_obpodi_caCerts",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng9/cacerts.pem",
+                "destinationFile": "/oracle/app/runtime/eng9/certs/cacerts.pem",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "eng9_obpodi_UnlimitedJCEPolicyLocal",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/jdk/UnlimitedJCEPolicyJDK8/local_policy.jar",
+                "destinationFile": "/oracle/app/binaries/obpodi/java/jre/lib/security/local_policy.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "eng9_obpodi_UnlimitedJCEPolicyUS",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/jdk/UnlimitedJCEPolicyJDK8/US_export_policy.jar",
+                "destinationFile": "/oracle/app/binaries/obpodi/java/jre/lib/security/US_export_policy.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "ovdkeystore",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng9/adapters.jks",
+                "destinationFile": "/oracle/app/runtime/obpodi/domains/obpodi_domain/config/fmwconfig/ovd/default/keystores/adapters.jks",
+                "permissions": "600",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "SIEMCustomAuditor",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/common/SIEMCustomAuditor.jar",
+                "destinationFile": "/oracle/app/binaries/obpodi/fmw/wlserver/server/lib/mbeantypes/SIEMCustomAuditor.jar",
+                "permissions": "600",
+                "transferWhenList": [
+                  "post-binaries",
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "HealthCheckFileCopy",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/stage/custom/csh/common/HealthCheck.war",
+                "destinationFile": "/oracle/app/runtime/obpodi/domains/applications/obpodi_domain/HealthCheck.war",
+                "permissions": "755",
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "name": "wpdevKeystore",
+                "destinationFile": "/oracle/app/runtime/obpodi/domains/certs/obpceng9odi.jks",
+                "permissions": "600",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng9/obpceng9odi.jks",
+                "properties": [
+                  {
+                    "name": "KeyAlias",
+                    "value": "wpdev"
+                  },
+                  {
+                    "name": "KeystorePassword",
+                    "value": "EodVD6DRv_SZ7SfNjc31"
+                  }
+                ]
+              },
+              {
+                "name": "wpdevTruststore",
+                "destinationFile": "/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+                "permissions": "600",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "transferWhenList": [
+                  "pre-online"
+                ],
+                "sourceFile": "/oracle/stage/certs/gen2_certs/eng9/wpdev_trust.jks",
+                "properties": [
+                  {
+                    "name": "TruststorePassword",
+                    "value": "EodVD6DRv_SZ7SfNjc31"
+                  }
+                ]
+              }
+            ],
+            "executeList": [
+              {
+                "name": "DeployHealthCheck",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpodi/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/deployApplication.py weblogic ${execute.weblogicAdminPassword} t3://obpceng9odi01-prv.wpdev.mintpress.io:17001  HealthCheck /oracle/app/runtime/obpodi/domains/applications/obpodi_domain/HealthCheck.war obpodi_cluster nostage 650",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}ugMtpWtOnwbPOYL89mq7SQ=={/IV}Ta/hv4brHoPiKxQyGKSUH4fDU0Gx6dCtInohXTEH9IJk="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "securityJMXAuthEnable",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpodi/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/securityAccessAndRoles.py weblogic ${execute.weblogicAdminPassword} t3://obpceng9odi01-prv.wpdev.mintpress.io:17001 JMXAuth true",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}ugMtpWtOnwbPOYL89mq7SQ=={/IV}Ta/hv4brHoPiKxQyGKSUH4fDU0Gx6dCtInohXTEH9IJk="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "jmsMsgView",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpodi/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/securityAccessAndRoles.py weblogic ${execute.weblogicAdminPassword} t3://obpceng9odi01-prv.wpdev.mintpress.io:17001 JMSView",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}ugMtpWtOnwbPOYL89mq7SQ=={/IV}Ta/hv4brHoPiKxQyGKSUH4fDU0Gx6dCtInohXTEH9IJk="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "CreateDatabaseObjects",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::create-db-users]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-rcu"
+                ]
+              },
+              {
+                "name": "DeleteDatabaseObjects",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "chef-client -c $HOME/chef/client.rb -o 'recipe[obp-environmint-custom::drop-db-users]' -l info",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-clobber"
+                ]
+              },
+              {
+                "name": "CreateCSAWORKREP",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpodi/java/bin/java -classpath '/oracle/app/binaries/obpodi/fmw/odi/sdk/lib/oracle.odi-sdk-jse.jar:/oracle/app/binaries/obpodi/fmw/oracle_common/modules/oracle.jdbc/ojdbc6.jar:/oracle/app/binaries/obpodi/fmw/wlserver/server/lib/weblogic.jar:/oracle/stage/custom/csh/obpodi/' CreateWorkRepository WORKREP_CSA obpceng9db-prv.wpdev.mintpress.io:1521/CBCD3_INT_PRIM OBPODI_ODI_REPO ${execute.dbSchemaPassword} OBPODI_CSA_REPO ${execute.dbSchemaPassword} false",
+                "properties": [
+                  {
+                    "name": "execute.dbSchemaPassword",
+                    "target": "execute.dbSchemaPassword",
+                    "value": "{AES2}kurI+t/CkwYCil4QCRphoA=={/IV}T6FiPiCIyysIUlKf20Sxy8g=="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "dupecerts",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "cp /oracle/stage/certs/gen2_certs/eng9/obpceng9odi.jks /oracle/app/runtime/eng9/certs/obpceng9odi01.jks",
+                "properties": [
+                  {
+                    "name": "execute.storepass",
+                    "target": "execute.storepass",
+                    "value": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "addDbSslParams",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "find /oracle/app/runtime/obpodi/domains/obpodi_domain/config/fmwconfig/components/ODI -name instance.sh | xargs sed -i 's|$ODI_ADDITIONAL_JAVA_OPTIONS $ODI_SSL_PROPERTIES|-Doracle.net.ssl_version=1.2 -Doracle.net.ssl_cipher_suites=TLS_RSA_WITH_AES_256_CBC_SHA256 $ODI_ADDITIONAL_JAVA_OPTIONS $ODI_SSL_PROPERTIES|g' ;",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-configure"
+                ]
+              },
+              {
+                "name": "updatecacerts",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "if /oracle/app/binaries/obpodi/java/bin/keytool -list -alias WBCTrust -storepass changeit -keystore /oracle/app/binaries/obpodi/java/jre/lib/security/cacerts > /dev/null; then echo 'Cert already Exists.. Skipping'; else /oracle/app/binaries/obpodi/java/bin/keytool -noprompt -import -trustcacerts -alias WBCTrust -file /oracle/stage/certs/gen2_certs/eng9/cacerts.pem -keystore /oracle/app/binaries/obpodi/java/jre/lib/security/cacerts -storepass changeit; fi",
+                "properties": [
+                  {
+                    "name": "scaleout",
+                    "value": "true"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-binaries"
+                ]
+              },
+              {
+                "name": "deleteDefaultAuditor",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpodi/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/deleteDefaultAuditor.py weblogic ${execute.weblogicAdminPassword} t3://obpceng9odi01-prv.wpdev.mintpress.io:17001 obpodi_domain",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}ugMtpWtOnwbPOYL89mq7SQ=={/IV}Ta/hv4brHoPiKxQyGKSUH4fDU0Gx6dCtInohXTEH9IJk="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "pre-online"
+                ]
+              },
+              {
+                "name": "updateSIEMAuditor",
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ],
+                "sourceFile": "/oracle/app/binaries/obpodi/fmw/oracle_common/common/bin/wlst.sh /oracle/stage/custom/csh/common/updateSIEMAuditor.py weblogic ${execute.weblogicAdminPassword} t3://obpceng9odi01-prv.wpdev.mintpress.io:17001 obpodi_domain obpodi",
+                "properties": [
+                  {
+                    "name": "execute.weblogicAdminPassword",
+                    "target": "execute.weblogicAdminPassword",
+                    "value": "{AES2}ugMtpWtOnwbPOYL89mq7SQ=={/IV}Ta/hv4brHoPiKxQyGKSUH4fDU0Gx6dCtInohXTEH9IJk="
+                  },
+                  {
+                    "name": "scaleout",
+                    "value": "false"
+                  }
+                ],
+                "executeWhenList": [
+                  "post-online"
+                ]
+              },
+              {
+                "name": "ensure-oid-working-online",
+                "sourceFile": " /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              },
+              {
+                "name": "ensure-oid-working-start",
+                "sourceFile": " /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              },
+              {
+                "name": "ensure-db-working-online",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPHOST_OBP/sA554xUyWA0bwIM4M0G_@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPODI_CSA_REPO/HgWRcCBiV4@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_INT_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-online"
+                ],
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              },
+              {
+                "name": "ensure-db-working-start",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPHOST_OBP/sA554xUyWA0bwIM4M0G_@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'OBPODI_CSA_REPO/HgWRcCBiV4@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_INT_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "executeWhenList": [
+                  "pre-start"
+                ],
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              },
+              {
+                "name": "check-obpodi-obpobh-admin-configure",
+                "sourceFile": "LOOP=1 ; while [ $LOOP != 0 ]; do timeout 1 bash -c 'cat < /dev/null > /dev/tcp/obpceng9obh01-prv.wpdev.mintpress.io/17001' ; LOOP=$? ; echo 'contacting obpceng9obh01-prv.wpdev.mintpress.io/17001' ; sleep 1 ;  done",
+                "executeWhenList": [
+                  "pre-configure"
+                ],
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              },
+              {
+                "name": "check-db",
+                "sourceFile": "RESULT=1 ; while [ $RESULT != 0 ]; do export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; $ORACLE_HOME/bin/sqlplus llama/duck@obpceng9db-prv.wpdev.mintpress.io:1521/CBCD3_INT_PRIM </dev/null 2>&1 | grep logon.denied ; RESULT=$? ; sleep 5 ; done",
+                "executeWhenList": [
+                  "pre-rcu"
+                ],
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              },
+              {
+                "name": "check-db-startup",
+                "sourceFile": "RESULT=1 ; while [ $RESULT != 0 ]; do export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; $ORACLE_HOME/bin/sqlplus llama/duck@obpceng9db-prv.wpdev.mintpress.io:1521/CBCD3_INT_PRIM </dev/null 2>&1 | grep logon.denied ; RESULT=$? ; sleep 5 ; done",
+                "executeWhenList": [
+                  "pre-start"
+                ],
+                "hostIdentifierList": [
+                  "obpceng9odi01"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "databaseList": [
+      {
+        "name": "eng9obpodidb",
+        "port": "1521",
+        "serviceName": "CBCD3_INT_PRIM",
+        "properties": [
+          {
+            "name": "rcu.datafile.initialsize",
+            "value": "200M",
+            "target": "rcu.datafile.initialsize"
+          },
+          {
+            "target": "rcu.extra.parameters",
+            "value": " -encryptTablespace false"
+          },
+          {
+            "name": "jdbcUrl",
+            "value": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=obpceng9db-prv.wpdev.mintpress.io)(Port=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=CBCD3_INT_PRIM)))"
+          }
+        ],
+        "hostIdentifier": "db_server",
+        "schemaList": [
+          {
+            "name": "SYS",
+            "password": "{AES2}bnbkg9dDA+c4v6Dbrk3Bmw=={/IV}TnXveLp3PkuQWKzlsVxMX33QcanNLFIvMF2mNyqr/8YA="
+          }
+        ]
+      }
+    ],
+    "resourceList": [
+      {
+        "name": "WeblogicUser_wlsmonitor",
+        "type": "User",
+        "attributes": {
+          "name": "wlsmonitor",
+          "password": "{AES2}TPXG3F53RAPEoD0pVBzgYg=={/IV}TmZ2BJnOQJmM+bxfFmQMCY+WEfUnVVfwjEW7pda0J4Xg=",
+          "description": "User with Weblogic Monitor Role",
+          "groupList": "monitors"
+        }
+      },
+      {
+        "name": "WeblogicUser_odemmon",
+        "type": "User",
+        "attributes": {
+          "name": "odemmon",
+          "password": "{AES2}TYJ6TkieELnDb40YzPwK5Q=={/IV}T9AsVYRyy+SV1BmF7M0wJVPi2LQ52TTE+yB27kpKvdhI=",
+          "description": "OEM User with Weblogic Monitor Role",
+          "groupList": "monitors"
+        }
+      },
+      {
+        "name": "AdminServerExtChannel",
+        "type": "NetworkAccessPoint",
+        "attributes": {
+          "Name": "AdminServerExtChannel",
+          "CustomPrivateKeyAlias": "None",
+          "Protocol": "https",
+          "ListenAddress": "obpceng9odi-adm.wpdev.mintpress.io",
+          "ListenPort": "18001",
+          "ClientCertificateEnforced": "false",
+          "Enabled": "false",
+          "TunnelingEnabled": "false",
+          "TwoWaySSLEnabled": "false",
+          "ChannelIdentityCustomized": "false",
+          "HttpEnabledForThisProtocol": "true",
+          "OutboundEnabled": "false",
+          "CustomPrivateKeyPassPhrase": "None"
+        }
+      },
+      {
+        "name": "DomainWebappConfig",
+        "type": "WebAppContainer",
+        "attributes": {
+          "WeblogicPluginEnabled": "true",
+          "XPoweredByHeaderLevel": "NONE"
+        }
+      },
+      {
+        "name": "defaultCoherenceCluster",
+        "type": "CoherenceClusterSystemResource",
+        "params": [
+          {
+            "type": "CoherenceClusterResource",
+            "params": [
+              {
+                "type": "CoherenceClusterParams",
+                "attributes": {
+                  "SecurityFrameworkEnabled": "true"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DomainLogConfiguration",
+        "type": "DomainLog",
+        "attributes": {
+          "NumberOfFilesLimited": "true",
+          "FileMinSize": "10000",
+          "RotationTime": "05:00",
+          "FileTimeSpan": "24",
+          "RotateLogOnStartup": "true",
+          "RotationType": "byTime",
+          "FileCount": "5",
+          "FileName": "/oracle/app/logs/obpodi/obpodi_domain.log"
+        }
+      },
+      {
+        "name": "DomainSecurityConfiguration",
+        "type": "SecurityConfiguration",
+        "attributes": {
+          "ConnectionLoggerEnabled": "true",
+          "ConnectionFilter": "weblogic.security.net.ConnectionFilterImpl"
+        },
+        "params": [
+          {
+            "type": "Realm",
+            "name": "myrealm",
+            "attributes": {
+              "DelegateMBeanAuthorization": "true"
+            },
+            "params": [
+              {
+                "type": "UserLockoutManager",
+                "attributes": {
+                  "LockoutThreshold": "3",
+                  "LockoutDuration": "15",
+                  "LockoutResetDuration": "15"
+                }
+              },
+              {
+                "type": "Auditor",
+                "name": "SIEMCustomAuditor:com.oracle.westpac.csh.siem.cap.SIEMCustomAuditor"
+              },
+              {
+                "type": "PasswordValidator",
+                "name": "SystemPasswordValidator:com.bea.security.providers.authentication.passwordvalidator.SystemPasswordValidator",
+                "attributes": {
+                  "MinPasswordLength": "15",
+                  "MinUppercaseCharacters": "1",
+                  "MinLowercaseCharacters": "1",
+                  "MinNumericCharacters": "1",
+                  "MinNonAlphanumericCharacters": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "CertRevoc",
+            "name": "obpodi_domain",
+            "attributes": {
+              "CheckingEnabled": "false"
+            }
+          }
+        ]
+      },
+      {
+        "name": "AdminServerSettings",
+        "type": "Server",
+        "params": [
+          {
+            "type": "Log",
+            "attributes": {
+              "RotateLogOnStartup": "true",
+              "MemoryBufferSize": "500",
+              "StdoutFormat": "standard",
+              "BufferSizeKB": "8",
+              "ServerLoggingBridgeUseParentLoggersEnabled": "false",
+              "RedirectStderrToServerLogEnabled": "false",
+              "StdoutSeverity": "Off",
+              "DomainLogBroadcastSeverity": "Error",
+              "MemoryBufferSeverity": "Error",
+              "StdoutLogStack": "true",
+              "RedirectStdoutToServerLogEnabled": "false",
+              "NumberOfFilesLimited": "true",
+              "FileCount": "5",
+              "RotationType": "byTime",
+              "DomainLogBroadcasterBufferSize": "10",
+              "Log4jLoggingEnabled": "false",
+              "FileMinSize": "10000",
+              "RotationTime": "05:00",
+              "FileTimeSpan": "24",
+              "StacktraceDepth": "5",
+              "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
+              "LogFileSeverity": "Warning",
+              "FileName": "/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%.log"
+            }
+          },
+          {
+            "type": "WebServer",
+            "params": [
+              {
+                "type": "WebServerLog",
+                "attributes": {
+                  "RotateLogOnStartup": "true",
+                  "NumberOfFilesLimited": "true",
+                  "FileCount": "5",
+                  "RotationType": "byTime",
+                  "FileMinSize": "10000",
+                  "RotationTime": "05:00",
+                  "FileTimeSpan": "24",
+                  "FileName": "/oracle/app/logs/obpodi/obpodi_domain/%Name%/access.log",
+                  "LogFileFormat": "extended",
+                  "ELFFields": "cs(X-Forwarded-For) c-ip auth_user date time time-taken cs-method cs-uri sc-status ctx-ecid ctx-rid"
+                }
+              }
+            ]
+          },
+          {
+            "type": "SSL",
+            "attributes": {
+              "ServerPrivateKeyAlias": "wpdev",
+              "HostnameVerificationIgnored": "false",
+              "Enabled": "true",
+              "ServerPrivateKeyPassPhrase": "EodVD6DRv_SZ7SfNjc31",
+              "JSSEEnabled": "true",
+              "UseServerCerts": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier"
+            }
+          },
+          {
+            "type": "ServerDiagnosticConfig",
+            "attributes": {
+              "DiagnosticContextEnabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "Notes": "Server settings",
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpodi/domains/certs/obpceng9odi.jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+          "CustomIdentityKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
+          "CustomTrustKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreType": "jks",
+          "AdministrationPort": "%ListenPort+2000%"
+        }
+      },
+      {
+        "name": "GenericServerSettings_auto_1",
+        "type": "Server",
+        "params": [
+          {
+            "type": "Log",
+            "attributes": {
+              "RotateLogOnStartup": "true",
+              "MemoryBufferSize": "500",
+              "StdoutFormat": "standard",
+              "BufferSizeKB": "8",
+              "ServerLoggingBridgeUseParentLoggersEnabled": "false",
+              "RedirectStderrToServerLogEnabled": "false",
+              "StdoutSeverity": "Off",
+              "DomainLogBroadcastSeverity": "Error",
+              "MemoryBufferSeverity": "Error",
+              "StdoutLogStack": "true",
+              "RedirectStdoutToServerLogEnabled": "false",
+              "NumberOfFilesLimited": "true",
+              "FileCount": "5",
+              "RotationType": "byTime",
+              "DomainLogBroadcasterBufferSize": "10",
+              "Log4jLoggingEnabled": "false",
+              "FileMinSize": "10000",
+              "RotationTime": "05:00",
+              "FileTimeSpan": "24",
+              "StacktraceDepth": "5",
+              "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
+              "LogFileSeverity": "Warning",
+              "FileName": "/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%.log"
+            }
+          },
+          {
+            "type": "WebServer",
+            "params": [
+              {
+                "type": "WebServerLog",
+                "attributes": {
+                  "RotateLogOnStartup": "true",
+                  "NumberOfFilesLimited": "true",
+                  "FileCount": "5",
+                  "RotationType": "byTime",
+                  "FileMinSize": "10000",
+                  "RotationTime": "05:00",
+                  "FileTimeSpan": "24",
+                  "FileName": "/oracle/app/logs/obpodi/obpodi_domain/%Name%/access.log",
+                  "LogFileFormat": "extended",
+                  "ELFFields": "cs(X-Forwarded-For) c-ip auth_user date time time-taken cs-method cs-uri sc-status ctx-ecid ctx-rid"
+                }
+              }
+            ]
+          },
+          {
+            "type": "SSL",
+            "attributes": {
+              "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
+              "HostnameVerificationIgnored": "false",
+              "Enabled": "true",
+              "ServerPrivateKeyPassPhrase": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ=",
+              "JSSEEnabled": "true",
+              "UseServerCerts": "true"
+            }
+          },
+          {
+            "type": "ServerDiagnosticConfig",
+            "attributes": {
+              "DiagnosticContextEnabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "Notes": "Server settings",
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng9/certs/obpceng9odi.jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ=",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreType": "jks",
+          "AdministrationPort": "%ListenPort+2000%"
+        }
+      },
+      {
+        "name": "JdbcCommonSettings",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCOracleParams",
+                "attributes": {
+                  "OnsNodeList": "None",
+                  "FanEnabled": "false"
+                }
+              },
+              {
+                "type": "JDBCConnectionPoolParams",
+                "attributes": {
+                  "MinCapacity": "1",
+                  "TestConnectionsOnReserve": "true",
+                  "TestTableName": "SQL ISVALID"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_INT_PRIM)))"
+                },
+                "properties": {
+                  "javax.net.ssl.trustStoreType": "JKS",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}qXbHbuCPU+12WOJqJD7XFA=={/IV}T97mfk+22p5Tr+xrQuLf9nmUg2nt+M/bXuwUFj9yL5qQ=",
+                  "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
+                  "oracle.net.ssl_version": "1.2",
+                  "javax.net.ssl.trustStore": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "obpDataSource",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCDataSourceParams",
+                "attributes": {
+                  "JNDINames": "jdbc/FCBDataSource"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
+                  "Password": "{AES2}tbcjroorSdeGrVAebV6irg=={/IV}TSZ8EQXXS4sFdlIrBZ8/cj+xzkSQaqidBGzomhPFdXHI=",
+                  "DriverName": "oracle.jdbc.OracleDriver"
+                },
+                "properties": {
+                  "user": "OBPHOST_OBP",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "csaodiWorkRepository",
+        "type": "JDBCSystemResource",
+        "params": [
+          {
+            "type": "JDBCResource",
+            "params": [
+              {
+                "type": "JDBCDataSourceParams",
+                "attributes": {
+                  "JNDINames": "jdbc/csaodiWorkRepository"
+                }
+              },
+              {
+                "type": "JDBCDriverParams",
+                "attributes": {
+                  "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_INT_PRIM)))",
+                  "Password": "{AES2}kurI+t/CkwYCil4QCRphoA=={/IV}T6FiPiCIyysIUlKf20Sxy8g==",
+                  "DriverName": "oracle.jdbc.OracleDriver"
+                },
+                "properties": {
+                  "user": "OBPODI_CSA_REPO",
+                  "oracle.jdbc.ReadTimeout": "300000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DefaultAuthenticator",
+        "type": "AuthenticationProvider",
+        "attributes": {
+          "subType": "null",
+          "ControlFlag": "SUFFICIENT"
+        }
+      },
+      {
+        "name": "AdminStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms2g -Xmx2g -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer",
+          "2": "",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng9/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpodi/obpodi_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false",
+          "Auto19": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto20": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "ClusterStartupParameters",
+        "type": "StartupParameter",
+        "attributes": {
+          "1": "-Xms4g -Xmx4g",
+          "2": "-XX:NewSize=256m -XX:MaxNewSize=1024m -Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer ",
+          "3": "",
+          "4": "",
+          "5": "-Dfile.encoding=UTF-8",
+          "c1": "-Dweblogic.Stdout=/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%.out",
+          "c2": "-Dweblogic.Stderr=/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%.err",
+          "c3": "-Xloggc:/oracle/app/logs/obpodi/obpodi_domain/%Name%/%Name%_gc.out -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=300M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps",
+          "c4": "-Djava.security.debug=failure -Djava.net.preferIPv4Stack=true -Doracle.ons.maxconnections=2 -Dweblogic.security.disableNullCipher=true",
+          "c5": "-Dweblogic.MaxMessageSize=500000000  -Dweblogic.Chunksize=65536 -Djava.security.egd=file:///dev/urandom",
+          "s1": "-Dweblogic.security.SSL.minimumProtocolVersion=TLSv1.2 -Dweblogic.security.SSL.protocolVersion=TLSv1.2",
+          "s2": "-Dweblogic.management.disableManagedServerNotifications=true",
+          "s3": "-Dweblogic.security.SSL.allowUnencryptedNullCipher=false",
+          "s4": "-Dweblogic.security.SSL.enableJSSE=true",
+          "s4a": "-Dweblogic.security.SSL.nojce=true -Dweblogic.jdbc.remoteEnabled=true",
+          "s5": "-Dweblogic.ssl.JSSEEnabled=true -Dweblogic.rjvm.enableprotocolswitch=true",
+          "s6": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
+          "s7": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
+          "s8": "-Dweblogic.webservice.client.ssl.trustedcertfile=/oracle/app/runtime/eng9/certs/cacerts.pem",
+          "s9": "-Dweblogic.security.audit.auditLogDir=/oracle/app/logs/obpodi/obpodi_domain",
+          "s10": "-Dweblogic.ssl.SSLv2HelloEnabled=false"
+        }
+      },
+      {
+        "attributes": {
+          "AdministrationPort": "19001",
+          "AdministrationPortEnabled": "false"
+        },
+        "type": "Domain",
+        "name": "DomainAdministrationPortConfiguration"
+      },
+      {
+        "name": "ipm-service-key",
+        "type": "FmwCredentials",
+        "attributes": {
+          "map": "oracle.obp.credmap",
+          "key": "IPM_SERVICE",
+          "username": "SA_OBP_IPM_MANAGE_USER",
+          "password": "{AES2}HrTh9eP+xxObhJpjZQysxQ=={/IV}T8E1rIBPqIpSpHB6qviS19osHa2v+NQEe6TdYPa+i+KU=",
+          "description": "IPM Service Account"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_1",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "oracle.security.jps.service.credstore.CredentialAccessPermission",
+          "permTarget": "context=SYSTEM,mapName=*,keyName=*",
+          "permActions": "*",
+          "codeBaseURL": "file:/oracle/app/binaries/obpodi/fmw/odi/sdk/lib/-"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_2",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "oracle.security.jps.service.credstore.CredentialAccessPermission",
+          "permTarget": "context=SYSTEM,mapName=*,keyName=*",
+          "permActions": "*",
+          "codeBaseURL": "file:/oracle/app/binaries/obpodi/fmw/odi/jee/oracledi-agent/oracle.odi-agent.jar"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_3",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "oracle.security.jps.service.credstore.CredentialAccessPermission",
+          "permTarget": "context=SYSTEM,mapName=*,keyName=*",
+          "permActions": "*",
+          "codeBaseURL": "file:/oracle/app/binaries/obpodi/fmw/oracle_common/modules/org.springframework_3.1.0.jar"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_4",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "java.security.AllPermission",
+          "permTarget": "None",
+          "permActions": "None",
+          "codeBaseURL": "file:/oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/lib/com.ofss.fc.document.upload.ipm.jar"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_5",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "java.security.AllPermission",
+          "permTarget": "None",
+          "permActions": "None",
+          "codeBaseURL": "file:/oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/lib/com.ofss.fc.document.upload.wsdl.client.jar"
+        }
+      },
+      {
+        "name": "WeblogicPolicyPermission_6",
+        "type": "WeblogicPolicyPermission",
+        "attributes": {
+          "permClass": "java.security.AllPermission",
+          "permTarget": "None",
+          "permActions": "None",
+          "codeBaseURL": "file:/oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/lib/imaging-client.jar"
+        }
+      },
+      {
+        "name": "ClusterClassPathParameters",
+        "type": "ClassPath",
+        "attributes": {
+          "Auto01": "/oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/config:/oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/lib/imaging-client.jar:/oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/lib/com.ofss.fc.document.upload.ipm.jar:/oracle/app/batch/odi/scripts/com.ofss.fc.cz.obp.batch/lib/com.ofss.fc.document.upload.wsdl.client.jar"
+        }
+      },
+      {
+        "name": "ODI_server1StartupParameter",
+        "type": "StartupParameter",
+        "attributes": {
+          "Auto1": "-Doracle.odi.coherence.localhost=obpceng9odi01-prv.wpdev.mintpress.io -Doracle.odi.coherence.localport=15002 -Doracle.odi.coherence.wka1=obpceng9odi01-prv.wpdev.mintpress.io -Doracle.odi.coherence.wka1.port=15002",
+          "Auto2": "-Dweblogic.security.SSL.enableJSSE=true",
+          "Auto3": "-Dweblogic.net.ssl.trustStore=/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+          "Auto4": "-Djavax.net.ssl.trustStore=/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+          "Auto5": "-Dweblogic.security.SSL.hostnameVerifier=weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+          "Auto6": "-Dweblogic.MuxerClass=weblogic.socket.PosixSocketMuxer"
+        }
+      },
+      {
+        "name": "ODI_server1Server",
+        "type": "Server",
+        "params": [
+          {
+            "type": "SSL",
+            "attributes": {
+              "JSSEEnabled": "true",
+              "HostnameVerifier": "weblogic.security.utils.SSLWLSWildcardHostnameVerifier",
+              "ServerPrivateKeyAlias": "wpdev",
+              "ServerPrivateKeyPassPhrase": "EodVD6DRv_SZ7SfNjc31",
+              "Enabled": "true"
+            }
+          }
+        ],
+        "attributes": {
+          "KeyStores": "CustomIdentityAndCustomTrust",
+          "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/obpodi/domains/certs/obpceng9odi.jks",
+          "CustomIdentityKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
+          "CustomIdentityKeyStoreType": "jks",
+          "CustomTrustKeyStoreFileName": "/oracle/app/runtime/obpodi/domains/certs/wpdev_trust.jks",
+          "CustomTrustKeyStorePassPhrase": "EodVD6DRv_SZ7SfNjc31",
+          "CustomTrustKeyStoreType": "jks"
+        }
+      }
+    ]
+  }
+}
