@@ -5,6 +5,6 @@ description      'CSH specific OCI VM configurations'
 version '1.0.0'
 
 depends 'mintpress-controllers-infrastructure'
-depends 'mintpress-controllers-aws'
+depends 'mintpress-controllers-infrastructure-aws'
 depends 'mintpress-controllers-dns'
 depends 'mintpress-controllers-infrastructure-oci'
