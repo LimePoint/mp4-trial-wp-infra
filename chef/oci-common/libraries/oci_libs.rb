@@ -99,7 +99,8 @@ class MintOCIHost
       operating_system_version: self.operating_system_version,
       connect_user: self.configs['oci_platform']['connect_user'],
       final_user: self.configs['oci_platform']['final_user'],
-      bootstrap_with_dns: false
+      bootstrap_with_dns: false,
+      network_security_groups: 'targets-to-core-services'
     )
 
     if self.block_devices.nil?
@@ -172,7 +173,7 @@ class MintOCIHost
       
       # If env is typical workload add typical work load rules
       # TODO - Make this efficient, this is shite
-      if self.environment_name.match(/^bpd/) or environment.match(/^eng/) or environment.match(/^shared-services/)
+      if self.environment_name.match(/^bpd/) or environment_name.match(/^eng/) or environment_name.match(/^shared-services/)
         rules['bpd_workload'].each do |secrule|
           Chef::Log.info "Adding Security rule: [#{secrule['name']}]"
           host_obj.add_network_security_group_by_display_name(secrule['name'])
