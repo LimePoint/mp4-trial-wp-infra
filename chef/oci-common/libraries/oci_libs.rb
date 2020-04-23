@@ -58,7 +58,7 @@ class MintOCIHost
     MintPress::Infrastructure::UsingPowerDnsEntry.new(name: 'internal_dns_omega', webserver_host: self.configs['powerdns_platform']['secondary_dns'], webserver_port: 80, api_key: self.configs['powerdns_platform']['dns_api_key'])
 
     # Read the security rules that must be applied
-    self.security_rules = YAML.load_file(::File.read("#{__dir__}/../files/security_rules.yaml"))
+    self.security_rules = YAML.load_file("#{__dir__}/../files/security_rules.yaml")
 
     # Set the default
     self.hostname = opts[:hostname] 
