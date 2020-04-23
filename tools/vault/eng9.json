@@ -110,7 +110,11 @@
     "obposb_readonly": "{AES2}t9yQEQo0iIJqCmvAh1pFtQ=={/IV}Tf9EmnsMo8mMrgE+LZcmfpmwjrmwuwFZWhk0PUK4sU+g=",
     "weblogic": "{AES2}YeGOaXZphYHcwsn4iygGew=={/IV}TnBERe9q1B7Vx2KGjlljlYyiE527zEPn9jlqOC58k5p8=",
     "ODS": "{AES2}MJvWOj2wSVWS4IECQpchbw=={/IV}TJBMr+PS6upqdfBqYy0b18dvXdaVh03JD8TSo4Hnn2UM=",
-    "cn=orcladmin": "{AES2}6/dFoCxLYZfl0MvJqMr9tw=={/IV}THAXjsVv1nz247Hxe/DFfAhBi/qt3PWcJHfGYFfwwxO8="
+    "cn=orcladmin": "{AES2}6/dFoCxLYZfl0MvJqMr9tw=={/IV}THAXjsVv1nz247Hxe/DFfAhBi/qt3PWcJHfGYFfwwxO8=",
+    "SA_DIGITAL_OBP_MANAGE_USER": "{AES2}0TAAmi255r/e0l/iEt8AAg=={/IV}T/pgaPlZQ/Ck8bbYvs5VzBOTup5raXrx3umlFO/gvNWk=",
+    "SA_MEDB_OBP_MANAGE_USER": "{AES2}3Nv7iFubpcxSSwCiWtd8/A=={/IV}THKdfL8s+AKro6+AKf4DHhbz2J+DJD4jNH3fwnR0dKTs=",
+    "SA_OBP_PROCESS_UPGRADE_USER": "{AES2}4fTH8C0uQpoRhp3rql3WwA=={/IV}TELaK3z3tGn1S0lnI4QgLgWWm4AoKEyxsTPMBwXH3g5c=",
+    "SA_API_LENDING_OBP_USER": "{AES2}QByi503WsQQi+r0P/gDBGw=={/IV}Tyk110EtKqaRJOjMlJu2XbtoHgtI5JsVQ2cYno5m7mus="
   },
   "obpipm": {
     "SYS": "{AES2}bnbkg9dDA+c4v6Dbrk3Bmw=={/IV}TnXveLp3PkuQWKzlsVxMX33QcanNLFIvMF2mNyqr/8YA=",
@@ -175,7 +179,8 @@
     "obpobh_readonly": "{AES2}zHCH49Z5j4bg9tmfOJ1DzA=={/IV}Tfhh49tkWaspf5GXFi7BGPGBEGwl7n/huFPdxIDwA8ho=",
     "obposb_readonly": "{AES2}QaYyksoN4ef8xLIQqRVWHA=={/IV}TUnMvV26m+XxGv51hjzE4orFXoUJUe/ZJLoe9N4uibiM=",
     "ODS": "{AES2}+ZJARHtlcLN1FYqZ1UmdAA=={/IV}Tro1JblnXHtvAyiD8kMt4m+xEQY7nGztJzllkfTdmT3M=",
-    "cn=orcladmin": "{AES2}fUb9/o0QWucsIYFGhcbBxA=={/IV}TvAVgf1erxKUUD5nhHoweRjmD00GEFM4LIfxJE9w+rAE="
+    "cn=orcladmin": "{AES2}fUb9/o0QWucsIYFGhcbBxA=={/IV}TvAVgf1erxKUUD5nhHoweRjmD00GEFM4LIfxJE9w+rAE=",
+    "obpsoa_readonly": "{AES2}hWFsh1mYEb2Noq1i/rpFTA=={/IV}TKx8AtWRi3a2WBaIieAN4cflAZCs064/fv6AGSju1fQA="
   },
   "oemmonitoring": {
     "odemmon": "{AES2}TYJ6TkieELnDb40YzPwK5Q=={/IV}T9AsVYRyy+SV1BmF7M0wJVPi2LQ52TTE+yB27kpKvdhI="
