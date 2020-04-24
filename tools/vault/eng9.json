@@ -33,7 +33,8 @@
     "wlsmonitor": "{AES2}ulajbH+0oIeUmY2BuYiQkw=={/IV}TZJ5If10FYfWhw2T5ocHADdDTsuMyt/dJvKFeY9aUkhI=",
     "sa_obp_och_password": "{AES2}lD628DYrZMcJr9HDz5YH7A=={/IV}TS3cmLcfuStJst33AkcuaeRZL4wjfOxQHejUvoBL+2is=",
     "sa_obp_netiq_password": "{AES2}JVNVi6sO3KiZ0zTocMAiaw=={/IV}TkPBuRAen1CEMjEWdfnyOElChswF93eCbNZTKIh1viR4=",
-    "sa_sts_hlrf_password": "{AES2}tkZoZrksJ6GrZnBqXuWqTw=={/IV}TWnTMkntnfhvUN1ovp0L6oUq3x/mKOx/7gehV5ajCl78="
+    "sa_sts_hlrf_password": "{AES2}tkZoZrksJ6GrZnBqXuWqTw=={/IV}TWnTMkntnfhvUN1ovp0L6oUq3x/mKOx/7gehV5ajCl78=",
+    "WestpacAPIUser": "{AES2}roDtjjvkGtwY9dyzYFAIXA=={/IV}TCvFiQg7x147Q1LB4azIbU0tas9Ikskspu4CUb0IvWkw="
   },
   "obpbip": {
     "SYS": "{AES2}nneCuYpFybVuX2A1Q/fuLg=={/IV}Tb9aj6kndCBg4Blwkqt6NmUu7Y9/6Kohi20SjLqg91XQ=",
@@ -110,7 +111,12 @@
     "obposb_readonly": "{AES2}2fMRD1d2Dpp23MfJUjuqGA=={/IV}T6NZSrquer5A7ol2tsV0zUbWdQPEy+Mu1aelWctwNIRY=",
     "weblogic": "{AES2}Qs/oxREdd2dNJwOMYTontA=={/IV}TFXvg6+YCIblYWAA7ek5585dwYweTrCJzwiPsBaO+aVQ=",
     "ODS": "{AES2}Lmt8K/elAmO38BFfu7W80A=={/IV}T3lkcKumpJEPOTn91bbqnUhw0NrKb1UGViu0M3nmcS7g=",
-    "cn=orcladmin": "{AES2}XWAnfdy5LLGCUgoV4zTYmA=={/IV}Tx39qOxgLph6lGWQZm3HCqhwYIUCIVq8KR3lMeX4WOEA="
+    "cn=orcladmin": "{AES2}XWAnfdy5LLGCUgoV4zTYmA=={/IV}Tx39qOxgLph6lGWQZm3HCqhwYIUCIVq8KR3lMeX4WOEA=",
+    "SA_DIGITAL_OBP_MANAGE_USER": "{AES2}iu5a4l5qxUqtcO10BqKndw=={/IV}Tytc4dLpiA8Q3zs1O7aoLeGFcUdQj/5fKSIUaSnfsiyg=",
+    "SA_MEDB_OBP_MANAGE_USER": "{AES2}49qHZp2ajpWkdS4sNeXNnA=={/IV}Tnbk2EmqazDKjLiRuocj+Hv5AB3Xz6s98nPMRS04y+oY=",
+    "SA_OBP_PROCESS_UPGRADE_USER": "{AES2}hFE9ciJTyOyc/gDZWXUpvA=={/IV}T6U4i7+Y5vPdFjqITOY6HssIHlnLJKgH6YZ0Ln0RiMpE=",
+    "SA_API_LENDING_OBP_USER": "{AES2}7p+i1xCSSA74d8dXBfQLoA=={/IV}TfXTghCMs31cGmxJ3Z7zg+Uw+APGGb+wGEgEHMu+zKVg=",
+    "wlsmonitor": "{AES2}afDlnmRgkLdhddEKizKsfA=={/IV}TdeWMm6Lu0tKc6eMfms4LFhdNIkZmgf6/6yovJHqHtqE="
   },
   "obpipm": {
     "SYS": "{AES2}nneCuYpFybVuX2A1Q/fuLg=={/IV}Tb9aj6kndCBg4Blwkqt6NmUu7Y9/6Kohi20SjLqg91XQ=",
@@ -175,7 +181,10 @@
     "obpobh_readonly": "{AES2}QPX6Bf9cEkXeSdxGkouzDw=={/IV}ToUmr06IVnhG0dpIQaYL2zI7dyZ4ap8WoOkwY2Sp6gis=",
     "obposb_readonly": "{AES2}sYpmP+LaNGruM+fBVOs58w=={/IV}TNqJuCaR7HynnpxUiN8F2ei2Bkn3LMeSe2mB59FzCwY8=",
     "ODS": "{AES2}0BgQwUE+48UpOzbl+onAMg=={/IV}TBTG1bOXcHNAJhOU8YZBwxMZJKaFPEOnocabUmHbLGvU=",
-    "cn=orcladmin": "{AES2}HxUZlv4F8st16J5H4uy6pw=={/IV}TWx5GOeW2Mtw0fkJYxi1Nj0yaZQlSKvZ0AweqQjSK8zA="
+    "cn=orcladmin": "{AES2}HxUZlv4F8st16J5H4uy6pw=={/IV}TWx5GOeW2Mtw0fkJYxi1Nj0yaZQlSKvZ0AweqQjSK8zA=",
+    "obpsoa_readonly": "{AES2}lY2ScGP4vfeejMsgR5p9bg=={/IV}TRO18HnLp/KNCWJ48cjiRj9laegm6llIBA707xhK/v9c=",
+    "weblogic": "{AES2}MTORd4h0gG+s30eoZZdJkg=={/IV}TX89WgNF936Xo8l6oIKAkgMn9hmWPBpkEHzaiQbSlw2U=",
+    "wlsmonitor": "{AES2}yjhph56gl6ancOtPAmnXIg=={/IV}TTdK2ejuJ0ZqZMfAQXi65SSK9clsrUok4ORUDVCNpoLo="
   },
   "oemmonitoring": {
     "odemmon": "{AES2}ppWLD6jyF8KktVUs+Z3VEQ=={/IV}TZsbbwMdnUiwT0b78CZRTY/eZ+XGqjlX6fgcrxBLhfss="
