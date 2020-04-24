@@ -82,8 +82,6 @@ end
 # It tries to create the directory which by that point has become a mount, and throws Read-only file system @ apply2files - /oracle/stage
 execute 'mkdir -p /oracle/stage'
 
-
-
 ### --- Set up SSSD For LDAP Authentication --- ###
 # Setup the SSSD Subsystem. This is from the sssd_ldap cookbook
 include_recipe 'sssd_ldap'
@@ -99,13 +97,8 @@ template '/etc/ssh/sshd_config' do
   owner 'root'
   group 'root'
   mode '0600'
-end
 
-# RB: Do this to for a workaround on sudoers not working;
-# RB: there is no guarantee that this fixes it but this has worked all the time
-service 'sssd' do
-  ignore_failure true
-  action :restart
+  notifies :restart, 'service[sshd]', :immediately
 end
 
 # This is required to create home directories for the LDAP users
@@ -163,6 +156,12 @@ gem_package "cicphash"
 # Include recipe for adding VM into the LDAP
 include_recipe '::ldap-client-configs'
 
+# RB: Do this to for a workaround on sudoers not working;
+# RB: there is no guarantee that this fixes it but this has worked all the time
+service 'sssd' do
+  action :restart
+end
+
 # Make the chef-client a system service unless you are running oel6 (for och)
 if node['platform_version'].to_i <= 7
   include_recipe 'chef-client::init_service'
@@ -218,3 +217,9 @@ else
       options 'ro'
   end
 end
+
+# Restart SSHD only if required
+service 'sshd' do
+  action :nothing
+end
+

@@ -151,11 +151,38 @@ class MintOCIHost
     # Create the Internal DNS Entry
     create_internal_dns
 
-    # Bootstrap the host now
-    #self.host_obj.bootstrapper = MintPress::Infrastructure::UsingChefBootstrapper.new(chef_environment: self.environment_name, omnibus_url: 'https://mintpress-alpha.wpdev.mintpress.io/staticfiles/install-chef.sh', run_list: run_list, node_attributes: self.node_attributes)
-    self.host_obj.bootstrapper = MintPress::Infrastructure::UsingChefBootstrapper.new(chef_environment: self.environment_name, omnibus_url: 'https://10.91.192.69/staticfiles/install-chef.sh', run_list: run_list, node_attributes: self.node_attributes)
-    self.host_obj.bootstrap
-    
+    # This ensures we can bootstrap to the chef server, the problem is that the VM
+    # does not knows about the chef server, using an IP is not an option because curl errors out with 'curl: (35) Peer reports it experienced an internal error.'
+    # So, what we are doing is, adding a temporary entry in the /etc/hosts of the VM if we don't find /etc/chef/client.rb
+    # Because if /etc/chef/client.rb exists, that means the node is already bootstrapped and we don't have to hack the host entry
+    hosts_file_updated = false
+    mint_host=`hostname`.strip
+    mint_ip=`host #{mint_host}| cut -d' ' -f4`.strip
+    if self.host_obj.transport.File.exist?('/etc/chef/client.rb')
+        Chef::Log.info ('/etc/chef/client.rb already exists, no need to update the hosts file.')
+    else
+        Chef::Log.info ('/etc/chef/client.rb does not exists. Temporarily updating the /etc/hosts file with MintPress Entry.')
+        h_file = MintPress::Resources::FileUtils.new(host: self.host_obj, file: '/etc/hosts', pattern: 'FOO', line: 'BAR')
+        h_file.pattern = "^#{mint_ip}.*"
+        h_file.line = "#{mint_ip} #{mint_host}"
+        h_file.replace_or_add_lines
+        hosts_file_updated = true
+    end
+  
+    # We should remove the host entry even if bootstrap fails 
+    begin 
+      # Now Bootstrap
+      self.host_obj.bootstrapper = MintPress::Infrastructure::UsingChefBootstrapper.new(chef_environment: self.environment_name, omnibus_url: "https://#{mint_host}/staticfiles/install-chef.sh", run_list: run_list, node_attributes: self.node_attributes)
+      self.host_obj.bootstrap
+    ensure
+      # Remove the hosts file change if we introduced it
+      if hosts_file_updated
+        Chef::Log.info ('Removing the temporary update from /etc/hosts')
+        h_file = MintPress::Resources::FileUtils.new(host: self.host_obj, file: '/etc/hosts', pattern: 'FOO', line: 'BAR')
+        h_file.pattern = "^#{mint_ip}.*"
+        h_file.delete_lines
+      end
+    end
   end
 
 
