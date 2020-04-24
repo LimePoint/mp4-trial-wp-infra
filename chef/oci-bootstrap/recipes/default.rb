@@ -78,6 +78,9 @@ template '/etc/resolv.conf' do
   group 'root'
 end
 
+# Make the resolv.conf file immutable coz VM reboot will override this file and then nothing will work
+execute 'chattr +i /etc/resolv.conf' 
+
 # Create the directory for stage mount, we have to use execute coz directory resource fails on subsequent runs
 # It tries to create the directory which by that point has become a mount, and throws Read-only file system @ apply2files - /oracle/stage
 execute 'mkdir -p /oracle/stage'
@@ -163,7 +166,7 @@ service 'sssd' do
 end
 
 # Make the chef-client a system service unless you are running oel6 (for och)
-if node['platform_version'].to_i <= 7
+if node['platform_version'].to_i < 7
   include_recipe 'chef-client::init_service'
 else
   include_recipe 'chef-client::systemd_service'
