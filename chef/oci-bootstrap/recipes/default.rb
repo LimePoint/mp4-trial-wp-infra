@@ -97,6 +97,8 @@ template '/etc/ssh/sshd_config' do
   owner 'root'
   group 'root'
   mode '0600'
+
+  notifies :restart, 'service[sshd]', :immediately
 end
 
 # This is required to create home directories for the LDAP users
@@ -215,3 +217,9 @@ else
       options 'ro'
   end
 end
+
+# Restart SSHD only if required
+service 'sshd' do
+  action :nothing
+end
+
