@@ -5,10 +5,11 @@
     "defaultHostTargetUsername": "oracle",
     "defaultHostTargetGroupName": "oinstall",
     "stageRootDir": "/oracle/stage",
-    "autoBaseline": "true"
+    "autoBaseline": "true",
+    "projectUri": "ENG9OBPOAM2020APR241250"
   },
-  "projectName": "eng9_obpoam2020Apr25_1453",
-  "uniquifier": "cdd3484ce31746d6a5cf83554e5a4801",
+  "projectName": "eng9_obpoam2020Apr25_1520",
+  "uniquifier": "c2096ae8e0b44930ae97bf7d1818d945",
   "site": {
     "hostList": [
       {
@@ -395,7 +396,7 @@
                 "name": "obpoam_domain",
                 "locationPath": "/oracle/app/runtime/obpoam/domains",
                 "adminUser": "weblogic",
-                "adminPassword": "{AES2}/6RtXtEZ+4PyO4FGQT343A=={/IV}Ta+wKBfZzEYqsRRgyTCFHJDr7R7oUdqIB2BcWX4tEUgk=",
+                "adminPassword": "{AES2}wYQJgsqVx1ZH7KALOJMVEg=={/IV}TiQ8bqVVrBZb/em48sCXKf0NCmGpL06WFHheHZsEsuiI=",
                 "adminServer": {
                   "name": "AdminServer",
                   "machineName": "Machine-obpceng9oam01",
@@ -501,7 +502,7 @@
                     "dbName": "eng9obpoamdb",
                     "prefix": "OBPOAM",
                     "dbUser": "SYS",
-                    "schemaPassword": "{AES2}lJnA7Z5dOEj0b//QNI2XKA=={/IV}TQITEdi9yMKJg3FJ2XkoWU5kBVFBvtg8NwvlejESdVJI=",
+                    "schemaPassword": "{AES2}NUfKT2zXfKs7RHP/vVsvRA=={/IV}T6mNBuiyEoHXgbXuQqwP38uNT9SYnxY+79Qi16+Wkt+E=",
                     "defaultRepository": "true"
                   }
                 ],
@@ -962,7 +963,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}/6RtXtEZ+4PyO4FGQT343A=={/IV}Ta+wKBfZzEYqsRRgyTCFHJDr7R7oUdqIB2BcWX4tEUgk="
+                    "value": "{AES2}wYQJgsqVx1ZH7KALOJMVEg=={/IV}TiQ8bqVVrBZb/em48sCXKf0NCmGpL06WFHheHZsEsuiI="
                   },
                   {
                     "name": "scaleout",
@@ -983,7 +984,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}/6RtXtEZ+4PyO4FGQT343A=={/IV}Ta+wKBfZzEYqsRRgyTCFHJDr7R7oUdqIB2BcWX4tEUgk="
+                    "value": "{AES2}wYQJgsqVx1ZH7KALOJMVEg=={/IV}TiQ8bqVVrBZb/em48sCXKf0NCmGpL06WFHheHZsEsuiI="
                   },
                   {
                     "name": "scaleout",
@@ -1084,7 +1085,7 @@
         "schemaList": [
           {
             "name": "SYS",
-            "password": "{AES2}1nU/dC+3h/xPqWuZWIMPIw=={/IV}T44OdwyalFMEQ+nLo8UTA4grUiGf95wyYrigWM6pFWNQ="
+            "password": "{AES2}3aS+RMbJNXjNdbI2iaRj7Q=={/IV}TrpIabQRwbWzby2eSC8hTC8QfCquD/ihkS+Wv4tcZghA="
           }
         ],
         "hostIdentifier": "db_server"
@@ -1096,7 +1097,7 @@
         "type": "User",
         "attributes": {
           "name": "wlsmonitor",
-          "password": "{AES2}hik+1C3Lzd/H25mLj/Q2wQ=={/IV}TSfJ/xWEE6TMrhQnD9bB6DnAcSPMndBBrhSTR3sh1sOc=",
+          "password": "{AES2}SaJkHMYww4f0HtmxW1dtkg=={/IV}TWqvK0b1YGHiHa5AOm7eDeO0m/eON9EjYxY0fJbsMAvk=",
           "description": "User with Weblogic Monitor Role",
           "groupList": "monitors"
         }
@@ -1106,7 +1107,7 @@
         "type": "User",
         "attributes": {
           "name": "odemmon",
-          "password": "{AES2}ZifuSoTQzJYdQNPFm0q+Vw=={/IV}TI5jc5BHNNM9t5FPkv0bQ2OjZKtgOvDRjua3FyP/Kf2k=",
+          "password": "{AES2}31jw8EwEyr6eux+Z2bFqaw=={/IV}TlyX+92joD35t00mlfwjB9tlNe3bKQrt692MPGoudnV4=",
           "description": "OEM User with Weblogic Monitor Role",
           "groupList": "monitors"
         }
@@ -1359,7 +1360,7 @@
               "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "{AES2}40YLxghcENfKapFOgAN1+A=={/IV}TOr4PfFsVhBZ6fM8drOmO7I89juGt4eY8sCuZxT0zkfI=",
+              "ServerPrivateKeyPassPhrase": "{AES2}Uiw86xT+llPVI6WMlKNeMg=={/IV}Tf52OLroPEOmUksAAqbpAhirxW9fHOTDhMiIVGNIE9gY=",
               "JSSEEnabled": "true",
               "UseServerCerts": "true"
             }
@@ -1376,8 +1377,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng9/certs/obpceng9oam.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
-          "CustomIdentityKeyStorePassPhrase": "{AES2}40YLxghcENfKapFOgAN1+A=={/IV}TOr4PfFsVhBZ6fM8drOmO7I89juGt4eY8sCuZxT0zkfI=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}40YLxghcENfKapFOgAN1+A=={/IV}TOr4PfFsVhBZ6fM8drOmO7I89juGt4eY8sCuZxT0zkfI=",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}Uiw86xT+llPVI6WMlKNeMg=={/IV}Tf52OLroPEOmUksAAqbpAhirxW9fHOTDhMiIVGNIE9gY=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}Uiw86xT+llPVI6WMlKNeMg=={/IV}Tf52OLroPEOmUksAAqbpAhirxW9fHOTDhMiIVGNIE9gY=",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1412,7 +1413,7 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}40YLxghcENfKapFOgAN1+A=={/IV}TOr4PfFsVhBZ6fM8drOmO7I89juGt4eY8sCuZxT0zkfI=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}Uiw86xT+llPVI6WMlKNeMg=={/IV}Tf52OLroPEOmUksAAqbpAhirxW9fHOTDhMiIVGNIE9gY=",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
                   "javax.net.ssl.trustStore": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
