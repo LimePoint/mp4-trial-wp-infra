@@ -3,8 +3,7 @@
     "environmentName": "eng9",
     "assetCode": "obposb",
     "stageRootDir": "/oracle/stage",
-    "autoBaseline": "true",
-    "projectUri": "ENG9OBPOSB2020APR241251"
+    "autoBaseline": "true"
   },
   "projectName": "eng9_obposb2020Apr25_1520",
   "uniquifier": "5262efac263e4ad9b2d51b2f81387026",
