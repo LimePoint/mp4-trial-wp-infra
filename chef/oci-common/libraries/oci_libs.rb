@@ -77,6 +77,16 @@ class MintOCIHost
     self.node_attributes = opts[:node_attributes] || {}
     self.create_cnames = opts[:create_cnames] || false
     self.create_friendly_names = opts[:create_friendly_names] || false
+    if self.create_friendly_names
+      short = self.hostname.split(".")[0]
+      self.cname_friendly = short.chomp(short[-2..-1]).concat('.wpdev.mintpress.io')
+      Chef::Log.info("Setting Friendly Name: #{cname_friendly}")
+    end
+
+    if self.create_cnames
+      self.cname_priv = self.hostname.split(".")[0].concat('-prv.wpdev.mintpress.io')
+      Chef::Log.info("Setting CName: #{cname_priv}")
+    end
   end
 
   # Function to create a host on OCI
@@ -93,16 +103,6 @@ class MintOCIHost
     Chef::Log.info("Setting Operating System Version: #{operating_system_version}")
     Chef::Log.info("Setting Run List: #{run_list}")
     Chef::Log.info("Setting Node Attributes: #{node_attributes}")
-    if self.create_friendly_names
-      short = self.hostname.split(".")[0]
-      self.cname_friendly = short.chomp(short[-2..-1]).concat('.wpdev.mintpress.io')
-      Chef::Log.info("Setting Friendly Name: #{cname_friendly}")
-    end
-
-    if self.create_cnames
-      self.cname_priv = self.hostname.split(".")[0].concat('-prv.wpdev.mintpress.io')
-      Chef::Log.info("Setting CName: #{cname_priv}")
-    end
 
     self.host_obj = MintPress::Infrastructure::VMHost.new(provider: 'public_subnet', 
       name: self.hostname,
