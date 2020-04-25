@@ -131,7 +131,14 @@ class MintOCIHost
     # The risk is that if the host got created and then failed for some reason, the code after the creation won't run which is not good
     # if that happens, destroy and recreate the host or change this logic
     #if ! self.host_obj.exists?
-      self.host_obj.create  
+      begin
+        create_retry ||= 1
+        Chef::Log.info "Attempt [#{create_retry}/3] to create the host."
+        self.host_obj.create  
+      rescue
+        Chef::Log.info "Host Creation failed but will attempt again if retries left"
+        retry if (create_retry += 1) < 4
+      end
       #self.host_obj.transport.execute("systemctl stop firewalld; services firewalld stop")
       if self.disable_selinux
         restart_required = true
