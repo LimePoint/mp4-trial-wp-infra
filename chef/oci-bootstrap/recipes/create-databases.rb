@@ -52,6 +52,11 @@ node.normal['oracle']['database'].tap do | database |
   ]
 end
 
+log "Creating Additional Directories for all databases"
+dirs_to_create = '/oracle/app/oradata/CBCD3OBAPRIM /oracle/app/oradata/CBCD3OSBPRIM /oracle/app/oradata/CBCD3DOCPRIM /oracle/app/oradata/CBCD3SECPRIM /oracle/app/oradata/CBCD3UCMPRIM /oracle/app/oradata/CBCD3SOAPRIM /oracle/app/oradata/CBCD3INTPRIM /oracle/app/oradata/CBCD3CSTPRIM /oracle/app/oradata/CBCD3OBPPRIM /oracle/app/oradata/CBCD3IDMPRIM'
+execute "mkdir -p #{dirs_to_create}"
+execute "chown -R oracle:oinstall #{dirs_to_create}"
+
 log "Creating databases..."
 include_recipe 'environmint-database::default'
 log "Databases created successfully."
@@ -59,9 +64,4 @@ log "Databases created successfully."
 log "Updating Profiles & Tablespaces for the databases."
 include_recipe 'oci-bootstrap::custom-sql-databases'
 log "Profiles & Tablespaces updated successfully."
-
-log "Creating Additional Directories for all databases"
-dirs_to_create = '/oracle/app/oradata/CBCD3OBAPRIM /oracle/app/oradata/CBCD3OSBPRIM /oracle/app/oradata/CBCD3DOCPRIM /oracle/app/oradata/CBCD3SECPRIM /oracle/app/oradata/CBCD3UCMPRIM /oracle/app/oradata/CBCD3SOAPRIM /oracle/app/oradata/CBCD3INTPRIM /oracle/app/oradata/CBCD3CSTPRIM /oracle/app/oradata/CBCD3OBPPRIM /oracle/app/oradata/CBCD3IDMPRIM'
-execute "mkdir -p #{dirs_to_create}"
-execute "chown -R oracle:oinstall #{dirs_to_create}"
 
