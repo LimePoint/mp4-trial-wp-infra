@@ -5,8 +5,7 @@
     "defaultHostTargetUsername": "oracle",
     "defaultHostTargetGroupName": "oinstall",
     "stageRootDir": "/oracle/stage",
-    "autoBaseline": "true",
-    "projectUri": "ENG9OBPOIM2020APR241251"
+    "autoBaseline": "true"
   },
   "projectName": "eng9_obpoim2020Apr24_2256",
   "uniquifier": "dde8be09730c4464a546277886add65d",
