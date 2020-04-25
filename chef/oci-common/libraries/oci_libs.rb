@@ -94,13 +94,13 @@ class MintOCIHost
     Chef::Log.info("Setting Run List: #{run_list}")
     Chef::Log.info("Setting Node Attributes: #{node_attributes}")
     if self.create_friendly_names
-      short = self.host_obj.name.split(".")[0]
+      short = self.hostname.split(".")[0]
       cname_friendly = short.chomp(short[-2..-1]).concat('.wpdev.mintpress.io')
       Chef::Log.info("Setting Friendly Name: #{cname_friendly}")
     end
 
     if self.create_cnames
-      cname_priv = self.host_obj.name.split(".")[0].concat('-prv.wpdev.mintpress.io')
+      cname_priv = self.hostname.split(".")[0].concat('-prv.wpdev.mintpress.io')
       Chef::Log.info("Setting CName: #{cname_priv}")
     end
 
