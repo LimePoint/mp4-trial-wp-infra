@@ -4,8 +4,7 @@
     "assetCode": "obpipm",
     "stageRootDir": "/oracle/stage",
     "ucmVaultDirectory": "/oracle/app/runtime/obpipm/eng9",
-    "autoBaseline": "true",
-    "projectUri": "ENG9OBPIPM2020APR241250"
+    "autoBaseline": "true"
   },
   "projectName": "eng9_obpipm2020Apr26_1441",
   "uniquifier": "7834831ddb6f4cb0b41a56dbdad47f68",
