@@ -220,7 +220,7 @@ class MintOCIHost
       
       # If env is typical workload add typical work load rules
       # TODO - Make this efficient, this is shite
-      if self.environment_name.match(/^bpd/) or environment_name.match(/^eng/) or environment_name.match(/^shared-services/)
+      if self.environment_name.match(/^bpd/) or environment_name.match(/^eng/) or environment_name.match(/^shared-services/) or environment_name.match(/^och/)
         rules['bpd_workload'].each do |secrule|
           Chef::Log.info "Adding Security rule: [#{secrule['name']}]"
           host_obj.add_network_security_group_by_display_name(secrule['name'])
