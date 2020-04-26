@@ -6,12 +6,13 @@
     "stageRootDir": "/oracle/stage",
     "documakerDataFileLocation": "/oracle/app/oradata/CBCD3DOCPRIM/",
     "databaseSysUsername": "SYS",
-    "databaseSysUserPassword": "{AES2}FHgGAArW5SY6Jswt4nhdaw=={/IV}Tt5HSqNkwwuPegZ4PKzak+u0axA4oiqY5vpK3gE8NOEE=",
-    "databaseSchemaPassword": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs=",
-    "autoBaseline": "true"
+    "databaseSysUserPassword": "{AES2}ifjIEmF7qFE7pX5WusaA0A=={/IV}TuUn9D83y45xcNZZAAnuWTaeMj/14u0eMReW23t2mA5g=",
+    "databaseSchemaPassword": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls=",
+    "autoBaseline": "true",
+    "projectUri": "ENG9OBPDOC2020APR241252"
   },
-  "projectName": "eng9_obpdoc2020Apr26_1440",
-  "uniquifier": "867a5893545645cc9b1812e7a2c3fd58",
+  "projectName": "eng9_obpdoc2020Apr26_2126",
+  "uniquifier": "0bee94a373114f2ead61c235bebfe533",
   "site": {
     "hostList": [
       {
@@ -266,7 +267,7 @@
           },
           {
             "target": "documaker.soa.admin.password",
-            "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+            "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
           },
           {
             "target": "documaker.database.advanced.compression.enabled",
@@ -282,7 +283,7 @@
           },
           {
             "target": "documaker.admin.password",
-            "value": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs="
+            "value": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls="
           },
           {
             "target": "documaker.assemblyline.username",
@@ -290,7 +291,7 @@
           },
           {
             "target": "documaker.assemblyline.password",
-            "value": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs="
+            "value": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls="
           },
           {
             "target": "documaker.assemblyline.hotfolder",
@@ -310,7 +311,7 @@
           },
           {
             "target": "documaker.smtp.password",
-            "value": "{AES2}HilseSB3TeamBXvEtwOXSA=={/IV}Tbui9ke3Fws0fJv58POD7faB2RJb1Goi2lGLJaID4fyE="
+            "value": "{AES2}59RzrBsCBNdvC1Apm1kt+w=={/IV}TS0mfcCqimDA1nTVAgGWRSIAjsl8iIDn2JSACo0xCAU0="
           },
           {
             "target": "documaker.smtp.sender",
@@ -326,7 +327,7 @@
           },
           {
             "target": "documaker.ucm.password",
-            "value": "{AES2}JKrbqzIxgFWWORl67fPJSw=={/IV}TEab0MQ2HXmyJxm53ryIdfV8uS2jhmzCF0f5+p2YQiac="
+            "value": "{AES2}/lO/MnpSuFQhfz6HzyTTCA=={/IV}T1GdiRZJQn195VgczpCrvMnX/zcJ6WW2RST0baBIAH6s="
           },
           {
             "target": "documaker.ucm.protocol",
@@ -366,7 +367,7 @@
           },
           {
             "target": "documaker.jms.credential",
-            "value": "{AES2}qcgCrYlCkueVvyX1Ih6DSw=={/IV}TnrCFD5tlW1IakjDc0cJbGN78Xb2XV3SsuNYA4b/Sbes="
+            "value": "{AES2}y7ryDutJ9DFq83AdxDRdAA=={/IV}TPK/p7R5wdj7WQBGFBvuZayaZxFH208BQ9cHPyF4KmYk="
           },
           {
             "target": "documaker.configure.smtp",
@@ -386,7 +387,7 @@
           },
           {
             "target": "documaker.ums.password",
-            "value": "{AES2}Hx/QHhzOge5VrUd4tNmWUg=={/IV}T2finHqDKmtD5iY1DKt6Qf1GIwL0yvGvY/2GB4gcMG/Q="
+            "value": "{AES2}0mOEkJ7RQMTgi3LasfINRA=={/IV}T0rnDAjSbGVU8QPqmYfXzF5AJ9V0RTEW7CthdiPwkS7E="
           },
           {
             "target": "documaker.ums.endpoint",
@@ -551,7 +552,7 @@
                 "name": "obpdoc_domain",
                 "locationPath": "/oracle/app/runtime/obpdoc/domains",
                 "adminUser": "weblogic",
-                "adminPassword": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ=",
+                "adminPassword": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk=",
                 "adminServer": {
                   "name": "AdminServer",
                   "machineName": "Machine-obpceng9doc01",
@@ -1232,7 +1233,7 @@
                   },
                   {
                     "target": "documaker.soa.admin.password",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "target": "documaker.database.advanced.compression.enabled",
@@ -1248,7 +1249,7 @@
                   },
                   {
                     "target": "documaker.admin.password",
-                    "value": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs="
+                    "value": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls="
                   },
                   {
                     "target": "documaker.assemblyline.username",
@@ -1256,7 +1257,7 @@
                   },
                   {
                     "target": "documaker.assemblyline.password",
-                    "value": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs="
+                    "value": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls="
                   },
                   {
                     "target": "documaker.assemblyline.hotfolder",
@@ -1276,7 +1277,7 @@
                   },
                   {
                     "target": "documaker.smtp.password",
-                    "value": "{AES2}HilseSB3TeamBXvEtwOXSA=={/IV}Tbui9ke3Fws0fJv58POD7faB2RJb1Goi2lGLJaID4fyE="
+                    "value": "{AES2}59RzrBsCBNdvC1Apm1kt+w=={/IV}TS0mfcCqimDA1nTVAgGWRSIAjsl8iIDn2JSACo0xCAU0="
                   },
                   {
                     "target": "documaker.smtp.sender",
@@ -1292,7 +1293,7 @@
                   },
                   {
                     "target": "documaker.ucm.password",
-                    "value": "{AES2}JKrbqzIxgFWWORl67fPJSw=={/IV}TEab0MQ2HXmyJxm53ryIdfV8uS2jhmzCF0f5+p2YQiac="
+                    "value": "{AES2}/lO/MnpSuFQhfz6HzyTTCA=={/IV}T1GdiRZJQn195VgczpCrvMnX/zcJ6WW2RST0baBIAH6s="
                   },
                   {
                     "target": "documaker.ucm.protocol",
@@ -1332,7 +1333,7 @@
                   },
                   {
                     "target": "documaker.jms.credential",
-                    "value": "{AES2}qcgCrYlCkueVvyX1Ih6DSw=={/IV}TnrCFD5tlW1IakjDc0cJbGN78Xb2XV3SsuNYA4b/Sbes="
+                    "value": "{AES2}y7ryDutJ9DFq83AdxDRdAA=={/IV}TPK/p7R5wdj7WQBGFBvuZayaZxFH208BQ9cHPyF4KmYk="
                   },
                   {
                     "target": "documaker.configure.smtp",
@@ -1352,7 +1353,7 @@
                   },
                   {
                     "target": "documaker.ums.password",
-                    "value": "{AES2}Hx/QHhzOge5VrUd4tNmWUg=={/IV}T2finHqDKmtD5iY1DKt6Qf1GIwL0yvGvY/2GB4gcMG/Q="
+                    "value": "{AES2}0mOEkJ7RQMTgi3LasfINRA=={/IV}T0rnDAjSbGVU8QPqmYfXzF5AJ9V0RTEW7CthdiPwkS7E="
                   },
                   {
                     "target": "documaker.ums.endpoint",
@@ -1439,7 +1440,7 @@
                     "dbName": "eng9obpdocdb",
                     "prefix": "OBPDOC",
                     "dbUser": "SYS",
-                    "schemaPassword": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs=",
+                    "schemaPassword": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls=",
                     "defaultRepository": "true"
                   }
                 ]
@@ -1511,7 +1512,7 @@
                   },
                   {
                     "target": "documaker.soa.admin.password",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "target": "documaker.database.advanced.compression.enabled",
@@ -1527,7 +1528,7 @@
                   },
                   {
                     "target": "documaker.admin.password",
-                    "value": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs="
+                    "value": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls="
                   },
                   {
                     "target": "documaker.assemblyline.username",
@@ -1535,7 +1536,7 @@
                   },
                   {
                     "target": "documaker.assemblyline.password",
-                    "value": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs="
+                    "value": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls="
                   },
                   {
                     "target": "documaker.assemblyline.hotfolder",
@@ -1555,7 +1556,7 @@
                   },
                   {
                     "target": "documaker.smtp.password",
-                    "value": "{AES2}HilseSB3TeamBXvEtwOXSA=={/IV}Tbui9ke3Fws0fJv58POD7faB2RJb1Goi2lGLJaID4fyE="
+                    "value": "{AES2}59RzrBsCBNdvC1Apm1kt+w=={/IV}TS0mfcCqimDA1nTVAgGWRSIAjsl8iIDn2JSACo0xCAU0="
                   },
                   {
                     "target": "documaker.smtp.sender",
@@ -1571,7 +1572,7 @@
                   },
                   {
                     "target": "documaker.ucm.password",
-                    "value": "{AES2}JKrbqzIxgFWWORl67fPJSw=={/IV}TEab0MQ2HXmyJxm53ryIdfV8uS2jhmzCF0f5+p2YQiac="
+                    "value": "{AES2}/lO/MnpSuFQhfz6HzyTTCA=={/IV}T1GdiRZJQn195VgczpCrvMnX/zcJ6WW2RST0baBIAH6s="
                   },
                   {
                     "target": "documaker.ucm.protocol",
@@ -1611,7 +1612,7 @@
                   },
                   {
                     "target": "documaker.jms.credential",
-                    "value": "{AES2}qcgCrYlCkueVvyX1Ih6DSw=={/IV}TnrCFD5tlW1IakjDc0cJbGN78Xb2XV3SsuNYA4b/Sbes="
+                    "value": "{AES2}y7ryDutJ9DFq83AdxDRdAA=={/IV}TPK/p7R5wdj7WQBGFBvuZayaZxFH208BQ9cHPyF4KmYk="
                   },
                   {
                     "target": "documaker.configure.smtp",
@@ -1631,7 +1632,7 @@
                   },
                   {
                     "target": "documaker.ums.password",
-                    "value": "{AES2}Hx/QHhzOge5VrUd4tNmWUg=={/IV}T2finHqDKmtD5iY1DKt6Qf1GIwL0yvGvY/2GB4gcMG/Q="
+                    "value": "{AES2}0mOEkJ7RQMTgi3LasfINRA=={/IV}T0rnDAjSbGVU8QPqmYfXzF5AJ9V0RTEW7CthdiPwkS7E="
                   },
                   {
                     "target": "documaker.ums.endpoint",
@@ -1710,7 +1711,7 @@
                   "dbName": "eng9obpdocdb",
                   "prefix": "OBPDOC",
                   "dbUser": "SYS",
-                  "schemaPassword": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs="
+                  "schemaPassword": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls="
                 }
               }
             ],
@@ -2072,7 +2073,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "name": "scaleout",
@@ -2093,7 +2094,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "name": "scaleout",
@@ -2156,7 +2157,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "name": "scaleout",
@@ -2197,7 +2198,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "name": "scaleout",
@@ -2282,7 +2283,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "name": "scaleout",
@@ -2303,7 +2304,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}0EqGpaQhhPrRiRupTLDckQ=={/IV}Tfn1yxVhL69WAKATg/+yFPh13Hw9I4LJZwpLAWh3+aKQ="
+                    "value": "{AES2}516T6aYq9Oixcuj40N+R5w=={/IV}TU0IY6ryeAhXH8zadAsRwoRFt4zxJBSBX9PiR85godhk="
                   },
                   {
                     "name": "scaleout",
@@ -2352,7 +2353,7 @@
               },
               {
                 "name": "ensure-db-working-online",
-                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_admin/v_gO3jJEoHTXH5XZ437O@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_asline/v_gO3jJEoHTXH5XZ437O@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DOCU_JMS_TLOGS/v_gO3jJEoHTXH5XZ437O@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_admin/jCBT6ai_GMG_yR27zCny@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_asline/jCBT6ai_GMG_yR27zCny@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DOCU_JMS_TLOGS/jCBT6ai_GMG_yR27zCny@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
                 "executeWhenList": [
                   "pre-online"
                 ],
@@ -2362,7 +2363,7 @@
               },
               {
                 "name": "ensure-db-working-start",
-                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_admin/v_gO3jJEoHTXH5XZ437O@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_asline/v_gO3jJEoHTXH5XZ437O@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DOCU_JMS_TLOGS/v_gO3jJEoHTXH5XZ437O@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_admin/jCBT6ai_GMG_yR27zCny@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'dmkr_asline/jCBT6ai_GMG_yR27zCny@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DOCU_JMS_TLOGS/jCBT6ai_GMG_yR27zCny@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
                 "executeWhenList": [
                   "pre-start"
                 ],
@@ -2427,7 +2428,7 @@
         "schemaList": [
           {
             "name": "SYS",
-            "password": "{AES2}FHgGAArW5SY6Jswt4nhdaw=={/IV}Tt5HSqNkwwuPegZ4PKzak+u0axA4oiqY5vpK3gE8NOEE="
+            "password": "{AES2}ifjIEmF7qFE7pX5WusaA0A=={/IV}TuUn9D83y45xcNZZAAnuWTaeMj/14u0eMReW23t2mA5g="
           }
         ]
       }
@@ -2438,7 +2439,7 @@
         "type": "User",
         "attributes": {
           "name": "wlsmonitor",
-          "password": "{AES2}wRPP8hoIR3ORgdK2GbjVZw=={/IV}TJ/q/mcJ+GSpTyyzhI4TVV3XfkKbGbZcS1gJwqXakoeY=",
+          "password": "{AES2}Nxn7ccLNDrCYotq4GWo9Ew=={/IV}TjkqFofsYGENQ2k2XoaWz+mfL0fCY7tJ3SwP6xe52u1c=",
           "description": "User with Weblogic Monitor Role",
           "groupList": "monitors"
         }
@@ -2448,7 +2449,7 @@
         "type": "User",
         "attributes": {
           "name": "odemmon",
-          "password": "{AES2}JDWFpu13idwWa7qWGwYltA=={/IV}Tv2Z+FcfTdRkUwg5Nzsi/vj8xP6Yt2eI3uxXzf5ZsZ7Q=",
+          "password": "{AES2}riKbAWaJnhy1xmmOxwnjXg=={/IV}TyvOEb0sF1uZy6xTPA3PRSvBWMMP600u0sJYlxufltnE=",
           "description": "OEM User with Weblogic Monitor Role",
           "groupList": "monitors"
         }
@@ -2701,7 +2702,7 @@
               "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "{AES2}sIqGnUOmJl2wVST17JWr4Q=={/IV}TtZFA+rt56EzvtZlgzuPayoYaiup0xY5K0aV0292Apjk=",
+              "ServerPrivateKeyPassPhrase": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
               "JSSEEnabled": "true",
               "UseServerCerts": "true"
             }
@@ -2718,8 +2719,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng9/certs/obpceng9doc.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
-          "CustomIdentityKeyStorePassPhrase": "{AES2}sIqGnUOmJl2wVST17JWr4Q=={/IV}TtZFA+rt56EzvtZlgzuPayoYaiup0xY5K0aV0292Apjk=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}sIqGnUOmJl2wVST17JWr4Q=={/IV}TtZFA+rt56EzvtZlgzuPayoYaiup0xY5K0aV0292Apjk=",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -2754,7 +2755,7 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}sIqGnUOmJl2wVST17JWr4Q=={/IV}TtZFA+rt56EzvtZlgzuPayoYaiup0xY5K0aV0292Apjk=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
                   "javax.net.ssl.trustStore": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
@@ -2777,7 +2778,7 @@
           "Host": "obpceng9oid.wpdev.mintpress.io",
           "Port": "18001",
           "Principal": "cn=obpdoc_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au",
-          "Credential": "{AES2}RibLfxvYM68KS08Uy0L98Q=={/IV}T3K2ZTry4DbF1UxHIaFrAf3KnTWSeo4Z+LDts+o/1GDY=",
+          "Credential": "{AES2}ZoVMgk7Tm1te77kNI5O7aQ=={/IV}TTRR6ONJQk493GaOcEBYo5KplcKE3/rj81+TurQy1Bps=",
           "UserNameAttribute": "uid",
           "UserFromNameFilter": "(&(uid=%u)(objectclass=person))",
           "KeepAliveEnabled": "true",
@@ -2975,7 +2976,7 @@
                 "type": "JDBCDriverParams",
                 "attributes": {
                   "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
-                  "Password": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs=",
+                  "Password": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls=",
                   "DriverName": "oracle.jdbc.xa.client.OracleXADataSource"
                 },
                 "properties": {
@@ -3016,7 +3017,7 @@
                 "type": "JDBCDriverParams",
                 "attributes": {
                   "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
-                  "Password": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs=",
+                  "Password": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls=",
                   "DriverName": "oracle.jdbc.xa.client.OracleXADataSource"
                 },
                 "properties": {
@@ -3057,7 +3058,7 @@
                 "type": "JDBCDriverParams",
                 "attributes": {
                   "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
-                  "Password": "{AES2}M88oM3Sutr7TtS5/03jDuA=={/IV}TiCAn2N+OpapnKam3mdsXBOrtjd3351jC4LWzS7Z6Ehs=",
+                  "Password": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls=",
                   "DriverName": "oracle.jdbc.OracleDriver"
                 },
                 "properties": {
@@ -3088,7 +3089,7 @@
         "type": "User",
         "attributes": {
           "name": "documaker",
-          "password": "{AES2}uU3zyfffWtTDhJTtrdB+6Q=={/IV}TMZfgaUalFsbr/SGc4QRfAH5aUFkAD593wMbKh2uG9Bk=",
+          "password": "{AES2}Lu8I91z4gcGQt4glesE0xA=={/IV}Td0iOeDh5I4PfJlDkVBYf+PK7Jv9bzAqf7RFYrv46dQM=",
           "description": "Documaker Admin",
           "groupList": "Documaker Administrators"
         }
@@ -3098,7 +3099,7 @@
         "type": "User",
         "attributes": {
           "name": "jmsadmin",
-          "password": "{AES2}qcgCrYlCkueVvyX1Ih6DSw=={/IV}TnrCFD5tlW1IakjDc0cJbGN78Xb2XV3SsuNYA4b/Sbes=",
+          "password": "{AES2}y7ryDutJ9DFq83AdxDRdAA=={/IV}TPK/p7R5wdj7WQBGFBvuZayaZxFH208BQ9cHPyF4KmYk=",
           "description": "Documaker Admin",
           "groupList": "Documaker Administrators"
         }
