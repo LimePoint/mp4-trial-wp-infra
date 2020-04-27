@@ -188,5 +188,8 @@
   },
   "oemmonitoring": {
     "odemmon": "{AES2}4RlihJKNmp/DGxtRY4T0DQ=={/IV}T8fxSocN2EGEc4QgzAI+LAVwirRvaVZsg1aVB7YtYa2Q="
+  },
+  "deployment": {
+    "cwalletpassword": "{AES2}bEvlyZhC9yucj9L11eb3Wg=={/IV}TDPgQlbkHaBYM2xedhDNzpnlSWKq+bKGuwh8LwpN/dp8="
   }
 }
