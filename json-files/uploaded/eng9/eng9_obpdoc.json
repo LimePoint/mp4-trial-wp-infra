@@ -8,8 +8,7 @@
     "databaseSysUsername": "SYS",
     "databaseSysUserPassword": "{AES2}ifjIEmF7qFE7pX5WusaA0A=={/IV}TuUn9D83y45xcNZZAAnuWTaeMj/14u0eMReW23t2mA5g=",
     "databaseSchemaPassword": "{AES2}fnk6XoTO0JTJNUNZ+gamCw=={/IV}Tv6SorH/lsaoUnP1q2xoPeE2y5kt+CLlKx4nr0EBMrls=",
-    "autoBaseline": "true",
-    "projectUri": "ENG9OBPDOC2020APR241252"
+    "autoBaseline": "true"
   },
   "projectName": "eng9_obpdoc2020Apr26_2126",
   "uniquifier": "0bee94a373114f2ead61c235bebfe533",
