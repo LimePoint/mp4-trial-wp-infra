@@ -40,7 +40,11 @@ action :create do
       raise
     end
   else
-    Chef::Log.info("Entry [#{new_resource.ldap_entry}] already exists. Skipping.")
+    if attr[:sudoHost]
+      ldap.add_attribute dn, :sudoHost, attr[:sudoHost]
+    else
+      Chef::Log.info("Entry [#{new_resource.ldap_entry}] already exists. Skipping.")
+    end
   end
 end
 
