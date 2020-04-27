@@ -5,9 +5,9 @@
     "stageRootDir": "/oracle/stage",
     "ucmVaultDirectory": "/oracle/app/runtime/obpipm/eng9",
     "autoBaseline": "true",
-    "projectUri": "ENG9OBPIPM2020APR241250"
+    "projectUri": "ENG9OBPIPM2020APR271419"
   },
-  "projectName": "eng9_obpipm2020Apr27_0933",
+  "projectName": "eng9_obpipm2020Apr27_1419",
   "uniquifier": "b8996997cd9d488f85c646aaccfcd93c",
   "site": {
     "hostList": [
@@ -105,8 +105,8 @@
           {
             "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
             "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
-            "name": "29814665",
-            "aru": "29814665",
+            "name": "30386660",
+            "aru": "30386660",
             "properties": [
               {
                 "name": "action",
@@ -117,16 +117,28 @@
           {
             "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
             "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
-            "name": "30386660",
-            "aru": "30386660",
+            "name": "30576401",
+            "aru": "30576401",
+            "properties": [
+              {
+                "name": "action",
+                "value": "rollback"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "30675853",
+            "aru": "30675853",
             "properties": [
               {
                 "target": "opatch.minimum.version",
-                "value": "13.9.4.2"
+                "value": "13.9.4.2.2"
               },
               {
                 "target": "opatch.binary.location",
-                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+                "value": "/oracle/stage/common_patches/OPatch/139422/6880880"
               },
               {
                 "target": "opatch.update.usegeneric",
@@ -141,16 +153,16 @@
           {
             "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
             "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
-            "name": "30576401",
-            "aru": "30576401",
+            "name": "122136",
+            "aru": "122136",
             "properties": [
               {
                 "target": "opatch.minimum.version",
-                "value": "13.9.4.2"
+                "value": "13.9.4.2.2"
               },
               {
                 "target": "opatch.binary.location",
-                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+                "value": "/oracle/stage/common_patches/OPatch/139422/6880880"
               },
               {
                 "target": "opatch.update.usegeneric",
@@ -170,11 +182,11 @@
             "properties": [
               {
                 "target": "opatch.minimum.version",
-                "value": "13.9.4.2"
+                "value": "13.9.4.2.2"
               },
               {
                 "target": "opatch.binary.location",
-                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
+                "value": "/oracle/stage/common_patches/OPatch/139422/6880880"
               },
               {
                 "target": "opatch.update.usegeneric",
@@ -298,8 +310,8 @@
           {
             "targetOracleHome": "/oracle/app/binaries/obpipm/fmw/wcc",
             "softwareStage": "/oracle/stage/wcc/12.2.1.3/patches",
-            "name": "30154206",
-            "aru": "30154206",
+            "name": "30499031",
+            "aru": "30499031",
             "properties": [
               {
                 "name": "patchWhen",
@@ -1720,6 +1732,7 @@
               "StacktraceDepth": "5",
               "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
               "LogFileSeverity": "Warning",
+              "LoggerSeverity": "Warning",
               "FileName": "/oracle/app/logs/obpipm/obpipm_domain/%Name%/%Name%.log"
             }
           },
@@ -1803,6 +1816,7 @@
               "StacktraceDepth": "5",
               "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
               "LogFileSeverity": "Warning",
+              "LoggerSeverity": "Warning",
               "FileName": "/oracle/app/logs/obpipm/obpipm_domain/%Name%/%Name%.log"
             }
           },
