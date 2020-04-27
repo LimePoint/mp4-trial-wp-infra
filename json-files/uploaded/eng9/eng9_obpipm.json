@@ -4,10 +4,11 @@
     "assetCode": "obpipm",
     "stageRootDir": "/oracle/stage",
     "ucmVaultDirectory": "/oracle/app/runtime/obpipm/eng9",
-    "autoBaseline": "true"
+    "autoBaseline": "true",
+    "projectUri": "ENG9OBPIPM2020APR241250"
   },
-  "projectName": "eng9_obpipm2020Apr27_1419",
-  "uniquifier": "b8996997cd9d488f85c646aaccfcd93c",
+  "projectName": "eng9_obpipm2020Apr27_2215",
+  "uniquifier": "8a1e9cf8aeb4478aa6ab80df123da1e3",
   "site": {
     "hostList": [
       {
@@ -104,40 +105,28 @@
           {
             "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
             "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
+            "name": "29814665",
+            "aru": "29814665",
+            "properties": [
+              {
+                "name": "action",
+                "value": "rollback"
+              }
+            ]
+          },
+          {
+            "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
+            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
             "name": "30386660",
             "aru": "30386660",
             "properties": [
               {
-                "name": "action",
-                "value": "rollback"
-              }
-            ]
-          },
-          {
-            "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
-            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
-            "name": "30576401",
-            "aru": "30576401",
-            "properties": [
-              {
-                "name": "action",
-                "value": "rollback"
-              }
-            ]
-          },
-          {
-            "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
-            "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
-            "name": "30675853",
-            "aru": "30675853",
-            "properties": [
-              {
                 "target": "opatch.minimum.version",
-                "value": "13.9.4.2.2"
+                "value": "13.9.4.2"
               },
               {
                 "target": "opatch.binary.location",
-                "value": "/oracle/stage/common_patches/OPatch/139422/6880880"
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
               },
               {
                 "target": "opatch.update.usegeneric",
@@ -152,16 +141,16 @@
           {
             "targetOracleHome": "/oracle/app/binaries/obpipm/fmw",
             "softwareStage": "/oracle/stage/fmwinfra/12.2.1.3/patches",
-            "name": "122136",
-            "aru": "122136",
+            "name": "30576401",
+            "aru": "30576401",
             "properties": [
               {
                 "target": "opatch.minimum.version",
-                "value": "13.9.4.2.2"
+                "value": "13.9.4.2"
               },
               {
                 "target": "opatch.binary.location",
-                "value": "/oracle/stage/common_patches/OPatch/139422/6880880"
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
               },
               {
                 "target": "opatch.update.usegeneric",
@@ -181,11 +170,11 @@
             "properties": [
               {
                 "target": "opatch.minimum.version",
-                "value": "13.9.4.2.2"
+                "value": "13.9.4.2"
               },
               {
                 "target": "opatch.binary.location",
-                "value": "/oracle/stage/common_patches/OPatch/139422/6880880"
+                "value": "/oracle/stage/common_patches/OPatch/139420/6880880"
               },
               {
                 "target": "opatch.update.usegeneric",
@@ -309,8 +298,8 @@
           {
             "targetOracleHome": "/oracle/app/binaries/obpipm/fmw/wcc",
             "softwareStage": "/oracle/stage/wcc/12.2.1.3/patches",
-            "name": "30499031",
-            "aru": "30499031",
+            "name": "30154206",
+            "aru": "30154206",
             "properties": [
               {
                 "name": "patchWhen",
@@ -454,7 +443,7 @@
                 "name": "obpipm_domain",
                 "locationPath": "/oracle/app/runtime/obpipm/domains",
                 "adminUser": "weblogic",
-                "adminPassword": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM=",
+                "adminPassword": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM=",
                 "adminServer": {
                   "name": "AdminServer",
                   "machineName": "Machine-obpceng9ipm01",
@@ -844,7 +833,7 @@
                       {
                         "name": "OracleWebCenter::IPMTemplateSet.ucm_connection_admin_password",
                         "target": "OracleWebCenter::IPMTemplateSet.ucm_connection_admin_password",
-                        "value": "{AES2}lfaJfceknm9oFxyWysYgWg=={/IV}TjHhEDSgBdF5ZF1sirXX3k6lNDW938GkQBTxhwbuQAzk="
+                        "value": "{AES2}Lwz6D5UySR4rMxFnO1t5yg=={/IV}Tj9xfOXHY8mxobiHzVV9pXnj+klr6gqkvR/kBTpXLQ7M="
                       },
                       {
                         "name": "OracleWebCenter::IPMTemplateSet.ucm_domain_home",
@@ -877,7 +866,7 @@
                     "dbName": "eng9obpipmdb",
                     "prefix": "OBPIPM",
                     "dbUser": "SYS",
-                    "schemaPassword": "{AES2}Bjv8PUkya7Nxe1R3jRdvug=={/IV}ToOnbJDmpHjjJS0PvQLMp1VFHvCkAvXtvxMm3lPnzqYA=",
+                    "schemaPassword": "{AES2}Il80cROLetfduXyANqfjLw=={/IV}TS7oYJ2kb0QrRLCtpOHXIfnXwBOqYNHMyrEpDtiignso=",
                     "defaultRepository": "true"
                   }
                 ],
@@ -966,7 +955,7 @@
                   },
                   {
                     "target": "wcc.img.config.admin.password",
-                    "value": "{AES2}lfaJfceknm9oFxyWysYgWg=={/IV}TjHhEDSgBdF5ZF1sirXX3k6lNDW938GkQBTxhwbuQAzk="
+                    "value": "{AES2}Lwz6D5UySR4rMxFnO1t5yg=={/IV}Tj9xfOXHY8mxobiHzVV9pXnj+klr6gqkvR/kBTpXLQ7M="
                   }
                 ]
               }
@@ -1183,7 +1172,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1204,7 +1193,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1225,7 +1214,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1246,7 +1235,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1267,7 +1256,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1288,7 +1277,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1328,7 +1317,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1349,12 +1338,12 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "execute.obpipmAdminPassword",
                     "target": "execute.obpipmAdminPassword",
-                    "value": "{AES2}lfaJfceknm9oFxyWysYgWg=={/IV}TjHhEDSgBdF5ZF1sirXX3k6lNDW938GkQBTxhwbuQAzk="
+                    "value": "{AES2}Lwz6D5UySR4rMxFnO1t5yg=={/IV}Tj9xfOXHY8mxobiHzVV9pXnj+klr6gqkvR/kBTpXLQ7M="
                   },
                   {
                     "name": "scaleout",
@@ -1420,7 +1409,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1441,7 +1430,7 @@
                   {
                     "name": "execute.weblogicAdminPassword",
                     "target": "execute.weblogicAdminPassword",
-                    "value": "{AES2}3ExOyedfxQzkWn3B81BPkQ=={/IV}T+rJQDIj3fCmMtzt1BXeXsB5q2yS9c9WP2UFD5LXbdiM="
+                    "value": "{AES2}iwGku+Lmo6B1PSou5M/dwA=={/IV}TMIeG4b+syw9n5iQKEnhC4IUzs86HiKe1eSf3YnuJRrM="
                   },
                   {
                     "name": "scaleout",
@@ -1502,7 +1491,7 @@
               },
               {
                 "name": "ensure-db-working-online",
-                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DCMS/cPl4Nrf9_1xN2_ttWLBp@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DCMS/LF_0ptMeJ_Z9HLbeLMTc@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
                 "executeWhenList": [
                   "pre-online"
                 ],
@@ -1512,7 +1501,7 @@
               },
               {
                 "name": "ensure-db-working-start",
-                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DCMS/cPl4Nrf9_1xN2_ttWLBp@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
+                "sourceFile": "export ORACLE_HOME=/oracle/stage/sqlplus/client/11.2.0/ ; export LD_LIBRARY_PATH=$ORACLE_HOME/lib ; export PATH=$PATH:$ORACLE_HOME/bin ; RESULT=1 ; while [ $RESULT != 0 ]; do sqlplus 'DCMS/LF_0ptMeJ_Z9HLbeLMTc@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))' </dev/null 2>&1 | grep 'Connected.to' ; RESULT=$? ; if [ $RESULT != 0 ]; then sleep 5 ; fi ; done ;  /bin/true",
                 "executeWhenList": [
                   "pre-start"
                 ],
@@ -1569,7 +1558,7 @@
         "schemaList": [
           {
             "name": "SYS",
-            "password": "{AES2}ifjIEmF7qFE7pX5WusaA0A=={/IV}TuUn9D83y45xcNZZAAnuWTaeMj/14u0eMReW23t2mA5g="
+            "password": "{AES2}hstDOVnp9E80SMFcPKBhDw=={/IV}Ts+BQxWvWe3Y6f/2JFxybtlBDeYnDIJWi2OKFZHdoJrc="
           }
         ]
       }
@@ -1580,7 +1569,7 @@
         "type": "User",
         "attributes": {
           "name": "wlsmonitor",
-          "password": "{AES2}ZIDZVFSaDV1CA/up9Jhxxw=={/IV}TkkVOlF5qBYO4MYX1jMmG39mK2DgVAXFdqFGFTRNsp6o=",
+          "password": "{AES2}ZcPmlDhUswSqwqBkmlZvRw=={/IV}TFAAlpX3XP3Fl5rZGKa0QOTv29EMajn2V0Mwyo+z/I/4=",
           "description": "User with Weblogic Monitor Role",
           "groupList": "monitors"
         }
@@ -1590,7 +1579,7 @@
         "type": "User",
         "attributes": {
           "name": "odemmon",
-          "password": "{AES2}riKbAWaJnhy1xmmOxwnjXg=={/IV}TyvOEb0sF1uZy6xTPA3PRSvBWMMP600u0sJYlxufltnE=",
+          "password": "{AES2}4lvhONbIfRN77qjGodGMeg=={/IV}TyAtG1liRFQ2oj8xI4/ZcPMKMM3tZe+2cnszIEau7RuA=",
           "description": "OEM User with Weblogic Monitor Role",
           "groupList": "monitors"
         }
@@ -1731,7 +1720,6 @@
               "StacktraceDepth": "5",
               "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
               "LogFileSeverity": "Warning",
-              "LoggerSeverity": "Warning",
               "FileName": "/oracle/app/logs/obpipm/obpipm_domain/%Name%/%Name%.log"
             }
           },
@@ -1815,7 +1803,6 @@
               "StacktraceDepth": "5",
               "DateFormatPattern": "MMM d, yyyy h:mm:ss a z",
               "LogFileSeverity": "Warning",
-              "LoggerSeverity": "Warning",
               "FileName": "/oracle/app/logs/obpipm/obpipm_domain/%Name%/%Name%.log"
             }
           },
@@ -1845,7 +1832,7 @@
               "ServerPrivateKeyAlias": "%ListenAddress/noprefix%",
               "HostnameVerificationIgnored": "false",
               "Enabled": "true",
-              "ServerPrivateKeyPassPhrase": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
+              "ServerPrivateKeyPassPhrase": "{AES2}SCGDtkfaX+U9B9pMjjJQrQ=={/IV}TA0wehUnK4BTVecJbG9WN90DxoJxVc1/f7lSLlPkMhNc=",
               "JSSEEnabled": "true",
               "UseServerCerts": "true"
             }
@@ -1862,8 +1849,8 @@
           "KeyStores": "CustomIdentityAndCustomTrust",
           "CustomIdentityKeyStoreFileName": "/oracle/app/runtime/eng9/certs/obpceng9ipm.jks",
           "CustomTrustKeyStoreFileName": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
-          "CustomIdentityKeyStorePassPhrase": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
-          "CustomTrustKeyStorePassPhrase": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
+          "CustomIdentityKeyStorePassPhrase": "{AES2}SCGDtkfaX+U9B9pMjjJQrQ=={/IV}TA0wehUnK4BTVecJbG9WN90DxoJxVc1/f7lSLlPkMhNc=",
+          "CustomTrustKeyStorePassPhrase": "{AES2}SCGDtkfaX+U9B9pMjjJQrQ=={/IV}TA0wehUnK4BTVecJbG9WN90DxoJxVc1/f7lSLlPkMhNc=",
           "CustomIdentityKeyStoreType": "jks",
           "CustomTrustKeyStoreType": "jks",
           "AdministrationPort": "%ListenPort+2000%"
@@ -1898,7 +1885,7 @@
                 },
                 "properties": {
                   "javax.net.ssl.trustStoreType": "JKS",
-                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}jY4M1tvFjOVuU4w09x3uqQ=={/IV}TSwi2A76IUZH33p24+Z9udGHA96kdpVHmfLHrhcHHjT4=",
+                  "encrypted:javax.net.ssl.trustStorePassword": "{AES2}SCGDtkfaX+U9B9pMjjJQrQ=={/IV}TA0wehUnK4BTVecJbG9WN90DxoJxVc1/f7lSLlPkMhNc=",
                   "oracle.net.ssl_cipher_suites": "(TLS_RSA_WITH_AES_256_CBC_SHA256)",
                   "oracle.net.ssl_version": "1.2",
                   "javax.net.ssl.trustStore": "/oracle/app/runtime/eng9/certs/wpdev_trust.jks",
@@ -1921,7 +1908,7 @@
           "Host": "obpceng9oid.wpdev.mintpress.io",
           "Port": "18001",
           "Principal": "cn=obpipm_readonly,cn=serviceaccounts,cn=users,dc=westpac,dc=com,dc=au",
-          "Credential": "{AES2}V6aXKOSPBY1v7mIKMV/CoQ=={/IV}TPm3QV9tpxOXma0RBNfQOZt9Aq5oqB+QQn6tMQt9LBZI=",
+          "Credential": "{AES2}HY9SJOtLTZ3DOwpf3D92Hg=={/IV}TwU5Iupu/bfgYzlfSJNamH84SBzbrgEoueLE/aGUqbkM=",
           "UserNameAttribute": "uid",
           "UserFromNameFilter": "(&(uid=%u)(objectclass=person))",
           "KeepAliveEnabled": "true",
@@ -2076,7 +2063,7 @@
                 "type": "JDBCDriverParams",
                 "attributes": {
                   "Url": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng9db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_CST_PRIM)))",
-                  "Password": "{AES2}Bjv8PUkya7Nxe1R3jRdvug=={/IV}ToOnbJDmpHjjJS0PvQLMp1VFHvCkAvXtvxMm3lPnzqYA=",
+                  "Password": "{AES2}Il80cROLetfduXyANqfjLw=={/IV}TS7oYJ2kb0QrRLCtpOHXIfnXwBOqYNHMyrEpDtiignso=",
                   "DriverName": "oracle.jdbc.OracleDriver"
                 },
                 "properties": {
