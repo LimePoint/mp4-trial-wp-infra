@@ -5,8 +5,8 @@ node.override['sssd_ldap']['sssd_conf']['ldap_user_search_base']='ou=account,dc=
 node.override['sssd_ldap']['sssd_conf']['ldap_group_search_base']='ou=group,dc=wpdev,dc=mintpress,dc=io'
 node.override['sssd_ldap']['sssd_conf']['ldap_netgroup_search_base']='ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io'
 node.override['sssd_ldap']['sssd_conf']['ldap_sudo_search_base']='ou=sudo,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io'
-node.override['sssd_ldap']['sssd_conf']['ldap_default_bind_dn']='cn=ldapadm,dc=wpdev,dc=mintpress,dc=io'
-node.override['sssd_ldap']['sssd_conf']['ldap_default_authtok']='LinqvUt9hzR1mGkvBGYGvo'
+node.override['sssd_ldap']['sssd_conf']['ldap_default_bind_dn']='cn=ldap_readonly,dc=wpdev,dc=mintpress,dc=io'
+node.override['sssd_ldap']['sssd_conf']['ldap_default_authtok']='twub!LEF8jeff1werm'
 node.override['sssd_ldap']['sssd_conf']['entry_cache_timeout']='300'
 node.override['sssd_ldap']['ldap_ssh']=true
 node.override['sssd_ldap']['ldap_sudo']=true
