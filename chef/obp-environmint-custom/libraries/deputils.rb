@@ -325,7 +325,7 @@ end
 # Use this function to clean up the vault after destroy action
 def cleanupVault(environment_code, my_topology_vars)
 	puts "Cleaning up password vault"
-	artifactory_url='https://artifactory1-priv.wpdev.mintpress.io/artifactory/'
+	artifactory_url='https://artifactory1.wpdev.mintpress.io/artifactory/'
 	artifactory_pass = Mint::AesEncryption.decrypt(PasswordVault.get_password('mintpress', 'artifactory', "artifactory_admin"))
 	
 	%x[ mkdir -p "#{my_topology_vars['common']['git_repo_path']}/tools/vault"; ]
@@ -358,7 +358,7 @@ def generatePasswordVaultZips(environment_code, my_topology_vars)
 	ruby_loc='/opt/chefdk/embedded/bin/ruby'
 	if is_running_on_cloud
 		sub_folder = 'ocloud'
-		artifactory_url='https://artifactory1-priv.wpdev.mintpress.io/artifactory/'
+		artifactory_url='https://artifactory1.wpdev.mintpress.io/artifactory/'
 		admin_pass = Mint::AesEncryption.decrypt(PasswordVault.get_password('mintpress', 'zippasswords', "#{environment_code}_admin"))
 		readonly_pass = Mint::AesEncryption.decrypt(PasswordVault.get_password('mintpress', 'zippasswords', "#{environment_code}_readonly"))
 		artifactory_pass = Mint::AesEncryption.decrypt(PasswordVault.get_password('mintpress', 'artifactory', "artifactory_admin"))
