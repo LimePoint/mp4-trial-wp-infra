@@ -1,7 +1,6 @@
 # Recipe to install all Oracle Packages required for FMW
 # Reference: https://docs.oracle.com/en/middleware/fusion-middleware/12.2.1.4/sysrs/system-requirements-and-specifications.html#GUID-37C51062-3732-4A4B-8E0E-003D9DFC8C26
-#oracle_packages = ['binutils','compat-libcap1','compat-libstdc++-33', 'compat-libstdc++-33','gcc','gcc-c++','glibc','glibc-devel','libaio','libaio-devel','libgcc','libstdc++','libstdc++-devel','libXext','libXtst','openmotif21','sysstat','redhat-lsb','redhat-lsb-core','openssl']
-oracle_packages = ['binutils','compat-libcap1','compat-libstdc++-33', 'compat-libstdc++-33','gcc','gcc-c++','glibc','glibc-devel','libaio','libaio-devel','libgcc','libstdc++','libstdc++-devel','libXext','libXtst','sysstat','redhat-lsb','redhat-lsb-core','openssl','ksh']
+oracle_packages = ['binutils','compat-libcap1','compat-libstdc++-33', 'compat-libstdc++-33','gcc','gcc-c++','glibc','glibc-devel','libaio','libaio-devel','libgcc','libstdc++','libstdc++-devel','libXext','libXtst','sysstat','redhat-lsb','redhat-lsb-core','openssl','ksh','xauth']
 
 oracle_packages.each do | pkg |
   yum_package pkg do
