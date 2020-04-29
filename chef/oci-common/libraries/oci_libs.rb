@@ -379,6 +379,12 @@ class MintOCIHost
       d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
       d_record.create
     end
+    if self.create_cnames
+      # Add -adm Entries
+      Chef::Log.info 'Publishing DNS Admin Record to External DNS'
+      d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_adm, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
+      d_record.create
+    end
   end
 
   # Destroy the external DNS entry
@@ -391,6 +397,12 @@ class MintOCIHost
     if self.create_friendly_names
       Chef::Log.info 'Unpublishing DNS Friendly CNAME Record from External DNS'
       d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
+      d_record.remove
+    end
+    if self.create_cnames
+      # Remove -adm Entries
+      Chef::Log.info 'Unpublishing DNS Admin Record to External DNS'
+      d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_adm, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
       d_record.remove
     end
   end
