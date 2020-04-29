@@ -101,6 +101,27 @@ if mp_action =='provision' or mp_action == 'generatevars'
 	# generate the HTML Report
 	generateHTMLReport(environment_code, my_topology_vars)
 	generatePasswordVaultZips(environment_code, my_topology_vars)
+
+    # Update all DNS records
+    global_properties.keys.each do |k|
+      if global_properties[k].is_a?(Hash) && global_properties[k].key?('hostnameList')
+        global_properties[k]['hostnameList'].each do |h|
+          Chef::Log.info("hostname: #{h}")
+          host_opts = {}
+          host_opts[:hostname] = "#{h}.wpdev.mintpress.io"
+          host_opts[:create_cnames] = true
+          host_opts[:create_friendly_names] = true
+          host_opts[:environment_name] = environment_name
+          # Transform hash keys to symbols; no specific reason just personal preference
+          host_opts.transform_keys!(&:to_sym)
+          oci_host = MintOCIHost.new(host_opts)
+          if oci_host.exists?
+            oci_host.create_external_dns
+            oci_host.create_internal_dns
+          end
+        end
+       end
+    end
 end
 
 if !asset_list.empty?
