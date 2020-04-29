@@ -21,6 +21,7 @@ class MintOCIHost
   attr_accessor :security_rules
   attr_accessor :cname_friendly
   attr_accessor :cname_priv
+  attr_accessor :cname_adm
 
   # init
   def initialize(opts={})
@@ -86,6 +87,9 @@ class MintOCIHost
     if self.create_cnames
       self.cname_priv = self.hostname.split(".")[0].concat('-prv.wpdev.mintpress.io')
       Chef::Log.info("Setting CName: #{cname_priv}")
+      short = self.hostname.split(".")[0]
+      self.cname_adm = short.chomp(short[-2..-1]).concat('-adm.wpdev.mintpress.io')
+      Chef::Log.info("Setting Admin Name: #{cname_adm}")
     end
   end
 
@@ -297,6 +301,16 @@ class MintOCIHost
       Chef::Log.info 'Publishing DNS CNAME Record to Internal DNS Omega'
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_priv, values: self.host_obj.name, ttl: 300)
       d_record.create
+
+      # Add -adm Entries
+      Chef::Log.info 'Publishing DNS Admin Record to Internal DNS Alpha'
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_adm, values: self.host_obj.name, ttl: 300)
+      d_record.create
+      
+      # Create the entry in secondory instance
+      Chef::Log.info 'Publishing DNS Admin Record to Internal DNS Omega'
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_adm, values: self.host_obj.name, ttl: 300)
+      d_record.create
     end
 
     if self.create_friendly_names
@@ -331,6 +345,15 @@ class MintOCIHost
       Chef::Log.info 'Publishing DNS CNAME Record to Internal DNS Omega'
       d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_priv, values: self.host_obj.name, ttl: 300)
       d_record.remove
+
+      # Remove the -adm
+      Chef::Log.info 'UnPublishing DNS Admin Record to Internal DNS Alpha'
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_alpha', type: 'CNAME', name: cname_adm, values: self.host_obj.name, ttl: 300)
+      d_record.remove
+      
+      Chef::Log.info 'Publishing DNS Admin Record to Internal DNS Omega'
+      d_record = MintPress::Infrastructure::PowerDnsEntry.new(provider: 'internal_dns_omega', type: 'CNAME', name: cname_adm, values: self.host_obj.name, ttl: 300)
+      d_record.remove
     end
 
     if self.create_friendly_names
@@ -356,6 +379,12 @@ class MintOCIHost
       d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
       d_record.create
     end
+    if self.create_cnames
+      # Add -adm Entries
+      Chef::Log.info 'Publishing DNS Admin Record to External DNS'
+      d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_adm, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
+      d_record.create
+    end
   end
 
   # Destroy the external DNS entry
@@ -368,6 +397,12 @@ class MintOCIHost
     if self.create_friendly_names
       Chef::Log.info 'Unpublishing DNS Friendly CNAME Record from External DNS'
       d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_friendly, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
+      d_record.remove
+    end
+    if self.create_cnames
+      # Remove -adm Entries
+      Chef::Log.info 'Unpublishing DNS Admin Record to External DNS'
+      d_record =  MintPress::InfrastructureAws::Route53DnsEntry.new(ttl: 300, type: 'CNAME', name: cname_adm, values: self.host_obj.name, hosted_zone_name: self.configs['aws_platform']['dns_zone'], region: self.configs['aws_platform']['region'])
       d_record.remove
     end
   end

@@ -22,3 +22,8 @@ default['ldap']['ldap_port']=636
 
 # which stage to mount
 default['stage']['host']='stage.alpha.wpdev.mintpress.io'
+
+# Which user to use to create LDAP entries
+node.override['sssd_ldap']['sssd_conf']['ldap_admin_username']='cn=ldapadm,dc=wpdev,dc=mintpress,dc=io'
+node.override['sssd_ldap']['sssd_conf']['ldap_admin_password']='LinqvUt9hzR1mGkvBGYGvo'
+

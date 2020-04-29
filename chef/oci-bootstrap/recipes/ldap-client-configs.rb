@@ -21,7 +21,7 @@ hostlist = node['name'].split('.')[0]
   
 #ldap_entry "cn=host_#{node.name.split('.')[0]},ou=host,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 #	attributes ({objectClass: ['top', 'nisNetgroup']})
-#	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+#	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 #	host node['ldap']['ldap_host']
 #	port node['ldap']['ldap_port']
 #	use_tls true
@@ -31,7 +31,7 @@ hostlist = node['name'].split('.')[0]
 # It does not looks like it is used anywhere though
 ldap_entry "cn=team_obp_all_root,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup']})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
@@ -40,7 +40,7 @@ end
 # Create the environment specific root team, this will allow members to access hosts in this environment as root
 ldap_entry "cn=team_obp_#{node.chef_environment}_root,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup']})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
@@ -49,7 +49,7 @@ end
 # Oracle team, allows members to access as oracle user
 ldap_entry "cn=team_obp_#{node.chef_environment}_oracle,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup']})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
@@ -58,7 +58,7 @@ end
 # Team for read only
 ldap_entry "cn=team_obp_#{node.chef_environment}_readonly,ou=team,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup']})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
@@ -67,7 +67,7 @@ end
 # put teams in host netgroup
 ldap_entry "cn=host_#{node.name.split('.')[0]},ou=host,ou=netgroup,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'nisNetgroup'], memberNisNetgroup: ["team_obp_#{node.chef_environment}_root", "team_obp_#{node.chef_environment}_oracle", "team_obp_#{node.chef_environment}_readonly"]})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
@@ -76,7 +76,7 @@ end
 # Create sudo for team, oracle
 ldap_entry "cn=obp_sudo_#{node.chef_environment}_root,ou=sudo,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'sudoRole'], sudoRunAsUser: 'root', sudoUser: ["+team_obp_#{node.chef_environment}_root", "+team_obp_all_root"], sudoCommand: 'ALL', sudoHost: hostlist})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
@@ -84,7 +84,7 @@ end
 
 ldap_entry "cn=obp_sudo_#{node.chef_environment}_oracle,ou=sudo,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'sudoRole'], sudoRunAsUser: 'oracle', sudoUser: ["+team_obp_#{node.chef_environment}_oracle"], sudoCommand: 'ALL', sudoHost: hostlist})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
@@ -92,7 +92,7 @@ end
 
 ldap_entry "cn=obp_sudo_#{node.chef_environment}_su_oracle,ou=sudo,ou=obp,ou=app,dc=wpdev,dc=mintpress,dc=io" do
 	attributes ({objectClass: ['top', 'sudoRole'], sudoRunAsUser: 'root', sudoUser: ["+team_obp_#{node.chef_environment}_oracle"], sudoCommand: '/bin/su - oracle', sudoHost: hostlist})
-	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_default_bind_dn'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_default_authtok']})
+	credentials ({'bind_dn' => node['sssd_ldap']['sssd_conf']['ldap_admin_username'], 'password' => node['sssd_ldap']['sssd_conf']['ldap_admin_password']})
 	host node['ldap']['ldap_host']
 	port node['ldap']['ldap_port']
 	use_tls true
