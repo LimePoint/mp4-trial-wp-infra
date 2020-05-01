@@ -1,5 +1,5 @@
 {
-  "name": "ENG10_CSH_OBP_RELEASE_33_029_00_V_1",
+  "name": "ENG10_CSH_OBP_RELEASE_33_036_00_V_1",
   "description": null,
   "params": {
   },
@@ -27,7 +27,7 @@
                   "name": null,
                   "description": "Disable All Plans",
                   "params": {
-                    "argument": "/home/mintpress/mintpress/bin/disablePlans.rb ENG10CSHOBPRELEASE3302900V1",
+                    "argument": "/home/mintpress/mintpress/bin/disablePlans.rb ENG10CSHOBPRELEASE3303600V1",
                     "environmentVariables": "",
                     "label": "ruby",
                     "workingSubDirectory": ""
@@ -255,7 +255,7 @@
         }
       ],
       "vars": {
-        "ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "ARTIFACTORY_URL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "DEPLOY_HOME": "/oracle/app/binaries/deployments",
         "GRADLE_VERSION": "2.1.14",
         "JAVA_VERSION": "1.7.85",
@@ -386,13 +386,13 @@
         }
       ],
       "vars": {
-        "BUILDDATE": "CSH-OBP-release_33-029-00",
+        "BUILDDATE": "CSH-OBP-release_33-036-00",
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "CONFIGPROVIDERPATH": "../deploymentProperties/eng10/obpbc.json",
         "CONFIGPROVIDERPATH1": "../deploymentProperties/eng10/obpdb.json",
-        "CTVERSION": "CSH-OBP-release_33-029-00",
+        "CTVERSION": "CSH-OBP-release_33-036-00",
         "DBCLIENTPATH": "/oracle/app/binaries/obpobh/dbclient",
-        "DBCONFIGVERSION": "CSH-OBP-release_33-029-00",
+        "DBCONFIGVERSION": "CSH-OBP-release_33-036-00",
         "DBSTRING": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
         "ENVNAME": "ENG10",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
@@ -409,7 +409,7 @@
         "OBP_NODE_1": "obpceng10obh01.wpdev.mintpress.io",
         "SCRIPT": "./scripts/dbIncremental.sh",
         "debug": "false",
-        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+        "productArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
       },
       "labels": null,
       "permissions": null
@@ -693,7 +693,7 @@
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpdoc.json",
         "DBSTRING": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_DOC_PRIM)))",
-        "DOCVERSION": "CSH-OBP-release_33-029-00",
+        "DOCVERSION": "CSH-OBP-release_33-036-00",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
         "IPMAppName": "MAIN",
         "IPMPort": "18102",
@@ -702,7 +702,7 @@
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpDocMDep",
         "OBP_NODE_1": "obpceng10doc01.wpdev.mintpress.io",
         "ODEE_HOME": "/oracle/app/binaries/obpdoc/fmw/odee_12",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false",
         "SCRIPT": "./scripts/docuScript.sh",
         "docAppWSDLURL": "https://obpceng10obh.wpdev.mintpress.io:18002/com.ofss.fc.webservice/services/content/DocumentApplicationServiceSpi?WSDL",
@@ -773,9 +773,9 @@
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpOSBDeploy",
         "OBP_NODE_1": "obpceng10osb01.wpdev.mintpress.io",
-        "OSBVERSION": "CSH-OBP-release_33-029-00",
+        "OSBVERSION": "CSH-OBP-release_33-036-00",
         "ENVNAME": "ENG10",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
       },
       "labels": null,
       "permissions": null
@@ -842,8 +842,8 @@
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpOAMDeploy",
         "OBP_NODE_1": "obpceng10oam01.wpdev.mintpress.io",
         "debug": "false",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
-        "CEMLIVERSION": "CSH-OBP-release_33-029-00",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "CEMLIVERSION": "CSH-OBP-release_33-036-00",
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33"
       },
       "labels": null,
@@ -890,15 +890,15 @@
         }
       ],
       "vars": {
-        "ARTIFACTORY_URL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "ARTIFACTORY_URL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "CEMLI_RELEASE_PATH": "au/com/westpac/csh/R19/release_33",
         "GRADLE_VERSION": "2.1.14",
         "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpht.json",
         "JAVA_VERSION": "1.7.85",
         "OES_HOSTNAME": "obpceng10soa01.wpdev.mintpress.io",
-        "POLICY_VERSION": "CSH-OBP-release_33-029-00",
+        "POLICY_VERSION": "CSH-OBP-release_33-036-00",
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpAccessPoliciesDeploy",
-        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "productArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
         "ENVNAME": "ENG10",
         "debug": "false"
@@ -964,14 +964,14 @@
       ],
       "vars": {
         "BIHOME": "/oracle/app/binaries/obpbip/fmw/bi",
-        "BIVERSION": "CSH-OBP-release_33-029-00",
+        "BIVERSION": "CSH-OBP-release_33-036-00",
         "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpbip.json",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpBIPDeploy",
         "OBP_NODE_1": "obpceng10bip01.wpdev.mintpress.io",
         "PRODUCT_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "debug": "false",
-        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+        "productArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
       },
       "labels": null,
       "permissions": null
@@ -1048,7 +1048,7 @@
         }
       ],
       "vars": {
-        "CEMLI_HOST_VERSION": "CSH-OBP-release_33-029-00",
+        "CEMLI_HOST_VERSION": "CSH-OBP-release_33-036-00",
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obphost.json",
         "DOMAIN_HOME": "/oracle/app/runtime/obpobh/domains/obphost_domain",
@@ -1057,14 +1057,14 @@
         "OBP_EXTENSION_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpHostWlstDeploy",
         "OBP_NODE_1": "obpceng10obh01.wpdev.mintpress.io",
         "OBP_PCSMDEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpPCSMDeploy",
-        "PCSM_VERSION": "R1.9_545",
+        "PCSM_VERSION": "R1.9_553",
         "PRODUCT_HOME": "/oracle/app/binaries/obpobh/fmw",
         "PCSM_RELEASE_PATH": "Verified",
         "SERVERNAME": "obphost_server1",
         "SERVERNAME2": "obphost_server2",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false",
-        "pcsmArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/A007BD_Powercurve"
+        "pcsmArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/A007BD_Powercurve"
       },
       "labels": null,
       "permissions": null
@@ -1126,7 +1126,7 @@
         }
       ],
       "vars": {
-        "CEMLIVERSION": "CSH-OBP-release_33-029-00",
+        "CEMLIVERSION": "CSH-OBP-release_33-036-00",
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpht.json",
         "DOMAIN_HOME": "/oracle/app/runtime/obpsoa/domains/obpsoa_domain",
@@ -1137,7 +1137,7 @@
         "PRODUCT_HOME": "/oracle/app/binaries/obpsoa/fmw",
         "SERVERNAME": "obphumantask_server1",
         "SERVERNAME2": "obphumantask_server2",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false"
       },
       "labels": null,
@@ -1202,7 +1202,7 @@
       "vars": {
         "BASEDIR": "/oracle/app/binaries/obpobu/fmw/obpinstall/obp/obp.ui.domain/userfiles",
         "BASEURL": "https://obpceng10obu.wpdev.mintpress.io:18002/com.ofss.fc.ui.view/userfiles/",
-        "CEMLIVERSION": "CSH-OBP-release_33-029-00",
+        "CEMLIVERSION": "CSH-OBP-release_33-036-00",
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpui.json",
         "DOMAIN_HOME": "/oracle/app/runtime/obpobu/domains/obpui_domain",
@@ -1214,7 +1214,7 @@
         "PRODUCT_HOME": "/oracle/app/binaries/obpobu/fmw",
         "SERVERNAME": "obpui_server1",
         "SERVERNAME2": "obpui_server2",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false"
       },
       "labels": null,
@@ -1259,11 +1259,11 @@
       ],
       "vars": {
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
-        "CEMLI_SOA_DYNMC_APPG_VERSION": "CSH-OBP-release_33-029-00",
+        "CEMLI_SOA_DYNMC_APPG_VERSION": "CSH-OBP-release_33-036-00",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpSoaDeploy",
         "OBP_NODE_1": "obpceng10soa01.wpdev.mintpress.io",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false"
       }
     },
@@ -1348,16 +1348,16 @@
         "CONFIGPROVIDERPATH1": "../../deploymentProperties/eng10/obpht.json",
         "FCSERVER": "https://obpceng10obh.wpdev.mintpress.io:18002",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
-        "METADATA_VERSION": "CSH-OBP-release_33-029-00",
+        "METADATA_VERSION": "CSH-OBP-release_33-036-00",
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpSoaDeploy/obpSoaCompTask",
         "OBP_DEPLOY_HOME1": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpSoaDeploy",
         "OBP_NODE_1": "obpceng10soa01.wpdev.mintpress.io",
         "PRODUCT_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "SOASERVERWITHPORT": "https://obpceng10soa.wpdev.mintpress.io:18002",
-        "SOA_COMPOSITE_VERSION": "CSH-OBP-release_33-029-00",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "SOA_COMPOSITE_VERSION": "CSH-OBP-release_33-036-00",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false",
-        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+        "productArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
       },
       "labels": null,
       "permissions": null
@@ -1416,12 +1416,12 @@
       ],
       "vars": {
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
-        "CEMLI_BAM_VERSION": "CSH-OBP-release_33-029-00",
+        "CEMLI_BAM_VERSION": "CSH-OBP-release_33-036-00",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpBAMDeploy",
         "OBP_NODE_1": "obpceng10soa01.wpdev.mintpress.io",
         "OBP_STARTSCRIPT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "CONFIGPROVIDERPATH": "../../deploymentProperties/eng10/obpbam.json",
         "debug": "false"
       }
@@ -1518,12 +1518,12 @@
         "DBSTRING": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=obpceng10db-prv.wpdev.mintpress.io)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=CBCD3_OBP_PRIM)))",
         "GRADLE_HOME": "/oracle/app/binaries/deployments/gradle",
         "JAVA_HOME": "/oracle/app/binaries/obpodi/java",
-        "OBPSCRIPTSVERSION": "CSH-OBP-release_33-029-00",
+        "OBPSCRIPTSVERSION": "CSH-OBP-release_33-036-00",
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/odiExpress",
         "OBP_HOST_NODE": "obpceng10obh01.wpdev.mintpress.io",
         "OBP_NODE_1": "obpceng10odi01.wpdev.mintpress.io",
         "OBP_STARTSCRIPT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false"
       },
       "labels": null,
@@ -1686,9 +1686,9 @@
         "OBP_DEPLOY_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/odiExpress",
         "OBP_HOST_NODE": "obpceng10obh01.wpdev.mintpress.io",
         "OBP_NODE_1": "obpceng10odi01.wpdev.mintpress.io",
-        "ODIVERSION": "CSH-OBP-release_33-029-00",
+        "ODIVERSION": "CSH-OBP-release_33-036-00",
         "OBP_STARTSCRIPT_HOME": "/oracle/app/binaries/deployments/mintdeploy/obpProductDeploy/obpStartupShutdown",
-        "cemliArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
+        "cemliArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot",
         "debug": "false"
       },
       "labels": null,
@@ -1831,8 +1831,8 @@
         }
       ],
       "vars": {
-        "BCVERSION": "CSH-OBP-release_33-029-00",
-        "BUILDDATE": "CSH-OBP-release_33-029-00",
+        "BCVERSION": "CSH-OBP-release_33-036-00",
+        "BUILDDATE": "CSH-OBP-release_33-036-00",
         "CEMLI_RELEASE_PATH": "au.com.westpac.csh.R19.release_33",
         "CONFIGPROVIDERPATH": "../deploymentProperties/eng10/obpbc.json",
         "ENVNAME": "ENG10",
@@ -1844,7 +1844,7 @@
         "SCRIPT": "./scripts/dbIncremental.sh",
         "dbArtifactsDownloadDir": "/oracle/app/binaries/deployments/hostdb/obp",
         "debug": "false",
-        "CTVERSION": "CSH-OBP-release_33-029-00",
+        "CTVERSION": "CSH-OBP-release_33-036-00",
         "OBPHOSTNAME": "obpceng10obh01-prv.wpdev.mintpress.io",
         "OBPHOSTPORT": "17002",
         "OBPHOSTPATH": "/oracle/app/binaries/obpobh/fmw",
@@ -1854,7 +1854,7 @@
         "DBCLIENTPATH": "/oracle/app/binaries/obpobh/dbclient",
         "JAVA_HOME": "/oracle/app/binaries/java8",
         "HOSTDBPATH": "/oracle/app/binaries/deployments/hostdb/host_db",
-        "productArtifactoryURL": "https://artifactory1.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
+        "productArtifactoryURL": "https://artifactory-oss.wpdev.mintpress.io/artifactory/MP-001_CSH-Snapshot"
       },
       "labels": null,
       "permissions": null
