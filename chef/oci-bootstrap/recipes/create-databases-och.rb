@@ -15,17 +15,17 @@ databaseList = []
 list_of_dbs.each do | db |
   databaseList << Hash({
   'name' => db,
-  'version' => '12.2.0.1',
+  'version' => '12.1.0.1',
   'oracle_base' => "/oracle/app/product/db12",
-  'oracle_home' => "/oracle/app/product/db12/12.2.0",
+  'oracle_home' => "/oracle/app/product/db12/12.1.0",
   'java_home' => '/oracle/app/product/java12',
   'sysdba_user' => "SYS",
   'sysdba_passwd' => PasswordVault.get_password(password_vault_name, 'database', 'dbsyspassword' ),
   'is_container_db' => false,
   'extra_servicenames' => db_to_service_mappings[db],
   'patchList' => [
-      { 'name'  => 'p28662603_122010_Linux-x86-64', 'aru'   => '28662603' },
-      { 'name'  => 'p29158680_12201181016DBOCT2018RU_Linux-x86-64', 'aru'   => '29158680' }
+      { 'name'  => 'p26635880_121020_Linux-x86-64', 'aru'   => '26635880' },
+      { 'name'  => 'p29158680_12102171017ProactiveBP_Linux-x86-64', 'aru'   => '29158680' }
   ]
 })
 end
@@ -40,7 +40,7 @@ node.normal['oracle']['database'].tap do | database |
     {
       'name' => 'LISTENER',
       'port' => 1521,
-      'oracle_home' => '/oracle/app/product/db12/12.2.0'
+      'oracle_home' => '/oracle/app/product/db12/12.1.0'
     }
   ]
 end
