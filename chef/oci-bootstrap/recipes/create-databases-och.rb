@@ -15,7 +15,7 @@ databaseList = []
 list_of_dbs.each do | db |
   databaseList << Hash({
   'name' => db,
-  'version' => '12.1.0.1',
+  'version' => '12.1.0.2',
   'oracle_base' => "/oracle/app/product/db12",
   'oracle_home' => "/oracle/app/product/db12/12.1.0",
   'java_home' => '/oracle/app/product/java12',
