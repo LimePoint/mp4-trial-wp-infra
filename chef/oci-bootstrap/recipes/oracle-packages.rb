@@ -22,7 +22,7 @@ yum_package "git"
 yum_package "nc"
 yum_package "tree"
 yum_package "psmisc"
-yum_package "htop" unless node['platform_version'].to_i <= 7
+yum_package "htop" unless node['platform_version'].to_i < 7
 
 # Install the rdbms package if it is a db node
 if node.name.split(".")[0][-2..-1] == 'db'
