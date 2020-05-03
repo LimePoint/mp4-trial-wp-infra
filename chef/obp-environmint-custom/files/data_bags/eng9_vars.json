@@ -9,7 +9,7 @@
     "trustStore": "wpdev_trust.jks",
     "certs_source": "${stageRootDir}/certs/gen2_certs",
     "custom_source": "${stageRootDir}/custom/csh",
-    "git_repo_path": "/backup/gitrepos/csh-cloud-config-repo",
+    "git_repo_path": "/backup/gitrepos/ocloud_mintpress_jsons",
     "rt_configs_path": "/limepoint/runTime/data/Repository/configs",
     "git_commit_on_upload": "true",
     "odl_log_retentionPeriod": "5d",
