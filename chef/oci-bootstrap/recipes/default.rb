@@ -167,6 +167,22 @@ end
 
 # Make the chef-client a system service unless you are running oel6 (for och)
 if node['platform_version'].to_i < 7
+  service 'iptables' do
+    action :stop
+  end
+
+  service 'iptables' do
+    action :disable
+  end
+
+  service 'ip6tables' do
+    action :stop 
+  end
+
+  service 'ip6tables' do
+    action :disable
+  end
+
   include_recipe 'chef-client::init_service'
 else
   include_recipe 'chef-client::systemd_service'
