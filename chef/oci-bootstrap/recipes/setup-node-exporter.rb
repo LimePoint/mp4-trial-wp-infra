@@ -11,11 +11,20 @@ user 'node_exporter' do
   shell '/sbin/nologin'
 end
 
+cookbook_file "/etc/init.d/node_exporter" do
+  source "node_exporter.initd"
+  mode '0755'
+
+  notifies :run, 'execute[create_directory]', :immediate
+  only_if { node['platform_version'].to_i < 7 }
+end
+
 cookbook_file "/etc/sysconfig/node_exporter" do
   source "sysconfig.node_exporter"
   mode '0744'
 
   notifies :run, 'execute[create_directory]', :immediate
+  only_if { node['platform_version'].to_i >= 7 }
 end
 
 cookbook_file "/etc/systemd/system/node_exporter.service" do
@@ -24,6 +33,7 @@ cookbook_file "/etc/systemd/system/node_exporter.service" do
 
   notifies :run, 'execute[reload_systemd]', :immediate
   notifies :run, 'execute[copy_binary]', :immediate
+  only_if { node['platform_version'].to_i >= 7 }
 end
 
 execute "create_directory" do
@@ -43,12 +53,13 @@ execute "reload_systemd" do
   command "systemctl daemon-reload"
 
   action :nothing
+  only_if { node['platform_version'].to_i >= 7 }
 end
 
-service 'node_exporter.service' do
+service 'node_exporter' do
   action :enable
-end
+end 
 
-service 'node_exporter.service' do
+service 'node_exporter' do
   action :start
-end
+end 
