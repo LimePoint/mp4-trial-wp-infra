@@ -242,3 +242,5 @@ service 'sshd' do
   action :nothing
 end
 
+# This will setup Prometheus Node Exporter on the targets
+include_recipe '::setup-node-exporter'
