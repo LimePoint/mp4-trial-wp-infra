@@ -16,6 +16,7 @@ cookbook_file "/etc/init.d/node_exporter" do
   mode '0755'
 
   notifies :run, 'execute[create_directory]', :immediate
+  notifies :run, 'execute[copy_binary]', :immediate
   only_if { node['platform_version'].to_i < 7 }
 end
 
