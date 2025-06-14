@@ -6,7 +6,7 @@
 
 # if there's shared_storage
 
-oci_test_config = '/opt/mintpress/oci_platform_configs.yaml' # this will come from vault from projects settings
+oci_test_config = '/opt/opschain/oci_platform_configs.yaml' # this will come from vault from projects settings
 provider_config = YAML.load_file(oci_test_config) unless OpsChain.dry_run?
 
 infrastructure_oci_oci_platform :oci_test_platform do
