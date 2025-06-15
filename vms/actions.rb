@@ -52,9 +52,37 @@ OpsChain.properties.assets.each do | asset_name, deets |
       name "#{host.name}#{OpsChain.properties.common_settings.domain_name}"
       platform oci_test_platform
     end
+
+    # Every host gets a default storage 
+    infrastructure_oci_oci_storage "#{host.name}-storage" do 
+      properties OpsChain.properties.common_settings.storage
+      host [host.name]
+    end
     all_hosts << host.name
   end
+
+  # Now see if there's shared storage and create resources for those.
+  deets.shared_storage.each do | st |
+    infrastructure_oci_oci_shared_storage st.storage_name do
+      available_actions :create, :attach, :setup_ocfs, :detach, :destroy
+      properties OpsChain.properties.common_settings.shared_storage
+      storage_name st.storage_name
+      host st.hosts
+      cluster_name st.cluster_name
+
+      # Only methods in MintSDK classes are exposed as action by default
+      # if there's any method that takes an argument, we have to attach it explicitly
+      action :attach do |ac|
+        ac.controller.attach
+      end
+
+      action :detach do |ac|
+        ac.controller.detach
+      end
+    end
+  end
 end
+
 
 # make a string of the actions that we are interested in
 # this will be used later when creating asset based actions
