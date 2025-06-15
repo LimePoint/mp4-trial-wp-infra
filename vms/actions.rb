@@ -52,8 +52,11 @@ OpsChain.properties.assets.each do | asset_name, deets |
       # order is important; things that come after will override
       my_props = {}
       my_props.merge(common_host_properties).merge(host)
-      my_props.merge('specs.cpu_count': host.cpu) if host.cpu
-      my_props.merge('specs.cpu_ram_gb': host.memory) if host.memory
+      specs = {}
+      specs['cpu_count'] = host.cpu if host.cpu
+      specs['cpu_ram_gb'] =  host.memory if host.memory
+      # my_props.merge('specs.cpu_ram_gb': host.memory) if host.memory
+      my_props.merge(specs)
       properties my_props
 
       name "#{host.name}#{OpsChain.properties.common_settings.domain_name}"
