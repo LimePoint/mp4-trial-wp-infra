@@ -1,5 +1,6 @@
 Bundler.require
 
+require 'mintpress-infrastructure-oci'
 # actions for vms
 
 # hostname:create # create individual host
@@ -9,11 +10,11 @@ Bundler.require
 # if there's shared_storage
 
 oci_test_config = '/opt/opschain/oci_platform_configs.yaml' # this will come from vault from projects settings
-provider_config = YAML.load_file(oci_test_config) unless OpsChain.dry_run?
+# provider_config = YAML.load_file(oci_test_config) unless OpsChain.dry_run?
 
 infrastructure_oci_oci_platform :oci_test_platform do
-  # config_file oci_test_config
-  properties provider_config
+  config_file oci_test_config
+  # properties provider_config
 end
 
 # Define resource by passing individual properties
