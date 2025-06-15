@@ -14,7 +14,7 @@ oci_test_config = '/opt/opschain/oci_platform_configs.yaml' # this will come fro
 
 puts "*********** "
 puts OpsChain.properties
-
+puts "env OPSCHAIN_REPO_FOLDER - #{ENV['OPSCHAIN_REPO_FOLDER']}"
 
 infrastructure_oci_oci_platform :oci_test_platform do
   config_file oci_test_config
