@@ -12,7 +12,7 @@ common_settings:
     assign_public_ip: true
     configure_ocid_service: false
   storage:
-    name: oracle
+    storage_name: oracle
     size: 90
     mount_point: /oracle
   shared_storage:
@@ -58,8 +58,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpotd-runtime
           hosts:
-            - name: cix1obpotd01
-            - name: cix1obpotd02
+            - cix1obpotd01
+            - cix1obpotd02
           cluster_name: cix1obpotdcluster
   obpoam:
     subnet: *sec_test_subnet
@@ -82,8 +82,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpoam-runtime
           hosts:
-            - name: cix1obpoam01
-            - name: cix1obpoam02
+            - cix1obpoam01
+            - cix1obpoam02
           cluster_name: cix1obpoamcluster
   obpoid:
     subnet: *sec_test_subnet
@@ -110,8 +110,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpoid-runtime
           hosts:
-            - name: cix1obpoid01
-            - name: cix1obpoid02
+            - cix1obpoid01
+            - cix1obpoid02
           cluster_name: cix1obpoidcluster
   obpcid:
     subnet: *sec_test_subnet
@@ -138,8 +138,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpcid-runtime
           hosts:
-            - name: cix1obpcid01
-            - name: cix1obpcid02
+            - cix1obpcid01
+            - cix1obpcid02
           cluster_name: cix1obpcidcluster
   obposb: 
     subnet: *int_test_subnet
@@ -162,8 +162,8 @@ assets:
     shared_storage:
         - storage_name: cix1obposb-runtime
           hosts:
-            - name: cix1obposb01
-            - name: cix1obposb02
+            - cix1obposb01
+            - cix1obposb02
           cluster_name: cix1obposbcluster
   obpsoa: 
     subnet: *app_test_subnet
@@ -186,8 +186,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpsoa-runtime
           hosts:
-            - name: cix1obpsoa01
-            - name: cix1obpsoa02
+            - cix1obpsoa01
+            - cix1obpsoa02
           cluster_name: cix1obpsoacluster
   obpdoc: 
     subnet: *app_test_subnet
@@ -210,8 +210,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpdoc-runtime
           hosts:
-            - name: cix1obpdoc01
-            - name: cix1obpdoc02
+            - cix1obpdoc01
+            - cix1obpdoc02
           cluster_name: cix1obpdoccluster
   obpobh: 
     subnet: *app_test_subnet
@@ -234,8 +234,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpobh-runtime
           hosts:
-            - name: cix1obpobh01
-            - name: cix1obpobh02
+            - cix1obpobh01
+            - cix1obpobh02
           cluster_name: cix1obpobhcluster
   obpipm: 
     subnet: *app_test_subnet
@@ -258,8 +258,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpipm-runtime
           hosts:
-            - name: cix1obpipm01
-            - name: cix1obpipm02
+            - cix1obpipm01
+            - cix1obpipm02
           cluster_name: cix1obpipmcluster
   obpurm: 
     subnet: *app_test_subnet
@@ -282,8 +282,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpurm-runtime
           hosts:
-            - name: cix1obpurm01
-            - name: cix1obpurm02
+            - cix1obpurm01
+            - cix1obpurm02
           cluster_name: cix1obpurmcluster
   obpobu: 
     subnet: *app_test_subnet
@@ -306,8 +306,8 @@ assets:
     shared_storage:
         - storage_name: cix1obpobu-runtime
           hosts:
-            - name: cix1obpobu01
-            - name: cix1obpobu02
+            - cix1obpobu01
+            - cix1obpobu02
           cluster_name: cix1obpobucluster
   obpodi: 
     subnet: *int_test_subnet
@@ -330,6 +330,6 @@ assets:
     shared_storage:
         - storage_name: cix1obpodi-runtime
           hosts:
-            - name: cix1obpodi01
-            - name: cix1obpodi02
+            - cix1obpodi01
+            - cix1obpodi02
           cluster_name: cix1obpodicluster

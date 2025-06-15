@@ -1,3 +1,5 @@
+Bundler.require
+
 # actions for vms
 
 # hostname:create # create individual host
