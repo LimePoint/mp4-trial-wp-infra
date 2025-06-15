@@ -1,7 +1,7 @@
 common_settings:
   hosts:
-    run_list: 'pca-infra-common::pca-bootstrap'
-    keys: ['/home/mintpress/.ssh/id_pca_opc_sshkey']
+    run_list: 'oci-infra-common::oci-bootstrap'
+    keys: ['/opt/opschain/oci_new_key']
     use_flex: true
     cpu: 2
     memory: 16
@@ -19,18 +19,18 @@ common_settings:
     size: 50
     mount_point: /oracle/app/runtime
   domain_name: '.trial.limepoint.com'
-  mount_target: 'mt-obp-tst-t1wpca'
-  sec_test_subnet: &sec_test_subnet 'sn-a006b1-sec-tst'
-  int_test_subnet: &int_test_subnet 'sn-a006b1-int-tst'
-  app_test_subnet: &app_test_subnet 'sn-a006b1-app-tst'
-  sec_test_network_security_groups: &sec_test_network_security_groups ["nsg-a006b1-tst-common-ops", "nsg-a006b1-tst-common-apps", "nsg-a006b1-tst-sec"]
-  int_test_network_security_groups: &int_test_network_security_groups ["nsg-a006b1-tst-common-ops", "nsg-a006b1-tst-common-apps", "nsg-a006b1-tst-int"]
-  app_test_network_security_groups: &app_test_network_security_groups ["nsg-a006b1-tst-common-ops", "nsg-a006b1-tst-common-apps", "nsg-a006b1-tst-app"]
+  mount_target: 'mt-trial-obp-tst'
+  sec_test_subnet: &sec_test_subnet 'sn-mp-trial-sec-tst'
+  int_test_subnet: &int_test_subnet 'sn-mp-trial-int-tst'
+  app_test_subnet: &app_test_subnet 'sn-mp-trial-tst'
+  sec_test_network_security_groups: &sec_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-sec"]
+  int_test_network_security_groups: &int_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-int"]
+  app_test_network_security_groups: &app_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-app"]
 assets:
   obpotd:
-    subnet: sn-a006b1-slb-tst
-    run_list: 'pca-infra-common::pca-bootstrap,pca-infra-common::otd-bootstrap'
-    network_security_groups: ["nsg-a006b1-slb-tst-apps", "nsg-a006b1-tst-slb"]
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
     hosts:
       - name: cix1obpotd01
         operating_system: "Oracle Linux"
