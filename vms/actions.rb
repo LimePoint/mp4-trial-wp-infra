@@ -17,12 +17,8 @@ else
   provider_config = YAML.load_file(oci_test_config)
 end
 
-oci_platform :ociplatform do
-  properties provider_config
-end
-
 infrastructure_oci_oci_platform :oci_test_platform do
-  config_file oci_test_config
+  properties provider_config
 end
 
 # Define resource by passing individual properties
