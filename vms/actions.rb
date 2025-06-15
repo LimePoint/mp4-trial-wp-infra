@@ -12,6 +12,10 @@ require 'mintpress-infrastructure-oci'
 oci_test_config = '/opt/opschain/oci_platform_configs.yaml' # this will come from vault from projects settings
 # provider_config = YAML.load_file(oci_test_config) unless OpsChain.dry_run?
 
+puts "*********** "
+puts OpsChain.properties
+
+
 infrastructure_oci_oci_platform :oci_test_platform do
   config_file oci_test_config
   # properties provider_config
