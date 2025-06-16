@@ -57,7 +57,7 @@ OpsChain.properties.assets.each do | asset_name, deets |
       # specs['cpu_ram_gb'] =  host.memory if host.memory
       # my_props.merge('specs.cpu_ram_gb': host.memory) if host.memory
       # my_props.merge(specs)
-      properties my_props
+      properties common_host_properties
 
       name "#{host.name}#{OpsChain.properties.common_settings.domain_name}"
       platform oci_test_platform
