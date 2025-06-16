@@ -128,5 +128,5 @@ end
 
 # this block will create actions like cix1-create
 %w(create start stop restart exists? destroy).each do |act|
-  action "allvms-#{act}", steps: asset_actions.select { |ha| ha.match?(/#{act}/)}, run_as: :parallel
+  action "allvms-#{act}", steps: asset_actions.select { |ha| ha.match?(/#{act}/)}, run_as: :parallel, description: "allvms-#{act}"
 end
