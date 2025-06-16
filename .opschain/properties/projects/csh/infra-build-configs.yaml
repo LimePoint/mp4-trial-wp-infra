@@ -12,7 +12,7 @@ common_settings:
     assign_public_ip: true
     configure_ocid_service: false
   storage:
-    storage_name: oracle
+    # storage_name: oracle
     size: 90
     mount_point: /oracle
   shared_storage:
@@ -60,7 +60,7 @@ assets:
           hosts:
             - cix1obpotd01
             - cix1obpotd02
-          cluster_name: cix1obpotdcluster
+          cluster_name: cix1obpotd
   obpoam:
     subnet: *sec_test_subnet
     network_security_groups: *sec_test_network_security_groups
@@ -84,7 +84,7 @@ assets:
           hosts:
             - cix1obpoam01
             - cix1obpoam02
-          cluster_name: cix1obpoamcluster
+          cluster_name: cix1obpoam
   obpoid:
     subnet: *sec_test_subnet
     network_security_groups: *sec_test_network_security_groups
@@ -112,7 +112,7 @@ assets:
           hosts:
             - cix1obpoid01
             - cix1obpoid02
-          cluster_name: cix1obpoidcluster
+          cluster_name: cix1obpoid
   obpcid:
     subnet: *sec_test_subnet
     network_security_groups: *sec_test_network_security_groups
@@ -126,6 +126,7 @@ assets:
             values: cix1obpcid01
         storage:
         - storage_name: cix1obpcid01-oracle
+        - storage_name: cix1obpcid01-oraclenew
       - name: cix1obpcid02
         operating_system: "Oracle Linux"
         operating_system_version: 8
@@ -140,7 +141,7 @@ assets:
           hosts:
             - cix1obpcid01
             - cix1obpcid02
-          cluster_name: cix1obpcidcluster
+          cluster_name: cix1obpcid
   obposb: 
     subnet: *int_test_subnet
     network_security_groups: *int_test_network_security_groups
@@ -164,7 +165,7 @@ assets:
           hosts:
             - cix1obposb01
             - cix1obposb02
-          cluster_name: cix1obposbcluster
+          cluster_name: cix1obposb
   obpsoa: 
     subnet: *app_test_subnet
     network_security_groups: *app_test_network_security_groups
@@ -188,7 +189,7 @@ assets:
           hosts:
             - cix1obpsoa01
             - cix1obpsoa02
-          cluster_name: cix1obpsoacluster
+          cluster_name: cix1obpsoa
   obpdoc: 
     subnet: *app_test_subnet
     network_security_groups: *app_test_network_security_groups
@@ -212,7 +213,7 @@ assets:
           hosts:
             - cix1obpdoc01
             - cix1obpdoc02
-          cluster_name: cix1obpdoccluster
+          cluster_name: cix1obpdoc
   obpobh: 
     subnet: *app_test_subnet
     network_security_groups: *app_test_network_security_groups
@@ -236,7 +237,7 @@ assets:
           hosts:
             - cix1obpobh01
             - cix1obpobh02
-          cluster_name: cix1obpobhcluster
+          cluster_name: cix1obpobh
   obpipm: 
     subnet: *app_test_subnet
     network_security_groups: *app_test_network_security_groups
@@ -260,7 +261,7 @@ assets:
           hosts:
             - cix1obpipm01
             - cix1obpipm02
-          cluster_name: cix1obpipmcluster
+          cluster_name: cix1obpipm
   obpurm: 
     subnet: *app_test_subnet
     network_security_groups: *app_test_network_security_groups
@@ -284,7 +285,7 @@ assets:
           hosts:
             - cix1obpurm01
             - cix1obpurm02
-          cluster_name: cix1obpurmcluster
+          cluster_name: cix1obpurm
   obpobu: 
     subnet: *app_test_subnet
     network_security_groups: *app_test_network_security_groups
@@ -308,7 +309,7 @@ assets:
           hosts:
             - cix1obpobu01
             - cix1obpobu02
-          cluster_name: cix1obpobucluster
+          cluster_name: cix1obpobu
   obpodi: 
     subnet: *int_test_subnet
     network_security_groups: *int_test_network_security_groups
@@ -332,4 +333,4 @@ assets:
           hosts:
             - cix1obpodi01
             - cix1obpodi02
-          cluster_name: cix1obpodicluster
+          cluster_name: cix1obpodi
