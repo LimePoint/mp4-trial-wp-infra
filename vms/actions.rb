@@ -58,10 +58,6 @@ OpsChain.properties.assets.each do | asset_name, deets |
         properties OpsChain.properties.common_settings.storage
         name str.storage_name # this is required bcoz of the DSL reference
         storage_name name
-        shared true
-        filesystem 'ocfs2'
-        volume_managed false
-        enable_clustered_file_system true
         platform oci_test_platform
       end
       block_devices_to_attach << str.storage_name
@@ -88,6 +84,10 @@ OpsChain.properties.assets.each do | asset_name, deets |
       host st.hosts
       cluster_name st.cluster_name
       platform oci_test_platform
+      shared true
+      filesystem 'ocfs2'
+      volume_managed false
+      enable_clustered_file_system true
 
       # Only methods in MintSDK classes are exposed as action by default
       # if there's any method that takes an argument, we have to attach it explicitly
