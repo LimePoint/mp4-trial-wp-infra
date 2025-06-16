@@ -48,15 +48,6 @@ OpsChain.properties.assets.each do | asset_name, deets |
   deets.hosts.each do | host |
     infrastructure_oci_oci_host host.name do
       available_actions :create, :start, :stop, :restart, :exists?, :destroy # only to show ui, else we can all any action
-
-      # order is important; things that come after will override
-      # my_props = {}
-      # my_props.merge(common_host_properties).merge(host)
-      # specs = {}
-      # specs['cpu_count'] = host.cpu if host.cpu
-      # specs['cpu_ram_gb'] =  host.memory if host.memory
-      # my_props.merge('specs.cpu_ram_gb': host.memory) if host.memory
-      # my_props.merge(specs)
       properties common_host_properties
 
       name "#{host.name}#{OpsChain.properties.common_settings.domain_name}"
@@ -64,7 +55,9 @@ OpsChain.properties.assets.each do | asset_name, deets |
     end
 
     # Every host gets a default storage 
-    infrastructure_oci_oci_storage "#{host.name}-storage" do 
+    infrastructure_oci_oci_storage "#{host.name}-storage" do
+      available_actions :create, :attach, :detach, :destroy
+ 
       properties OpsChain.properties.common_settings.storage
       host [host.name]
     end
