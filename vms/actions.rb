@@ -43,8 +43,10 @@ common_host_properties = OpsChain.properties.common_settings.hosts.merge(
   'specs.ram_gb': OpsChain.properties.common_settings.hosts.memory
 )
 
-# Make list of all hosts
+# Make list of all hosts and shared storage
 all_hosts = []
+all_shared_storage = []
+
 OpsChain.properties.assets.each do | asset_name, deets |
   deets.hosts.each do | host |
     # Every host gets a default storage, storage shd be defined earlier if required to attach host
@@ -93,9 +95,10 @@ OpsChain.properties.assets.each do | asset_name, deets |
         ac.controller.detach
       end
     end
+
+    all_shared_storage << st.storage_name
   end
 end
-
 
 # make a string of the actions that we are interested in
 # this will be used later when creating asset based actions
@@ -104,11 +107,21 @@ host_actions = {}
   host_actions[action_name] = all_hosts.map { |h| "#{h}:#{action_name}" }
 end
 
-# this block will create actions like obpotd-create
+# this block will create actions like obpotd-create-hosts which creates all hosts
+asset_host_actions = []
+OpsChain.properties.assets.each do | asset_name, deets |
+  %w(create start stop restart exists? destroy).each do |act|
+    action "#{asset_name}-#{act}-hosts", steps: host_actions[act].select { |ha| ha.match?(/#{asset_name}/)}, run_as: :parallel, description: "#{asset_name}-#{act}-hosts"
+    asset_host_actions << "#{asset_name}-#{act}-hosts"
+  end
+end
+
+# this block will create actions like obpotd-create which will create hosts and then create shared storage
 asset_actions = []
 OpsChain.properties.assets.each do | asset_name, deets |
   %w(create start stop restart exists? destroy).each do |act|
-    action "#{asset_name}-#{act}", steps: host_actions[act].select { |ha| ha.match?(/#{asset_name}/)}, run_as: :parallel, description: "----- #{asset_name}-#{act}"
+    action "#{asset_name}-#{act}", steps: [ asset_host_actions.select { |ha| ha.match?(/#{asset_name}-#{act}/)}, all_shared_storage.select { |ha| ha.match?(/#{asset_name}/)}], description: "#{asset_name}-#{act}"
+    
     asset_actions << "#{asset_name}-#{act}"
   end
 end
