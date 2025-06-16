@@ -116,6 +116,12 @@ OpsChain.properties.assets.each do | asset_name, deets |
   end
 end
 
+# this block will create actions like cix1obpcid-runtime-provision which will call shared storage create, attach and setup_ocfs
+all_shared_storage.each do |st|
+  action "#{st}-provision", steps: [ "#{st}:create", "#{st}:attach", "#{st}:setup_ocfs"], description: "#{st}-provision"
+  action "#{st}-destroy", steps: [ "#{st}:destroy"], description: "#{st}-destroy"
+end
+
 # this block will create actions like obpotd-create which will create hosts and then create shared storage
 asset_actions = []
 OpsChain.properties.assets.each do | asset_name, deets |
@@ -123,7 +129,13 @@ OpsChain.properties.assets.each do | asset_name, deets |
     action "#{asset_name}-#{act}", 
       steps: [ 
         asset_host_actions.select { |ha| ha.match?(/#{asset_name}-#{act}/)}, 
-        all_shared_storage.select { |ha| ha.match?(/#{asset_name}/)}.map { |v| "#{v}:#{act}" }
+        all_shared_storage.select { |ha| ha.match?(/#{asset_name}/)}.map { |v| 
+          if act == 'create'
+            "#{v}-provision"
+          elsif act == 'destroy'
+            "#{v}-destroy"
+          end
+         }
       ], 
         description: "#{asset_name}-#{act}"
     
