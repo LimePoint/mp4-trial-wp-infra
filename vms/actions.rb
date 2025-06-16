@@ -120,7 +120,12 @@ end
 asset_actions = []
 OpsChain.properties.assets.each do | asset_name, deets |
   %w(create start stop restart exists? destroy).each do |act|
-    action "#{asset_name}-#{act}", steps: [ asset_host_actions.select { |ha| ha.match?(/#{asset_name}-#{act}/)}, all_shared_storage.select { |ha| ha.match?(/#{asset_name}/)}], description: "#{asset_name}-#{act}"
+    action "#{asset_name}-#{act}", 
+      steps: [ 
+        asset_host_actions.select { |ha| ha.match?(/#{asset_name}-#{act}/)}, 
+        all_shared_storage.select { |ha| ha.match?(/#{asset_name}/)}.map { |v| "#{v}:#{act}" }
+      ], 
+        description: "#{asset_name}-#{act}"
     
     asset_actions << "#{asset_name}-#{act}"
   end
