@@ -19,6 +19,7 @@ end
 
 infrastructure_oci_oci_platform :oci_test_platform do
   properties provider_config
+  # config_file oci_test_config
 end
 
 # Define resource by passing individual properties
@@ -46,21 +47,29 @@ common_host_properties = OpsChain.properties.common_settings.hosts.merge(
 all_hosts = []
 OpsChain.properties.assets.each do | asset_name, deets |
   deets.hosts.each do | host |
+    # Every host gets a default storage, storage shd be defined earlier if required to attach host
+    block_devices_to_attach = []
+    host.storage.each do | str |
+      infrastructure_oci_oci_storage str.storage_name do
+        available_actions :create, :attach, :detach, :destroy
+
+        properties OpsChain.properties.common_settings.storage
+        name str.storage_name # this is required bcoz of the DSL reference
+        storage_name name
+        platform oci_test_platform
+      end
+      block_devices_to_attach << str.storage_name
+    end
+
     infrastructure_oci_oci_host host.name do
       available_actions :create, :start, :stop, :restart, :exists?, :destroy # only to show ui, else we can all any action
       properties common_host_properties
 
       name "#{host.name}#{OpsChain.properties.common_settings.domain_name}"
       platform oci_test_platform
+      block_devices block_devices_to_attach
     end
-
-    # Every host gets a default storage 
-    infrastructure_oci_oci_storage "#{host.name}-storage" do
-      available_actions :create, :attach, :detach, :destroy
- 
-      properties OpsChain.properties.common_settings.storage
-      host [host.name]
-    end
+    
     all_hosts << host.name
   end
 
@@ -72,6 +81,7 @@ OpsChain.properties.assets.each do | asset_name, deets |
       storage_name st.storage_name
       host st.hosts
       cluster_name st.cluster_name
+      platform oci_test_platform
 
       # Only methods in MintSDK classes are exposed as action by default
       # if there's any method that takes an argument, we have to attach it explicitly
