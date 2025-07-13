@@ -1,5 +1,3 @@
-Bundler.require
-
 require 'mintpress-infrastructure-oci'
 # actions for vms
 
