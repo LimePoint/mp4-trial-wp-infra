@@ -1,0 +1,336 @@
+common_settings:
+  hosts:
+    run_list: 'oci-infra-common::oci-bootstrap'
+    keys: ['/opt/opschain/oci_new_key']
+    use_flex: true
+    cpu: 2
+    memory: 16
+    boot_volume_size_in_gbs: 75 
+    native_instance_type: "VM.Standard3.Flex"
+    operating_system: "Oracle Linux"
+    operating_system_version: 9
+    assign_public_ip: true
+    configure_ocid_service: false
+  storage:
+    # storage_name: oracle
+    size: 90
+    mount_point: /oracle
+  shared_storage:
+    size: 50
+    mount_point: /oracle/app/runtime
+  domain_name: '.trial.limepoint.com'
+  mount_target: 'mt-trial-obp-tst'
+  sec_test_subnet: &sec_test_subnet 'sn-mp-trial-sec-tst'
+  int_test_subnet: &int_test_subnet 'sn-mp-trial-int-tst'
+  app_test_subnet: &app_test_subnet 'sn-mp-trial-tst'
+  sec_test_network_security_groups: &sec_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-sec"]
+  int_test_network_security_groups: &int_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-int"]
+  app_test_network_security_groups: &app_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-app"]
+assets:
+  obpotd:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: cix9obpotd01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        dns_entries: 
+          - type: cname
+            name: cix9obpotd01-pca
+            values: cix9obpotd01
+        # chef_node_name: cix9obpotd01-pca
+        # cpu: 2
+        memory: 18 # you can override the global configs
+        # primary_ip: 10.107.159.44
+        # boot_volume_size: 75 
+        storage:
+        - storage_name: cix9obpotd01-oracle
+      - name: cix9obpotd02
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        dns_entries: 
+          - type: cname
+            name: cix9obpotd02-pca
+            values: cix9obpotd02
+        storage:
+        - storage_name: cix9obpotd02-oracle
+    shared_storage:
+        - storage_name: cix9obpotd-runtime
+          hosts:
+            - cix9obpotd01
+            - cix9obpotd02
+          cluster_name: cix9obpotd
+  obpoam:
+    subnet: *sec_test_subnet
+    network_security_groups: *sec_test_network_security_groups
+    hosts:
+      - name: cix9obpoam01
+        dns_entries: 
+          - type: cname
+            name: cix9obpoam01-pca
+            values: cix9obpoam01
+        storage:
+        - storage_name: cix9obpoam01-oracle
+      - name: cix9obpoam02
+        dns_entries: 
+          - type: cname
+            name: cix9obpoam02-pca
+            values: cix9obpoam02
+        storage:
+        - storage_name: cix9obpoam02-oracle
+    shared_storage:
+        - storage_name: cix9obpoam-runtime
+          hosts:
+            - cix9obpoam01
+            - cix9obpoam02
+          cluster_name: cix9obpoam
+  obpoid:
+    subnet: *sec_test_subnet
+    network_security_groups: *sec_test_network_security_groups
+    hosts:
+      - name: cix9obpoid01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        dns_entries: 
+          - type: cname
+            name: cix9obpoid01-pca
+            values: cix9obpoid01
+        storage:
+        - storage_name: cix9obpoid01-oracle
+      - name: cix9obpoid02
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        dns_entries: 
+          - type: cname
+            name: cix9obpoid02-pca
+            values: cix9obpoid02
+        storage:
+        - storage_name: cix9obpoid02-oracle
+    shared_storage:
+        - storage_name: cix9obpoid-runtime
+          hosts:
+            - cix9obpoid01
+            - cix9obpoid02
+          cluster_name: cix9obpoid
+  obpcid:
+    subnet: *sec_test_subnet
+    network_security_groups: *sec_test_network_security_groups
+    hosts:
+      - name: cix9obpcid01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        dns_entries: 
+          - type: cname
+            name: cix9obpcid01-pca
+            values: cix9obpcid01
+        storage:
+        - storage_name: cix9obpcid01-oracle
+        - storage_name: cix9obpcid01-oraclenew
+      - name: cix9obpcid02
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        dns_entries: 
+          - type: cname
+            name: cix9obpcid02-pca
+            values: cix9obpcid02
+        storage:
+        - storage_name: cix9obpcid02-oracle
+    shared_storage:
+        - storage_name: cix9obpcid-runtime
+          hosts:
+            - cix9obpcid01
+            - cix9obpcid02
+          cluster_name: cix9obpcid
+  obposb: 
+    subnet: *int_test_subnet
+    network_security_groups: *int_test_network_security_groups
+    hosts:
+      - name: cix9obposb01
+        dns_entries: 
+          - type: cname
+            name: cix9obposb01-pca
+            values: cix9obposb02
+        storage:
+        - storage_name: cix9obposb01-oracle
+      - name: cix9obposb02
+        dns_entries: 
+          - type: cname
+            name: cix9obposb02-pca
+            values: cix9obposb02
+        storage:
+        - storage_name: cix9obposb02-oracle
+    shared_storage:
+        - storage_name: cix9obposb-runtime
+          hosts:
+            - cix9obposb01
+            - cix9obposb02
+          cluster_name: cix9obposb
+  obpsoa: 
+    subnet: *app_test_subnet
+    network_security_groups: *app_test_network_security_groups
+    hosts:
+      - name: cix9obpsoa01
+        dns_entries: 
+          - type: cname
+            name: cix9obpsoa01-pca
+            values: cix9obpsoa01
+        storage:
+        - storage_name: cix9obpsoa01-oracle
+      - name: cix9obpsoa02
+        dns_entries: 
+          - type: cname
+            name: cix9obpsoa02-pca
+            values: cix9obpsoa02
+        storage:
+        - storage_name: cix9obpsoa02-oracle
+    shared_storage:
+        - storage_name: cix9obpsoa-runtime
+          hosts:
+            - cix9obpsoa01
+            - cix9obpsoa02
+          cluster_name: cix9obpsoa
+  obpdoc: 
+    subnet: *app_test_subnet
+    network_security_groups: *app_test_network_security_groups
+    hosts:
+      - name: cix9obpdoc01
+        dns_entries: 
+          - type: cname
+            name: cix9obpdoc01-pca
+            values: cix9obpdoc01
+        storage:
+        - storage_name: cix9obpdoc01-oracle
+      - name: cix9obpdoc02
+        dns_entries: 
+          - type: cname
+            name: cix9obpdoc02-pca
+            values: cix9obpdoc02
+        storage:
+        - storage_name: cix9obpdoc02-oracle
+    shared_storage:
+        - storage_name: cix9obpdoc-runtime
+          hosts:
+            - cix9obpdoc01
+            - cix9obpdoc02
+          cluster_name: cix9obpdoc
+  obpobh: 
+    subnet: *app_test_subnet
+    network_security_groups: *app_test_network_security_groups
+    hosts:
+      - name: cix9obpobh01
+        dns_entries: 
+          - type: cname
+            name: cix9obpobh01-pca
+            values: cix9obpobh01
+        storage:
+        - storage_name: cix9obpobh01-oracle
+      - name: cix9obpobh02
+        dns_entries: 
+          - type: cname
+            name: cix9obpobh02-pca
+            values: cix9obpobh02
+        storage:
+        - storage_name: cix9obpobh02-oracle
+    shared_storage:
+        - storage_name: cix9obpobh-runtime
+          hosts:
+            - cix9obpobh01
+            - cix9obpobh02
+          cluster_name: cix9obpobh
+  obpipm: 
+    subnet: *app_test_subnet
+    network_security_groups: *app_test_network_security_groups
+    hosts:
+      - name: cix9obpipm01
+        dns_entries: 
+          - type: cname
+            name: cix9obpipm01-pca
+            values: cix9obpipm01
+        storage:
+        - storage_name: cix9obpipm01-oracle
+      - name: cix9obpipm02
+        dns_entries: 
+          - type: cname
+            name: cix9obpipm02-pca
+            values: cix9obpipm02
+        storage:
+        - storage_name: cix9obpipm02-oracle
+    shared_storage:
+        - storage_name: cix9obpipm-runtime
+          hosts:
+            - cix9obpipm01
+            - cix9obpipm02
+          cluster_name: cix9obpipm
+  obpurm: 
+    subnet: *app_test_subnet
+    network_security_groups: *app_test_network_security_groups
+    hosts:
+      - name: cix9obpurm01
+        dns_entries: 
+          - type: cname
+            name: cix9obpurm01-pca
+            values: cix9obpurm01
+        storage:
+        - storage_name: cix9obpurm01-oracle
+      - name: cix9obpurm02
+        dns_entries: 
+          - type: cname
+            name: cix9obpurm02-pca
+            values: cix9obpurm02
+        storage:
+        - storage_name: cix9obpurm02-oracle
+    shared_storage:
+        - storage_name: cix9obpurm-runtime
+          hosts:
+            - cix9obpurm01
+            - cix9obpurm02
+          cluster_name: cix9obpurm
+  obpobu: 
+    subnet: *app_test_subnet
+    network_security_groups: *app_test_network_security_groups
+    hosts:
+      - name: cix9obpobu01
+        dns_entries: 
+          - type: cname
+            name: cix9obpobu01-pca
+            values: cix9obpobu01
+        storage:
+        - storage_name: cix9obpobu01-oracle
+      - name: cix9obpobu02
+        dns_entries: 
+          - type: cname
+            name: cix9obpobu02-pca
+            values: cix9obpobu02
+        storage:
+        - storage_name: cix9obpobu02-oracle
+    shared_storage:
+        - storage_name: cix9obpobu-runtime
+          hosts:
+            - cix9obpobu01
+            - cix9obpobu02
+          cluster_name: cix9obpobu
+  obpodi: 
+    subnet: *int_test_subnet
+    network_security_groups: *int_test_network_security_groups
+    hosts:
+      - name: cix9obpodi01
+        dns_entries: 
+          - type: cname
+            name: cix9obpodi01-pca
+            values: cix9obpodi01
+        storage:
+        - storage_name: cix9obpodi01-oracle
+      - name: cix9obpodi02
+        dns_entries: 
+          - type: cname
+            name: cix9obpodi02-pca
+            values: cix9obpodi02
+        storage:
+        - storage_name: cix9obpodi02-oracle
+    shared_storage:
+        - storage_name: cix9obpodi-runtime
+          hosts:
+            - cix9obpodi01
+            - cix9obpodi02
+          cluster_name: cix9obpodi
