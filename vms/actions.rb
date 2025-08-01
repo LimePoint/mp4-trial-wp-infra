@@ -78,8 +78,10 @@ OpsChain.properties.assets.each do | asset_name, deets |
 
   Opschain.logger.info "---- all hosts done for asset #{asset_name}"
 
+  Opschain.logger.info "---- starting the storage loop"
   # Now see if there's shared storage and create resources for those.
   deets.shared_storage.each do | st |
+    Opschain.logger.info "---- starting processing for shared storage #{st.storage_name}"
     infrastructure_oci_oci_shared_storage st.storage_name do
       available_actions :create, :attach, :setup_ocfs, :detach, :destroy
       properties OpsChain.properties.common_settings.shared_storage
@@ -102,6 +104,7 @@ OpsChain.properties.assets.each do | asset_name, deets |
         ac.controller.detach
       end
     end
+    Opschain.logger.info "---- finished processing for shared storage #{st.storage_name}"
 
     all_shared_storage << st.storage_name
   end
