@@ -47,6 +47,7 @@ all_shared_storage = []
 
 OpsChain.properties.assets.each do | asset_name, deets |
   deets.hosts.each do | host |
+    Opschain.logger.info "---- processing host in the asset loop; asset: #{asset_name}; host: #{host.name}"
     # Every host gets a default storage, storage shd be defined earlier if required to attach host
     block_devices_to_attach = []
     host.storage.each do | str |
@@ -61,6 +62,7 @@ OpsChain.properties.assets.each do | asset_name, deets |
       block_devices_to_attach << str.storage_name
     end
 
+    Opschain.logger.info "---- storage complete, starting host init. host: #{host.name}"
     infrastructure_oci_oci_host host.name do
       available_actions :create, :start, :stop, :restart, :exists?, :destroy # only to show ui, else we can all any action
       properties common_host_properties
@@ -69,9 +71,12 @@ OpsChain.properties.assets.each do | asset_name, deets |
       platform oci_test_platform
       block_devices block_devices_to_attach
     end
+    Opschain.logger.info "---- finished host init - host: #{host.name}"
     
     all_hosts << host.name
   end
+
+  Opschain.logger.info "---- all hosts done for asset #{asset_name}"
 
   # Now see if there's shared storage and create resources for those.
   deets.shared_storage.each do | st |
