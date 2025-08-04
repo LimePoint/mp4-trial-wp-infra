@@ -78,36 +78,36 @@ OpsChain.properties.assets.each do | asset_name, deets |
 
   OpsChain.logger.info "---- all hosts done for asset #{asset_name}"
 
-  OpsChain.logger.info "---- starting the storage loop"
-  # Now see if there's shared storage and create resources for those.
-  deets.shared_storage.each do | st |
-    OpsChain.logger.info "---- starting processing for shared storage #{st.storage_name}"
-    infrastructure_oci_oci_shared_storage st.storage_name do
-      available_actions :create, :attach, :setup_ocfs, :detach, :destroy
-      properties OpsChain.properties.common_settings.shared_storage
-      storage_name st.storage_name
-      host st.hosts
-      cluster_name st.cluster_name
-      platform oci_test_platform
-      shared true
-      filesystem 'ocfs2'
-      volume_managed false
-      enable_clustered_file_system true
+  # OpsChain.logger.info "---- starting the storage loop"
+  # # Now see if there's shared storage and create resources for those.
+  # deets.shared_storage.each do | st |
+  #   OpsChain.logger.info "---- starting processing for shared storage #{st.storage_name}"
+  #   infrastructure_oci_oci_shared_storage st.storage_name do
+  #     available_actions :create, :attach, :setup_ocfs, :detach, :destroy
+  #     properties OpsChain.properties.common_settings.shared_storage
+  #     storage_name st.storage_name
+  #     host st.hosts
+  #     cluster_name st.cluster_name
+  #     platform oci_test_platform
+  #     shared true
+  #     filesystem 'ocfs2'
+  #     volume_managed false
+  #     enable_clustered_file_system true
 
-      # Only methods in MintSDK classes are exposed as action by default
-      # if there's any method that takes an argument, we have to attach it explicitly
-      action :attach do |ac|
-        ac.controller.attach
-      end
+  #     # Only methods in MintSDK classes are exposed as action by default
+  #     # if there's any method that takes an argument, we have to attach it explicitly
+  #     action :attach do |ac|
+  #       ac.controller.attach
+  #     end
 
-      action :detach do |ac|
-        ac.controller.detach
-      end
-    end
-    OpsChain.logger.info "---- finished processing for shared storage #{st.storage_name}"
+  #     action :detach do |ac|
+  #       ac.controller.detach
+  #     end
+  #   end
+  #   OpsChain.logger.info "---- finished processing for shared storage #{st.storage_name}"
 
-    all_shared_storage << st.storage_name
-  end
+  #   all_shared_storage << st.storage_name
+  # end
 end
 
 # make a string of the actions that we are interested in
@@ -126,11 +126,11 @@ OpsChain.properties.assets.each do | asset_name, deets |
   end
 end
 
-# this block will create actions like cix1obpcid-runtime-provision which will call shared storage create, attach and setup_ocfs
-all_shared_storage.each do |st|
-  action "#{st}-provision", steps: [ "#{st}:create", "#{st}:attach", "#{st}:setup_ocfs"], description: "#{st}-provision"
-  action "#{st}-destroy", steps: [ "#{st}:destroy"], description: "#{st}-destroy"
-end
+# # this block will create actions like cix1obpcid-runtime-provision which will call shared storage create, attach and setup_ocfs
+# all_shared_storage.each do |st|
+#   action "#{st}-provision", steps: [ "#{st}:create", "#{st}:attach", "#{st}:setup_ocfs"], description: "#{st}-provision"
+#   action "#{st}-destroy", steps: [ "#{st}:destroy"], description: "#{st}-destroy"
+# end
 
 # this block will create actions like obpotd-create which will create hosts and then create shared storage
 asset_actions = []
@@ -138,14 +138,7 @@ OpsChain.properties.assets.each do | asset_name, deets |
   %w(create start stop restart exists? destroy).each do |act|
     action "#{asset_name}-#{act}", 
       steps: [ 
-        asset_host_actions.select { |ha| ha.match?(/#{asset_name}-#{act}/)}, 
-        all_shared_storage.select { |ha| ha.match?(/#{asset_name}/)}.map { |v| 
-          if act == 'create'
-            "#{v}-provision"
-          elsif act == 'destroy'
-            "#{v}-destroy"
-          end
-         }
+        asset_host_actions.select { |ha| ha.match?(/#{asset_name}-#{act}/)}
       ], 
         description: "#{asset_name}-#{act}"
     
