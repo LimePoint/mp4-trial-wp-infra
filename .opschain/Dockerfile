@@ -35,6 +35,8 @@ RUN opschain_configure_project_repo.sh "$GIT_SHA"
 
 # Run any Dockerfile commands that rely on using `opschain-exec` here. Copy the --mount used in the "opschain-exec bundle install" RUN
 # command below if you require access to OpsChain secrets and/or properties environment variables.
+RUN gem install knife -v 18.5.0
+
 
 # Run `bundle install` to install the Ruby dependencies into the image.
 # The use of `opschain-exec` with the env_context_zip secret, means that any OpsChain secrets, or properties environment variables
@@ -48,7 +50,6 @@ USER opschain
 # COPY /Volumes/D/resources/source/opschain-soa-template-private/cinc-client.rpm /opt/opschain/cinc-client.rpm
 # COPY /Volumes/D/resources/source/opschain-soa-template-private/.oci_platform_configs.yaml /opt/opschain/.oci_platform_configs.yaml
 
-RUN gem install knife -v 18.5.0
 #RUN --mount=type=secret,required=true,id=env_context_zip,uid=10001,gid=10001,target=/opt/opschain/.mintpress/step_context.json.zip \
 #     --mount=type=secret,required=false,id=mintpress_license,uid=10001,gid=10001,target=/opt/opschain/.environmint/mintpress.license \
 #     bundle_and_lint.sh
