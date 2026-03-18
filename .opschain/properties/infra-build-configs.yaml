@@ -1,0 +1,196 @@
+common_settings:
+  hosts:
+    # run_list: 'oci-bootstrap::default'
+    run_list: 'environmint-common::default'
+    node_attributes: {}
+    keys: ['/opt/opschain/oci_new_key']
+    cpu: 2
+    memory: 16
+    boot_volume_size_in_gbs: 75 
+    native_instance_type: "VM.Standard3.Flex"
+    operating_system: "Oracle Linux"
+    operating_system_version: 9
+    assign_public_ip: true
+    configure_ocid_service: false
+    disable_selinux: true
+    create_cnames: true
+    create_friendly_names: true
+    domain_name: '.trial.limepoint.com'
+    # domain_name: '.wpocloud.com'
+    zone: 'trial.limepoint.com'
+    # zone: 'wpocloud.com'
+  storage:
+    # storage_name: oracle
+    size_gb: 90
+    mount_point: /oracle
+  shared_storage:
+    size: 50
+    mount_point: /oracle/app/runtime
+  mount_target: 'mt-trial-obp-tst'
+  sec_test_subnet: &sec_test_subnet 'sn-mp-trial-sec-tst'
+  int_test_subnet: &int_test_subnet 'sn-mp-trial-int-tst'
+  app_test_subnet: &app_test_subnet 'sn-mp-trial-tst'
+  sec_test_network_security_groups: &sec_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-sec"]
+  int_test_network_security_groups: &int_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-int"]
+  app_test_network_security_groups: &app_test_network_security_groups ["nsg-mp-trial-tst-common-ops", "nsg-mp-trial-tst-common-apps", "nsg-mp-trial-tst-app"]
+assets:
+  obpobh:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21obh01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        # chef_node_name: cix1obpotd01-pca
+        # cpu: 2
+        memory: 18 # you can override the global configs
+        # primary_ip: 10.107.159.44
+        # boot_volume_size: 75 
+        storage:
+          - storage_name: obpcbpd21obh01-oracle
+            size_gb: 100
+  obpsoa:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21soa01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21soa01-oracle
+            size_gb: 100
+  obpobu:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21obu01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21obu01-oracle
+            size_gb: 100
+  obpdoc:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21doc01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21doc01-oracle
+            size_gb: 100
+  obpipm:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21ipm01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21ipm01-oracle
+            size_gb: 100
+  obpurm:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21urm01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21urm01-oracle
+            size_gb: 100
+  obpoim:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21oim01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21oim01-oracle
+            size_gb: 100
+  obpodi:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21odi01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21odi01-oracle
+            size_gb: 100
+  obpoid:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21oid01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21oid01-oracle
+            size_gb: 100
+  obpcid:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21cid01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21cid01-oracle
+            size_gb: 100
+      - name: obpcbpd21cid02
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21cid02-oracle
+            size_gb: 100
+  obpoam:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21oam01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21oam01-oracle
+            size_gb: 100
+  obposb:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21osb01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21osb01-oracle
+            size_gb: 100
+  obpohs:
+    subnet: sn-mp-trial-slb-tst
+    run_list: 'oci-infra-common::oci-bootstrap'
+    network_security_groups: ["nsg-mp-trial-slb-tst-apps", "nsg-mp-trial-tst-slb"]
+    hosts:
+      - name: obpcbpd21ohs01
+        operating_system: "Oracle Linux"
+        operating_system_version: 8
+        storage:
+          - storage_name: obpcbpd21ohs01-oracle
+            size_gb: 100
+        sso_cname_list:
+          - obp-banker-bpd21
+          - obp-worklist-bpd21
+          - obp-files-bpd21
+          - obp-records-bpd21
+          - obp-sso-bpd21
