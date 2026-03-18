@@ -1,5 +1,5 @@
   require 'mintpress-infrastructure-oci'
-  require 'mintpress-dns-powerdns'
+  # require 'mintpress-dns-powerdns'
   require_relative 'utility'
 
   oci_config = '/opt/opschain/oci_platform_configs.yaml' # this will come from vault from projects settings
@@ -158,53 +158,53 @@
         cname_dns_entries << resource_name
       end
 
-      # power dns A entries
-      dns_targets = {
-          "alpha" => "primary_dns",
-          "omega" => "secondary_dns"
-      }
-      dns_targets.each do |suffix, config_key|
-        infrastructure_power_dns_entry "#{host.name}_#{suffix}" do
-          # ArgumentError: Attribute :name on MintPress::Infrastructure::PowerDnsEntry must be of type [String],
-          # however you specified a MintPress::InfrastructureOci::OCIHost (#<MintPress::InfrastructureOci::OCIHost:0x00007ff71492fd20>)) (ArgumentError)
-          name host.name
-          # name literal { host.name }#NOTE
-          #webserver_host provider_config['powerdns_platform'][config_key]
-          #webserver_port 80
-          #api_key        provider_config['powerdns_platform']['dns_api_key']
-          type           'A'
-          values         lazy { ref(host.name).controller.primary_ip }
-        end
-          # a_dns_entries << "#{host.name}_#{suffix}" # TODO: Enable for powerdns
-      end
-
-      cname_types = {}
-      if create_cnames
-        cname_types.merge!({"private" => cname_priv, "admin"   => cname_adm})
-      end
-      if create_friendly_names
-        cname_types.merge!({"friendly" => cname_friendly})
-      end
-
-      if create_sso_cnames
-        sso_cnames.each do |sso_cname|
-          cname_types["sso-#{sso_cname}"] = "#{sso_cname}#{domain_name}"
-        end
-      end
-      cname_types.each do |type_label, cname_prefix|
-        dns_targets.each do |suffix, config_key|
-
-          infrastructure_power_dns_entry "#{host.name}-power-dns-#{type_label}-cname-#{suffix}" do
-            name           "#{cname_prefix}"
-            #webserver_host provider_config['powerdns_platform'][config_key]
-            #webserver_port 80
-            #api_key        provider_config['powerdns_platform']['dns_api_key']
-            type           'CNAME'
-            values         lazy { ref(host.name).controller.name }
-          end
-            # cname_dns_entries << "#{host.name}-power-dns-#{type_label}-cname-#{suffix}" # TODO: Enable for powerdns
-        end
-      end
+      ## power dns A entries
+      #dns_targets = {
+      #    "alpha" => "primary_dns",
+      #    "omega" => "secondary_dns"
+      #}
+      #dns_targets.each do |suffix, config_key|
+      #  infrastructure_power_dns_entry "#{host.name}_#{suffix}" do
+      #    # ArgumentError: Attribute :name on MintPress::Infrastructure::PowerDnsEntry must be of type [String],
+      #    # however you specified a MintPress::InfrastructureOci::OCIHost (#<MintPress::InfrastructureOci::OCIHost:0x00007ff71492fd20>)) (ArgumentError)
+      #    name host.name
+      #    # name literal { host.name }#NOTE
+      #    #webserver_host provider_config['powerdns_platform'][config_key]
+      #    #webserver_port 80
+      #    #api_key        provider_config['powerdns_platform']['dns_api_key']
+      #    type           'A'
+      #    values         lazy { ref(host.name).controller.primary_ip }
+      #  end
+      #    # a_dns_entries << "#{host.name}_#{suffix}" # TODO: Enable for powerdns
+      #end
+      #
+      #cname_types = {}
+      #if create_cnames
+      #  cname_types.merge!({"private" => cname_priv, "admin"   => cname_adm})
+      #end
+      #if create_friendly_names
+      #  cname_types.merge!({"friendly" => cname_friendly})
+      #end
+      #
+      #if create_sso_cnames
+      #  sso_cnames.each do |sso_cname|
+      #    cname_types["sso-#{sso_cname}"] = "#{sso_cname}#{domain_name}"
+      #  end
+      #end
+      #cname_types.each do |type_label, cname_prefix|
+      #  dns_targets.each do |suffix, config_key|
+      #
+      #    infrastructure_power_dns_entry "#{host.name}-power-dns-#{type_label}-cname-#{suffix}" do
+      #      name           "#{cname_prefix}"
+      #      #webserver_host provider_config['powerdns_platform'][config_key]
+      #      #webserver_port 80
+      #      #api_key        provider_config['powerdns_platform']['dns_api_key']
+      #      type           'CNAME'
+      #      values         lazy { ref(host.name).controller.name }
+      #    end
+      #      # cname_dns_entries << "#{host.name}-power-dns-#{type_label}-cname-#{suffix}" # TODO: Enable for powerdns
+      #  end
+      #end
 
 
       # support for bootstrap
