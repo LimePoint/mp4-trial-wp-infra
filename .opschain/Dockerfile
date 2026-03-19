@@ -36,7 +36,7 @@ RUN opschain_configure_project_repo.sh "$GIT_SHA"
 # Run any Dockerfile commands that rely on using `opschain-exec` here. Copy the --mount used in the "opschain-exec bundle install" RUN
 # command below if you require access to OpsChain secrets and/or properties environment variables.
 RUN gem install knife -v 18.5.0
-
+RUN export __checking_licence=1
 
 # Run `bundle install` to install the Ruby dependencies into the image.
 # The use of `opschain-exec` with the env_context_zip secret, means that any OpsChain secrets, or properties environment variables
