@@ -56,7 +56,7 @@ def overlay_actions (all_hosts, a_dns_entries, cname_dns_entries)
     deets.hosts.each do |host|
       %w(create).each do |act|
         # action "#{host.name}-dns-#{act}", steps: ["#{host.name}-vm-a-dns-#{act}", "#{host.name}-vm-cname-dns-#{act}"], description: "#{host.name}-dns-#{act}", run_as: :parallel
-        action "#{host.name}-dns-#{act}", steps: ["#{host.name}-vm-a-dns-#{act}", "#{host.name}-vm-cname-dns-#{act}"], description: "#{host.name}-dns-#{act}", run_as: :sequentia
+        action "#{host.name}-dns-#{act}", steps: ["#{host.name}-vm-a-dns-#{act}", "#{host.name}-vm-cname-dns-#{act}"], description: "#{host.name}-dns-#{act}", run_as: :sequential
         action "#{host.name}-infra-#{act}", steps: [ "#{host.name}-vm-#{act}", "#{host.name}-dns-#{act}" ], description: "#{host.name}-infra-#{act}", run_as: :sequential
         action "#{host.name}-infra-#{act}-and-bootstrap", steps: [ "#{host.name}-infra-#{act}", "#{host.name}-vm-bootstrap", "#{host.name}-vm-update-security-rules" ] , description: "#{host.name}-infra-#{act}-and-bootstrap", run_as: :sequential
 
