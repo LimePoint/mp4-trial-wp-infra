@@ -1,5 +1,5 @@
   require 'mintpress-infrastructure-oci'
-  # require 'mintpress-dns-powerdns'
+  require 'mintpress-dns-powerdns'
   require_relative 'utility'
 
   oci_config = '/opt/opschain/oci_platform_configs.yaml' # this will come from vault from projects settings
