@@ -43,7 +43,7 @@ RUN gem install knife -v 18.5.0
 # will be available for Bundler configuration (eg for authentication details).
 # By default, the OpsChain lint command will be run to look for errors before execution. To skip linting, pass "false" to the
 # `bundle_and_lint.sh` script.
-USER opschain
+# USER opschain
 # COPY ../cinc-client.rpm /opt/opschain/cinc-client.rpm
 # COPY ../.oci_platform_configs.yaml /opt/opschain/.oci_platform_configs.yaml
 
