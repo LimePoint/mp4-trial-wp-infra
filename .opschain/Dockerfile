@@ -35,7 +35,9 @@ RUN opschain_configure_project_repo.sh "$GIT_SHA"
 
 # Run any Dockerfile commands that rely on using `opschain-exec` here. Copy the --mount lines used in the "bundle_and_lint.sh" RUN
 # command below if you require access to OpsChain secrets and/or properties environment variables.
-RUN chmod g+rw -R /usr/local/rbenv/versions/3.4.6/lib/ruby/gems/3.4.0/plugins
+RUN [ -d /usr/local/rbenv/versions/3.4.6/lib/ruby/gems/3.4.0/plugins ] && \
+    chmod g+rw -R /usr/local/rbenv/versions/3.4.6/lib/ruby/gems/3.4.0/plugins || \
+    echo "Directory not found, skipping chmod"
 
 # Run `bundle install` to install the Ruby dependencies into the image.
 # The use of `opschain-exec` with the env_context_zip secret, means that any OpsChain secrets, or properties environment variables
