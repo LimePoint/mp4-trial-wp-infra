@@ -132,6 +132,7 @@
           platform oci_test_platform
         end
       end
+      action"#{host.name}-public-a-dns:create": ["#{host.name}:exists?"]
       a_dns_entries << "#{host.name}-public-a-dns" << "#{host.name}-private-a-dns"
 
       # construct hash to assit with iterative construction of infrastructure_oci_oci_dns_entry
