@@ -103,7 +103,7 @@
 
       infrastructure_oci_oci_host host.name do
         available_actions :create, :start, :stop, :restart, :exists?, :destroy # only to show ui, else we can all any action
-        action_policies ignore_defined: true#, ignore_failure: true
+        # action_policies ignore_defined: true#, ignore_failure: true
         name "#{host.name}#{domain_name}"
         properties common_host_properties
         always_use_mintpress_bootstrap false
