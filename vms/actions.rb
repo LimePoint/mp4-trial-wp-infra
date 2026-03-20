@@ -275,27 +275,12 @@
       end
       action"#{host.name}_remove_mintpress_hosts_entry:delete_lines": ["#{host.name}:exists?"]
 
-      action "#{host.name}-remove-mintpress-hosts-entry", description: "#{host.name}-remove-mintpress-hosts-entry" do
-          OpsChain.append_child_steps(%I[#{host.name}_remove_mintpress_hosts_entry:delete_lines])
-      end
-      action"#{host.name}-remove-mintpress-hosts-entry": ["#{host.name}:exists?"]
-
-      #action "#{host.name}-bootstrap", description: "#{host.name}-bootstrap" do
-      #  OpsChain.append_child_steps(%I[
-      #    #{host.name}-whoami:execute
-      #    #{host.name}-disable_selinux
-      #    #{host.name}-add-mintpress-hosts-entry
-      #    #{host.name}:bootstrap
-      #    #{host.name}-remove-mintpress-hosts-entry
-      #    ])
-      #end
-
       bootstrap_steps = [
             "#{host.name}-whoami:execute",
             (common_host_properties.disable_selinux ? "#{host.name}:disable_se_linux" : nil),
             "#{host.name}-add-mintpress-hosts-entry",
             "#{host.name}:bootstrap",
-            "#{host.name}-remove-mintpress-hosts-entry"
+            "#{host.name}_remove_mintpress_hosts_entry:delete_lines"
         ].compact
 
       action "#{host.name}-bootstrap", description: "#{host.name}-bootstrap", steps: bootstrap_steps
