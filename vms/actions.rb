@@ -243,7 +243,7 @@
         host host.name
         file '/etc/hosts'
         pattern lazy { ref(host.name).controller.primary_public_ip }
-        line lazy { "#{ref(host.name).controller.primary_public_ip} #{host.name.controller.name}" }
+        line lazy { "#{ref(host.name).controller.primary_public_ip} #{ref(host.name).controller.name}" }
         as_admin true
       end
 
@@ -254,6 +254,7 @@
           OpsChain.append_child_steps(%I[#{host.name}_add_mintpress_hosts_entry:replace_or_add_lines])
         end
       end
+      action"#{host.name}-add-mintpress-hosts-entry": ["#{host.name}:exists?"]
 
       action "#{host.name}-setup-bootstrapper" do
 
@@ -275,6 +276,7 @@
       action "#{host.name}-remove-mintpress-hosts-entry", description: "#{host.name}-remove-mintpress-hosts-entry" do
           OpsChain.append_child_steps(%I[#{host.name}_remove_mintpress_hosts_entry:delete_lines])
       end
+      action"#{host.name}-remove-mintpress-hosts-entry": ["#{host.name}:exists?"]
 
       #action "#{host.name}-bootstrap", description: "#{host.name}-bootstrap" do
       #  OpsChain.append_child_steps(%I[
