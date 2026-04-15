@@ -113,6 +113,9 @@
 
         platform oci_test_platform
         block_devices block_devices_to_attach
+
+        action "#{host.name}:bootstrap": ["#{host.name}-setup-bootstrapper"]
+        action "unbootstrap": ["#{host.name}-setup-bootstrapper"]
       end
       all_hosts << host.name
 
@@ -263,9 +266,7 @@
         host_obj.bootstrap_with_dns = false if host_obj.bootstrap_with_dns
         host_obj.bootstrapper = ref('chef').controller
       end
-      action "#{host.name}:bootstrap": ["#{host.name}-setup-bootstrapper"]
-      action "#{host.name}:unbootstrap": ["#{host.name}-setup-bootstrapper"]
-
+      
       resources_file_utils "#{host.name}_remove_mintpress_hosts_entry" do
         host host.name
         file '/etc/hosts'
