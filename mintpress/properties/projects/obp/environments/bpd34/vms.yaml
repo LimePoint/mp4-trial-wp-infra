@@ -1,0 +1,97 @@
+assets:
+  obpoid:
+    hosts:
+      - name: obpcbpd34oid01
+        storage:
+          - storage_name: obpcbpd34oid01-oracle
+            size_gb: 50
+
+  obpcid:
+    hosts:
+      - name: obpcbpd34cid01
+        storage:
+          - storage_name: obpcbpd34cid01-oracle
+            size_gb: 50
+
+  obpoam:
+    hosts:
+      - name: obpcbpd34oam01
+        storage:
+          - storage_name: obpcbpd34oam01-oracle
+            size_gb: 50
+
+  obpohs:
+    hosts:
+      - name: obpcbpd34ohs01
+        storage:
+          - storage_name: obpcbpd34ohs01-oracle
+            size_gb: 50
+        sso_cname_list:
+          - obp-banker-bpd34
+          - obp-worklist-bpd34
+          - obp-files-bpd34
+          - obp-records-bpd34
+          - obp-sso-bpd34
+
+  obpobh:
+    hosts:
+      - name: obpcbpd34obh01
+        storage:
+          - storage_name: obpcbpd34obh01-oracle
+            size_gb: 300
+
+  obpsoa:
+    hosts:
+      - name: obpcbpd34soa01
+        storage:
+          - storage_name: obpcbpd34soa01-oracle
+            size_gb: 300
+
+  obpobu:
+    hosts:
+      - name: obpcbpd34obu01
+        storage:
+          - storage_name: obpcbpd34obu01-oracle
+            size_gb: 300
+
+  obpdoc:
+    hosts:
+      - name: obpcbpd34doc01
+        storage:
+          - storage_name: obpcbpd34doc01-oracle
+            size_gb: 300
+
+  obposb:
+    hosts:
+      - name: obpcbpd34osb01
+        storage:
+          - storage_name: obpcbpd34osb01-oracle
+            size_gb: 300
+
+  obpodi:
+    hosts:
+      - name: obpcbpd34odi01
+        storage:
+          - storage_name: obpcbpd34odi01-oracle
+            size_gb: 300
+
+  obpipm:
+    hosts:
+      - name: obpcbpd34ipm01
+        storage:
+          - storage_name: obpcbpd34ipm01-oracle
+            size_gb: 100
+
+  obpurm:
+    hosts:
+      - name: obpcbpd34urm01
+        storage:
+          - storage_name: obpcbpd34urm01-oracle
+            size_gb: 50
+
+  obpoim:
+    hosts:
+      - name: obpcbpd34oim01
+        storage:
+          - storage_name: obpcbpd34oim01-oracle
+            size_gb: 50

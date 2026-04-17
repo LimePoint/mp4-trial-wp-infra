@@ -1,0 +1,192 @@
+require 'mintpress-infrastructure-oci'
+require 'yaml'
+
+oci_config = '/opt/opschain/.oci/oci_platform_configs.yaml'
+provider_config = OpsChain.dry_run? ? {} : YAML.load_file(oci_config)
+
+environment_name = OpsChain.context.parents.environment.code
+common           = OpsChain.properties.common_settings
+domain_name      = common.hosts.domain_name
+zone             = common.hosts.zone
+
+# OCI platform
+infrastructure_oci_oci_platform :oci_platform do
+  properties provider_config
+end
+
+# Chef bootstrapper
+infrastructure_chef_bootstrapper 'chef' do
+  chef_server_url       common.chef.server_url
+  knife_config_file     common.chef.knife_config_file
+  chef_client_installer common.chef.client_installer
+  chef_environment      environment_name
+  node_attributes       common.hosts.node_attributes
+  run_list              common.hosts.run_list
+end
+
+all_create_steps  = []
+all_destroy_steps = []
+
+OpsChain.properties.assets.each do |component_name, component|
+  host_create_steps  = []
+  host_destroy_steps = []
+
+  component.hosts.each do |host|
+    host_name = host.name
+    short     = host_name.split('.').first
+
+    # Block storage
+    host.storage.each do |str|
+      infrastructure_oci_oci_storage str.storage_name do
+        name        str.storage_name
+        size_in_gbs str.size_gb
+        platform    :oci_platform
+      end
+    end
+
+    # OCI host — per-host overrides (e.g. memory, cpu, os version) take precedence over common
+    infrastructure_oci_oci_host host_name do
+      available_actions        :create, :start, :stop, :restart, :exists?, :destroy
+      name                     "#{host_name}#{domain_name}"
+      native_instance_type     common.hosts.native_instance_type
+      cpu                      host.respond_to?(:cpu)                       ? host.cpu                       : common.hosts.cpu
+      memory                   host.respond_to?(:memory)                    ? host.memory                    : common.hosts.memory
+      boot_volume_size_in_gbs  common.hosts.boot_volume_size_in_gbs
+      operating_system         host.respond_to?(:operating_system)          ? host.operating_system          : common.hosts.operating_system
+      operating_system_version host.respond_to?(:operating_system_version)  ? host.operating_system_version  : common.hosts.operating_system_version
+      assign_public_ip         common.hosts.assign_public_ip
+      keys                     common.hosts.keys
+      subnet                   common.hosts.subnet
+      network_security_groups  common.hosts.network_security_groups
+      block_devices            host.storage.map(&:storage_name)
+      always_use_mintpress_bootstrap false
+      bootstrap_with_dns       false
+      platform                 :oci_platform
+    end
+
+    # Public and private A records
+    infrastructure_oci_oci_dns_entry "#{host_name}-public-dns" do
+      name     lazy { ref(host_name).controller.name }
+      values   lazy { ref(host_name).controller.primary_public_ip }
+      type     'A'
+      zone     zone
+      platform :oci_platform
+    end
+
+    infrastructure_oci_oci_dns_entry "#{host_name}-private-dns" do
+      name     "#{short}-prv#{domain_name}"
+      values   lazy { ref(host_name).controller.primary_ip }
+      type     'A'
+      zone     zone
+      platform :oci_platform
+    end
+
+    # VIP CNAME — strips host number suffix (e.g. obpcbpd34obh01 -> obpcbpd34obh)
+    if common.hosts.create_cnames
+      vip_name = short.sub(/\d+$/, '')
+      infrastructure_oci_oci_dns_entry "#{host_name}-vip-cname" do
+        name     "#{vip_name}#{domain_name}"
+        type     'CNAME'
+        values   lazy { ref(host_name).controller.name }
+        zone     zone
+        platform :oci_platform
+      end
+    end
+
+    # SSO CNAMEs — only defined on obpohs
+    if host.respond_to?(:sso_cname_list) && host.sso_cname_list
+      host.sso_cname_list.each do |sso_cname|
+        infrastructure_oci_oci_dns_entry "#{host_name}-#{sso_cname}-cname" do
+          name     "#{sso_cname}#{domain_name}"
+          type     'CNAME'
+          values   lazy { ref(host_name).controller.name }
+          zone     zone
+          platform :oci_platform
+        end
+      end
+    end
+
+    # Wire up Chef bootstrapper at runtime
+    action "#{host_name}-setup-bootstrapper" do
+      host_obj = ref(host_name).controller
+      host_obj.bootstrap_with_dns = false
+      host_obj.bootstrapper       = ref('chef').controller
+    end
+
+    action "#{host_name}-bootstrap",
+      description: "Bootstrap #{host_name} with Chef",
+      steps: [
+        "#{host_name}-setup-bootstrapper",
+        "#{host_name}:bootstrap"
+      ],
+      run_as: :sequential
+
+    # Collect all DNS steps for this host
+    dns_create_steps = [
+      "#{host_name}-public-dns:create",
+      "#{host_name}-private-dns:create"
+    ]
+    dns_create_steps << "#{host_name}-vip-cname:create" if common.hosts.create_cnames
+    if host.respond_to?(:sso_cname_list) && host.sso_cname_list
+      host.sso_cname_list.each { |s| dns_create_steps << "#{host_name}-#{s}-cname:create" }
+    end
+
+    # Individual host: storage -> VM -> DNS -> bootstrap
+    action "#{host_name}-create",
+      description: "Create #{host_name}: storage, VM, DNS and bootstrap",
+      steps: [
+        *host.storage.map { |s| "#{s.storage_name}:create" },
+        "#{host_name}:create",
+        *dns_create_steps,
+        "#{host_name}-bootstrap"
+      ],
+      run_as: :sequential
+
+    action "#{host_name}-destroy",
+      description: "Destroy #{host_name} and its storage",
+      steps: [
+        "#{host_name}:destroy",
+        *host.storage.map { |s| "#{s.storage_name}:destroy" }
+      ],
+      run_as: :sequential
+
+    host_create_steps  << "#{host_name}-create"
+    host_destroy_steps << "#{host_name}-destroy"
+  end
+
+  # Component hosts group — all hosts in parallel
+  action "#{component_name}-hosts-create",
+    description: "Create all #{component_name} hosts in parallel",
+    steps: host_create_steps,
+    run_as: :parallel
+
+  action "#{component_name}-hosts-destroy",
+    description: "Destroy all #{component_name} hosts in parallel",
+    steps: host_destroy_steps,
+    run_as: :parallel
+
+  # Top-level component action
+  action "#{component_name}-create",
+    description: "Create #{component_name} infrastructure",
+    steps: ["#{component_name}-hosts-create"],
+    run_as: :sequential
+
+  action "#{component_name}-destroy",
+    description: "Destroy #{component_name} infrastructure",
+    steps: ["#{component_name}-hosts-destroy"],
+    run_as: :sequential
+
+  all_create_steps  << "#{component_name}-create"
+  all_destroy_steps << "#{component_name}-destroy"
+end
+
+# Environment-wide actions — sequential to respect OBP dependency order
+action "create-all",
+  description: "Create all environment infrastructure in dependency order",
+  steps: all_create_steps,
+  run_as: :sequential
+
+action "destroy-all",
+  description: "Destroy all environment infrastructure",
+  steps: all_destroy_steps.reverse,
+  run_as: :sequential

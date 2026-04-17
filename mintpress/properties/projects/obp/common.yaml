@@ -1,0 +1,38 @@
+common_settings:
+  hosts:
+    run_list: 'environmint-common::default'
+    node_attributes: {}
+    keys:
+      - '/opt/opschain/oci_ssh.key'
+    cpu: 1
+    memory: 2
+    boot_volume_size_in_gbs: 75
+    native_instance_type: 'VM.Standard3.Flex'
+    operating_system: 'Oracle Linux'
+    operating_system_version: 9
+    assign_public_ip: true
+    configure_ocid_service: false
+    disable_selinux: true
+    create_cnames: true
+    domain_name: '.trial.limepoint.engineering'
+    zone: 'wpocloud.com'
+    subnet: 'sn-obp-bpd-app'
+    network_security_groups:
+      - 'nsg-obp-bpd-common-ops'
+      - 'nsg-obp-bpd-common-apps'
+      - 'nsg-obp-bpd-app'
+
+  storage:
+    size_gb: 50
+    mount_point: /oracle
+
+  shared_storage:
+    size: 50
+    mount_point: /oracle/app/runtime
+
+  mount_target: 'mt-obp-bpd'
+
+  chef:
+    server_url: 'https://cust-wp-315.limepoint.engineering/organizations/environmint'
+    knife_config_file: '/opt/opschain/.cinc/knife.rb'
+    client_installer: '/lib/cinc-client/cinc-client.rpm'
