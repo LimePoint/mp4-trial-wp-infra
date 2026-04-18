@@ -5,6 +5,9 @@ oci_config = '/opt/opschain/.oci/oci_platform_configs.yaml'
 provider_config = OpsChain.dry_run? ? {} : YAML.load_file(oci_config)
 
 environment_name = OpsChain.context.parents.environment.code
+
+puts OpsChain.properties
+
 common           = OpsChain.properties.common_settings
 domain_name      = common.hosts.domain_name
 zone             = common.hosts.zone
