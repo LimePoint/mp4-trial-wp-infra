@@ -15,7 +15,7 @@ infrastructure_oci_oci_platform :oci_platform do
 end
 
 # Chef bootstrapper
-infrastructure_chef_bootstrapper 'chef' do
+infrastructure_chef_bootstrapper :chef_bootstrapper do
   chef_server_url       common.chef.server_url
   knife_config_file     common.chef.knife_config_file
   chef_client_installer common.chef.client_installer
@@ -48,7 +48,8 @@ OpsChain.properties.assets.each do |component_name, component|
     end
 
     # OCI host — per-host overrides (e.g. memory, cpu, os version) take precedence over common
-    infrastructure_oci_oci_host host_name do
+    vm_name = "#{host_name}-vm"
+    infrastructure_oci_oci_host vm_name do
       available_actions        :create, :start, :stop, :restart, :exists?, :destroy
       name                     "#{host_name}#{domain_name}"
       native_instance_type     common.hosts.native_instance_type
@@ -69,8 +70,8 @@ OpsChain.properties.assets.each do |component_name, component|
 
     # Public and private A records
     infrastructure_oci_oci_dns_entry "#{host_name}-public-dns" do
-      name     lazy { ref(host_name).controller.name }
-      values   lazy { ref(host_name).controller.primary_public_ip }
+      name     lazy { vm_name.controller.name }
+      values   lazy { vm_name.controller.primary_public_ip }
       type     'A'
       zone     zone
       platform :oci_platform
@@ -78,7 +79,7 @@ OpsChain.properties.assets.each do |component_name, component|
 
     infrastructure_oci_oci_dns_entry "#{host_name}-private-dns" do
       name     "#{short}-prv#{domain_name}"
-      values   lazy { ref(host_name).controller.primary_ip }
+      values   lazy { vm_name.controller.primary_ip }
       type     'A'
       zone     zone
       platform :oci_platform
@@ -90,7 +91,7 @@ OpsChain.properties.assets.each do |component_name, component|
       infrastructure_oci_oci_dns_entry "#{host_name}-vip-cname" do
         name     "#{vip_name}#{domain_name}"
         type     'CNAME'
-        values   lazy { ref(host_name).controller.name }
+        values   lazy { vm_name.controller.name }
         zone     zone
         platform :oci_platform
       end
@@ -102,7 +103,7 @@ OpsChain.properties.assets.each do |component_name, component|
         infrastructure_oci_oci_dns_entry "#{host_name}-#{sso_cname}-cname" do
           name     "#{sso_cname}#{domain_name}"
           type     'CNAME'
-          values   lazy { ref(host_name).controller.name }
+          values   lazy { vm_name.controller.name }
           zone     zone
           platform :oci_platform
         end
@@ -112,16 +113,16 @@ OpsChain.properties.assets.each do |component_name, component|
     # Wire up Chef bootstrapper at runtime
     action "#{host_name}-setup-bootstrapper",
       description: "Configure Chef bootstrapper for #{host_name}" do
-      host_obj = ref(host_name).controller
+      host_obj = vm_name.controller
       host_obj.bootstrap_with_dns = false
-      host_obj.bootstrapper       = ref('chef').controller
+      host_obj.bootstrapper       = :chef_bootstrapper.controller
     end
 
     action "#{host_name}-bootstrap",
       description: "Bootstrap #{host_name} with Chef",
       steps: [
         "#{host_name}-setup-bootstrapper",
-        "#{host_name}:bootstrap"
+        "#{vm_name}:bootstrap"
       ],
       run_as: :sequential
 
@@ -140,7 +141,7 @@ OpsChain.properties.assets.each do |component_name, component|
       description: "Create #{host_name}: storage, VM, DNS and bootstrap",
       steps: [
         *host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}:create" },
-        "#{host_name}:create",
+        "#{vm_name}:create",
         *dns_create_steps,
         "#{host_name}-bootstrap"
       ],
@@ -149,7 +150,7 @@ OpsChain.properties.assets.each do |component_name, component|
     action "#{host_name}-destroy",
       description: "Destroy #{host_name} and its storage",
       steps: [
-        "#{host_name}:destroy",
+        "#{vm_name}:destroy",
         *host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}:destroy" }
       ],
       run_as: :sequential
