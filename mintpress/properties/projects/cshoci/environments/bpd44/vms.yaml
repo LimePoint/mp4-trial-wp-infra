@@ -1,0 +1,149 @@
+assets:
+  obpoid:
+    hosts:
+      - name: obpcbpd44oid01
+        storage:
+          - storage_name: obpcbpd44oid01-oracle
+            size_gb: 50
+      - name: obpcbpd44oid02
+        storage:
+          - storage_name: obpcbpd44oid02-oracle
+            size_gb: 50
+
+  obpcid:
+    hosts:
+      - name: obpcbpd44cid01
+        storage:
+          - storage_name: obpcbpd44cid01-oracle
+            size_gb: 50
+      - name: obpcbpd44cid02
+        storage:
+          - storage_name: obpcbpd44cid02-oracle
+            size_gb: 50
+
+  obpoam:
+    hosts:
+      - name: obpcbpd44oam01
+        storage:
+          - storage_name: obpcbpd44oam01-oracle
+            size_gb: 50
+      - name: obpcbpd44oam02
+        storage:
+          - storage_name: obpcbpd44oam02-oracle
+            size_gb: 50
+
+  obpohs:
+    hosts:
+      - name: obpcbpd44ohs01
+        storage:
+          - storage_name: obpcbpd44ohs01-oracle
+            size_gb: 50
+        sso_cname_list:
+          - obp-banker-bpd44
+          - obp-worklist-bpd44
+          - obp-files-bpd44
+          - obp-records-bpd44
+          - obp-sso-bpd44
+      - name: obpcbpd44ohs02
+        storage:
+          - storage_name: obpcbpd44ohs02-oracle
+            size_gb: 50
+
+  obpobh:
+    hosts:
+      - name: obpcbpd44obh01
+        storage:
+          - storage_name: obpcbpd44obh01-oracle
+            size_gb: 300
+      - name: obpcbpd44obh02
+        storage:
+          - storage_name: obpcbpd44obh02-oracle
+            size_gb: 300
+
+  obpsoa:
+    hosts:
+      - name: obpcbpd44soa01
+        storage:
+          - storage_name: obpcbpd44soa01-oracle
+            size_gb: 300
+      - name: obpcbpd44soa02
+        storage:
+          - storage_name: obpcbpd44soa02-oracle
+            size_gb: 300
+
+  obpobu:
+    hosts:
+      - name: obpcbpd44obu01
+        storage:
+          - storage_name: obpcbpd44obu01-oracle
+            size_gb: 300
+      - name: obpcbpd44obu02
+        storage:
+          - storage_name: obpcbpd44obu02-oracle
+            size_gb: 300
+
+  obpdoc:
+    hosts:
+      - name: obpcbpd44doc01
+        storage:
+          - storage_name: obpcbpd44doc01-oracle
+            size_gb: 300
+      - name: obpcbpd44doc02
+        storage:
+          - storage_name: obpcbpd44doc02-oracle
+            size_gb: 300
+
+  obposb:
+    hosts:
+      - name: obpcbpd44osb01
+        storage:
+          - storage_name: obpcbpd44osb01-oracle
+            size_gb: 300
+      - name: obpcbpd44osb02
+        storage:
+          - storage_name: obpcbpd44osb02-oracle
+            size_gb: 300
+
+  obpodi:
+    hosts:
+      - name: obpcbpd44odi01
+        storage:
+          - storage_name: obpcbpd44odi01-oracle
+            size_gb: 300
+      - name: obpcbpd44odi02
+        storage:
+          - storage_name: obpcbpd44odi02-oracle
+            size_gb: 300
+
+  obpipm:
+    hosts:
+      - name: obpcbpd44ipm01
+        storage:
+          - storage_name: obpcbpd44ipm01-oracle
+            size_gb: 100
+      - name: obpcbpd44ipm02
+        storage:
+          - storage_name: obpcbpd44ipm02-oracle
+            size_gb: 100
+
+  obpurm:
+    hosts:
+      - name: obpcbpd44urm01
+        storage:
+          - storage_name: obpcbpd44urm01-oracle
+            size_gb: 50
+      - name: obpcbpd44urm02
+        storage:
+          - storage_name: obpcbpd44urm02-oracle
+            size_gb: 50
+
+  obpoim:
+    hosts:
+      - name: obpcbpd44oim01
+        storage:
+          - storage_name: obpcbpd44oim01-oracle
+            size_gb: 50
+      - name: obpcbpd44oim02
+        storage:
+          - storage_name: obpcbpd44oim02-oracle
+            size_gb: 50
