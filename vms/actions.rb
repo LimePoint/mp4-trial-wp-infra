@@ -35,9 +35,12 @@ OpsChain.properties.assets.each do |component_name, component|
     host_name = host.name
     short     = host_name.split('.').first
 
-    # Block storage
+    # Block storage — resource named {hostname}-storage-{suffix} for clarity in OpsChain UI
     host.storage.each do |str|
-      infrastructure_oci_oci_storage str.storage_name do
+      storage_suffix   = str.storage_name.sub("#{host_name}-", '')
+      storage_resource = "#{host_name}-storage-#{storage_suffix}"
+
+      infrastructure_oci_oci_storage storage_resource do
         name        str.storage_name
         size_in_gbs str.size_gb
         platform    :oci_platform
@@ -58,7 +61,7 @@ OpsChain.properties.assets.each do |component_name, component|
       keys                     common.hosts.keys
       subnet                   common.hosts.subnet
       network_security_groups  common.hosts.network_security_groups
-      block_devices            host.storage.map(&:storage_name)
+      block_devices            host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}" }
       always_use_mintpress_bootstrap false
       bootstrap_with_dns       false
       platform                 :oci_platform
@@ -136,7 +139,7 @@ OpsChain.properties.assets.each do |component_name, component|
     action "#{host_name}-create",
       description: "Create #{host_name}: storage, VM, DNS and bootstrap",
       steps: [
-        *host.storage.map { |s| "#{s.storage_name}:create" },
+        *host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}:create" },
         "#{host_name}:create",
         *dns_create_steps,
         "#{host_name}-bootstrap"
@@ -147,7 +150,7 @@ OpsChain.properties.assets.each do |component_name, component|
       description: "Destroy #{host_name} and its storage",
       steps: [
         "#{host_name}:destroy",
-        *host.storage.map { |s| "#{s.storage_name}:destroy" }
+        *host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}:destroy" }
       ],
       run_as: :sequential
 
