@@ -49,11 +49,11 @@ OpsChain.properties.assets.each do |component_name, component|
       available_actions        :create, :start, :stop, :restart, :exists?, :destroy
       name                     "#{host_name}#{domain_name}"
       native_instance_type     common.hosts.native_instance_type
-      cpu                      host.respond_to?(:cpu)                       ? host.cpu                       : common.hosts.cpu
-      memory                   host.respond_to?(:memory)                    ? host.memory                    : common.hosts.memory
+      cpu                      host.respond_to?(:cpu)                      ? host.cpu                      : common.hosts.cpu
+      memory                   host.respond_to?(:memory)                   ? host.memory                   : common.hosts.memory
       boot_volume_size_in_gbs  common.hosts.boot_volume_size_in_gbs
-      operating_system         host.respond_to?(:operating_system)          ? host.operating_system          : common.hosts.operating_system
-      operating_system_version host.respond_to?(:operating_system_version)  ? host.operating_system_version  : common.hosts.operating_system_version
+      operating_system         host.respond_to?(:operating_system)         ? host.operating_system         : common.hosts.operating_system
+      operating_system_version host.respond_to?(:operating_system_version) ? host.operating_system_version : common.hosts.operating_system_version
       assign_public_ip         common.hosts.assign_public_ip
       keys                     common.hosts.keys
       subnet                   common.hosts.subnet
@@ -106,22 +106,14 @@ OpsChain.properties.assets.each do |component_name, component|
       end
     end
 
-    # Wire up Chef bootstrapper at runtime
+    # Wire up Chef bootstrapper at runtime — runs as a visible step before bootstrap
     action "#{host_name}-setup-bootstrapper" do
       host_obj = ref(host_name).controller
       host_obj.bootstrap_with_dns = false
       host_obj.bootstrapper       = ref('chef').controller
     end
 
-    action "#{host_name}-bootstrap",
-      description: "Bootstrap #{host_name} with Chef",
-      steps: [
-        "#{host_name}-setup-bootstrapper",
-        "#{host_name}:bootstrap"
-      ],
-      run_as: :sequential
-
-    # Collect all DNS steps for this host
+    # Collect DNS create steps for this host
     dns_create_steps = [
       "#{host_name}-public-dns:create",
       "#{host_name}-private-dns:create"
@@ -131,19 +123,19 @@ OpsChain.properties.assets.each do |component_name, component|
       host.sso_cname_list.each { |s| dns_create_steps << "#{host_name}-#{s}-cname:create" }
     end
 
-    # Individual host: storage -> VM -> DNS -> bootstrap
+    # Individual host: storage -> VM -> DNS -> setup-bootstrapper -> bootstrap
+    # All expressed as steps so every operation is visible in OpsChain
     action "#{host_name}-create",
-      description: "Create #{host_name}: storage, VM, DNS and bootstrap",
       steps: [
         *host.storage.map { |s| "#{s.storage_name}:create" },
         "#{host_name}:create",
         *dns_create_steps,
-        "#{host_name}-bootstrap"
+        "#{host_name}-setup-bootstrapper",
+        "#{host_name}:bootstrap"
       ],
       run_as: :sequential
 
     action "#{host_name}-destroy",
-      description: "Destroy #{host_name} and its storage",
       steps: [
         "#{host_name}:destroy",
         *host.storage.map { |s| "#{s.storage_name}:destroy" }
@@ -156,23 +148,19 @@ OpsChain.properties.assets.each do |component_name, component|
 
   # Component hosts group — all hosts in parallel
   action "#{component_name}-hosts-create",
-    description: "Create all #{component_name} hosts in parallel",
     steps: host_create_steps,
     run_as: :parallel
 
   action "#{component_name}-hosts-destroy",
-    description: "Destroy all #{component_name} hosts in parallel",
     steps: host_destroy_steps,
     run_as: :parallel
 
   # Top-level component action
   action "#{component_name}-create",
-    description: "Create #{component_name} infrastructure",
     steps: ["#{component_name}-hosts-create"],
     run_as: :sequential
 
   action "#{component_name}-destroy",
-    description: "Destroy #{component_name} infrastructure",
     steps: ["#{component_name}-hosts-destroy"],
     run_as: :sequential
 
@@ -182,11 +170,9 @@ end
 
 # Environment-wide actions — sequential to respect OBP dependency order
 action "create-all",
-  description: "Create all environment infrastructure in dependency order",
   steps: all_create_steps,
   run_as: :sequential
 
 action "destroy-all",
-  description: "Destroy all environment infrastructure",
   steps: all_destroy_steps.reverse,
   run_as: :sequential

@@ -15,7 +15,7 @@ common_settings:
     disable_selinux: true
     create_cnames: true
     domain_name: '.trial.limepoint.engineering'
-    zone: 'wpocloud.com'
+    zone: 'trial.limepoint.engineering'
     subnet: 'sn-obp-bpd-app'
     network_security_groups:
       - 'nsg-obp-bpd-common-ops'
