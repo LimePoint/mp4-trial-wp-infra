@@ -26,10 +26,14 @@ end
 
 all_create_steps  = []
 all_destroy_steps = []
+all_start_steps   = []
+all_stop_steps    = []
 
 OpsChain.properties.assets.each do |component_name, component|
   host_create_steps  = []
   host_destroy_steps = []
+  host_start_steps   = []
+  host_stop_steps    = []
 
   component.hosts.each do |host|
     host_name = host.name
@@ -155,8 +159,20 @@ OpsChain.properties.assets.each do |component_name, component|
       ],
       run_as: :sequential
 
+    action "#{host_name}-start",
+      description: "Start #{host_name}",
+      steps: ["#{vm_name}:start"],
+      run_as: :sequential
+
+    action "#{host_name}-stop",
+      description: "Stop #{host_name}",
+      steps: ["#{vm_name}:stop"],
+      run_as: :sequential
+
     host_create_steps  << "#{host_name}-create"
     host_destroy_steps << "#{host_name}-destroy"
+    host_start_steps   << "#{host_name}-start"
+    host_stop_steps    << "#{host_name}-stop"
   end
 
   # Component hosts group — all hosts in parallel
@@ -170,6 +186,16 @@ OpsChain.properties.assets.each do |component_name, component|
     steps: host_destroy_steps,
     run_as: :parallel
 
+  action "#{component_name}-hosts-start",
+    description: "Start all #{component_name} hosts in parallel",
+    steps: host_start_steps,
+    run_as: :parallel
+
+  action "#{component_name}-hosts-stop",
+    description: "Stop all #{component_name} hosts in parallel",
+    steps: host_stop_steps,
+    run_as: :parallel
+
   # Top-level component action
   action "#{component_name}-create",
     description: "Create #{component_name} infrastructure",
@@ -181,8 +207,20 @@ OpsChain.properties.assets.each do |component_name, component|
     steps: ["#{component_name}-hosts-destroy"],
     run_as: :sequential
 
+  action "#{component_name}-start",
+    description: "Start #{component_name} infrastructure",
+    steps: ["#{component_name}-hosts-start"],
+    run_as: :sequential
+
+  action "#{component_name}-stop",
+    description: "Stop #{component_name} infrastructure",
+    steps: ["#{component_name}-hosts-stop"],
+    run_as: :sequential
+
   all_create_steps  << "#{component_name}-create"
   all_destroy_steps << "#{component_name}-destroy"
+  all_start_steps   << "#{component_name}-start"
+  all_stop_steps    << "#{component_name}-stop"
 end
 
 # Environment-wide actions — sequential to respect OBP dependency order
@@ -194,4 +232,14 @@ action "create-all",
 action "destroy-all",
   description: "Destroy all environment infrastructure",
   steps: all_destroy_steps.reverse,
+  run_as: :sequential
+
+action "start-all",
+  description: "Start all environment infrastructure in dependency order",
+  steps: all_start_steps,
+  run_as: :sequential
+
+action "stop-all",
+  description: "Stop all environment infrastructure",
+  steps: all_stop_steps.reverse,
   run_as: :sequential
