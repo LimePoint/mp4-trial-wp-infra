@@ -175,47 +175,26 @@ OpsChain.properties.assets.each do |component_name, component|
     host_stop_steps    << "#{host_name}-stop"
   end
 
-  # Component hosts group — all hosts in parallel
-  action "#{component_name}-hosts-create",
+  # Component-level actions — all hosts in parallel
+  action "#{component_name}-create",
     description: "Create all #{component_name} hosts in parallel",
     steps: host_create_steps,
     run_as: :parallel
 
-  action "#{component_name}-hosts-destroy",
+  action "#{component_name}-destroy",
     description: "Destroy all #{component_name} hosts in parallel",
     steps: host_destroy_steps,
     run_as: :parallel
 
-  action "#{component_name}-hosts-start",
+  action "#{component_name}-start",
     description: "Start all #{component_name} hosts in parallel",
     steps: host_start_steps,
     run_as: :parallel
 
-  action "#{component_name}-hosts-stop",
+  action "#{component_name}-stop",
     description: "Stop all #{component_name} hosts in parallel",
     steps: host_stop_steps,
     run_as: :parallel
-
-  # Top-level component action
-  action "#{component_name}-create",
-    description: "Create #{component_name} infrastructure",
-    steps: ["#{component_name}-hosts-create"],
-    run_as: :sequential
-
-  action "#{component_name}-destroy",
-    description: "Destroy #{component_name} infrastructure",
-    steps: ["#{component_name}-hosts-destroy"],
-    run_as: :sequential
-
-  action "#{component_name}-start",
-    description: "Start #{component_name} infrastructure",
-    steps: ["#{component_name}-hosts-start"],
-    run_as: :sequential
-
-  action "#{component_name}-stop",
-    description: "Stop #{component_name} infrastructure",
-    steps: ["#{component_name}-hosts-stop"],
-    run_as: :sequential
 
   all_create_steps  << "#{component_name}-create"
   all_destroy_steps << "#{component_name}-destroy"
