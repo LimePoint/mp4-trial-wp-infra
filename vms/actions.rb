@@ -61,8 +61,8 @@ OpsChain.properties.assets.each do |component_name, component|
       available_actions        :create, :start, :stop, :restart, :exists?, :destroy
       name                     "#{host_name}#{domain_name}"
       native_instance_type     common.hosts.native_instance_type
-      'specs.cpu_count'        host.respond_to?(:cpu)                       ? host.cpu                       : common.hosts.cpu
-      'specs.ram_gb'           host.respond_to?(:memory)                    ? host.memory                    : common.hosts.memory
+      specs.cpu_count        host.respond_to?(:cpu)                       ? host.cpu                       : common.hosts.cpu
+      specs.ram_gb           host.respond_to?(:memory)                    ? host.memory                    : common.hosts.memory
       boot_volume_size_in_gbs  common.hosts.boot_volume_size_in_gbs
       operating_system         host.respond_to?(:operating_system)          ? host.operating_system          : common.hosts.operating_system
       operating_system_version host.respond_to?(:operating_system_version)  ? host.operating_system_version  : common.hosts.operating_system_version
@@ -73,6 +73,7 @@ OpsChain.properties.assets.each do |component_name, component|
       block_devices            host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}" }
       always_use_mintpress_bootstrap false
       bootstrap_with_dns       false
+      use_flex                 true
       platform                 :oci_platform
     end
 
