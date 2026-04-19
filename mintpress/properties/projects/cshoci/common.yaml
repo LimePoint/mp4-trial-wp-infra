@@ -3,7 +3,7 @@ common_settings:
     run_list: 'environmint-common::default'
     node_attributes: {}
     keys:
-      - '/opt/opschain/oci_ssh.key'
+      - '/opt/opschain/.ssh2/oci_ssh.key'
     cpu: 1
     memory: 2
     boot_volume_size_in_gbs: 75
