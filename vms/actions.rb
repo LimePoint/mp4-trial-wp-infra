@@ -37,8 +37,8 @@ OpsChain.properties.assets.each do |component_name, component|
 
   component.hosts.each do |host|
 
-    log.info "************************* host - #{host.to_s}"
-    log.info "************************* common props - #{common.to_s}"
+    log.info "************************* host - #{host.to_json}"
+    log.info "************************* common props - #{common.to_json}"
 
     host_name = host.name
     short     = host_name.split('.').first
