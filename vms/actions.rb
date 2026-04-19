@@ -46,7 +46,7 @@ OpsChain.properties.assets.each do |component_name, component|
 
       infrastructure_oci_oci_storage storage_resource do
         name        str.storage_name
-        size_in_gb str.size_gb
+        size_gb str.size_gb
         platform    :oci_platform
       end
     end
