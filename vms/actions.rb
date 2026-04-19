@@ -36,6 +36,10 @@ OpsChain.properties.assets.each do |component_name, component|
   host_stop_steps    = []
 
   component.hosts.each do |host|
+
+    log.info "************************* host - #{host.to_s}"
+    log.info "************************* common props - #{common.to_s}"
+
     host_name = host.name
     short     = host_name.split('.').first
 
@@ -46,7 +50,7 @@ OpsChain.properties.assets.each do |component_name, component|
 
       infrastructure_oci_oci_storage storage_resource do
         name        str.storage_name
-        size_gb str.size_gb
+        size_gb     str.size_gb
         platform    :oci_platform
       end
     end
