@@ -28,6 +28,11 @@ infrastructure_chef_bootstrapper :chef_bootstrapper do
   run_list              common.hosts.run_list
 end
 
+infrastructure_oci_oci_network_security_group 'test-nsg1' do
+  display_name 'test-nsg1'
+  platform :oci_platform
+end
+
 # infrastructure_chef_bootstrapper :chef_bootstrapper_databases do
 #   properties :chef_bootstrapper.properties
 #   run_list 'foo'
