@@ -60,6 +60,7 @@ OpsChain.properties.assets.each do |component_name, component|
       infrastructure_oci_oci_storage storage_resource do
         available_actions :create, :attach, :detach, :destroy
         name              str.storage_name
+        mount_point       common.storage.mount_point
         storage_name      name
         size_gb           str.size_gb
         platform          :oci_platform
