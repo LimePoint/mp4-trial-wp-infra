@@ -65,7 +65,7 @@ OpsChain.properties.assets.each do |component_name, component|
       #   'specs.cpu_count':     host.respond_to?(:cpu)                       ? host.cpu                       : common.hosts.cpu,
       #   'specs.ram_gb':        host.respond_to?(:memory)                    ? host.memory                    : common.hosts.memory
       # })
-      specs                    {'specs.cpu_count': 1, 'specs.ram_gb': 16} 
+      specs                    ({'specs.cpu_count': 1, 'specs.ram_gb': 16})
       boot_volume_size_in_gbs  common.hosts.boot_volume_size_in_gbs
       operating_system         host.respond_to?(:operating_system)          ? host.operating_system          : common.hosts.operating_system
       operating_system_version host.respond_to?(:operating_system_version)  ? host.operating_system_version  : common.hosts.operating_system_version
