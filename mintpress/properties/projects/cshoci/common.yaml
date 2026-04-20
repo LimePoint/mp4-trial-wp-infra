@@ -18,9 +18,9 @@ common_settings:
     zone: 'trial.limepoint.engineering'
     subnet: 'sn-obp-bpd-app'
     network_security_groups:
-      - 'nsg-obp-bpd-common-ops'
-      - 'nsg-obp-bpd-common-apps'
-      - 'nsg-obp-bpd-app'
+      # - 'nsg-obp-bpd-common-ops'
+      # - 'nsg-obp-bpd-common-apps'
+      # - 'nsg-obp-bpd-app'
 
   storage:
     size_gb: 50
