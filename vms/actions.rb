@@ -28,6 +28,11 @@ infrastructure_chef_bootstrapper :chef_bootstrapper do
   run_list              common.hosts.run_list
 end
 
+# infrastructure_chef_bootstrapper :chef_bootstrapper_databases do
+#   properties :chef_bootstrapper.properties
+#   run_list 'foo'
+# end
+
 all_create_steps  = []
 all_destroy_steps = []
 all_start_steps   = []
@@ -82,6 +87,7 @@ OpsChain.properties.assets.each do |component_name, component|
       always_use_mintpress_bootstrap false
       bootstrap_with_dns       false
       use_flex                 true
+      bootstrapper             :chef_bootstrapper
       platform                 :oci_platform
     end
 
@@ -127,21 +133,21 @@ OpsChain.properties.assets.each do |component_name, component|
       end
     end
 
-    # Wire up Chef bootstrapper at runtime
-    action "#{host_name}-setup-bootstrapper",
-      description: "Configure Chef bootstrapper for #{host_name}" do
-      host_obj = vm_name.controller
-      host_obj.bootstrap_with_dns = false
-      host_obj.bootstrapper       = :chef_bootstrapper.controller
-    end
+    # # Wire up Chef bootstrapper at runtime
+    # action "#{host_name}-setup-bootstrapper",
+    #   description: "Configure Chef bootstrapper for #{host_name}" do
+    #   host_obj = vm_name.controller
+    #   host_obj.bootstrap_with_dns = false
+    #   host_obj.bootstrapper       = :chef_bootstrapper.controller
+    # end
 
-    action "#{host_name}-bootstrap",
-      description: "Bootstrap #{host_name} with Chef",
-      steps: [
-        "#{host_name}-setup-bootstrapper",
-        "#{vm_name}:bootstrap"
-      ],
-      run_as: :sequential
+    # action "#{host_name}-bootstrap",
+    #   description: "Bootstrap #{host_name} with Chef",
+    #   steps: [
+    #     "#{host_name}-setup-bootstrapper",
+    #     "#{vm_name}:bootstrap"
+    #   ],
+    #   run_as: :sequential
 
     # Collect all DNS steps for this host
     dns_create_steps = [
@@ -153,14 +159,14 @@ OpsChain.properties.assets.each do |component_name, component|
       host.sso_cname_list.each { |s| dns_create_steps << "#{host_name}-#{s}-cname:create" }
     end
 
-    # Individual host: storage -> VM -> DNS -> bootstrap
+    # Individual host: storage -> VM -> DNS
     action "#{host_name}-create",
       description: "Create #{host_name}: storage, VM, DNS and bootstrap",
       steps: [
         *block_devices_to_attach.map { |s| "#{s}:create" },
         "#{vm_name}:create",
-        *dns_create_steps,
-        "#{host_name}-bootstrap"
+        *dns_create_steps
+        # "#{host_name}-bootstrap"
       ],
       run_as: :sequential
 
