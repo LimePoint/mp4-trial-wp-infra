@@ -9,13 +9,15 @@ common           = OpsChain.properties.common_settings
 domain_name      = common.hosts.domain_name
 zone             = common.hosts.zone
 
+log.info "common.hosts.keys - #{common.hosts.keys}"
+
 log.info "oci_config: - #{File.read(oci_config)}" unless OpsChain.dry_run? 
 log.info provider_config unless OpsChain.dry_run?
 
 # OCI platform
 infrastructure_oci_oci_platform :oci_platform do
   properties provider_config
-  log_requests true
+  # log_requests true
 end
 
 # Chef bootstrapper
