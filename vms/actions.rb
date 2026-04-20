@@ -37,9 +37,6 @@ OpsChain.properties.assets.each do |component_name, component|
 
   component.hosts.each do |host|
 
-    log.info "************************* host - #{host.to_json}"
-    log.info "************************* common props - #{common.to_json}"
-
     host_name = host.name
     short     = host_name.split('.').first
 
@@ -61,10 +58,6 @@ OpsChain.properties.assets.each do |component_name, component|
       available_actions        :create, :start, :stop, :restart, :exists?, :destroy
       name                     "#{host_name}#{domain_name}"
       native_instance_type     common.hosts.native_instance_type
-      # properties ({
-      #   'specs.cpu_count':     host.respond_to?(:cpu)                       ? host.cpu                       : common.hosts.cpu,
-      #   'specs.ram_gb':        host.respond_to?(:memory)                    ? host.memory                    : common.hosts.memory
-      # })
       specs                    ({
         'specs.cpu_count': host.respond_to?(:cpu) ? host.cpu : common.hosts.cpu,
         'specs.ram_gb': host.respond_to?(:memory) ? host.memory : common.hosts.memory
