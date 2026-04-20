@@ -67,7 +67,7 @@ OpsChain.properties.assets.each do |component_name, component|
       operating_system_version host.respond_to?(:operating_system_version)  ? host.operating_system_version  : common.hosts.operating_system_version
       assign_public_ip         common.hosts.assign_public_ip
       keys                     common.hosts.keys
-      subnet                   common.hosts.subnet
+      # subnet                   common.hosts.subnet
       network_security_groups  common.hosts.network_security_groups
       block_devices            host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}" }
       always_use_mintpress_bootstrap false
