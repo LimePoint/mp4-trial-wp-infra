@@ -44,15 +44,20 @@ OpsChain.properties.assets.each do |component_name, component|
     short     = host_name.split('.').first
 
     # Block storage — resource named {hostname}-storage-{suffix} for clarity in OpsChain UI
+    block_devices_to_attach = []
     host.storage.each do |str|
       storage_suffix   = str.storage_name.sub("#{host_name}-", '')
       storage_resource = "#{host_name}-storage-#{storage_suffix}"
 
       infrastructure_oci_oci_storage storage_resource do
-        name        str.storage_name
-        size_gb     str.size_gb
-        platform    :oci_platform
+        available_actions :create, :attach, :detach, :destroy
+        name              str.storage_name
+        storage_name      name
+        size_gb           str.size_gb
+        platform          :oci_platform
       end
+
+      block_devices_to_attach << storage_resource
     end
 
     # OCI host — per-host overrides (e.g. memory, cpu, os version) take precedence over common
@@ -72,7 +77,7 @@ OpsChain.properties.assets.each do |component_name, component|
       keys                     common.hosts.keys
       # subnet                   common.hosts.subnet
       network_security_groups  common.hosts.network_security_groups
-      block_devices            host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}" }
+      block_devices            block_devices_to_attach
       always_use_mintpress_bootstrap false
       bootstrap_with_dns       false
       use_flex                 true
@@ -151,7 +156,7 @@ OpsChain.properties.assets.each do |component_name, component|
     action "#{host_name}-create",
       description: "Create #{host_name}: storage, VM, DNS and bootstrap",
       steps: [
-        *host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}:create" },
+        *block_devices_to_attach.map { |s| "#{s}:create" },
         "#{vm_name}:create",
         *dns_create_steps,
         "#{host_name}-bootstrap"
@@ -162,7 +167,7 @@ OpsChain.properties.assets.each do |component_name, component|
       description: "Destroy #{host_name} and its storage",
       steps: [
         "#{vm_name}:destroy",
-        *host.storage.map { |s| "#{host_name}-storage-#{s.storage_name.sub("#{host_name}-", '')}:destroy" }
+        *block_devices_to_attach.map { |s| "#{s}:destroy" }
       ],
       run_as: :sequential
 
