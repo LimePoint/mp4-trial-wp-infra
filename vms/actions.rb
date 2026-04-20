@@ -9,12 +9,6 @@ common           = OpsChain.properties.common_settings
 domain_name      = common.hosts.domain_name
 zone             = common.hosts.zone
 
-log.info "common - #{common}"
-log.info "common.hosts.keys - #{common.hosts.keys}"
-
-log.info "oci_config: - #{File.read(oci_config)}" unless OpsChain.dry_run? 
-log.info provider_config unless OpsChain.dry_run?
-
 # OCI platform
 infrastructure_oci_oci_platform :oci_platform do
   properties provider_config
@@ -88,7 +82,7 @@ OpsChain.properties.assets.each do |component_name, component|
       operating_system         host.respond_to?(:operating_system)          ? host.operating_system          : common.hosts.operating_system
       operating_system_version host.respond_to?(:operating_system_version)  ? host.operating_system_version  : common.hosts.operating_system_version
       assign_public_ip         common.hosts.assign_public_ip
-      keys                     common.hosts.keys
+      keys                     common.hosts.ssh_keys
       # subnet                   common.hosts.subnet
       network_security_groups  common.hosts.network_security_groups
       block_devices            block_devices_to_attach

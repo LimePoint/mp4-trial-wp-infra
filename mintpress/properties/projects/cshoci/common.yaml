@@ -2,7 +2,7 @@ common_settings:
   hosts:
     run_list: 'environmint-common::default'
     node_attributes: {}
-    keys:
+    ssh_keys:
       - '/opt/opschain/.ssh2/oci_ssh.key'
     cpu: 1
     memory: 2
