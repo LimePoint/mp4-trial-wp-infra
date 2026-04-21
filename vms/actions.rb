@@ -12,7 +12,7 @@ zone             = common.hosts.zone
 # OCI platform
 infrastructure_oci_oci_platform :oci_platform do
   properties provider_config
-  # log_requests true
+  log_requests true
 end
 
 # Chef bootstrapper
