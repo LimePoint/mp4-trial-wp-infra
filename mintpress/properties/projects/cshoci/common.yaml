@@ -33,6 +33,6 @@ common_settings:
   mount_target: 'mt-obp-bpd'
 
   chef:
-    server_url: 'https://cust-wp-315.limepoint.engineering/organizations/environmint'
+    server_url: 'https://mintpress.trial.limepoint.com:8443/organizations/environmint'
     knife_config_file: '/opt/opschain/.cinc/knife.rb'
     client_installer: '/lib/cinc-client/cinc-client.rpm'
